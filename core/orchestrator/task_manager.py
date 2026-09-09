@@ -17,3 +17,6 @@ class TaskManager:
             return self._tasks[task_id]
         except KeyError as exc:
             raise KeyError(f"Unknown task: {task_id}") from exc
+
+    def all(self) -> tuple[Task, ...]:
+        return tuple(self._tasks.values())
