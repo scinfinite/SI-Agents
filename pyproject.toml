@@ -9,6 +9,9 @@ description = "Evidence-driven AI engineering system"
 requires-python = ">=3.11"
 dependencies = []
 
+[tool.setuptools.packages.find]
+include = ["core*", "tools*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
