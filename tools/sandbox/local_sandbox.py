@@ -3,28 +3,34 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from tools.sandbox.command_policy import CommandPolicy
 from tools.sandbox.sandbox_result import CommandResult
 
 
 class SandboxError(RuntimeError):
-    """Raised when a sandbox command cannot be started safely."""
+    """Raised when a local command cannot be started safely."""
 
 
 class LocalSandbox:
-    """Run commands inside an explicitly supplied workspace.
+    """Run approved commands inside an explicitly supplied workspace.
 
-    This is a development primitive, not a security boundary. Production use must
+    This is a development executor, not a security boundary. Production use must
     add OS/container isolation before executing untrusted projects.
     """
 
-    def __init__(self, workspace: str | Path) -> None:
+    def __init__(
+        self,
+        workspace: str | Path,
+        *,
+        policy: CommandPolicy | None = None,
+    ) -> None:
         self.workspace = Path(workspace).resolve()
         if not self.workspace.is_dir():
             raise SandboxError(f"Workspace does not exist: {self.workspace}")
+        self.policy = policy or CommandPolicy()
 
     def run(self, command: str, *, timeout: float = 60.0) -> CommandResult:
-        if not command.strip():
-            raise ValueError("Command must not be empty")
+        self.policy.check(command)
         if timeout <= 0:
             raise ValueError("Timeout must be greater than zero")
 
