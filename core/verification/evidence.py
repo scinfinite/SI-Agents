@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
 from uuid import uuid4
@@ -18,8 +18,8 @@ class Evidence:
     source: str
     verification_status: VerificationStatus
     details: str = ""
-    id: str = uuid4().hex
-    recorded_at: datetime = datetime.now(UTC)
+    id: str = field(default_factory=lambda: uuid4().hex)
+    recorded_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def __post_init__(self) -> None:
         if not self.claim.strip():
