@@ -1,0 +1,12 @@
+compliance_policy:
+  external_sources_require_review: true
+  review:
+    license: true
+    terms_of_service: true
+    privacy: true
+    data_rights: true
+    storage_and_caching: true
+    redistribution: true
+    attribution: true
+    geography_and_limits: true
+  legal_advice_disclaimer: true
