@@ -1,0 +1,9 @@
+learning_policy:
+  enabled: true
+  uncontrolled_self_modification: false
+  require_evidence: true
+  require_benchmark_before_update: true
+  require_benchmark_after_update: true
+  require_regression_test: true
+  promotion:
+    project_to_global_requires_validation: true
