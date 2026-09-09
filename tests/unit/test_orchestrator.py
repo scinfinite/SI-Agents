@@ -29,6 +29,6 @@ def test_failed_worker_marks_task_failed() -> None:
     with pytest.raises(RuntimeError, match="boom"):
         orchestrator.run("broken task", worker)
 
-    task = next(iter(manager._tasks.values()))
+    task = manager.all()[0]
     assert task.status is TaskStatus.FAILED
     assert task.error == "boom"
