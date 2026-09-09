@@ -2,6 +2,7 @@ import pytest
 
 from core.orchestrator.orchestrator import Orchestrator
 from core.orchestrator.task_manager import TaskManager
+from core.state.checkpoints import CheckpointStore
 from core.state.task_state import TaskStatus
 
 
@@ -32,3 +33,20 @@ def test_failed_worker_marks_task_failed() -> None:
     task = manager.all()[0]
     assert task.status is TaskStatus.FAILED
     assert task.error == "boom"
+
+
+def test_checkpoint_requires_known_task() -> None:
+    orchestrator = Orchestrator(TaskManager(), CheckpointStore())
+
+    with pytest.raises(KeyError, match="Unknown task"):
+        orchestrator.checkpoint("missing", "before modification")
+
+
+def test_checkpoint_records_known_task() -> None:
+    orchestrator = Orchestrator(TaskManager(), CheckpointStore())
+    task = orchestrator.tasks.create("modify project")
+
+    checkpoint = orchestrator.checkpoint(task.id, "before modification")
+
+    assert checkpoint.task_id == task.id
+    assert orchestrator.checkpoints.for_task(task.id) == (checkpoint,)
