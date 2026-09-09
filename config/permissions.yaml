@@ -1,0 +1,24 @@
+permissions:
+  default: deny
+
+  read:
+    filesystem: true
+    repository: true
+    documentation: true
+
+  write:
+    workspace: true
+    repository: false
+
+  execute:
+    local_commands: true
+    destructive_commands: false
+
+  high_risk_requires_approval:
+    - destructive_git
+    - destructive_filesystem
+    - production_deploy
+    - credential_rotation
+    - publication
+    - paid_resource
+    - sensitive_data_transfer
