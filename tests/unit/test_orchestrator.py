@@ -1,11 +1,8 @@
 import pytest
 
 from core.orchestrator.orchestrator import Orchestrator
-from core.state.task_state import TaskManager, TaskStatus
-
-
-class TestableOrchestrator(Orchestrator):
-    pass
+from core.orchestrator.task_manager import TaskManager
+from core.state.task_state import TaskStatus
 
 
 def test_run_executes_worker_and_returns_result() -> None:
