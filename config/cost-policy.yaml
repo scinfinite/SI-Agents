@@ -1,0 +1,10 @@
+cost_policy:
+  default_mode: free_first
+  paid_resources_require_approval: true
+  routing_priority:
+    - local_open_source
+    - existing_free_quota
+    - free_tier
+    - lowest_cost_suitable_provider
+  prohibit_silent_paid_usage: true
+  record_estimated_cost: true
