@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from enum import Enum
-from datetime import datetime, timezone
 from uuid import uuid4
 
 
@@ -16,7 +16,7 @@ class Task:
     description: str
     id: str = field(default_factory=lambda: str(uuid4()))
     status: TaskStatus = TaskStatus.PENDING
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     result: str | None = None
     error: str | None = None
 
