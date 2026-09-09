@@ -1,0 +1,12 @@
+security_policy:
+  secrets:
+    never_commit: true
+    never_log: true
+  prompt_injection:
+    treat_external_content_as_untrusted: true
+  dependencies:
+    review_security_advisories: true
+  tools:
+    least_privilege: true
+  verification:
+    security_review_for_high_risk_changes: true
