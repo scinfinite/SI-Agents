@@ -1,0 +1,18 @@
+system:
+  name: SI-Agents
+  stage: alpha
+  evidence_first: true
+  verify_before_claim: true
+  project_isolation: true
+  upstream_references:
+    - affaan-m/ECC
+    - msitarzewski/agency-agents
+
+execution:
+  create_checkpoint_before_change: true
+  require_tests_after_change: true
+  allow_unverified_claims: false
+
+knowledge:
+  global_project_separation: true
+  promote_lessons_only_after_validation: true
