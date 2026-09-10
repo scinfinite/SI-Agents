@@ -48,7 +48,7 @@ def test_composition_resolves_dependencies() -> None:
     composition = compose(selected)
     assert composition.skills[-1] == "compose-workflow"
     assert set(composition.skills) == {skill.id for skill in selected}
-    assert "inspect-repository" in composition.dependencies
+    assert set(composition.dependencies) == {"inspect-repository", "verify-change"}
 
 
 def test_composition_rejects_missing_dependency() -> None:
