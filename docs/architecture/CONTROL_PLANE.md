@@ -1,6 +1,10 @@
 # Control Plane Execution Contract
 
-The current Alpha control plane establishes this verified path:
+## Status
+
+**Phase 2 — Control Plane complete.** This contract remains the authoritative execution and policy boundary for the completed Alpha phases.
+
+The current control plane establishes this verified path:
 
 ```text
 Task
@@ -35,6 +39,10 @@ A checkpoint marker alone is **not** a rollback guarantee. Callers must create a
 
 The Docker daemon remains a trust boundary. Backend-specific security properties must not be generalized to other execution environments.
 
+## Alpha integration
+
+The control plane is now consumed by the Phase 5 Developer/Debugger/Tester workflow. Agents remain workers: permission evaluation, approvals, execution backends, task state, checkpoints, and evidence remain control-plane responsibilities.
+
 ## Alpha fixture
 
-`tests/fixtures/broken_project` is a deterministic intentionally broken project. Its acceptance case is executed by an integration harness so the normal repository test suite remains green while the fixture can demonstrate reproducible failure. `AlphaWorkflow` now provides the ordered control-plane stages for inspection, reproduction, checkpointing, repair, verification, red-team checking, and regression checking.
+`tests/fixtures/broken_project` is a deterministic intentionally broken project. Its acceptance case is executed by an integration harness so the normal repository test suite remains green while the fixture can demonstrate reproducible failure. The Phase 5 workflow builds on the ordered inspection, reproduction, checkpointing, repair, verification, red-team, and regression stages.
