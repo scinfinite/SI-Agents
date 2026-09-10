@@ -7,9 +7,10 @@ SI-Agents.
 
 import base64
 import json
+import threading
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from core.runtime.models import (
@@ -28,9 +29,11 @@ from core.runtime.protocol import HarnessAdapter, HarnessMetadata
 from .config import OpenCodeConfig
 
 
-@dataclass(frozen=True)
+@dataclass
 class OpenCodeAdapter:
-    config: OpenCodeConfig = OpenCodeConfig()
+    config: OpenCodeConfig = field(default_factory=OpenCodeConfig)
+    _sessions: dict[str, str] = field(default_factory=dict, init=False, repr=False)
+    _lock: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
 
     @property
     def metadata(self) -> HarnessMetadata:
@@ -59,8 +62,9 @@ class OpenCodeAdapter:
             )
         try:
             session_id = request.session_id or self._create_session(request.project_id)
-            payload = self._message_payload(request)
-            result = self._post(f"/session/{session_id}/message", payload)
+            with self._lock:
+                self._sessions[request.request_id] = session_id
+            result = self._post(f"/session/{session_id}/message", self._message_payload(request))
             output = self._extract_text(result)
             event = RuntimeEvent(
                 type=RuntimeEventType.COMPLETED,
@@ -106,11 +110,13 @@ class OpenCodeAdapter:
             )
 
     def cancel(self, request_id: str) -> bool:
-        # The universal request ID is not necessarily an OpenCode session ID.
-        # Cancellation therefore requires the caller to pass the OpenCode session
-        # ID in this adapter's cancel boundary.
+        with self._lock:
+            session_id = self._sessions.get(request_id)
+        if session_id is None:
+            # Accept a raw OpenCode session ID as a useful administrative fallback.
+            session_id = request_id
         try:
-            self._post(f"/session/{request_id}/abort", {})
+            self._post(f"/session/{session_id}/abort", {})
             return True
         except (_OpenCodeHTTPError, urllib.error.URLError, TimeoutError, OSError):
             return False
@@ -136,7 +142,11 @@ class OpenCodeAdapter:
     @staticmethod
     def _extract_text(payload: dict[str, Any]) -> str:
         parts = payload.get("parts", [])
-        texts = [part.get("text", "") for part in parts if isinstance(part, dict) and part.get("type") == "text"]
+        texts = [
+            part.get("text", "")
+            for part in parts
+            if isinstance(part, dict) and part.get("type") == "text"
+        ]
         return "".join(texts)
 
     def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
