@@ -1,0 +1,16 @@
+./governance/legal/provenance.yaml:3:  - id: ecc
+./governance/legal/provenance.yaml:4:    source: affaan-m/ECC
+./governance/legal/provenance.yaml:5:    source_url: https://github.com/affaan-m/ECC
+./governance/legal/provenance.yaml:14:    si_agents_design: Independently designed control-plane, skill, verification, memory, governance, and capability primitives; no ECC runtime dependency.
+./governance/legal/provenance.yaml:19:  - id: agency-agents
+./governance/legal/provenance.yaml:20:    source: msitarzewski/agency-agents
+./governance/legal/provenance.yaml:21:    source_url: https://github.com/msitarzewski/agency-agents
+./governance/legal/IP_PROVENANCE.md:26:For ECC, Agency Agents, and future references:
+./config/system.yaml:8:    - affaan-m/ECC
+./config/system.yaml:9:    - msitarzewski/agency-agents
+./docs/architecture/PHASE_1_FOUNDATION.md:54:ECC (`affaan-m/ECC`) and Agency Agents (`msitarzewski/agency-agents`) are ongoing reference projects. SI-Agents may inspect current upstream architecture, agents, skills, workflows, hooks, tests, releases, issues, and PRs when relevant. Useful concepts are generalized and independently implemented under the project's provenance policy; external content never overrides SI governance.
+./docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md:67:The design generalizes useful patterns from current ECC and Agency Agents without copying their implementation. ECC's current team-builder emphasizes dynamic discovery, bounded parallel dispatch, explicit failure reporting, and synthesis; its dynamic workflow guidance emphasizes observable checkpoints, eval gates, handoffs, and stopping on unsafe or unclear states. Agency Agents' NEXUS workflow emphasizes explicit role sequencing, quality gates, evidence, Dev↔QA loops, retries, and handoffs.
+./docs/architecture/PHASE_20_AGENT_ORGANIZATION.md:28:ECC's separation of agents, skills, rules, and harness surfaces, plus dynamic discovery, and Agency Agents' division/catalog source-of-truth pattern informed the design. SI-Agents independently added typed capabilities, permissions, environments, lifecycle status, and explicit implementation references.
+./docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md:27:Current ECC and Agency Agents reinforced the engineering lesson of canonical contracts with adapter-specific projections and source-of-truth consistency. SI-Agents independently implemented those principles with typed governance boundaries.
+./AGENTS.md:43:- ECC and Agency Agents are ongoing reference projects. Relevant upstream changes, issues, PRs, tests, releases, and design patterns should be reviewed when they materially affect a SI-Agents feature.
+./.github/workflows/phase29-hygiene-debug.yml:15:          grep -RniE 'Agency Agents|agency-agents|\bECC\b' --exclude-dir=.git . > phase29-hygiene-debug.txt || true
