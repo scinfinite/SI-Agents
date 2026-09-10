@@ -1,0 +1,13 @@
+{
+  "schema": "si-agents.skill-index.v1",
+  "version": 1,
+  "source_of_truth": "skills/**/SKILL.md",
+  "skills": [
+    {"id": "compose-workflow", "version": "1.0", "path": "skills/orchestration/compose-workflow/SKILL.md"},
+    {"id": "inspect-repository", "version": "1.0", "path": "skills/engineering/inspect-repository/SKILL.md"},
+    {"id": "plan-minimal-change", "version": "1.0", "path": "skills/engineering/plan-minimal-change/SKILL.md"},
+    {"id": "reproduce-failure", "version": "1.0", "path": "skills/debugging/reproduce-failure/SKILL.md"},
+    {"id": "security-review", "version": "1.0", "path": "skills/security/security-review/SKILL.md"},
+    {"id": "verify-change", "version": "1.0", "path": "skills/testing/verify-change/SKILL.md"}
+  ]
+}
