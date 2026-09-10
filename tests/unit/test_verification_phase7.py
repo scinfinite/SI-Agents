@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import pytest
 
+from core.verification.benchmark import Benchmark, BenchmarkStatus
 from core.verification.claim_store import ClaimStore
 from core.verification.claims import Claim
 from core.verification.confidence import ConfidenceLevel, assess
-from core.verification.evidence import Evidence, VerificationStatus
+from core.verification.evidence import Evidence, EvidenceKind, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
 from core.verification.production_readiness import ReadinessGate, ReadinessStatus, evaluate
 from core.verification.red_team import RedTeamChallenge, RedTeamStatus, RedTeamSuite
@@ -28,7 +29,9 @@ def make_claim() -> Claim:
 def test_claim_validation_and_evidence_attachment() -> None:
     store = ClaimStore()
     claim = store.record(make_claim())
-    evidence = Evidence("result is correct", "unit-test", VerificationStatus.VERIFIED)
+    evidence = Evidence(
+        "result is correct", "unit-test", VerificationStatus.VERIFIED, kind=EvidenceKind.TEST
+    )
     EvidenceStore().record(evidence)
     updated = store.attach_evidence(claim.id, (evidence.id,), 0.9)
     assert updated.evidence_ids == (evidence.id,)
@@ -142,6 +145,19 @@ def test_verification_engine_fails_when_red_team_finds_flaw() -> None:
     )
     assert report.outcome is VerificationOutcome.FAILED
     assert "red-team suite" in report.failed_checks
+
+
+def test_benchmark_requires_non_regression() -> None:
+    benchmark = Benchmark("quality", lambda: 10.0)
+    before = benchmark.execute()
+    after = type(before)(before.name, 11.5)
+    comparison = benchmark.compare(before, after)
+    assert comparison.status is BenchmarkStatus.PASSED
+    assert comparison.improved
+    worse = benchmark.compare(before, type(before)(before.name, 9.0))
+    assert worse.status is BenchmarkStatus.FAILED
+    assert Benchmark.evaluate((before,)) is BenchmarkStatus.PASSED
+    assert Benchmark.evaluate(()) is BenchmarkStatus.BLOCKED
 
 
 def test_production_readiness_requires_evidence_and_all_gates() -> None:
