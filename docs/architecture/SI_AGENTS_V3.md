@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–37 implemented and CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–38 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -38,7 +38,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 establishes the stable machine-facing API over those existing authorities. Phase 36 establishes the first Web transport/presentation boundary over that API. Phase 37 turns that foundation into the live Control Center while preserving the same authority boundary.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 established the stable machine-facing API over those existing authorities. Phase 36 established the first Web transport/presentation boundary over that API. Phase 37 turned that foundation into the live Control Center. Phase 38 adds visual organization/workflow inspection while preserving the same authority boundary.
 
 ### Web and TUI are views, not authorities
 
@@ -60,7 +60,7 @@ Phase 29 established the persona-to-typed-contract boundary. Phase 30 establishe
                        OmniRoute
 ```
 
-No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces.
+No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces. Phase 38 graph rendering is a read-only projection and must remain so.
 
 ### Evidence-first operation
 
@@ -76,128 +76,17 @@ The Web Control Center is localhost-first and requires no cloud control plane or
 
 ---
 
-# Phase 29 — Agent Persona & Definition System
-
-**State: Complete.** Deterministic Markdown personas, typed behavioral contracts, validation, governed compilation, duplicate/conflict detection, canonical personas, provenance, inert-content handling, and distribution packaging are implemented and CI-verified.
-
-Canonical architecture record: `docs/architecture/PHASE_29_AGENT_PERSONA.md`.
-
----
-
-# Phase 30 — First-Class Portable Skills
-
-**State: Complete.** Portable `SKILL.md` artifacts provide deterministic discovery, metadata, validation, versioning, compatibility, composition, provenance, regression coverage, evidence requirements, and safe installation/deployment boundaries.
-
-Canonical architecture record: `docs/architecture/PHASE_30_PORTABLE_SKILLS.md`.
-
----
-
-# Phase 31 — Rules, Hooks & Event System
-
-**State: Complete + CI verified.** Explicit Rules, bounded in-process Hooks, immutable Events, fail-closed dangerous-event handling, Skill lifecycle integration, declarative Rule catalog loading, and adversarial regression coverage are implemented. Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and full pytest (**381 passed**).
-
-Canonical architecture record: `docs/architecture/PHASE_31_RULES_HOOKS_EVENTS.md`.
-
----
-
-# Phase 32 — Memory & Knowledge
-
-**State: Complete + CI verified.** Durable, provenance-aware Memory and source-backed Knowledge span task/project/team/agent/division/organization/global scopes with evidence-gated promotion, deterministic retrieval, atomic schema-versioned persistence, lifecycle events, supersession/contradiction tracking, and adversarial regression coverage.
-
-Feature CI **#762** passed all gates with **392 passed**. Mainline CI **#769** passed the same gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac` with **392 passed**; naming/documentation merge `c1937c70348e7b308c8274d2e3ce71cb9a07f0d8` was verified by mainline CI **#777**.
-
-Canonical record: `docs/architecture/PHASE_32_MEMORY_KNOWLEDGE.md`.
-
----
-
-# Phase 33 — Security & Governance Center
-
-**State: Complete + CI verified.**
-
-Phase 33 makes SI governance a first-class inspectable system and operator-facing core service.
-
-Implemented governance objects include Permission, Capability, Policy, Approval, Risk, Trust Boundary, Credential Reference, Data Classification, Cost Constraint, and typed Governance Request/Decision contracts.
-
-Authorization remains:
-
-```text
-Request → Agent/Subject → Skill/Capability → Tool → Environment
-        → Policy → Permission → Risk → Approval? → ALLOW / DENY / APPROVAL_REQUIRED
-```
-
-Declared capabilities require explicit scoped permissions. Credential-bearing external egress is denied even with approval. Expired approvals cannot authorize. Governance decisions never execute tools or configuration.
-
-`config/governance.v1.json` is validated and packaged as the declarative baseline. `GovernanceScanner` provides deterministic, read-only findings for secret-like literals, broad permissions, unsafe hook commands, suspicious authority-bearing content, and unpinned package execution. Findings carry severity, evidence, remediation guidance, and auto-fixability metadata; scanning never mutates configuration.
-
-Feature CI **#785** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite (**402 passed**). The implementation was merged to `main` as `765782377def8173ea235f1bbb3f8c3f9c194767`; mainline CI **#786** passed all gates on that exact merge commit.
-
-Canonical record: `docs/architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`.
-
----
-
-# Phase 34 — Organization Expansion
-
-**State: Complete + CI verified.**
-
-Phase 34 turns the canonical 279-agent catalog into an inspectable operating organization without importing an external persona roster or creating a second permission authority.
-
-Implemented organization contracts define five bounded operating teams, a single organizational home for each of the 18 canonical divisions, immutable workflow steps and ordered dependencies, four reusable evidence-gated workflows, source-of-truth validation against the canonical agent catalog, workflow team-membership checks, division/team consistency validation, authority-boundary checks, and packaged declarative organization configuration.
-
-The organization layer coordinates responsibilities only. It does not execute workflows and does not grant authority. Governance remains the authorization boundary.
-
-Feature CI **#798** passed all build, packaging, audit, Ruff, and pytest gates. PR #25 merged the implementation to `main` as `a100282375f4fdb8108f62faf16151e1a8abd8e9`. Mainline CI **#799** passed all gates on that exact merge commit, with **409 passed**.
-
-Canonical record: `docs/architecture/PHASE_34_ORGANIZATION_EXPANSION.md`.
-
----
-
-# Phase 35 — Control API
-
-**State: Complete + CI verified.**
-
-Phase 35 establishes the stable machine-facing `/api/v1` boundary before the full Web/TUI surfaces. It exposes canonical agent/team/organization/workflow/Skill/governance/event/run read models plus a bounded run-creation operation. The API is a transport boundary, not a new authority.
-
-The dependency-free HTTP transport is localhost-only, uses JSON-only mutation input capped at 1 MiB, emits no-store/nosniff response headers, and does not introduce browser CORS or credential handling. `si-api` launches the service locally.
-
-`POST /api/v1/runs` passes through the existing `GovernanceEngine` and creates a queued run record only; it never executes workers, tools, workflows, Skills, shell commands, or network requests. Capability-bearing requests remain subject to existing scoped permissions, and credential-bearing external egress remains fail-closed.
-
-Feature CI **#809** passed all build, wheel, repository-audit, Ruff, and pytest gates with **417 passed** after resolving CI-detected import-order findings. PR #27 merged the implementation to `main` as `8e990f225b69fe1822861e1f21af29094c6b481b`.
-
-Canonical record: `docs/architecture/PHASE_35_CONTROL_API.md`.
-
----
-
-# Phase 36 — Local Web Foundation
-
-**State: Complete + CI verified.**
-
-Phase 36 establishes the first Web operator surface as a dependency-free, localhost-first presentation and transport layer over the existing Control API. The default `si web` surface serves packaged static assets and live health state; it does not create a second authority.
-
-Remote binding is an explicit opt-in and requires bearer authentication. CORS is deny-by-default with an explicit allowlist and no wildcard origin. The server emits restrictive security headers, bounds JSON mutation bodies, returns safe errors, records redacted local mutation audit events, and shuts down cleanly on SIGINT/SIGTERM. No telemetry or browser credential surface is introduced.
-
-PR #31 merged the implementation to `main` as `0829e29d7e2b3718e57caf027f9a1cb8534cbcba`. Feature CI **#830** (`34505281056`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates with **434 passed**. Final mainline CI **#833** (`34505742175`) passed all gates on main commit `f76717fa11f1ce275e0459724f6e6e871b4d1922`.
-
-Canonical record: `docs/architecture/PHASE_36_LOCAL_WEB_FOUNDATION.md`.
-
----
-
-# Phase 37 — Control Center
-
-**State: Complete + CI verified.**
-
-Phase 37 turns the Web foundation into the live operator Control Center. The packaged single-page surface provides Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings views. All data is fetched from the Control API; the browser contains no execution engine and no second authorization path.
-
-The Control API now exposes deterministic read-only projections for evidence, sanitized environment context, registered adapter families, effective settings, and a Control Center aggregate. The OpenAPI document is synchronized with these paths. Environment reporting deliberately avoids exposing the process environment, and evidence reporting distinguishes control-plane evidence from downstream execution evidence.
-
-The UI is dependency-free and same-origin: no CDN, external script, inline script/style, telemetry, or persistent browser credential storage. Data rendering avoids `innerHTML`, and the existing Web CSP/security boundary remains in force.
-
-Canonical record: `docs/architecture/PHASE_37_CONTROL_CENTER.md`.
-
----
-
 # Phase 38 — Visual Organization & Workflow
 
-Provide interactive organization and workflow visualization showing divisions, agents, roles, teams, Skills, relationships, capabilities/permissions, and actual execution state.
+**State: Complete + CI verified.**
+
+Phase 38 provides a deterministic visual read model and dependency-free SVG operator surface for organizational and workflow topology. It covers divisions, teams, agents, Skills, capabilities, permissions, workflows, steps, dependencies, relationships, and current control-plane run state. Organization, workflow, and Skills/security graph modes support filtering, node inspection, pan/zoom/reset, responsive layout, and keyboard activation.
+
+The visualization remains read-only: it does not edit artifacts, authorize requests, execute workers/tools/workflows, or infer downstream execution progress. `/api/v1/visualization` and the Control Center aggregate expose the same canonical state used elsewhere by the operator UI.
+
+Final mainline CI **#845** (`34508914827`) passed all repository gates on implementation merge commit `657530eefa41794fb425cd0fe38d2aced9bd316d`.
+
+Canonical record: `docs/architecture/PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md`.
 
 ---
 
@@ -205,33 +94,23 @@ Provide interactive organization and workflow visualization showing divisions, a
 
 Allow operators to inspect, customize, create, validate, test, and manage agents through the local Web UI while preserving canonical Markdown and typed contracts. Customization must not become a hidden privilege-escalation path.
 
----
-
 # Phase 40 — Evidence & Observability
 
 Make the evidence-first architecture visible through inspectable run timelines and evidence detail. Evidence views distinguish facts, observations, inferences, and unresolved uncertainty and expose provenance, confidence, verification state, and supersession/contradiction where applicable.
-
----
 
 # Phase 41 — SI TUI
 
 Provide a first-class terminal operator interface for Termux, Codespaces, SSH, and other terminal environments. The TUI is an SI organization and operations console, not a replacement for a coding harness.
 
----
-
 # Phase 42 — Harness Deployment Center
 
 Make SI organization deployment into supported harnesses understandable, inspectable, and governed. Deployment manifests cannot grant permissions, execute workers, migrate credentials, or bypass governance.
-
----
 
 # Phase 43 — Final v3 Integration & Hardening
 
 Integrate the complete v3 stack and close remaining architecture/security/verification gaps. Final gates cover tests, distribution, Ruff, Control API contracts, Web/TUI checks, organization/catalog consistency, governance/security scanning, evidence integrity, harness conformance, migration/rollback, documentation audit, and adversarial fail-closed checks.
 
 Phase 43 must not be declared complete until final mainline CI evidence is green and current-state documentation matches implementation reality.
-
----
 
 ## v3 completion principle
 
@@ -245,7 +124,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 35 Control API [complete]
  → 36 Web Foundation [complete]
  → 37 Control Center [complete]
- → 38 Visual Graphs
+ → 38 Visual Graphs [complete]
  → 39 Agent Builder
  → 40 Evidence/Observability
  → 41 TUI

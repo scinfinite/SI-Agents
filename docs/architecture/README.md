@@ -5,7 +5,7 @@
 Use these documents in this order when determining project state:
 
 1. **`PHASES.md`** — current implementation status and verification evidence.
-2. **`SI_AGENTS_V3.md`** — future architecture and Phase 38–43 roadmap after Phase 37 completion.
+2. **`SI_AGENTS_V3.md`** — future architecture and Phase 39–43 roadmap after Phase 38 completion.
 3. **Detailed phase documents** — historical contracts, boundaries, and completion evidence.
 4. **`PHASE_1_FOUNDATION.md` / `EXECUTION_BACKENDS.md`** — cross-cutting architectural boundaries; the Phase 2 control-plane contract is consolidated into `PHASE_2_CONTROL_PLANE.md`.
 
@@ -52,6 +52,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 35 | `PHASE_35_CONTROL_API.md` | Complete + CI verified |
 | 36 | `PHASE_36_LOCAL_WEB_FOUNDATION.md` | Complete + CI verified |
 | 37 | `PHASE_37_CONTROL_CENTER.md` | Complete + CI verified |
+| 38 | `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -71,11 +72,12 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_35_CONTROL_API.md` — canonical versioned Control API contract and final verification record.
 - `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical dependency-free local Web boundary and final verification record.
 - `PHASE_37_CONTROL_CENTER.md` — canonical live Control Center contract and final verification record.
+- `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` — canonical visual organization/workflow contract and final verification record.
 - `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining **Phases 38–43**. Phases 29–37 are complete and CI-verified.
+`SI_AGENTS_V3.md` defines the remaining **Phases 39–43**. Phases 29–38 are complete and CI-verified.
 
 ```text
 29 SI Agent Personas       [complete]
@@ -96,7 +98,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
    ↓
 37 Control Center          [complete]
    ↓
-38 Visual Organization / Workflow
+38 Visual Organization / Workflow [complete]
    ↓
 39 Agent Builder
    ↓

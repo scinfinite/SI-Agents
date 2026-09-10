@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–37 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–38 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -33,7 +33,7 @@
 25. Termux Runtime — environment detection, readiness checks, OpenCode/OmniRoute health integration, read-only doctor, sanitized reports, conservative package planning, and workspace validation. **Complete.**
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
 27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, and packaged canonical catalogs. **Complete.**
-28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
+28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, resumable workflow context, atomic storage, and governance. **Complete and CI-verified.**
 29. Complete SI Agent Persona System — **Complete and CI-verified.** Exactly 279 SI-native specialist personas across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, provenance, packaging, and CI verification.
 30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation, dependency-aware composition, manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, and safety boundaries.
 31. Rules, Hooks & Event System — **Complete and CI-verified.** Immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation.
@@ -43,6 +43,7 @@
 35. Control API — **Complete and CI-verified.** Versioned `/api/v1` machine-facing contract, deterministic OpenAPI description, canonical agent/team/organization/workflow/Skill/governance/event/run read models, governed run creation, localhost-only dependency-free HTTP transport, bounded JSON mutations, security response headers, packaged `si-api` launcher, and adversarial HTTP/governance regression coverage.
 36. Local Web Foundation — **Complete and CI-verified.** Dependency-free localhost-first Web server over the Control API, packaged live browser surface, stable `si web`/`si-web` launchers, strict CSP/security headers, deny-by-default CORS, explicit authenticated remote opt-in, bounded JSON mutations, redacted private audit logging, safe errors, graceful shutdown, packaging, and adversarial Web/security regression coverage.
 37. Control Center — **Complete and CI-verified.** Live dependency-free operator UI over the Control API with Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings views; sanitized read-model extensions; strict no-execution browser boundary; OpenAPI synchronization; and browser/read-model regression coverage.
+38. Visual Organization & Workflow — **Complete and CI-verified.** Deterministic graph read model for divisions, teams, agents, Skills, capabilities, permissions, workflows, steps, dependencies, and relationships; interactive dependency-free SVG organization/workflow/security views with filtering, selection, pan/zoom/reset, keyboard access, current control-plane run state, OpenAPI synchronization, and execution-boundary regression coverage.
 
 ## Release targets
 
@@ -51,7 +52,7 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 37:** complete and CI-verified
+- **Post-v2 validation through Phase 38:** complete and CI-verified
 
 ## Phase completion gate
 
@@ -63,7 +64,11 @@ Phase 36 was merged from PR #31 as squash commit `0829e29d7e2b3718e57caf027f9a1c
 
 ## Phase 37 verification record
 
-Phase 37 was merged from PR #33 as squash commit `d54ab5a0e9a0dc5daed72e89bdaf842b8da59078`. Final mainline CI **#840** (`34507154878`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates on that exact main commit, with **441 tests passed**. The documentation-closed state is therefore fully verified on `main`.
+Phase 37 was merged from PR #33 as squash commit `d54ab5a0e9a0dc5daed72e89bdaf842b8da59078`. Final mainline CI **#840** (`34507154878`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates on that exact main commit, with **441 tests passed**. The documentation-closed state was then merged through PR #34 and verified by mainline CI **#842** (`34508033162`).
+
+## Phase 38 verification record
+
+Phase 38 implementation merged from PR #35 as squash commit `657530eefa41794fb425cd0fe38d2aced9bd316d`. Feature CI passed all build, wheel-install, repository-audit, Ruff, and pytest gates. Final mainline CI **#845** (`34508914827`) passed every repository gate on that exact implementation merge commit; setup, checkout, Python/tooling, distribution build, wheel installation, repository audit, Ruff, tests, diagnostics, and cleanup all completed successfully. The implementation is therefore verified on `main` before this documentation closure.
 
 ## Documentation structure
 
@@ -77,8 +82,9 @@ Phase 37 was merged from PR #33 as squash commit `d54ab5a0e9a0dc5daed72e89bdaf84
 - `PHASE_35_CONTROL_API.md` — canonical Control API contract and final verification record.
 - `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical Web foundation contract and final verification record.
 - `PHASE_37_CONTROL_CENTER.md` — canonical Control Center contract and final verification record.
+- `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` — canonical Visual Organization & Workflow contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 38 — Visual Organization & Workflow.**
+**Phase 39 — Agent Builder & Customization.**
