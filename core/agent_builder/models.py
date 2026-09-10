@@ -39,6 +39,10 @@ class ValidationResult:
     agent: dict[str, object] | None = None
     markdown: str | None = None
 
+    def as_dict(self) -> dict[str, object]:
+        return {"valid": self.valid, "errors": list(self.errors), "warnings": list(self.warnings),
+                "agent": self.agent, "markdown": self.markdown}
+
 
 MAX_TEXT = 4000
 MAX_ITEMS = 32
