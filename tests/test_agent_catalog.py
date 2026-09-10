@@ -15,7 +15,7 @@ CATALOG = Path(__file__).parents[1] / "config" / "agent-catalog.json"
 class AgentCatalogTests(unittest.TestCase):
     def test_canonical_catalog_loads_and_validates(self) -> None:
         catalog = load_catalog(CATALOG)
-        self.assertEqual(len(catalog.all_divisions()), 7)
+        self.assertEqual(len(catalog.all_divisions()), 18)
         self.assertEqual(len(catalog.all()), 279)
         self.assertEqual(catalog.validate(), ())
         self.assertTrue(all(agent.status is AgentStatus.CATALOGED for agent in catalog.all()))
@@ -23,7 +23,7 @@ class AgentCatalogTests(unittest.TestCase):
     def test_catalog_selection_is_capability_and_permission_aware(self) -> None:
         catalog = load_catalog(CATALOG)
         selected = catalog.select(
-            division="engineering",
+            division="si-engineering",
             required_capabilities=("filesystem",),
             required_permissions=("repository_read",),
             environment="codespace",
@@ -43,7 +43,7 @@ class AgentCatalogTests(unittest.TestCase):
 
     def test_duplicate_division_and_agent_are_rejected(self) -> None:
         catalog = AgentCatalog()
-        division = Division("engineering", "Engineering", "Build software")
+        division = Division("si-engineering", "SI Engineering Forge", "Build and maintain governed software systems")
         catalog.register_division(division)
         with self.assertRaisesRegex(ValueError, "Duplicate division"):
             catalog.register_division(division)
@@ -51,7 +51,7 @@ class AgentCatalogTests(unittest.TestCase):
         agent = AgentDefinition(
             id="example-agent",
             name="Example Agent",
-            division="engineering",
+            division="si-engineering",
             description="Build software",
             responsibilities=("implement",),
             deliverables=("change",),
@@ -67,7 +67,7 @@ class AgentCatalogTests(unittest.TestCase):
             path = Path(directory) / "catalog.json"
             path.write_text(
                 '{"version":1,"divisions":[{"id":"engineering","name":"Engineering","description":"Build"}],'
-                '"agents":[{"id":"bad","name":"Bad","division":"engineering","description":"Bad",'
+                '"agents":[{"id":"bad","name":"Bad","division":"si-engineering","description":"Bad",'
                 '"responsibilities":["x"],"deliverables":["x"],"success_criteria":["x"],"boundaries":["x"],'
                 '"status":"unknown"}]}',
                 encoding="utf-8",

@@ -9,7 +9,7 @@ TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
 
 def test_shipped_repository_has_no_external_project_branding() -> None:
     for path in ROOT.rglob("*"):
-        if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:
+        if not path.is_file() or ".git" in path.parts or ".ci-wheel-venv" in path.parts or path.suffix not in TEXT_SUFFIXES:
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
         assert not any(term in text for term in FORBIDDEN), path
@@ -27,5 +27,5 @@ def test_temporary_phase29_artifacts_are_absent() -> None:
         "phase29-test-debug.txt",
     }
     for path in ROOT.rglob("*"):
-        if path.is_file() and path.name in forbidden_names:
+        if path.is_file() and ".ci-wheel-venv" not in path.parts and path.name in forbidden_names:
             raise AssertionError(path)

@@ -50,8 +50,8 @@ Verify deterministic parsing.
 - Preserve outputs
 """
 
-CANONICAL_ID = "engineering--engineering-backend-architect"
-CANONICAL_NAME = "Engineering Engineering Backend Architect"
+CANONICAL_ID = "si-engineering-ai-engineer"
+CANONICAL_NAME = "SI Engineering Forge — AI Engineer"
 
 
 def test_parse_persona_is_deterministic_and_typed() -> None:
@@ -99,6 +99,7 @@ def test_compiler_preserves_governance_fields() -> None:
     catalog = load_catalog("config/agent-catalog.json")
     source = PERSONA.replace("example-agent", CANONICAL_ID)
     source = source.replace("Example Agent", CANONICAL_NAME)
+    source = source.replace("division: engineering", "division: si-engineering")
     persona = parse_persona(source)
     compiled = compile_persona(persona, catalog.get(CANONICAL_ID))
     base = catalog.get(CANONICAL_ID)
@@ -123,6 +124,7 @@ def test_registry_detects_duplicate_identity_and_catalog_conflicts(tmp_path) -> 
         registry.register(first)
     source = PERSONA.replace("example-agent", CANONICAL_ID)
     source = source.replace("Example Agent", CANONICAL_NAME)
+    source = source.replace("division: engineering", "division: si-engineering")
     conflict = parse_persona(source)
     registry = PersonaRegistry()
     registry.register(conflict)
