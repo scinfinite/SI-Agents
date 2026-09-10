@@ -1,7 +1,8 @@
 # Phase 31 — Rules, Hooks & Events
 
-**Status:** Complete pending final mainline CI evidence  
-**Scope:** explicit policy/event layer spanning agents, Skills, tools, workflows, runtime, handoffs, and verification
+**Status:** Complete + CI verified  
+**Merged to `main`:** `32db86c560053e831b0740c5614d63bf64d3ce6b` via PR #18  
+**Final CI verification:** run **#735** on the exact Phase 31 source tree passed successfully
 
 ## Delivered
 
@@ -71,22 +72,19 @@ Tests cover:
 
 Current external engineering pattern research was reviewed for matcher-specific hooks, explicit runtime profiles, actionable hook failures, lifecycle state, continuous QA loops, evidence-based phase gates, reuse-before-creation, and fail-path handling. SI-Agents independently implements these ideas under its existing typed governance and local-first architecture rather than copying external code, prompts, branding, or architecture.
 
-## Verification requirements
+## Final verification
 
-The Phase 31 gate requires:
+Final CI run **#735** completed successfully on the exact Phase 31 source tree before merge. The job completed all required gates:
 
-- typed event vocabulary and bounded immutable envelopes;
-- explicit Rule registration and deterministic evaluation;
-- safe declarative Rule loading;
-- explicit Hook registration and bounded execution;
-- fail-closed dangerous-operation handling;
-- Skill event integration;
-- regression and adversarial tests;
-- distribution/package coverage;
-- Ruff and complete pytest;
-- documentation/source-of-truth synchronization;
-- successful final mainline CI.
+- distribution build;
+- wheel installation verification;
+- SI repository audit;
+- Ruff;
+- complete pytest suite;
+- diagnostic artifact generation.
+
+The pytest diagnostic reported **381 passed** tests in **6.16s**. The earlier CI run that exposed Ruff issues was treated as a failed verification, fixed, and rerun; run #735 is the passing final verification.
 
 ## Exit gate
 
-Phase 32 may begin only after final mainline CI is green and current documentation reports the verified Rules/Hooks/Events contract and safety boundaries.
+Phase 31 is closed. Phase 32 — Memory & Knowledge — is now the next implementation phase.

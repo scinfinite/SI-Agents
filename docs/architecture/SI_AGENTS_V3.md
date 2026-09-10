@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–31 implemented; Phases 19–30 CI-verified and Phase 31 awaiting final mainline CI  
+**Baseline:** SI-Agents v2.0 + Phases 19–31 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -110,7 +110,7 @@ A Skill defines identity/version, purpose, inputs/outputs, prerequisites, workfl
 
 # Phase 31 — Rules, Hooks & Event System
 
-**State: Implementation complete; final mainline CI pending.**
+**State: Complete + CI verified.**
 
 Phase 31 adds an explicit policy/event layer spanning agents, Skills, tools, workflows, runtime, handoffs, and verification.
 
@@ -132,6 +132,8 @@ Implemented properties:
 Rules and Hooks never grant permissions, credentials, tools, network access, or execution authority. No arbitrary shell/command hook registration is supported.
 
 The canonical implementation record is `docs/architecture/PHASE_31.md` and the canonical declarative Rule catalog is `config/rules.v1.json`.
+
+Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and the full pytest suite (**381 passed**) on the exact Phase 31 source tree before merge.
 
 ---
 
@@ -306,7 +308,7 @@ The v3 program is layered and must be completed in order:
 ```text
 29 Personas [complete]
  → 30 Skills [complete]
- → 31 Rules/Hooks/Events [implementation complete; CI pending]
+ → 31 Rules/Hooks/Events [complete]
  → 32 Memory/Knowledge
  → 33 Security/Governance
  → 34 Organization

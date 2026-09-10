@@ -61,6 +61,6 @@ Markdown is documentation/configuration, not an authority boundary. Imported or 
 
 ## Current baseline
 
-As of the latest branch state, SI-Agents has completed **Phases 1–30** with mainline CI verification. Phase 31 implementation is complete and its final mainline CI run is the remaining closure gate.
+As of the latest branch state, SI-Agents has completed **Phases 1–31** with CI verification. Phase 31's final CI run #735 passed the repository audit, Ruff, distribution/wheel checks, and full pytest (**381 passed**).
 
-**Next implementation after Phase 31 closure: Phase 32 — Memory & Knowledge.**
+**Next implementation: Phase 32 — Memory & Knowledge.**

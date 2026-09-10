@@ -45,7 +45,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 28 | `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` | Complete + CI verified |
 | 29 | `PHASE_29.md` | Complete + CI verified |
 | 30 | `PHASE_30.md` | Complete + CI verified |
-| 31 | `PHASE_31.md` | Implementation complete; final mainline CI pending |
+| 31 | `PHASE_31.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -63,14 +63,14 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29 and 30 are complete; Phase 31 implementation is complete pending final mainline CI.
+`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29–31 are complete and CI-verified.
 
 ```text
 29 SI Agent Personas       [complete]
    ↓
 30 Skills                  [complete]
    ↓
-31 Rules / Hooks / Events  [implementation complete; CI pending]
+31 Rules / Hooks / Events  [complete]
    ↓
 32 Memory / Knowledge
    ↓
