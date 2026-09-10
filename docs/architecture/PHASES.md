@@ -43,7 +43,7 @@ Phase 20 establishes the first canonical organization layer. `config/agent-catal
 
 Catalog membership and selection do not grant permissions, invoke workers, spawn harnesses, or bypass governance. Runtime authorization remains with the existing permission and governance layers. This keeps organization data separate from execution authority and preserves the Phase 17/18 boundaries.
 
-Verification evidence: the Phase 20 test suite covers canonical loading, catalog consistency, capability/permission selection, skill/harness/environment selection, duplicate rejection, and invalid status rejection. CI must verify the full existing suite, build, isolated installation/import, and lint before Phase 20 is considered complete.
+Verification evidence: the Phase 20 test suite covers canonical loading, catalog consistency, capability/permission selection, skill/harness/environment selection, duplicate rejection, and invalid status rejection. Final main CI run **#440** completed successfully on commit `8a53078f8a1f745ab49813d3c27d71cefd271b25`, verifying distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Final PR verification run **#439** also completed successfully.
 
 Phase 20 intentionally does **not** claim multi-agent orchestration, dynamic team execution, external harness adapters, OpenCode/OmniRoute integration, environment installers, automatic persona generation, or self-modifying agent promotion. Those remain separate future workstreams.
 
