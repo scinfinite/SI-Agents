@@ -43,7 +43,10 @@ class HandoffEnvelope:
             raise ValueError("unsupported handoff schema")
         if not self.handoff_id.strip():
             raise ValueError("handoff_id is required")
-        if self.target_environment == self.source_environment and self.source_environment != "unknown":
+        if (
+            self.target_environment == self.source_environment
+            and self.source_environment != "unknown"
+        ):
             raise ValueError("source and target environments must differ for a cross-environment handoff")
         if any(value < 0 for value in self.attempts.values()):
             raise ValueError("handoff attempts cannot be negative")
@@ -51,7 +54,7 @@ class HandoffEnvelope:
         _reject_secret_keys(self.results)
 
     def payload(self) -> dict[str, Any]:
-        data = {
+        return {
             "schema": self.schema,
             "handoff_id": self.handoff_id,
             "source_environment": self.source_environment,
@@ -70,10 +73,11 @@ class HandoffEnvelope:
             "evidence_ids": list(self.evidence_ids),
             "created_at": self.created_at,
         }
-        return data
 
     def digest(self) -> str:
-        encoded = json.dumps(self.payload(), sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        encoded = json.dumps(
+            self.payload(), sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode()
         return hashlib.sha256(encoded).hexdigest()
 
     def as_dict(self) -> dict[str, Any]:
@@ -92,13 +96,13 @@ class HandoffEnvelope:
         fields = dict(payload)
         fields.pop("sha256", None)
         fields.pop("status", None)
-        envelope = cls(
-            **{key: fields.get(key) for key in (
-                "schema", "handoff_id", "source_environment", "source_workspace", "target_environment",
-                "project_id", "team_id", "execution_id", "session_id", "objective", "task_status",
-                "attempts", "context", "results", "checkpoints", "evidence_ids", "created_at"
-            )}
+        names = (
+            "schema", "handoff_id", "source_environment", "source_workspace",
+            "target_environment", "project_id", "team_id", "execution_id",
+            "session_id", "objective", "task_status", "attempts", "context",
+            "results", "checkpoints", "evidence_ids", "created_at",
         )
+        envelope = cls(**{key: fields.get(key) for key in names})
         if supplied_digest != envelope.digest():
             raise ValueError("handoff integrity check failed")
         return cls(**{**envelope.__dict__, "status": HandoffStatus.VALID})
@@ -107,7 +111,9 @@ class HandoffEnvelope:
 def _reject_secret_keys(value: object) -> None:
     if not isinstance(value, dict):
         return
-    secret_terms = ("api_key", "apikey", "token", "password", "secret", "credential", "authorization")
+    secret_terms = (
+        "api_key", "apikey", "token", "password", "secret", "credential", "authorization"
+    )
     for key, item in value.items():
         normalized = str(key).lower().replace("-", "_")
         if any(term in normalized for term in secret_terms):
