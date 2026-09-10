@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–32 implemented and CI-verified; Phase 33 implementation complete pending final CI closure  
+**Baseline:** SI-Agents v2.0 + Phases 19–33 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -12,23 +12,9 @@
 
 SI-Agents v3 evolves the verified runtime/governance foundation into a complete, inspectable, customizable **agent organization and control system**.
 
-The v3 layer combines:
+The v3 layer combines human-authored agent personas, typed machine contracts, portable Skills, scoped Rules/Hooks/Events, scoped Memory/Knowledge, teams/workflows, Security/Governance, evidence-first execution/observability, harness interoperability, Termux/Codespaces support, localhost Web Control Center, keyboard-first TUI, and a stable Control API shared by operator surfaces.
 
-- human-authored agent personas
-- typed machine contracts
-- portable Skills
-- scoped Rules, Hooks, and Events
-- scoped Memory and Knowledge
-- teams and workflows
-- Security and Governance
-- evidence-first execution and observability
-- harness interoperability
-- Termux and GitHub Codespaces support
-- localhost Web Control Center
-- keyboard-first terminal TUI
-- a stable Control API shared by operator surfaces
-
-SI-Agents does not replace OpenCode, Codex, Claude Code, Cline, or other harnesses. It is the organization, intelligence, governance, verification, and deployment layer around them.
+SI-Agents does not replace coding harnesses. It is the organization, intelligence, governance, verification, and deployment layer around them.
 
 **OmniRoute remains the model/provider routing authority.** SI-Agents must not recreate provider quota, pricing, fallback, circuit-breaker, or model-routing authority around OmniRoute.
 
@@ -52,7 +38,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 adds the explicit event/policy layer without creating a parallel permission authority. Phase 32 adds scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 makes governance and security scanning explicit without granting authority to configuration or scanner findings.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings.
 
 ### Web and TUI are views, not authorities
 
@@ -104,13 +90,11 @@ Canonical architecture record: `docs/architecture/PHASE_29_AGENT_PERSONA.md`.
 
 Canonical architecture record: `docs/architecture/PHASE_30_PORTABLE_SKILLS.md`.
 
-**Invariant:** Skill selection never grants permissions. Skills request capabilities; governance independently authorizes operations.
-
 ---
 
 # Phase 31 — Rules, Hooks & Event System
 
-**State: Complete + CI verified.** Explicit Rules, bounded in-process Hooks, immutable Events, fail-closed dangerous-event handling, Skill lifecycle integration, declarative Rule catalog loading, and adversarial regression coverage are implemented. Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and full pytest (**381 passed**) before merge.
+**State: Complete + CI verified.** Explicit Rules, bounded in-process Hooks, immutable Events, fail-closed dangerous-event handling, Skill lifecycle integration, declarative Rule catalog loading, and adversarial regression coverage are implemented. Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and full pytest (**381 passed**).
 
 Canonical architecture record: `docs/architecture/PHASE_31_RULES_HOOKS_EVENTS.md`.
 
@@ -118,43 +102,17 @@ Canonical architecture record: `docs/architecture/PHASE_31_RULES_HOOKS_EVENTS.md
 
 # Phase 32 — Memory & Knowledge
 
-**State: Complete + CI verified.**
+**State: Complete + CI verified.** Durable, provenance-aware Memory and source-backed Knowledge span task/project/team/agent/division/organization/global scopes with evidence-gated promotion, deterministic retrieval, atomic schema-versioned persistence, lifecycle events, supersession/contradiction tracking, and adversarial regression coverage.
 
-Phase 32 delivers durable, provenance-aware memory and source-backed knowledge across:
+Feature CI **#762** passed all gates with **392 passed**. Mainline CI **#769** passed the same gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac` with **392 passed**; naming/documentation merge `c1937c70348e7b308c8274d2e3ce71cb9a07f0d8` was verified by mainline CI **#777**.
 
-```text
-Task → Project → Team → Agent → Division → Organization → Global
-```
-
-Lifecycle:
-
-```text
-Observation → Candidate → Evidence → Validation → Promotion → Scoped memory/knowledge
-```
-
-Implemented properties:
-
-- immutable scoped MemoryEntry and MemoryEvidence contracts;
-- scope identity for task/project/team/agent/division/organization;
-- provenance, confidence, lifecycle, expiry, supersession, and contradiction tracking;
-- source-backed KnowledgeEntry records requiring verified evidence;
-- fail-closed one-scope-at-a-time promotion;
-- deterministic context-aware memory and knowledge retrieval;
-- atomic schema-versioned JSON persistence with backward-compatible list loading;
-- explicit MemoryService lifecycle coordination;
-- memory lifecycle EventBus integration;
-- security boundary preserving Rules, Hooks, PermissionEngine, and GovernanceEngine authority;
-- targeted regression/adversarial coverage.
-
-Feature-branch CI run **#762** passed repository audit, Ruff, distribution/wheel verification, and complete pytest (**392 passed in 5.95s**). Final mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`, with **392 passed in 5.47s**.
-
-The canonical implementation record is `docs/architecture/PHASE_32_MEMORY_KNOWLEDGE.md`.
+Canonical record: `docs/architecture/PHASE_32_MEMORY_KNOWLEDGE.md`.
 
 ---
 
 # Phase 33 — Security & Governance Center
 
-**State: Implementation complete; final mainline CI verification pending.**
+**State: Complete + CI verified.**
 
 Phase 33 makes SI governance a first-class inspectable system and operator-facing core service.
 
@@ -171,7 +129,9 @@ Declared capabilities require explicit scoped permissions. Credential-bearing ex
 
 `config/governance.v1.json` is validated and packaged as the declarative baseline. `GovernanceScanner` provides deterministic, read-only findings for secret-like literals, broad permissions, unsafe hook commands, suspicious authority-bearing content, and unpinned package execution. Findings carry severity, evidence, remediation guidance, and auto-fixability metadata; scanning never mutates configuration.
 
-Canonical architecture record: `docs/architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`.
+Feature CI **#785** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite (**402 passed**). The implementation was merged to `main` as `765782377def8173ea235f1bbb3f8c3f9c194767`; mainline CI **#786** passed all gates on that exact merge commit.
+
+Canonical record: `docs/architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`.
 
 ---
 
@@ -253,7 +213,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 30 Skills [complete]
  → 31 Rules/Hooks/Events [complete]
  → 32 Memory/Knowledge [complete]
- → 33 Security/Governance [implementation complete]
+ → 33 Security/Governance [complete]
  → 34 Organization
  → 35 Control API
  → 36 Web Foundation
