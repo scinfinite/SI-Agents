@@ -1,8 +1,8 @@
 """Dependency-free health and readiness checks."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable
 
 
 class HealthStatus(str, Enum):
