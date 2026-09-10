@@ -2,7 +2,6 @@ from collections.abc import Callable, Iterable
 
 from core.learning.models import EvaluationResult, EvidenceItem, ImprovementProposal
 
-
 Benchmark = Callable[[ImprovementProposal], tuple[float, bool, Iterable[EvidenceItem]]]
 Regression = Callable[[ImprovementProposal], tuple[bool, Iterable[str], Iterable[EvidenceItem]]]
 Safety = Callable[[ImprovementProposal], tuple[bool, Iterable[EvidenceItem]]]
@@ -11,8 +10,13 @@ Safety = Callable[[ImprovementProposal], tuple[bool, Iterable[EvidenceItem]]]
 class ImprovementEvaluator:
     """Runs independent gates; a missing gate fails closed."""
 
-    def __init__(self, *, benchmark: Benchmark | None = None,
-                 regression: Regression | None = None, safety: Safety | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        benchmark: Benchmark | None = None,
+        regression: Regression | None = None,
+        safety: Safety | None = None,
+    ) -> None:
         self.benchmark = benchmark
         self.regression = regression
         self.safety = safety
@@ -40,5 +44,9 @@ class ImprovementEvaluator:
             score_before=score_before,
             score_after=score_after,
             regressions=tuple(regressions),
-            evidence=tuple(benchmark_evidence) + tuple(regression_evidence) + tuple(safety_evidence),
+            evidence=(
+                tuple(benchmark_evidence)
+                + tuple(regression_evidence)
+                + tuple(safety_evidence)
+            ),
         )
