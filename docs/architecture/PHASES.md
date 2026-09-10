@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–24 implemented and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–25 implemented and CI-verified.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -26,6 +26,7 @@
 22. Universal Harness Integration — versioned language-neutral wire contract, structural callback bridge, adapter discovery, organization deployment manifests, and conformance coverage. **Complete.**
 23. OpenCode Integration — headless-server adapter, session continuity, normalized messages/events, cancellation, safe authentication handling, and distribution/CI verification. **Complete.**
 24. OmniRoute Integration — OpenAI-compatible gateway transport, deterministic model discovery, secure credential handling, fail-closed health/failure classification, correlation/session forwarding, and a governed delegation boundary that keeps provider/model routing authoritative in OmniRoute. **Complete.**
+25. Termux Runtime — environment detection, readiness checks, OpenCode/OmniRoute health integration, read-only doctor, sanitized reports, conservative package planning, and workspace validation. **Complete.**
 
 ## Release targets
 
@@ -40,10 +41,21 @@
 - **Post-v2 interoperability:** Phase 22 — **complete**
 - **Post-v2 OpenCode:** Phase 23 — **complete**
 - **Post-v2 model gateway:** Phase 24 — **complete**
+- **Post-v2 Termux runtime:** Phase 25 — **complete**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 25 completion
+
+Phase 25 makes SI-Agents inspectable and operationally ready inside Termux without turning readiness checks into an implicit installer or command-execution authority. `core/environments/models.py` defines vendor-neutral environment kinds, statuses, and sanitized requirement/report contracts. `core/environments/termux.py` implements Termux detection, required command checks for Python/Git/curl/OpenSSH/pkg, OpenCode readiness, optional fail-closed OmniRoute health, read-only workspace validation, a conservative package plan, and a direct doctor command available as `python -m core.environments.termux`.
+
+The doctor supports human-readable and `--json` output. Exit code `0` means ready, `2` means degraded, and `3` means unsupported. JSON reports expose only readiness metadata and never emit API-key values. The runtime never installs packages, mutates OpenCode configuration, persists OmniRoute credentials, executes arbitrary commands, or bypasses Phase 13 governance and Phase 24 OmniRoute authority.
+
+The Termux runtime intentionally validates the presence of OpenCode rather than pinning a harness release. The package plan is descriptive only and currently covers `pkg update` plus `git`, `python`, `curl`, and `openssh`. Explicit installation/configuration remains the later `si` setup layer. The detailed contract is documented in `docs/architecture/PHASE_25_TERMUX_RUNTIME.md`.
+
+Verification evidence: PR #13 CI run **#485** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite with **319 tests passing**. An initial CI attempt (#482) found a Ruff SIM114 issue; it was fixed and the corrected run passed. The PR was merged as commit **cf1962870c979ebbf21fac5b6f3bc304f7af76ee**. Mainline CI run **#486** was then triggered on the merge commit; the post-merge code verification is complete before the documentation-only status synchronization below.
 
 ## Phase 24 completion
 
