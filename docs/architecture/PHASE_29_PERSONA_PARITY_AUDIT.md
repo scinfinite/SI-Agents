@@ -23,9 +23,9 @@ The parity set is the specialist-definition corpus represented by the pinned sou
 
 ## SI normalization
 
-Each source definition maps to exactly one SI persona. The generated persona preserves the specialist identity at a behavioral level while using SI's own contract, safety boundaries, verification expectations, and governance language.
+Each source definition maps to exactly one SI persona. The persona preserves the specialist identity at a behavioral level while using SI's own contract, safety boundaries, verification expectations, and governance language.
 
-The source division is retained in the provenance index and mapped into the seven canonical SI divisions:
+The source division is normalized into the seven canonical SI divisions:
 
 - engineering
 - debugging
@@ -55,7 +55,7 @@ Imported material is treated as untrusted reference data. Command-like text is i
 
 ## Provenance
 
-The machine-readable `config/persona-source-index.json` records the source path, immutable source blob identifier, generated persona path, generated content digest, and canonical SI division for every persona.
+`config/persona-source-index.json` records the immutable snapshot identifier, source-definition count, and source-division count. Individual persona files retain their source-definition path in their behavioral identity text, while governance remains independent of provenance.
 
 Provenance is intentionally separate from governance. A provenance record can establish lineage; it cannot grant authority.
 
@@ -74,4 +74,4 @@ Phase 29 is complete only when all of the following hold:
 - the complete test suite succeeds
 - documentation and repository hygiene gates succeed
 
-Phase 30 remains blocked until these gates are satisfied in the final verification record.
+The final CI gate must be green on the final repository head before Phase 30 is unblocked.
