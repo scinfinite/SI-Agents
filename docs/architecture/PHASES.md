@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–25 implemented and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–27 implemented in code; Phase 27 CI verification is in progress on PR #14.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -27,6 +27,8 @@
 23. OpenCode Integration — headless-server adapter, session continuity, normalized messages/events, cancellation, safe authentication handling, and distribution/CI verification. **Complete.**
 24. OmniRoute Integration — OpenAI-compatible gateway transport, deterministic model discovery, secure credential handling, fail-closed health/failure classification, correlation/session forwarding, and a governed delegation boundary that keeps provider/model routing authoritative in OmniRoute. **Complete.**
 25. Termux Runtime — environment detection, readiness checks, OpenCode/OmniRoute health integration, read-only doctor, sanitized reports, conservative package planning, and workspace validation. **Complete.**
+26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
+27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode OmniRoute configuration, and governed team execution. **Implementation complete; CI verification pending.**
 
 ## Release targets
 
@@ -42,10 +44,32 @@
 - **Post-v2 OpenCode:** Phase 23 — **complete**
 - **Post-v2 model gateway:** Phase 24 — **complete**
 - **Post-v2 Termux runtime:** Phase 25 — **complete**
+- **Post-v2 Codespaces runtime:** Phase 26 — **complete**
+- **Post-v2 CLI/setup:** Phase 27 — **implementation complete; CI verification pending**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 27 completion
+
+Phase 27 adds the `si` console entry point and a single user-facing control surface over the existing SI-Agents contracts. `si doctor` delegates to the Termux/Codespaces readiness contracts; `si status` reports environment and non-secret configuration; `si agents` and `si teams` load the canonical Phase 20/21 catalogs; `si setup` provides a dry-run by default and requires `--apply` for local mutation; `si update` requires `--apply` before package upgrade; and `si run` executes canonical teams through `TeamEngine` without creating a second permission system.
+
+The CLI stores only non-secret configuration at `~/.config/si-agents/config.json` by default, with atomic replacement and restrictive permissions. No API key, OpenCode password, provider credential, or auth token is stored. OpenCode configuration is updated only when explicitly requested and only for a JSON configuration that can be parsed safely; JSONC is refused rather than destructively rewritten. OmniRoute remains the model/provider routing authority and an explicit model ID is required before adding a model to the OpenCode OmniRoute provider configuration.
+
+Setup execution is limited to commands supplied by the existing environment runtime plan and checked against an allowlist. The CLI never accepts arbitrary shell strings. Read-only operations do not mutate the host. Team execution uses existing worker, runtime, and governance boundaries; catalog-only agents are not made executable by the CLI.
+
+Detailed architecture: `docs/architecture/PHASE_27_SI_CLI.md`.
+
+Verification evidence is pending until PR #14 CI completes. The acceptance target is distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite, followed by documentation synchronization after any discovered defects are fixed.
+
+## Phase 26 completion
+
+Phase 26 adds the equivalent read-only readiness boundary for GitHub Codespaces. `core/environments/codespace.py` detects Codespaces, validates Python/Git/curl/OpenSSH/workspace requirements, optionally requires GitHub CLI and OmniRoute, validates OpenCode readiness, and exposes a non-executing toolchain plan plus sanitized doctor output. Exit codes remain `0` ready, `2` degraded, and `3` unsupported.
+
+The Codespaces runtime never creates/configures a Codespace, installs packages, mutates OpenCode configuration, persists credentials, or executes arbitrary commands. Cross-environment synchronization and the user-facing `si` setup layer remain separate responsibilities.
+
+Verification evidence: mainline CI run **#494** passed distribution build, isolated wheel installation/import, Ruff, and the full pytest suite with **327 tests passing** after an initial #493 Ruff F841 defect was fixed.
 
 ## Phase 25 completion
 
@@ -53,9 +77,9 @@ Phase 25 makes SI-Agents inspectable and operationally ready inside Termux witho
 
 The doctor supports human-readable and `--json` output. Exit code `0` means ready, `2` means degraded, and `3` means unsupported. JSON reports expose only readiness metadata and never emit API-key values. The runtime never installs packages, mutates OpenCode configuration, persists OmniRoute credentials, executes arbitrary commands, or bypasses Phase 13 governance and Phase 24 OmniRoute authority.
 
-The Termux runtime intentionally validates the presence of OpenCode rather than pinning a harness release. The package plan is descriptive only and currently covers `pkg update` plus `git`, `python`, `curl`, and `openssh`. Explicit installation/configuration remains the later `si` setup layer. The detailed contract is documented in `docs/architecture/PHASE_25_TERMUX_RUNTIME.md`.
+The Termux runtime intentionally validates the presence of OpenCode rather than pinning a harness release. The package plan is descriptive only and currently covers `pkg update` plus `git`, `python`, `curl`, and `openssh`. Explicit installation/configuration is provided by the Phase 27 `si` setup layer. The detailed contract is documented in `docs/architecture/PHASE_25_TERMUX_RUNTIME.md`.
 
-Verification evidence: PR #13 CI run **#485** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite with **319 tests passing**. An initial CI attempt (#482) found a Ruff SIM114 issue; it was fixed and the corrected run passed. The PR was merged as commit **cf1962870c979ebbf21fac5b6f3bc304f7af76ee**. Mainline CI run **#486** was then triggered on the merge commit; the post-merge code verification is complete before the documentation-only status synchronization below.
+Verification evidence: PR #13 CI run **#485** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite with **319 tests passing**. An initial CI attempt (#482) found a Ruff SIM114 issue; it was fixed and the corrected run passed. The PR was merged as commit **cf1962870c979ebbf21fac5b6f3bc304f7af76ee**. Mainline CI run **#486** passed after merge.
 
 ## Phase 24 completion
 
@@ -63,7 +87,7 @@ Phase 24 adds an external OmniRoute model/provider gateway without creating a se
 
 `core/provider_intelligence/omniroute_router.py` adds a thin invocation boundary that delegates model/provider routing to OmniRoute. It rejects SI-side cost/latency constraints that cannot be independently verified and rejects `auto` when an SI model allowlist would be required. This avoids shadow pricing, routing, fallback, or circuit-breaker logic around OmniRoute.
 
-Phase 24 intentionally stops before Termux/Codespace installation, the `si` CLI, persistent credential/config management, OpenCode configuration mutation, streaming normalization, cross-environment handoff, and automatic paid-provider activation. Those remain later phases or deployment responsibilities.
+Phase 24 intentionally stops before Termux/Codespace installation, the `si` CLI, persistent credential/config management, OpenCode configuration mutation, streaming normalization, cross-environment handoff, and automatic paid-provider activation. Those were subsequent phases.
 
 The detailed contract is documented in `docs/architecture/PHASE_24_OMNIROUTE_INTEGRATION.md`.
 
@@ -75,8 +99,6 @@ Phase 23 adds the first vendor-specific harness adapter on top of the Phase 22 u
 
 The adapter advertises only capabilities it currently implements: session continuity, tool calls, structured output, and cancellation. Streaming is deliberately fail-closed until OpenCode's SSE event stream can be normalized into the universal event contract. Optional HTTP Basic authentication is accepted in memory only; SI-Agents does not persist OpenCode credentials or provider secrets. Existing runtime registration and Phase 13 governance remain authoritative.
 
-Phase 23 deliberately stops before OmniRoute/model routing, Termux/Codespace installers, the `si` CLI, cross-environment handoff, or additional vendor adapters. The detailed contract is documented in `docs/architecture/PHASE_23_OPENCODE_INTEGRATION.md`.
-
 Verification evidence: PR #11 CI run **#470** passed distribution build, isolated wheel installation/import including `adapters.opencode`, Ruff, and the complete pytest suite with **299 tests passing**. The PR was merged as commit **bf955386a4b6dff39161af77ef01cb76c1db1246**. Mainline CI run **#471** subsequently passed build, wheel verification, Ruff, and the full pytest suite with **299 tests passing**.
 
 ## Phase 22 completion
@@ -84,8 +106,6 @@ Verification evidence: PR #11 CI run **#470** passed distribution build, isolate
 Phase 22 extends the Phase 17 runtime boundary without coupling the core to a vendor harness. `core/runtime/wire.py` defines the versioned `si.runtime.v1` JSON-compatible envelope; `core/runtime/bridge.py` provides a callback-based adapter bridge and normalized metadata discovery; and `core/runtime/deployment.py` provides a deterministic organization exposure manifest for Phase 20/21 agents, teams, skills, permissions, and capabilities.
 
 Deployment manifests are descriptive only. They do not enable harnesses, grant permissions, invoke workers, bypass governance, or install configuration. The existing deny-by-default harness registry, session isolation, capability checks, and governance decision remain authoritative.
-
-Phase 22 deliberately stops before vendor-specific integration. OpenCode, Codex, Claude Code, Cline, Antigravity, OmniRoute, Termux, Codespaces, and installation/configuration workflows remain subsequent phases or deployment responsibilities.
 
 Verification evidence: PR #7 CI run **#465** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite with **293 tests passing**. The PR was merged as commit **4daa68732ddd515b5033ec3a1516be418c0bf4fb**. Mainline CI run **#466** subsequently passed the same build, wheel verification, Ruff, and full test suite on `main`.
 
@@ -95,45 +115,33 @@ Phase 21 adds the executable organization/team layer on top of Phase 20. `config
 
 The workflow engine schedules a dependency DAG deterministically, limits concurrency with team-level `max_parallelism`, supports explicit shared or isolated task context, uses `AgentResult.handoff` for portable handoffs, bounds retries, supports explicit escalation to declared team members, blocks downstream work after dependency failure, supports cooperative cancellation, and records ordered workflow events plus a final evidence checkpoint.
 
-Team membership does not grant permissions or governance authority. Workers are injected into the engine and remain responsible for their existing permission checks; the existing governance/runtime layers remain authoritative. This preserves the separation established by Phases 13, 17, and 18.
-
-The canonical `engineering-repair` workflow models debugger → developer → tester sequencing with evidence and verification gates. The acceptance suite covers dependency handoff, shared/isolated context, bounded parallelism, retry, escalation, verification/evidence gates, blocked downstream work, cancellation, cycle rejection, duplicate team rejection, and canonical catalog loading.
-
-Final verification evidence: CI run **#450** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite, with **284 tests passing**. The final completion fixes included enforcing isolated-context non-publication and keeping verification gates active during escalation.
-
-Phase 21 intentionally does **not** claim external harness adapters, OpenCode/OmniRoute integration, Claude Code/Codex/Cline/Antigravity adapters, Termux/Codespace installers, model/quota routing, automatic persona generation, self-modifying promotion, or forced termination of arbitrary workers. Those remain later phases or deployment responsibilities. The detailed contract is documented in `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md`.
+The canonical `engineering-repair` workflow models debugger → developer → tester sequencing with evidence and verification gates. Final CI run **#450** passed with **284 tests passing** after isolated-context publication and escalation-gate fixes.
 
 ## Phase 20 completion
 
-Phase 20 establishes the first canonical organization layer. `config/agent-catalog.json` is the source of truth for 7 divisions and 12 agent definitions. `core/organization` provides typed definitions, lifecycle status, duplicate-safe registration, deterministic lookup/grouping, and selection by skills, capabilities, permissions, harness, environment, and status. The loader uses only the Python standard library. Implemented roles explicitly reference their existing Python workers; catalog-only roles remain declarative and are not presented as executable.
+Phase 20 establishes the first canonical organization layer. `config/agent-catalog.json` is the source of truth for 7 divisions and 12 agent definitions. `core/organization` provides typed definitions, lifecycle status, duplicate-safe registration, deterministic lookup/grouping, and selection by skills, capabilities, permissions, harness, environment, and status. Implemented roles reference existing Python workers; catalog-only roles remain declarative.
 
-Catalog membership and selection do not grant permissions, invoke workers, spawn harnesses, or bypass governance. Runtime authorization remains with the existing permission and governance layers. This keeps organization data separate from execution authority and preserves the Phase 17/18 boundaries.
-
-Verification evidence: the Phase 20 test suite covers canonical loading, catalog consistency, capability/permission selection, skill/harness/environment selection, duplicate rejection, and invalid status rejection. Final main CI run **#442** completed successfully on the Phase 20 mainline, verifying distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Final PR verification was also successful.
-
-Phase 20 intentionally does **not** claim multi-agent orchestration, dynamic team execution, external harness adapters, OpenCode/OmniRoute integration, environment installers, automatic persona generation, or self-modifying agent promotion. Those remain separate future workstreams.
+Verification evidence: final main CI run **#442** passed distribution build, isolated wheel installation/import, Ruff, and the full pytest suite.
 
 ## Phase 19 completion
 
-Phase 19 established the evidence-backed boundary for the next SI-Agents evolution. The audit confirmed that the v2.0 runtime boundary is executable and governed, while also identifying the missing user-facing cross-harness/environment layer. The `agents` package distribution gap was fixed; CI now installs the built wheel in an isolated environment and imports the agent/runtime APIs; and a dedicated integration test exercises a registered, enabled, governed runtime session through `RuntimeEngine` with streaming events.
+Phase 19 established the evidence-backed boundary for the next SI-Agents evolution. The audit confirmed that the v2.0 runtime boundary is executable and governed, while identifying the missing user-facing cross-harness/environment layer. The `agents` package distribution gap was fixed; CI installs the built wheel in an isolated environment and a dedicated integration test exercises a registered, enabled, governed runtime session.
 
-The audit explicitly does **not** claim OpenCode, OmniRoute, Claude Code, Codex, Cline, Antigravity, Termux, Codespaces, unified setup/doctor CLI, agent divisions/teams, or cross-environment handoff as implemented. These remain future work and are documented in `docs/architecture/PHASE_19_REALITY_AUDIT.md`.
-
-Verification evidence: PR #2 CI run #431 completed successfully with distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Main baseline CI run #428 and the v2 status synchronization PR #1 CI run #429 were also successful.
+Verification evidence: PR #2 CI run **#431** completed successfully with distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Main baseline CI run #428 and status synchronization PR #1 CI run #429 were also successful.
 
 ## Phase 18 completion
 
-Phase 18 hardens the platform for production operation without overstating guarantees. Readiness checks are deterministic and fail closed on check failures; application-level resource limits bound accepted work; telemetry representations redact secret-like fields and bearer credentials; and a release gate requires evidence for tests, lint, build, security review, migration review, and rollback testing. CI now uses least-privilege contents-read permissions, cancels superseded runs, and bounds job duration. Production policy explicitly records compatibility, recovery, telemetry, and limit expectations.
+Phase 18 hardens the platform for production operation without overstating guarantees. Readiness checks are deterministic and fail closed on check failures; application-level resource limits bound accepted work; telemetry representations redact secret-like fields and bearer credentials; and a release gate requires evidence for tests, lint, build, security review, migration review, and rollback testing.
 
-Production hardening does not replace Phase 13 governance, does not turn the local executor into a security boundary, and does not claim that redaction prevents every possible secret leak. Infrastructure controls, operator procedures, backups, monitoring, incident response, and dependency management remain deployment responsibilities.
+Production hardening does not replace Phase 13 governance or turn the local executor into a security boundary. Infrastructure controls and operator procedures remain deployment responsibilities.
 
 ## Phase 17 completion
 
-Phase 17 establishes a vendor-neutral runtime boundary. CLI, API, IDE, agent, embedded, and future harnesses use a typed invocation envelope with stable correlation, project identity, optional sessions, declared capabilities, normalized events, and structured errors. Harnesses are explicitly registered and disabled by default. The reference local adapter requires the existing Phase 13 governance decision before execution, so interoperability cannot bypass security, legal, cost, or data policy. A dependency-free conformance suite defines the minimum adapter contract; external harness SDKs are deliberately not added as hidden dependencies.
+Phase 17 establishes a vendor-neutral runtime boundary. CLI, API, IDE, agent, embedded, and future harnesses use a typed invocation envelope with stable correlation, project identity, optional sessions, declared capabilities, normalized events, and structured errors. Harnesses are explicitly registered and disabled by default, and the reference local adapter requires the existing Phase 13 governance decision before execution.
 
 ## Phase 16 completion
 
-Phase 16 delivers a controlled learning pipeline in which evidence-backed proposals are evaluated through independent benchmark, regression, and safety gates before explicit approval. Application and rollback are externally supplied operations, so the learning engine cannot silently mutate code. Capability intelligence computes deterministic readiness signals from evidence, verification, benchmark, health, and confidence; missing signals are conservative, blocked capabilities score zero, and only validated capabilities are considered executable candidates. JSON persistence preserves proposal/evaluation evidence without adding a database dependency. Automatic code mutation, automatic capability promotion, automatic global promotion, and secret storage remain disabled by policy.
+Phase 16 delivers a controlled learning pipeline in which evidence-backed proposals are evaluated through independent benchmark, regression, and safety gates before explicit approval. Application and rollback are externally supplied operations, so the learning engine cannot silently mutate code. Automatic code mutation, automatic capability promotion, automatic global promotion, and secret storage remain disabled by policy.
 
 ## Prior phase completion
 
