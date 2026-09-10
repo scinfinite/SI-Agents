@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import core.organization as organization
+from core import organization
 
 
 ROOT = Path(__file__).parents[1]
