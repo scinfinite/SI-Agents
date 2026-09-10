@@ -6,6 +6,7 @@ import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
+from .openapi import document
 from .service import ControlApiService
 
 
@@ -57,6 +58,7 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             "/": self.service.snapshot().as_dict(),
             "/api/v1": self.service.snapshot().as_dict(),
             "/api/v1/health": {"status": "ok", "api_version": "v1"},
+            "/api/v1/openapi.json": document(),
             "/api/v1/agents": self.service.agents(),
             "/api/v1/teams": self.service.teams(),
             "/api/v1/workflows": self.service.workflows(),
