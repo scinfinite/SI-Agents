@@ -65,7 +65,7 @@ Phase 29 introduces `AgentPersona`, a deterministic Markdown parser, semantic va
 
 The persona contract intentionally contains behavioral content only. The parser rejects privilege/execution frontmatter, including capabilities, permissions, harnesses, environments, tools, commands, shell, network, credentials, and secrets. Compilation requires stable identity/name/division agreement and preserves typed governance fields unchanged. Command-like text in Markdown is inert data and is never executed.
 
-Verification includes deterministic parsing, malformed input, duplicate detection, required-section enforcement, semantic validation, persona-to-catalog matching, governance-preserving compilation, security boundary tests, catalog regression tests, and distribution packaging of persona Markdown. The detailed contract is `PHASE_29_AGENT_PERSONAS.md`; provenance is `PHASE_29_PROVENANCE.md`.
+Verification includes deterministic parsing, malformed input, duplicate detection, required-section enforcement, semantic validation, persona-to-catalog matching, governance-preserving compilation, security boundary tests, catalog regression tests, and distribution packaging of persona Markdown. A first CI pass exposed two integration issues (persona README discovery and an expected catalog-selection set); both were corrected. The final Phase 29 mainline commit is `e5212c05c13f98c2a11499df974dd7f407d8e77a`, and GitHub Actions CI run **#563** completed successfully: distribution build, isolated wheel installation, Ruff, and **352 tests passed**. The detailed contract is `PHASE_29_AGENT_PERSONAS.md`; provenance is `PHASE_29_PROVENANCE.md`.
 
 ## Phase 28 verification record
 
