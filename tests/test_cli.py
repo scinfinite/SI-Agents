@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from core.cli.config import SIConfig, config_path, load_config, save_config
-from core.cli.main import build_parser, cmd_agents, cmd_teams
+from core.cli.main import _opencode_install_plan, build_parser, cmd_agents, cmd_teams
 
 
 def test_cli_parser_exposes_phase_27_commands() -> None:
@@ -44,6 +44,11 @@ def test_config_path_honors_explicit_environment(monkeypatch, tmp_path: Path) ->
     target = tmp_path / "si.json"
     monkeypatch.setenv("SI_CONFIG", str(target))
     assert config_path() == target
+
+
+def test_opencode_install_plan_uses_official_npm_package(monkeypatch) -> None:
+    monkeypatch.setattr("core.cli.main.shutil.which", lambda name: "npm" if name == "npm" else None)
+    assert _opencode_install_plan() == ("npm", "install", "-g", "opencode-ai")
 
 
 def test_catalog_commands_use_canonical_sources(capsys) -> None:
