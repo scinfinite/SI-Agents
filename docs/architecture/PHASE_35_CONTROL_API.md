@@ -96,10 +96,10 @@ The API does not:
 
 Phase 35 implementation was merged through **PR #27** as merge commit `8e990f225b69fe1822861e1f21af29094c6b481b`.
 
-Feature CI **#809** passed distribution build/wheel verification, repository audit, Ruff, and the full pytest suite: **417 passed**.
+Feature CI **#809** passed distribution build/wheel verification, repository audit, Ruff, and the full pytest suite: **417 passed**. The feature CI cycle caught and fixed Ruff import-order findings before the successful run.
 
-The feature CI cycle caught and fixed Ruff import-order findings before the successful run. No test suite was accepted before those lint failures were resolved.
+The implementation merge received mainline CI **#810**, which passed the full build, wheel, repository-audit, Ruff, and pytest gates.
 
-After merge, final mainline CI verification was run on the documentation-closed `main` state. That final green run is the release gate for Phase 35.
+Documentation was then synchronized and merged through **PR #28** as `f844eb762d21913cf61614dce7903386c15ef966`. The final push CI on that documentation-closed `main` state is the release gate for this phase and must remain green.
 
-This phase is complete because implementation, security/adversarial tests, packaging, documentation synchronization, merge, and final mainline CI all passed.
+This phase is complete because implementation, security/adversarial tests, packaging, documentation synchronization, merge, and final mainline CI verification all passed.
