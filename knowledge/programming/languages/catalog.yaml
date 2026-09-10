@@ -1,0 +1,47 @@
+schema_version: "1.0"
+description: Initial language coverage map. Entries identify knowledge scope, not claims of complete expertise.
+languages:
+  - python
+  - java
+  - javascript
+  - typescript
+  - rust
+  - go
+  - c
+  - cpp
+  - csharp
+  - kotlin
+  - swift
+  - dart
+  - php
+  - ruby
+  - scala
+  - elixir
+  - haskell
+  - zig
+  - lua
+  - r
+  - julia
+  - sql
+  - bash
+  - powershell
+  - assembly
+  - solidity
+coverage_dimensions:
+  - syntax
+  - semantics
+  - type_system
+  - memory_model
+  - concurrency
+  - runtime
+  - toolchain
+  - testing
+  - debugging
+  - security
+  - ecosystems
+  - standards
+status_semantics:
+  planned: Directory/schema target exists or is intended for future population.
+  experimental: Knowledge is being researched and verified.
+  validated: Evidence-backed knowledge has passed the project's verification gates.
+  unknown: SI-Agents has not established sufficient evidence.
