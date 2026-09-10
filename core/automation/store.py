@@ -7,7 +7,15 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from core.automation.models import AutomationJob, JobState, RetryPolicy, RunRecord, RunStatus, Schedule, ScheduleKind
+from core.automation.models import (
+    AutomationJob,
+    JobState,
+    RetryPolicy,
+    RunRecord,
+    RunStatus,
+    Schedule,
+    ScheduleKind,
+)
 from core.automation.registry import AutomationRegistry
 
 
