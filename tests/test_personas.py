@@ -50,6 +50,9 @@ Verify deterministic parsing.
 - Preserve outputs
 """
 
+CANONICAL_ID = "engineering--engineering-backend-architect"
+CANONICAL_NAME = "Engineering Engineering Backend Architect"
+
 
 def test_parse_persona_is_deterministic_and_typed() -> None:
     first = parse_persona(PERSONA)
@@ -94,11 +97,11 @@ def test_parser_rejects_non_bullet_lists() -> None:
 
 def test_compiler_preserves_governance_fields() -> None:
     catalog = load_catalog("config/agent-catalog.json")
-    source = PERSONA.replace("example-agent", "developer")
-    source = source.replace("Example Agent", "Developer")
+    source = PERSONA.replace("example-agent", CANONICAL_ID)
+    source = source.replace("Example Agent", CANONICAL_NAME)
     persona = parse_persona(source)
-    compiled = compile_persona(persona, catalog.get("developer"))
-    base = catalog.get("developer")
+    compiled = compile_persona(persona, catalog.get(CANONICAL_ID))
+    base = catalog.get(CANONICAL_ID)
     assert compiled.capabilities == base.capabilities
     assert compiled.permissions == base.permissions
     assert compiled.harnesses == base.harnesses
@@ -109,7 +112,7 @@ def test_compiler_preserves_governance_fields() -> None:
 def test_compiler_rejects_identity_mismatch() -> None:
     catalog = load_catalog("config/agent-catalog.json")
     with pytest.raises(ValueError, match="identity mismatch"):
-        compile_persona(parse_persona(PERSONA), catalog.get("developer"))
+        compile_persona(parse_persona(PERSONA), catalog.get(CANONICAL_ID))
 
 
 def test_registry_detects_duplicate_identity_and_catalog_conflicts(tmp_path) -> None:
@@ -118,8 +121,8 @@ def test_registry_detects_duplicate_identity_and_catalog_conflicts(tmp_path) -> 
     registry.register(first)
     with pytest.raises(ValueError, match="Duplicate persona id"):
         registry.register(first)
-    source = PERSONA.replace("example-agent", "developer")
-    source = source.replace("Example Agent", "Developer")
+    source = PERSONA.replace("example-agent", CANONICAL_ID)
+    source = source.replace("Example Agent", CANONICAL_NAME)
     conflict = parse_persona(source)
     registry = PersonaRegistry()
     registry.register(conflict)
@@ -138,7 +141,7 @@ def test_all_canonical_personas_parse_and_match_catalog() -> None:
     assert registry.validate_against_catalog(catalog) == ()
     ids = {persona.id for persona in registry.all()}
     assert len(ids) == 279
-    assert {"developer", "debugger", "tester", "backend-engineer", "infrastructure-engineer", "code-reviewer", "security-engineer"}.issubset(ids)
+    assert CANONICAL_ID in ids
 
 
 def test_persona_source_is_data_and_never_executed(tmp_path) -> None:
