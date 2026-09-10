@@ -6,43 +6,37 @@ Phase 17 defines one transport-neutral invocation boundary so CLI, API, IDE, age
 
 `HarnessAdapter` is an integration boundary, not a policy authority. Registration is explicit and disabled by default. Adapters report capabilities, accept an `InvocationRequest`, return a correlated `InvocationResponse`, and expose cooperative cancellation.
 
-`RuntimeEngine` is the governed entry point. It resolves only enabled adapters, validates optional session identity against both project and harness, checks requested runtime capabilities, evaluates the existing Phase 13 `GovernanceEngine`, invokes the adapter, and validates the returned envelope. Adapter failures are normalized without exposing implementation exception text.
+`RuntimeEngine` is the governed entry point. It resolves only enabled adapters, validates session identity against project and harness, checks requested runtime capabilities, evaluates the existing governance engine, invokes the adapter, and validates the returned envelope.
 
 ## Interoperability guarantees
 
 - deterministic metadata normalization;
 - stable request/response correlation;
 - normalized typed events with ordered sequence numbers;
-- structured, transport-neutral error categories;
+- structured transport-neutral errors;
 - capability negotiation with fail-closed unsupported features;
 - project-scoped, harness-bound sessions;
 - explicit harness enablement;
 - dependency-free adapter conformance checks;
 - no credentials in runtime envelopes or runtime policy;
-- a deterministic local reference adapter for testing and development.
+- a deterministic local reference adapter for testing/development.
 
-Timeouts are a **cooperative contract** at this layer: the request carries a deadline declaration and adapters are responsible for enforcing it without unsafe forced termination. The local adapter detects overrun after the supplied function returns; it is not a hard process-isolation boundary.
+Timeouts are a cooperative contract. The local adapter is not a hard process-isolation boundary.
 
 ## Adapter lifecycle
 
 1. Define immutable metadata and advertised capabilities.
-2. Register the adapter explicitly; leave it disabled until trusted configuration enables it.
+2. Register explicitly and leave disabled until trusted configuration enables it.
 3. Run the transport-neutral conformance suite.
-4. Add transport-specific tests for streaming, timeout enforcement, disconnects, partial output, cancellation races, malformed payloads, and resource cleanup.
+4. Add transport-specific tests for streaming, timeouts, disconnects, partial output, cancellation races, malformed payloads, and cleanup.
 5. Route production calls through `RuntimeEngine`, never directly from an untrusted transport.
 
 ## Governance and security
 
-Every runtime invocation has a mandatory project identity. The reference local adapter and `RuntimeEngine` both require a `GovernanceRequest`; deny and approval-required decisions do not execute. Phase 13 remains authoritative for security, legal, cost, data-egress, and approval decisions.
+Every runtime invocation has a mandatory project identity. Runtime and reference-adapter governance checks prevent deny/approval-required execution. Runtime registration and capability negotiation do not grant permissions. Credentials must never be placed in metadata, input, output, errors, or policy files.
 
-Runtime registration and capability negotiation do not grant permissions. Runtime metadata is descriptive only. Adapter exceptions are normalized at the runtime boundary, and credentials must never be placed in metadata, input, output, errors, or policy files.
+OpenCode is a supported harness adapter, while OmniRoute remains the model/provider routing authority. Termux and Codespaces are environment profiles, not policy authorities.
 
-The local adapter is a reference implementation, not a host security boundary. External runtimes retain their own isolation properties and remain subject to SI-Agents governance.
+## Current v3 boundary
 
-## Conformance
-
-`run_conformance` verifies request correlation, terminal status, response shape, and cancellation when the adapter advertises cancellation. Conformance is intentionally transport-neutral; adapter implementations must add tests for protocol-specific behavior before production use.
-
-## Scope discipline
-
-Phase 17 does not add OpenCode, Codex, Claude, Cline, MCP, or other vendor SDK dependencies, and it does not add paid runtime services. Those can be integrated later through adapters that implement the same contract and preserve governance and project isolation.
+Phase 29 personas are compiled above the organization/runtime layer; Phase 30 Skills will be composed above this boundary without changing the transport authority. Future Control API, Web, and TUI surfaces must all use the same runtime/governance contracts rather than duplicating them.
