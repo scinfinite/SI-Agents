@@ -1,9 +1,9 @@
 """Dependency-free scanner for agent, skill, rule, hook, and config surfaces."""
 
+import re
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
-import re
 
 
 class Severity(IntEnum):
