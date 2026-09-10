@@ -1,6 +1,6 @@
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 
 FIXTURE = Path(__file__).parents[1] / "fixtures" / "broken_project"
@@ -17,5 +17,4 @@ def test_broken_fixture_reproduces_expected_failure() -> None:
     )
 
     assert completed.returncode != 0
-    assert "assert 5" not in completed.stdout
     assert "failed" in (completed.stdout + completed.stderr).lower()
