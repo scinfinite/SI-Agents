@@ -4,7 +4,7 @@
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete for the core control-plane scope.**
 3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox. **Complete for the defined Phase 2 scope.**
 4. Engineering Brain — decomposition, planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty. **Complete.**
-5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test.
+5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test. **Complete.**
 6. Skills Engine — reusable, verifiable engineering procedures.
 7. Verification + Evidence — claims, evidence, confidence, regression, red-team checks, benchmarks.
 8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards.
