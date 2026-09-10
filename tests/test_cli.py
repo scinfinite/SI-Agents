@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import importlib
 import json
 from pathlib import Path
 
+import core.cli.main as CLI_MODULE
 from core.cli.config import SIConfig, config_path, load_config, save_config
 from core.cli.main import _opencode_install_plan, build_parser, cmd_agents, cmd_teams
-
-
-CLI_MODULE = importlib.import_module("core.cli.main")
 
 
 def test_cli_parser_exposes_phase_27_commands() -> None:
