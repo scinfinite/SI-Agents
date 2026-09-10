@@ -1,6 +1,9 @@
+import pytest
+
 from core.execution.command_runner import CommandRunner
 from core.orchestrator.orchestrator import Orchestrator
 from core.policies.permission_engine import PermissionEngine
+from tools.sandbox.command_policy import CommandPolicyError
 from tools.sandbox.local_sandbox import LocalSandbox
 from tools.sandbox.sandbox_result import CommandResult
 
@@ -52,9 +55,15 @@ def test_command_runner_honors_permission_denial(tmp_path) -> None:
     task = orchestrator.tasks.create("blocked command")
     task.start()
 
-    try:
+    with pytest.raises(PermissionError):
         orchestrator.execute(task.id, "python -c \"print('no')\"")
-    except PermissionError:
-        pass
-    else:
-        raise AssertionError("Denied command was executed")
+
+
+def test_command_policy_blocks_destructive_command_before_backend() -> None:
+    backend = StubBackend("/workspace")
+    runner = CommandRunner(backend)
+
+    with pytest.raises(CommandPolicyError):
+        runner.run("task-1", "rm -rf /")
+
+    assert backend.commands == []
