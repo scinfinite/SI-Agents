@@ -7,7 +7,12 @@ from core.capabilities.registry import CapabilityRegistry
 from core.learning.engine import ImprovementEngine
 from core.learning.evaluator import ImprovementEvaluator
 from core.learning.intelligence import CapabilityIntelligence
-from core.learning.models import EvaluationResult, EvidenceItem, ImprovementProposal, ImprovementStatus
+from core.learning.models import (
+    EvaluationResult,
+    EvidenceItem,
+    ImprovementProposal,
+    ImprovementStatus,
+)
 from core.learning.registry import ImprovementRegistry
 from core.learning.store import ImprovementStore
 
