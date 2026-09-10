@@ -102,6 +102,9 @@ class HandoffEnvelope:
             "session_id", "objective", "task_status", "attempts", "context",
             "results", "checkpoints", "evidence_ids", "created_at",
         )
+        for key in ("checkpoints", "evidence_ids"):
+            if fields.get(key) is not None:
+                fields[key] = tuple(fields[key])
         envelope = cls(**{key: fields.get(key) for key in names})
         if supplied_digest != envelope.digest():
             raise ValueError("handoff integrity check failed")
