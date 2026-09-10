@@ -1,6 +1,6 @@
 # Phase 27 — `si` CLI + Easy Setup
 
-**Status: complete and CI-verified.**
+**Status: implementation complete; final post-enhancement CI verification is queued.**
 
 ## Objective
 
@@ -13,7 +13,7 @@ si doctor [--json]
 si status
 si agents
 si teams
-si setup [--apply] [--configure-opencode] [--opencode-url URL] [--omniroute-url URL] [--model MODEL]
+si setup [--apply] [--install-opencode] [--configure-opencode] [--opencode-url URL] [--omniroute-url URL] [--model MODEL]
 si update [--apply]
 si run TEAM --objective TEXT
 ```
@@ -32,9 +32,11 @@ Load the canonical Phase 20 agent catalog and Phase 21 team catalog rather than 
 
 ### `setup`
 
-Default behavior is a dry-run plan. `--apply` is required before local mutation. Only commands supplied by the environment runtime's explicit setup/toolchain plan may execute; arbitrary shell strings are rejected. The CLI can also persist non-secret SI configuration and, with `--configure-opencode --model MODEL`, add/update an OmniRoute OpenAI-compatible provider in OpenCode's JSON configuration.
+Default behavior is a dry-run plan. `--apply` is required before local mutation. Only commands supplied by the environment runtime's explicit setup/toolchain plan may execute; arbitrary shell strings are rejected.
 
-OpenCode credentials are not copied into SI configuration. The generated provider points at the configured OmniRoute endpoint and uses OpenCode's own credential/configuration mechanisms. JSONC configs are refused rather than parsed destructively. The model must be explicit because OmniRoute's `/v1/models` surface can contain multiple model modalities and SI-Agents does not guess chat capability.
+`--install-opencode` is an explicit opt-in installer. When `opencode` is missing and `npm` is available, SI-Agents executes the official OpenCode npm installation command `npm install -g opencode-ai`; if npm is unavailable, setup fails with an actionable prerequisite instead of fetching and executing a remote shell script. The official OpenCode documentation currently lists npm installation as a supported installation path. citeturn2search0
+
+With `--configure-opencode --model MODEL`, the CLI can persist non-secret SI configuration and add/update an OmniRoute OpenAI-compatible provider in OpenCode's JSON configuration. OpenCode credentials are not copied into SI configuration. JSONC configs are refused rather than parsed destructively. The model must be explicit because OmniRoute's `/v1/models` surface can contain multiple model modalities and SI-Agents does not guess chat capability.
 
 ### `update`
 
@@ -52,13 +54,14 @@ No API key, password, provider credential, or OpenCode auth token is stored by P
 
 ## OpenCode integration
 
-Current OpenCode configuration supports an OpenAI-compatible provider with `providers.<id>.package = "@opencode/ai/providers/openai-compatible"` and a `settings.baseURL`. Phase 27 writes only the provider declaration and an explicitly selected model; it does not install OpenCode, write OpenCode credentials, or guess model capabilities.
+Current OpenCode configuration supports an OpenAI-compatible provider with `providers.<id>.package = "@opencode/ai/providers/openai-compatible"` and a `settings.baseURL`. Phase 27 writes only the provider declaration and an explicitly selected model; it does not write OpenCode credentials or guess model capabilities.
 
 ## Security and governance boundaries
 
 - Read-only commands do not execute arbitrary shell commands.
 - Setup mutation requires explicit `--apply`.
 - Setup execution is restricted to environment-provided, allowlisted command tuples.
+- The optional OpenCode installer is itself an allowlisted npm command and requires explicit `--install-opencode --apply`.
 - No secret persistence is introduced.
 - OpenCode credentials remain under OpenCode's own auth/configuration boundary.
 - OmniRoute remains the model/provider routing authority.
@@ -67,7 +70,7 @@ Current OpenCode configuration supports an OpenAI-compatible provider with `prov
 
 ## Verification evidence
 
-Phase 27 acceptance was verified by PR #14 CI run **#499**:
+The core Phase 27 acceptance was verified by PR #14 CI run **#499**:
 
 1. The built wheel exposed the `si` console entry point.
 2. The isolated wheel imported the core packages and executed `si agents` and `si teams`, proving canonical catalogs are available after installation.
@@ -77,8 +80,10 @@ Phase 27 acceptance was verified by PR #14 CI run **#499**:
 
 Two earlier failures were corrected rather than suppressed: CI #495 exposed an invalid exception type under Ruff; CI #497 exposed an incomplete CLI parser test. The corrected CI #499 run passed all build, wheel, lint, and test gates.
 
-The PR was merged as commit **7308549553e9cc15f3d393b283974a26c9425a73**. README and the phase roadmap were synchronized to the verified state after merge.
+After that verification, the setup layer was strengthened with explicit `--install-opencode` support and its regression test. CI #505 caught a test monkeypatch defect in that new regression test; the test was corrected in commit `e95bb8b6cda8f60446c3c3b1034c3f925f46e891`. The resulting CI run #506 is queued for final verification.
+
+The PR was merged as commit **7308549553e9cc15f3d393b283974a26c9425a73**. README and the phase roadmap were synchronized to the verified core state; this document records the post-verification installer enhancement separately so status never outruns CI.
 
 ## Deliberate non-goals
 
-Phase 27 does not implement cross-environment state synchronization, automatic Codespace creation, remote account provisioning, arbitrary shell execution, provider fallback logic, secret migration from OpenCode, or a new model router. Those remain outside the CLI boundary or belong to later phases.
+Phase 27 does not implement cross-environment state synchronization, automatic Codespace creation, remote account provisioning, arbitrary shell execution, provider fallback logic, secret migration from OpenCode, or a new model router. OmniRoute remains the routing authority and OpenCode remains the harness/credential authority.
