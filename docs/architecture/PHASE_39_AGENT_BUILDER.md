@@ -1,6 +1,6 @@
 # Phase 39 — Agent Builder & Customization
 
-**State:** Implementation complete pending final mainline CI closure.
+**State:** Complete + CI verified.
 
 ## Objective
 
@@ -17,8 +17,9 @@ Provide a local, inspectable authoring surface for creating and customizing SI a
 - Revision tracking, validation, archive, and non-executing test operations.
 - Deterministic Markdown preview explicitly marked as an authoring artifact.
 - Dependency-free local Web Agent Builder at `/agent-builder`.
-- Control API/OpenAPI exposure for listing, validating, saving, testing, archiving, and loading canonical-agent projections.
+- Versioned Web API/OpenAPI exposure for listing, validating, saving, testing, archiving, and loading canonical-agent projections.
 - Builder mutations are audited without logging request bodies or secrets.
+- Regression coverage for persistence, authority non-escalation, Web routes, CSP-clean authoring assets, and non-executing validation.
 
 ## Authority boundary
 
@@ -26,7 +27,11 @@ The Builder is an authoring and validation layer. It does **not** execute an age
 
 ## Verification
 
-Phase 39 requires the repository build, wheel installation, repository audit, Ruff, full pytest suite, and final mainline CI to pass. The final verification record is appended here only after the implementation and documentation commits are merged and the resulting `main` CI is green.
+Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`. Feature CI **#853** (`34511009965`) passed the repository build, wheel installation, repository audit, Ruff, full pytest, diagnostics, and cleanup gates. The final documentation-closed `main` verification is recorded below after the documentation merge.
+
+## Final mainline verification
+
+Pending the final CI run for the documentation-closed mainline tree.
 
 ## Next phase
 

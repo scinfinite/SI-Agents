@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–38 implemented and CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–39 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -38,7 +38,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 established the stable machine-facing API over those existing authorities. Phase 36 established the first Web transport/presentation boundary over that API. Phase 37 turned that foundation into the live Control Center. Phase 38 adds visual organization/workflow inspection while preserving the same authority boundary.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 established the stable machine-facing API over those existing authorities. Phase 36 established the first Web transport/presentation boundary over that API. Phase 37 turned that foundation into the live Control Center. Phase 38 added visual organization/workflow inspection while preserving the same authority boundary. Phase 39 added a governed authoring boundary for agent customization without mutating the canonical catalog or granting new authority.
 
 ### Web and TUI are views, not authorities
 
@@ -60,7 +60,7 @@ Phase 29 established the persona-to-typed-contract boundary. Phase 30 establishe
                        OmniRoute
 ```
 
-No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces. Phase 38 graph rendering is a read-only projection and must remain so.
+No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces. Phase 38 graph rendering remains read-only, and Phase 39 authoring is validation/storage only; neither surface becomes an execution authority.
 
 ### Evidence-first operation
 
@@ -92,7 +92,15 @@ Canonical record: `docs/architecture/PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md`.
 
 # Phase 39 — Agent Builder & Customization
 
-Allow operators to inspect, customize, create, validate, test, and manage agents through the local Web UI while preserving canonical Markdown and typed contracts. Customization must not become a hidden privilege-escalation path.
+**State: Complete + CI verified.**
+
+Phase 39 provides a dependency-free local authoring surface for inspect, customize, create, validate, test, save, revise, and archive operations over agent drafts. Canonical agents can be projected into editable drafts, but identity/division and authority-bearing fields remain constrained. New agents cannot self-grant capabilities, permissions, harnesses, or environments. Drafts are stored atomically under `.si/agent-builder.json` with restrictive permissions and produce deterministic Markdown previews marked as authoring artifacts.
+
+The Builder does not execute agents, tools, Skills, workflows, shell commands, harnesses, or external calls, and it never mutates `config/agent-catalog.json`. The Web Agent Builder is available at `/agent-builder`, with versioned API/OpenAPI routes and audited mutations.
+
+Feature CI **#853** (`34511009965`) passed all repository gates. Implementation merge: `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`.
+
+Canonical record: `docs/architecture/PHASE_39_AGENT_BUILDER.md`.
 
 # Phase 40 — Evidence & Observability
 
@@ -125,7 +133,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 36 Web Foundation [complete]
  → 37 Control Center [complete]
  → 38 Visual Graphs [complete]
- → 39 Agent Builder
+ → 39 Agent Builder [complete]
  → 40 Evidence/Observability
  → 41 TUI
  → 42 Harness Deployment

@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–38 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–39 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -44,6 +44,7 @@
 36. Local Web Foundation — **Complete and CI-verified.** Dependency-free localhost-first Web server over the Control API, packaged live browser surface, stable `si web`/`si-web` launchers, strict CSP/security headers, deny-by-default CORS, explicit authenticated remote opt-in, bounded JSON mutations, redacted private audit logging, safe errors, graceful shutdown, packaging, and adversarial Web/security regression coverage.
 37. Control Center — **Complete and CI-verified.** Live dependency-free operator UI over the Control API with Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings views; sanitized read-model extensions; strict no-execution browser boundary; OpenAPI synchronization; and browser/read-model regression coverage.
 38. Visual Organization & Workflow — **Complete and CI-verified.** Deterministic graph read model for divisions, teams, agents, Skills, capabilities, permissions, workflows, steps, dependencies, and relationships; interactive dependency-free SVG organization/workflow/security views with filtering, selection, pan/zoom/reset, keyboard access, current control-plane run state, OpenAPI synchronization, and execution-boundary regression coverage.
+39. Agent Builder & Customization — **Complete and CI-verified.** Immutable bounded agent drafts, canonical-agent projections, deterministic non-escalation validation, durable atomic local draft storage, revision/archive/test lifecycle, deterministic Markdown authoring preview, dependency-free Web authoring surface, versioned API/OpenAPI routes, audited mutations, and regression coverage for authority boundaries and Web behavior.
 
 ## Release targets
 
@@ -52,7 +53,7 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 38:** complete and CI-verified
+- **Post-v2 validation through Phase 39:** complete and CI-verified
 
 ## Phase completion gate
 
@@ -68,11 +69,14 @@ Phase 37 was merged from PR #33 as squash commit `d54ab5a0e9a0dc5daed72e89bdaf84
 
 ## Phase 38 verification record
 
-Phase 38 implementation merged from PR #35 as squash commit `657530eefa41794fb425cd0fe38d2aced9bd316d`. Feature CI passed all build, wheel-install, repository-audit, Ruff, and pytest gates. Final mainline CI **#845** (`34508914827`) passed every repository gate on that exact implementation merge commit; setup, checkout, Python/tooling, distribution build, wheel installation, repository audit, Ruff, tests, diagnostics, and cleanup all completed successfully. The implementation is therefore verified on `main` before this documentation closure.
+Phase 38 implementation merged from PR #35 as squash commit `657530eefa41794fb425cd0fe38d2aced9bd316d`. Final mainline CI **#845** (`34508914827`) passed every repository gate on that exact implementation merge commit; setup, checkout, Python/tooling, distribution build, wheel installation, repository audit, Ruff, tests, diagnostics, and cleanup all completed successfully. Documentation was synchronized in the Phase 38 closure commits.
+
+## Phase 39 verification record
+
+Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`. Feature CI **#853** (`34511009965`) passed build, wheel-install, repository-audit, Ruff, pytest, diagnostics, and cleanup gates. The documentation-closed mainline CI is recorded in the final closure update after the docs merge.
 
 ## Documentation structure
 
-- `PHASE_1_FOUNDATION.md` through `PHASE_28_*` — historical phase records.
 - `PHASE_29_AGENT_PERSONA.md` — canonical persona/parity/provenance/security/packaging record.
 - `PHASE_30_PORTABLE_SKILLS.md` — canonical portable Skill record.
 - `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events record.
@@ -83,8 +87,9 @@ Phase 38 implementation merged from PR #35 as squash commit `657530eefa41794fb42
 - `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical Web foundation contract and final verification record.
 - `PHASE_37_CONTROL_CENTER.md` — canonical Control Center contract and final verification record.
 - `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` — canonical Visual Organization & Workflow contract and final verification record.
+- `PHASE_39_AGENT_BUILDER.md` — canonical Agent Builder & Customization contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 39 — Agent Builder & Customization.**
+**Phase 40 — Evidence & Observability.**
