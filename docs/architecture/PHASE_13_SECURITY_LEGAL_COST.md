@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete when the final main-branch CI run for the Phase 13 head is green.**
+**Complete — final Phase 13 head CI is green.**
 
 ## Purpose
 
@@ -41,7 +41,7 @@ Sec Legal Cost Data Risk
 
 ### Security
 
-`SecurityPolicy` blocks credential-bearing external egress and requires approval for high-risk destructive/production operations and sensitive egress.
+`SecurityPolicy` blocks credential-bearing external egress and requires approval for credential operations, high-risk destructive/production operations, and sensitive egress.
 
 ### Legal/provenance
 
@@ -73,6 +73,12 @@ Sec Legal Cost Data Risk
 - Persistent/encrypted audit storage and retention controls are deferred to later hardening.
 - No secret material belongs in requests, audit records, tests, or configuration.
 
-## Verification
+## Verification evidence
 
-The Phase 13 suite is adversarial by design and must be run through the repository CI workflow. Completion is based on the final commit's green build, Ruff, and test job rather than documentation alone.
+- Final verified commit: `269b9f1c6cc609602fb6561aec98b3449fd919fb`.
+- GitHub Actions CI run: **#339**, run ID `34444191826`.
+- Final job: `test`, job ID `102765318224`, completed with **success**.
+- Build distributions: success.
+- Ruff: `All checks passed!`.
+- Tests: **193 passed in 1.34s**.
+- All workflow steps completed successfully.
