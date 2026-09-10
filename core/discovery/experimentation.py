@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 
 @dataclass(frozen=True)
@@ -22,7 +22,7 @@ class ExperimentRunner:
             raise ValueError("Experiment root must be an existing directory")
         try:
             observation = experiment(root)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - discovery must record arbitrary experiment failure
             return ExperimentResult(name=name, passed=False, observation=f"{type(exc).__name__}: {exc}")
         if not isinstance(observation, str) or not observation.strip():
             return ExperimentResult(name=name, passed=False, observation="empty experiment observation")
