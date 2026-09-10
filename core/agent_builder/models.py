@@ -31,7 +31,7 @@ class AgentDraft:
     revision: int = 1
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class ValidationResult:
     valid: bool
     errors: tuple[str, ...]
