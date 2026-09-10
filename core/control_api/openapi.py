@@ -24,6 +24,13 @@ def document() -> dict[str, object]:
             "/api/v1/settings": {"get": {"responses": {"200": {"description": "Effective control-center settings"}}}},
             "/api/v1/visualization": {"get": {"responses": {"200": {"description": "Deterministic organization/workflow graph read model"}}}},
             "/api/v1/control-center": {"get": {"responses": {"200": {"description": "Control Center aggregate read model"}}}},
+            "/api/v1/agent-builder": {"get": {"responses": {"200": {"description": "Persisted user-authored agent drafts"}}}},
+            "/api/v1/agent-builder/from/{agent_id}": {"get": {"parameters": [{"name": "agent_id", "in": "path", "required": True, "schema": {"type": "string"}}], "responses": {"200": {"description": "Editable projection of a canonical agent"}, "404": {"description": "Agent not found"}}}},
+            "/api/v1/agent-builder/drafts/{draft_id}": {"get": {"parameters": [{"name": "draft_id", "in": "path", "required": True, "schema": {"type": "string"}}], "responses": {"200": {"description": "Agent draft"}, "404": {"description": "Draft not found"}}}},
+            "/api/v1/agent-builder/validate": {"post": {"responses": {"200": {"description": "Validation and deterministic Markdown preview"}, "400": {"description": "Invalid request"}}}},
+            "/api/v1/agent-builder/drafts": {"post": {"responses": {"201": {"description": "Validated draft saved"}, "400": {"description": "Invalid draft"}}}},
+            "/api/v1/agent-builder/drafts/{draft_id}/test": {"post": {"parameters": [{"name": "draft_id", "in": "path", "required": True, "schema": {"type": "string"}}], "responses": {"200": {"description": "Non-executing validation test"}, "404": {"description": "Draft not found"}}}},
+            "/api/v1/agent-builder/drafts/{draft_id}/archive": {"post": {"parameters": [{"name": "draft_id", "in": "path", "required": True, "schema": {"type": "string"}}], "responses": {"200": {"description": "Draft archived"}, "404": {"description": "Draft not found"}}}},
             "/api/v1/events": {"get": {"responses": {"200": {"description": "API events"}}}},
             "/api/v1/runs": {
                 "get": {"responses": {"200": {"description": "Run records"}}},
