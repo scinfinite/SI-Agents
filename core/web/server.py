@@ -109,13 +109,14 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             "/api/v1/environments": service.environments(),
             "/api/v1/harnesses": service.harnesses(),
             "/api/v1/settings": service.settings(),
+            "/api/v1/visualization": service.visualization(),
             "/api/v1/events": service.events(),
             "/api/v1/runs": service.runs(),
         }
         if path == "/api/v1/control-center":
             return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(),
                     "environments": service.environments(), "harnesses": service.harnesses(),
-                    "evidence": service.evidence()}
+                    "evidence": service.evidence(), "visualization": service.visualization()}
         if path in routes:
             return routes[path]
         if path.startswith("/api/v1/runs/"):
