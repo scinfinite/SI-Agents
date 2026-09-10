@@ -23,8 +23,8 @@ class WebConfig:
     def validate(self) -> None:
         if not self.host.strip():
             raise ValueError("web host must not be empty")
-        if not 1 <= self.port <= 65535:
-            raise ValueError("web port must be between 1 and 65535")
+        if not 0 <= self.port <= 65535:
+            raise ValueError("web port must be between 0 and 65535")
         remote = self.host not in LOOPBACK_HOSTS
         if remote and not self.allow_remote:
             raise ValueError("remote Web binding requires explicit allow_remote=True")
@@ -32,10 +32,10 @@ class WebConfig:
             raise ValueError("remote Web exposure requires an authentication token")
         if self.auth_token is not None and len(self.auth_token) < 32:
             raise ValueError("Web authentication token must contain at least 32 characters")
-        if any(origin != origin.strip() or not origin.startswith(("http://", "https://")) for origin in self.cors_origins):
-            raise ValueError("CORS origins must be explicit absolute HTTP(S) origins")
         if "*" in self.cors_origins:
             raise ValueError("wildcard CORS is forbidden")
+        if any(origin != origin.strip() or not origin.startswith(("http://", "https://")) for origin in self.cors_origins):
+            raise ValueError("CORS origins must be explicit absolute HTTP(S) origins")
 
     @property
     def is_loopback(self) -> bool:
