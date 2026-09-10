@@ -26,10 +26,10 @@ class Finding:
 
 
 _SECRET_PATTERNS = (
-    re.compile(r"(?i)(api[_-]?key|access[_-]?token|secret|password)\s*[:=]\s*['\"][^'\"]{8,}['\"]"),
+    re.compile(r"(?i)[\"']?(api[_-]?key|access[_-]?token|secret|password)[\"']?\s*[:=]\s*['\"][^'\"]{8,}['\"]"),
     re.compile(r"\b(?:sk|ghp|glpat|xox[baprs])-[-_A-Za-z0-9]{12,}\b"),
 )
-_BROAD_PERMISSION = re.compile(r"(?i)(?:allow|permission|permissions).*\b(?:\*|all|bash\s*\(\s*\*\s*\)|shell\s*\(\s*\*\s*\))")
+_BROAD_PERMISSION = re.compile(r"(?i)(?:allow|permission|permissions)[\"']?\s*[:=]\s*[\"']?(?:\*|all)\b")
 _UNSAFE_HOOK = re.compile(r"(?i)(?:hook|command).*\b(?:curl|wget|bash\s+-c|sh\s+-c|eval\s*\(|exec\s*\()")
 _SUSPICIOUS_INJECTION = re.compile(r"(?i)(?:ignore\s+(?:all|previous|prior)\s+instructions|reveal\s+(?:the\s+)?system\s+prompt|disable\s+(?:security|approval|governance))")
 _UNPINNED_TOOL = re.compile(r"(?i)(?:npx\s+-y|pip\s+install\s+[^\s]+@latest)")
