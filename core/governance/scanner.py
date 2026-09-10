@@ -32,7 +32,7 @@ _SECRET_PATTERNS = (
 _BROAD_PERMISSION = re.compile(r"(?i)(?:allow|permission|permissions).*\b(?:\*|all|bash\s*\(\s*\*\s*\)|shell\s*\(\s*\*\s*\))")
 _UNSAFE_HOOK = re.compile(r"(?i)(?:hook|command).*\b(?:curl|wget|bash\s+-c|sh\s+-c|eval\s*\(|exec\s*\()")
 _SUSPICIOUS_INJECTION = re.compile(r"(?i)(?:ignore\s+(?:all|previous|prior)\s+instructions|reveal\s+(?:the\s+)?system\s+prompt|disable\s+(?:security|approval|governance))")
-_UNPINNED_REMOTE = re.compile(r"(?i)(?:npx\s+-y|pip\s+install\s+[^\s]+(?:@latest)?|https?://[^\s]+)")
+_UNPINNED_TOOL = re.compile(r"(?i)(?:npx\s+-y|pip\s+install\s+[^\s]+@latest)")
 
 
 class GovernanceScanner:
@@ -58,10 +58,8 @@ class GovernanceScanner:
 
     def _scan_text(self, path: str, text: str) -> list[Finding]:
         findings: list[Finding] = []
-        lines = text.splitlines()
-        for number, line in enumerate(lines, 1):
-            stripped = line.strip()
-            evidence = f"line {number}: {stripped[:240]}"
+        for number, line in enumerate(text.splitlines(), 1):
+            evidence = f"line {number}: {line.strip()[:240]}"
             for pattern in _SECRET_PATTERNS:
                 if pattern.search(line):
                     findings.append(Finding("secret.literal", Severity.CRITICAL, path, "secret-like literal detected", evidence, "Replace the literal with a scoped secret reference and keep secrets outside source control."))
@@ -72,6 +70,6 @@ class GovernanceScanner:
                 findings.append(Finding("hook.unsafe-command", Severity.HIGH, path, "hook or configuration contains an unsafe command pattern", evidence, "Use bounded typed hooks and explicit, non-interpolated inputs; do not execute untrusted configuration."))
             if _SUSPICIOUS_INJECTION.search(line):
                 findings.append(Finding("content.injection", Severity.MEDIUM, path, "instruction-like prompt injection pattern detected", evidence, "Treat the content as untrusted data and remove authority-bearing instructions from configuration."))
-            if path.endswith((".json", ".yaml", ".yml", ".toml", ".md")) and _UNPINNED_REMOTE.search(line):
-                findings.append(Finding("supply.remote-unpinned", Severity.MEDIUM, path, "remote or unpinned dependency/configuration reference detected", evidence, "Pin versions or immutable references and verify the source before execution."))
+            if path.endswith((".json", ".yaml", ".yml", ".toml")) and _UNPINNED_TOOL.search(line):
+                findings.append(Finding("supply.unpinned-tool", Severity.MEDIUM, path, "unpinned package execution detected", evidence, "Pin tool/package versions or immutable references before execution."))
         return findings
