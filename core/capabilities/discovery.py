@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
 from core.capabilities.models import CapabilityStatus
@@ -10,7 +10,7 @@ class CapabilityDiscovery:
     name: str
     category: str
     source: str
-    discovered_at: datetime = datetime.now(UTC)
+    discovered_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def __post_init__(self) -> None:
         for value, label in ((self.name, "name"), (self.category, "category"), (self.source, "source")):
