@@ -1,0 +1,122 @@
+from core.runtime.bridge import CallbackHarnessAdapter, adapter_metadata, is_harness_adapter
+from core.runtime.deployment import HarnessDeploymentManifest, build_manifest
+from core.runtime.models import (
+    InvocationRequest,
+    InvocationResponse,
+    InvocationStatus,
+    RuntimeCapabilities,
+    RuntimeEvent,
+    RuntimeEventType,
+    RuntimeKind,
+)
+from core.runtime.protocol import HarnessMetadata
+from core.runtime.wire import (
+    WIRE_PROTOCOL,
+    capabilities_to_dict,
+    error_code,
+    request_to_dict,
+    response_status,
+    validate_wire_payload,
+)
+
+
+def test_callback_bridge_exposes_metadata_and_invokes() -> None:
+    metadata = HarnessMetadata("test-harness", RuntimeKind.AGENT, "1.0")
+    capabilities = RuntimeCapabilities(streaming=True, cancellation=True)
+    cancelled: list[str] = []
+
+    def invoke(request: InvocationRequest) -> InvocationResponse:
+        return InvocationResponse(
+            request.request_id,
+            InvocationStatus.COMPLETED,
+            output={"ok": True},
+            events=(RuntimeEvent(RuntimeEventType.COMPLETED, request.request_id, 0),),
+        )
+
+    adapter = CallbackHarnessAdapter(metadata, capabilities, invoke, lambda request_id: cancelled.append(request_id) or True)
+    request = InvocationRequest("echo", "hello", "project")
+    response = adapter.invoke(request)
+
+    assert response.request_id == request.request_id
+    assert is_harness_adapter(adapter)
+    assert adapter.cancel(request.request_id) is True
+    assert cancelled == [request.request_id]
+    assert adapter_metadata(adapter)["harness"]["harness_id"] == "test-harness"
+
+
+def test_callback_bridge_requires_cancel_callback_when_capability_is_declared() -> None:
+    metadata = HarnessMetadata("test-harness", RuntimeKind.CLI, "1.0")
+    try:
+        CallbackHarnessAdapter(metadata, RuntimeCapabilities(cancellation=True), lambda request: InvocationResponse(request.request_id, InvocationStatus.CANCELLED))
+    except ValueError as exc:
+        assert "cancel_callback" in str(exc)
+    else:
+        raise AssertionError("expected cancellation callback validation")
+
+
+def test_wire_request_has_stable_protocol_envelope() -> None:
+    request = InvocationRequest("echo", {"value": 1}, "project", metadata=(("source", "test"),))
+    payload = request_to_dict(request)
+    assert payload["protocol"] == WIRE_PROTOCOL
+    assert payload["request_id"] == request.request_id
+    assert payload["metadata"] == {"source": "test"}
+    assert validate_wire_payload(payload) is payload
+
+
+def test_wire_helpers_reject_unknown_protocol_and_parse_enums() -> None:
+    response = InvocationResponse("req-1", InvocationStatus.FAILED, error=__import__("core.runtime.models", fromlist=["RuntimeError"]).RuntimeError(__import__("core.runtime.models", fromlist=["RuntimeErrorCode"]).RuntimeErrorCode.TIMEOUT, "timed out"))
+    from core.runtime.wire import response_to_dict
+
+    payload = response_to_dict(response)
+    assert response_status(payload) is InvocationStatus.FAILED
+    assert error_code(payload["error"]).value == "timeout"
+    try:
+        validate_wire_payload({"protocol": "si.runtime.v0"})
+    except ValueError as exc:
+        assert "protocol" in str(exc)
+    else:
+        raise AssertionError("expected protocol rejection")
+
+
+def test_capability_serialization_is_complete() -> None:
+    capabilities = RuntimeCapabilities(True, True, True, True, True)
+    assert capabilities_to_dict(capabilities) == {
+        "streaming": True,
+        "cancellation": True,
+        "tool_calls": True,
+        "structured_output": True,
+        "session_continuity": True,
+    }
+
+
+def test_deployment_manifest_is_deterministic_and_non_authorizing() -> None:
+    agent = __import__("core.organization.models", fromlist=["AgentDefinition"]).AgentDefinition(
+        name="developer",
+        division="engineering",
+        responsibility="repair",
+        skills=("verify-change",),
+        capabilities=("code-edit",),
+        required_permissions=("workspace_write",),
+    )
+    team = __import__("core.teams.models", fromlist=["TeamDefinition"]).TeamDefinition(
+        name="repair-team", description="repair", members=("developer",), tasks=(), max_parallelism=1
+    )
+    manifest = build_manifest("test-harness", (agent,), (team,), skills=("verify-change",), capabilities=("streaming",))
+    assert manifest.as_dict() == {
+        "protocol": "si.runtime.v1",
+        "harness_id": "test-harness",
+        "agents": ["developer"],
+        "teams": ["repair-team"],
+        "skills": ["verify-change"],
+        "required_permissions": ["workspace_write"],
+        "capabilities": ["streaming"],
+    }
+
+
+def test_manifest_rejects_duplicate_entries() -> None:
+    try:
+        HarnessDeploymentManifest("si.runtime.v1", "h", ("a", "a"), (), (), (), ())
+    except ValueError as exc:
+        assert "unique" in str(exc)
+    else:
+        raise AssertionError("expected duplicate rejection")
