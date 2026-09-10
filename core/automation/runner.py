@@ -59,7 +59,11 @@ class AutomationRunner:
         )
         decision = self.governance.decide(request)
         if decision.status != DecisionStatus.ALLOW:
-            status = RunStatus.APPROVAL_REQUIRED if decision.status == DecisionStatus.APPROVAL_REQUIRED else RunStatus.SKIPPED
+            status = (
+                RunStatus.APPROVAL_REQUIRED
+                if decision.status == DecisionStatus.APPROVAL_REQUIRED
+                else RunStatus.SKIPPED
+            )
             return self._record(job, status, started, 0, "; ".join(decision.reasons), decision.status.value)
 
         attempts = 0
@@ -68,7 +72,7 @@ class AutomationRunner:
             attempts = attempt
             try:
                 self.actions[job.action](job.payload)
-            except Exception as exc:  # action failures are recorded, not swallowed silently
+            except Exception as exc:  # noqa: BLE001 — every action failure must be retried/recorded
                 last_error = f"{type(exc).__name__}: {exc}"
                 if attempt < job.retry.max_attempts:
                     self.sleeper(job.retry.delay_for(attempt))
