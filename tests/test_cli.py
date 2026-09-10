@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import core.cli.main as CLI_MODULE
 from core.cli.config import SIConfig, config_path, load_config, save_config
 from core.cli.main import _opencode_install_plan, build_parser, cmd_agents, cmd_teams
 
@@ -48,7 +47,8 @@ def test_config_path_honors_explicit_environment(monkeypatch, tmp_path: Path) ->
 
 
 def test_opencode_install_plan_uses_official_npm_package(monkeypatch) -> None:
-    monkeypatch.setattr(CLI_MODULE.shutil, "which", lambda name: "npm" if name == "npm" else None)
+    shutil_module = _opencode_install_plan.__globals__["shutil"]
+    monkeypatch.setattr(shutil_module, "which", lambda name: "npm" if name == "npm" else None)
     assert _opencode_install_plan() == ("npm", "install", "-g", "opencode-ai")
 
 
