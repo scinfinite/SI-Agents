@@ -90,7 +90,7 @@ class AgentCatalogTests(unittest.TestCase):
                 '"status":"unknown"}]}',
                 encoding="utf-8",
             )
-            with self.assertRaisesRegex(ValueError, "unknown is not a valid AgentStatus"):
+            with self.assertRaisesRegex(ValueError, "'unknown' is not a valid AgentStatus"):
                 load_catalog(path)
 
 
