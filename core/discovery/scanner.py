@@ -19,7 +19,7 @@ class DiscoveryScanner:
         for detector in self._detectors:
             try:
                 detections = detector.detect(root)
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - detector failure becomes an explicit unknown
                 unknowns.append(f"detector:{detector.name}: {type(exc).__name__}")
                 continue
             findings.extend(detection.finding() for detection in detections)
