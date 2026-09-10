@@ -15,7 +15,8 @@ def validate_skill(skill: Skill) -> tuple[str, ...]:
         errors.append("provenance is required")
     if any("grant" in item.casefold() or "bypass" in item.casefold() for item in skill.requested_permissions):
         errors.append("skills cannot grant or bypass permissions")
-    if any("credential" in item.casefold() or "secret" in item.casefold() for item in skill.evidence_requirements):
+    unsafe_evidence = ("request secret", "provide secret", "request credential", "provide credential", "credential input")
+    if any(token in item.casefold() for item in skill.evidence_requirements for token in unsafe_evidence):
         errors.append("evidence requirements cannot request credentials or secrets")
     if any(not requirement.name.strip() or not requirement.kind.strip() for requirement in skill.compatibility):
         errors.append("compatibility requirements must be complete")
