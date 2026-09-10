@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from tools.sandbox.command_policy import CommandPolicy
+from core.execution.execution_record import ExecutionRecord
+from core.policies.permission_engine import PermissionDecision, PermissionEngine
 from tools.sandbox.local_sandbox import LocalSandbox
 from tools.sandbox.sandbox_result import CommandResult
-from core.execution.execution_record import ExecutionRecord
-from core.policies.permission_engine import PermissionEngine, PermissionDecision
 
 
 class CommandRunner:
@@ -16,11 +15,7 @@ class CommandRunner:
 
     def run(self, task_id: str, command: str, *, timeout: float = 60.0) -> ExecutionRecord:
         self.permissions.require("local_command")
-        result: CommandResult
-        try:
-            result = self.sandbox.run(command, timeout=timeout)
-        except Exception:
-            raise
+        result: CommandResult = self.sandbox.run(command, timeout=timeout)
         return ExecutionRecord(
             task_id=task_id,
             command=result.command,
