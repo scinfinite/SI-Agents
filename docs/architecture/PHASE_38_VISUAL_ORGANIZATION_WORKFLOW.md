@@ -1,6 +1,6 @@
 # Phase 38 — Visual Organization & Workflow
 
-**Status: implementation in review; CI pending.**
+**Status: Complete + CI verified.**
 
 ## Purpose
 
@@ -21,11 +21,13 @@ Phase 38 makes the SI organization inspectable as an interactive visual graph wi
 
 The visualization is read-only. It does not create, edit, authorize, execute, schedule, cancel, or deploy anything. Governance remains the authorization authority; the Control API remains the machine-facing boundary; the browser remains a presentation client.
 
-The graph is rendered with DOM/SVG APIs and text nodes. No CDN, external script, inline script/style, telemetry, or browser-side execution engine is introduced. Existing Phase 36 Web security headers, localhost-first binding, remote authentication, CORS allowlist, bounded mutations, and audit behavior remain unchanged.
+The graph is rendered with DOM/SVG APIs and text nodes. No CDN, external script/style, telemetry, or browser-side execution engine is introduced. Existing Web security headers, localhost-first binding, remote authentication, CORS allowlist, bounded mutations, and audit behavior remain unchanged.
 
 ## Verification
 
-Feature CI must pass distribution build, isolated wheel installation, repository audit, Ruff, and the full pytest suite. Mainline CI must pass the same gates on the final merge commit. The phase is not complete until documentation records the exact final main commit, CI run, and test count.
+Phase 38 implementation was merged from PR #35 as squash commit `657530eefa41794fb425cd0fe38d2aced9bd316d`. Feature CI passed all build, wheel-install, repository-audit, Ruff, and pytest gates. Final mainline CI **#845** (`34508914827`) passed every repository gate on that exact implementation merge commit; setup, checkout, Python/tooling, distribution build, wheel installation, repository audit, Ruff, tests, diagnostics, and cleanup all completed successfully.
+
+The implementation was therefore verified on `main` before this documentation closure. This documentation update itself must receive the same final mainline verification before the phase is considered fully closed.
 
 ## Phase boundary
 
