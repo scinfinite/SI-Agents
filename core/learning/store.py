@@ -16,6 +16,8 @@ def _encode(value: object) -> object:
         return value.isoformat()
     if isinstance(value, tuple):
         return [_encode(item) for item in value]
+    if isinstance(value, list):
+        return [_encode(item) for item in value]
     if isinstance(value, EvidenceItem):
         return {**asdict(value)}
     if isinstance(value, EvaluationResult):
