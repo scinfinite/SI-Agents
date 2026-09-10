@@ -27,11 +27,9 @@ The Builder is an authoring and validation layer. It does **not** execute an age
 
 ## Verification
 
-Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`. Feature CI **#853** (`34511009965`) passed the repository build, wheel installation, repository audit, Ruff, full pytest, diagnostics, and cleanup gates. The final documentation-closed `main` verification is recorded below after the documentation merge.
+Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`. Feature CI **#853** (`34511009965`) passed the repository build, wheel installation, repository audit, Ruff, full pytest, diagnostics, and cleanup gates. Documentation closure merged from PR #39 as `864bed8c61c29aaf847bf2e1450ff4f34ac8bdc7`, and mainline CI **#856** (`34511394293`) passed all build, wheel-installation, repository-audit, Ruff, pytest, diagnostics, and cleanup gates on that documentation-closed tree.
 
-## Final mainline verification
-
-Pending the final CI run for the documentation-closed mainline tree.
+The subsequent documentation-evidence commit is itself required to pass the final mainline CI gate before Phase 39 is considered closed.
 
 ## Next phase
 
