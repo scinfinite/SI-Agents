@@ -21,7 +21,7 @@ def valid_payload() -> dict[str, object]:
     return {
         "id": "custom-review-agent",
         "name": "Custom Review Agent",
-        "division": "engineering",
+        "division": "si-engineering",
         "description": "Reviews engineering changes against explicit criteria.",
         "responsibilities": ["Review changes"],
         "deliverables": ["Review report"],
@@ -59,7 +59,7 @@ def test_existing_customization_cannot_add_capability(tmp_path):
 def test_existing_customization_must_keep_identity_and_division(tmp_path):
     service = AgentBuilderService(tmp_path)
     base = service.from_agent(service.catalog.all()[0].id)
-    base["division"] = "finance"
+    base["division"] = "si-finance"
     result = service.validate_payload(base)
     assert not result.valid
     assert any("division" in error for error in result.errors)
