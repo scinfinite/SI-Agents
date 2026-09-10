@@ -48,14 +48,22 @@ class PermissionEngine:
         if not normalized:
             raise ValueError("Capability must not be empty")
 
-        if normalized in {"destructive_git", "destructive_filesystem", "production_deploy",
-                          "credential_rotation", "publication", "paid_resource",
-                          "sensitive_data_transfer"}:
-            return PermissionDecision.ALLOW if approval_granted else PermissionDecision.APPROVAL_REQUIRED
-
         scope_matches = [scope for scope in self.scopes if self._scope_matches(scope, agent, tool)]
+        if self.scopes and not scope_matches:
+            return PermissionDecision.DENY
         if scope_matches and not any(normalized in scope.capabilities for scope in scope_matches):
             return PermissionDecision.DENY
+
+        if normalized in {
+            "destructive_git",
+            "destructive_filesystem",
+            "production_deploy",
+            "credential_rotation",
+            "publication",
+            "paid_resource",
+            "sensitive_data_transfer",
+        }:
+            return PermissionDecision.ALLOW if approval_granted else PermissionDecision.APPROVAL_REQUIRED
 
         allowed = {
             "filesystem_read": self.allow_read_filesystem,
