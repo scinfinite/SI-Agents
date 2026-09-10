@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from core.events.models import Event
-from core.rules.models import Rule, RuleEffect
+from core.rules.models import RuleEffect
 from core.rules.registry import RuleRegistry
 
 
