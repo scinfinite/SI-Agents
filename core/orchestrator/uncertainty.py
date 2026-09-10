@@ -39,10 +39,13 @@ class UncertaintyEngine:
             raise ValueError("Evidence count must not be negative")
         if not statement.strip():
             raise ValueError("Uncertainty statement must not be empty")
-        if not evidence_count and not assumptions:
+        if missing_evidence:
+            level = UncertaintyLevel.MEDIUM
+            confidence = min(0.75, 0.4 + (0.1 * evidence_count))
+        elif not evidence_count and not assumptions:
             level = UncertaintyLevel.UNKNOWN
             confidence = 0.0
-        elif missing_evidence or assumptions:
+        elif assumptions:
             level = UncertaintyLevel.MEDIUM
             confidence = min(0.75, 0.4 + (0.1 * evidence_count))
         else:
