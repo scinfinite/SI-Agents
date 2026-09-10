@@ -34,7 +34,7 @@ def project_identity(workspace: Path) -> str | None:
 
 
 def _sanitize_git_url(value: str) -> str:
-    if value.startswith("http://") or value.startswith("https://"):
+    if value.startswith(("http://", "https://")):
         parsed = urlsplit(value)
         return urlunsplit((parsed.scheme, parsed.hostname or "", parsed.path, "", ""))
     if "@" in value and ":" in value.split("@", 1)[0]:
