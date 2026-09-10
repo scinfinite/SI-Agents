@@ -2,6 +2,7 @@ import pytest
 
 from core.orchestrator.alpha_workflow import AlphaWorkflow
 from core.orchestrator.orchestrator import Orchestrator
+from core.state.task_state import TaskStatus
 
 
 def test_alpha_workflow_enforces_repair_verification_order() -> None:
@@ -20,7 +21,7 @@ def test_alpha_workflow_enforces_repair_verification_order() -> None:
     )
 
     assert stages == ["inspect", "reproduce", "repair", "verify", "red_team", "regression"]
-    assert result.task.succeeded
+    assert result.task.status is TaskStatus.SUCCEEDED
     assert len(orchestrator.checkpoints.for_task(result.task.id)) == 1
     assert len(orchestrator.evidence.all()) == 7
 
@@ -43,7 +44,7 @@ def test_alpha_workflow_stops_before_repair_when_reproduction_fails() -> None:
 
     assert stages == ["inspect", "reproduce"]
     task = orchestrator.tasks.all()[0]
-    assert task.failed
+    assert task.status is TaskStatus.FAILED
     assert orchestrator.checkpoints.for_task(task.id) == ()
 
 
