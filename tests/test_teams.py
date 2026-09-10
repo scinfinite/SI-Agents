@@ -128,7 +128,13 @@ class TeamEngineTests(unittest.TestCase):
             raise RuntimeError("primary failed")
 
         def escalation(context):
-            return AgentResult("senior", "succeeded", "escalated recovery", evidence_ids=("escalated-ok",))
+            return AgentResult(
+                "senior",
+                "succeeded",
+                "escalated recovery",
+                evidence_ids=("escalated-ok",),
+                handoff={"verified": True},
+            )
 
         registry = TeamRegistry()
         registry.register(self.make_team(TaskDefinition("work", "primary", escalate_to="senior")))
