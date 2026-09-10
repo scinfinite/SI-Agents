@@ -149,7 +149,7 @@ class TeamEngine:
             try:
                 escalation_context = AgentContext(task_id=f"{task.id}:escalation", values=deepcopy(context.values))
                 escalation = resolve_worker(task.escalate_to)(escalation_context)
-                self._validate_result(task, escalation, allow_verification=False)
+                self._validate_result(task, escalation)
                 execution.emit(
                     WorkflowEventType.TASK_ESCALATED,
                     task_id=task.id,
@@ -164,17 +164,12 @@ class TeamEngine:
         return TaskStatus.FAILED, None, f"task {task.id} failed: {last_error}", {}
 
     @staticmethod
-    def _validate_result(
-        task: TaskDefinition,
-        result: AgentResult,
-        *,
-        allow_verification: bool = True,
-    ) -> None:
+    def _validate_result(task: TaskDefinition, result: AgentResult) -> None:
         if result.status != "succeeded":
             raise RuntimeError(f"agent returned non-success status: {result.status}")
         if task.requires_evidence and not result.evidence_ids:
             raise RuntimeError("task requires evidence but agent returned none")
-        if allow_verification and task.verification_gate and not bool(result.handoff.get("verified")):
+        if task.verification_gate and not bool(result.handoff.get("verified")):
             raise RuntimeError("verification gate requires handoff['verified'] == true")
 
     @staticmethod
