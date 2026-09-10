@@ -7,8 +7,8 @@ stable SI contract and keeps arbitrary callbacks behind one normalization point.
 from collections.abc import Callable
 from typing import Any
 
-from core.runtime.protocol import HarnessAdapter, HarnessMetadata
 from core.runtime.models import InvocationRequest, InvocationResponse, RuntimeCapabilities
+from core.runtime.protocol import HarnessAdapter, HarnessMetadata
 
 InvokeCallback = Callable[[InvocationRequest], InvocationResponse]
 CancelCallback = Callable[[str], bool]
