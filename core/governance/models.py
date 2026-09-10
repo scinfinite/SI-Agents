@@ -182,8 +182,6 @@ class GovernanceRequest:
             raise ValueError("action must not be empty")
         if self.estimated_cost < 0:
             raise ValueError("estimated_cost must be non-negative")
-        if not self.provenance:
-            raise ValueError("governance request requires provenance")
         if any(not item.strip() for item in self.capabilities):
             raise ValueError("capability names must not be empty")
         if not isinstance(self.metadata, Mapping):
