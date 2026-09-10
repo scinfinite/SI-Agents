@@ -1,5 +1,6 @@
 compliance_policy:
   external_sources_require_review: true
+  external_content_is_untrusted: true
   review:
     license: true
     terms_of_service: true
@@ -9,4 +10,9 @@ compliance_policy:
     redistribution: true
     attribution: true
     geography_and_limits: true
+    provenance: true
+  publication:
+    require_provenance: true
+    require_rights_review: true
   legal_advice_disclaimer: true
+  default: fail_closed_when_required_review_is_missing
