@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–34 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–35 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -40,6 +40,7 @@
 32. Memory & Knowledge — **Complete and CI-verified.** Immutable scoped Memory, verified source-backed Knowledge, provenance/evidence contracts, fail-closed promotion, explicit supersession/contradiction tracking, deterministic context-aware retrieval, atomic schema-versioned persistence, lifecycle event integration, and targeted regression coverage.
 33. Security & Governance Center — **Complete and CI-verified.** Typed governance objects, fail-closed capability/permission decisions, approval expiry handling, credential + external-egress denial, declarative governance catalog, packaged governance configuration, deterministic read-only security scanner, audit-safe decision records, and adversarial regression coverage.
 34. Organization Expansion — **Complete and CI-verified.** Immutable team/division/workflow contracts, source-of-truth validation against the canonical 279-agent catalog, five operating teams, single-home assignments for all 18 divisions, four evidence-gated workflows, authority-boundary checks, packaging, and adversarial regression coverage.
+35. Control API — **Complete and CI-verified.** Versioned `/api/v1` machine-facing contract, deterministic OpenAPI description, canonical agent/team/organization/workflow/Skill/governance/event/run read models, governed run creation, localhost-only dependency-free HTTP transport, bounded JSON mutations, security response headers, packaged `si-api` launcher, and adversarial HTTP/governance regression coverage.
 
 ## Release targets
 
@@ -48,7 +49,7 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 34:** complete and CI-verified
+- **Post-v2 validation through Phase 35:** complete and CI-verified
 
 ## Phase completion gate
 
@@ -74,7 +75,11 @@ Phase 34 implementation was merged from PR #25 as merge commit `a100282375f4fdb8
 
 Feature CI **#798** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite on the Phase 34 delivery branch. Mainline CI **#799** passed all of the same gates on the exact merge commit. Final pytest diagnostics reported **409 passed in 6.30s**.
 
-The implementation and documentation are now synchronized and Phase 35 — Control API — is the next phase.
+## Phase 35 verification record
+
+Phase 35 implementation was merged from PR #27 as merge commit `8e990f225b69fe1822861e1f21af29094c6b481b` after feature CI **#809** passed all build, wheel, repository-audit, Ruff, and pytest gates with **417 passed**. The feature CI cycle caught and resolved Ruff import-order findings before the successful run.
+
+Documentation was synchronized after the implementation merge. The final mainline CI run on the documentation-closed state is the final Phase 35 release gate.
 
 ## Documentation structure
 
@@ -85,8 +90,9 @@ The implementation and documentation are now synchronized and Phase 35 — Contr
 - `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
 - `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract and final verification record.
 - `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical Organization Expansion contract and final verification record.
+- `PHASE_35_CONTROL_API.md` — canonical Control API contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 35 — Control API.**
+**Phase 36 — Local Web Foundation.**
