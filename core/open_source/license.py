@@ -1,7 +1,4 @@
-from core.open_source.models import (
-    IntelligenceStatus,
-    LicenseAssessment,
-)
+from core.open_source.models import LicenseAssessment, IntelligenceStatus
 
 
 # Conservative identifiers only. This is not legal advice and does not replace license review.
