@@ -1,0 +1,32 @@
+schema_version: 1
+records:
+  - id: ecc
+    source: affaan-m/ECC
+    source_url: https://github.com/affaan-m/ECC
+    source_license: MIT
+    reviewed_on: 2026-09-10
+    concepts:
+      - skills as reusable engineering procedures
+      - lifecycle hooks and policy enforcement
+      - evidence-oriented development workflows
+      - persistent engineering memory and controlled learning
+      - security scanning and multi-harness adaptation
+    si_agents_design: Independently designed control-plane, skill, verification, memory, governance, and capability primitives; no ECC runtime dependency.
+    copied_code_or_content: false
+    third_party_notice_required: false
+    evidence: audit of upstream repository documentation and license
+
+  - id: agency-agents
+    source: msitarzewski/agency-agents
+    source_url: https://github.com/msitarzewski/agency-agents
+    source_license: MIT
+    reviewed_on: 2026-09-10
+    concepts:
+      - specialized agent roles
+      - explicit workflows and deliverables
+      - success criteria and domain specialization
+      - engineering, evidence, compliance, and review roles
+    si_agents_design: Independently designed capability-oriented agents with explicit tools, permissions, evidence, verification, and escalation rather than copied personas.
+    copied_code_or_content: false
+    third_party_notice_required: false
+    evidence: audit of upstream repository documentation, agent definitions, security guidance, and license
