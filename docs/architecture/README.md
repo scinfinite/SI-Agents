@@ -49,6 +49,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 32 | `PHASE_32_MEMORY_KNOWLEDGE.md` | Complete + CI verified |
 | 33 | `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` | Complete + CI verified |
 | 34 | `PHASE_34_ORGANIZATION_EXPANSION.md` | Complete + CI verified |
+| 35 | `PHASE_35_CONTROL_API.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -65,11 +66,12 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
 - `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract, scanner, and final verification record.
 - `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical organization/team/workflow contract and final verification record.
+- `PHASE_35_CONTROL_API.md` — canonical versioned Control API contract and final verification record.
 - `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29–34 are complete and CI-verified.
+`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29–35 are complete and CI-verified.
 
 ```text
 29 SI Agent Personas       [complete]
@@ -84,7 +86,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
    ↓
 34 Organization Expansion  [complete]
    ↓
-35 Control API
+35 Control API             [complete]
    ↓
 36 Web Foundation
    ↓
