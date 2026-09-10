@@ -6,7 +6,13 @@ import pytest
 
 from core.provider_intelligence.circuit import CircuitBreaker
 from core.provider_intelligence.health import HealthObservation, HealthTracker
-from core.provider_intelligence.models import Capability, ModelProfile, ProviderProfile, QuotaSnapshot, RoutingRequest
+from core.provider_intelligence.models import (
+    Capability,
+    ModelProfile,
+    ProviderProfile,
+    QuotaSnapshot,
+    RoutingRequest,
+)
 from core.provider_intelligence.quota import QuotaTracker
 from core.provider_intelligence.registry import ProviderRegistry
 from core.provider_intelligence.router import ModelRouter, NoSuitableModelError
