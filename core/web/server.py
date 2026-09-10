@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from core.agent_builder.service import AgentBuilderService
 from core.control_api.openapi import document
 from core.control_api.service import ControlApiService
+from core.evidence.service import EvidenceService
 
 from .audit import AuditLogger
 from .models import WebConfig
@@ -101,6 +102,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             "/api/v1/workflows": service.workflows(), "/api/v1/organization": service.organization(),
             "/api/v1/skills": service.skills(), "/api/v1/memory": service.memory(),
             "/api/v1/governance": service.governance_state(), "/api/v1/evidence": service.evidence(),
+            "/api/v1/evidence/records": self.web_server.evidence.list(),
             "/api/v1/environments": service.environments(), "/api/v1/harnesses": service.harnesses(),
             "/api/v1/settings": service.settings(), "/api/v1/visualization": service.visualization(),
             "/api/v1/events": service.events(), "/api/v1/runs": service.runs(),
@@ -110,6 +112,11 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(), "environments": service.environments(),
                     "harnesses": service.harnesses(), "evidence": service.evidence(), "visualization": service.visualization(),
                     "agent_builder": self.web_server.builder.list()}
+        if path.startswith("/api/v1/evidence/"):
+            evidence_id = path.removeprefix("/api/v1/evidence/")
+            if evidence_id.endswith("/verify"):
+                raise KeyError(path)
+            return self.web_server.evidence.get(evidence_id)
         if path.startswith("/api/v1/agent-builder/drafts/"):
             draft_id = path.removeprefix("/api/v1/agent-builder/drafts/")
             if draft_id.endswith("/test"):
@@ -120,7 +127,10 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         if path in routes:
             return routes[path]
         if path.startswith("/api/v1/runs/"):
-            return service.get_run(path.removeprefix("/api/v1/runs/"))
+            suffix = path.removeprefix("/api/v1/runs/")
+            if suffix.endswith("/timeline"):
+                return self.web_server.evidence.timeline(suffix.removesuffix("/timeline"))
+            return service.get_run(suffix)
         raise KeyError(path)
 
     def do_OPTIONS(self) -> None:
@@ -186,6 +196,20 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 self._send(202, result)
                 self._audit(202, {"mutation": "run_create", "decision": "accepted", "run_id": result.get("id")})
                 return
+            if path == "/api/v1/evidence":
+                result = self.web_server.evidence.record(payload)
+                self._send(201, result)
+                self._audit(201, {"mutation": "evidence_record", "evidence_id": result.get("id"), "kind": result.get("kind")})
+                return
+            if path.startswith("/api/v1/evidence/") and path.endswith("/verify"):
+                evidence_id = path.removeprefix("/api/v1/evidence/").removesuffix("/verify")
+                state = payload.get("verification")
+                if not isinstance(state, str):
+                    raise ValueError("verification is required")
+                result = self.web_server.evidence.verify(evidence_id, state)
+                self._send(200, result)
+                self._audit(200, {"mutation": "evidence_verify", "evidence_id": evidence_id, "verification": state})
+                return
             if path == "/api/v1/agent-builder/validate":
                 result = self.web_server.builder.validate_payload(payload)
                 self._send(200, result.as_dict())
@@ -219,10 +243,10 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             self._audit(404)
         except (TypeError, ValueError, UnicodeDecodeError):
             self._error(400, "invalid_request")
-            self._audit(400, {"mutation": "agent_builder", "decision": "invalid"})
+            self._audit(400, {"mutation": "request", "decision": "invalid"})
         except Exception:
             self._error(500, "internal_error")
-            self._audit(500, {"mutation": "agent_builder", "decision": "error"})
+            self._audit(500, {"mutation": "request", "decision": "error"})
 
     def log_message(self, format: str, *args: object) -> None:
         return
@@ -240,6 +264,7 @@ class WebServer(ThreadingHTTPServer):
         self.config = config
         self.service = service
         self.builder = AgentBuilderService(service.root)
+        self.evidence = EvidenceService(str(Path(service.root) / ".si" / "evidence.v1.json"))
         self.audit = audit
 
 
