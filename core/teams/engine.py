@@ -127,7 +127,7 @@ class TeamEngine:
                 worker = resolve_worker(task.agent_id)
                 result = worker(context)
                 self._validate_result(task, result)
-                handoff = dict(result.handoff)
+                handoff = dict(result.handoff) if task.context_mode is ContextMode.SHARED else {}
                 if task.context_mode is ContextMode.SHARED:
                     handoff = {**context.values, **handoff}
                 execution.emit(
@@ -155,7 +155,8 @@ class TeamEngine:
                     task_id=task.id,
                     data={"to": task.escalate_to, "agent": escalation.agent},
                 )
-                return TaskStatus.ESCALATED, escalation, last_error, dict(escalation.handoff)
+                handoff = dict(escalation.handoff) if task.context_mode is ContextMode.SHARED else {}
+                return TaskStatus.ESCALATED, escalation, last_error, handoff
             except Exception as exc:  # noqa: BLE001 - escalation is an agent boundary
                 last_error = f"{last_error}; escalation failed: {exc}"
 
