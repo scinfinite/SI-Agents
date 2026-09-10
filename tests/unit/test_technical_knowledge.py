@@ -75,8 +75,8 @@ def test_registry_selects_validated_entries_by_kind() -> None:
             status=KnowledgeStatus.EXPERIMENTAL,
         )
     )
-    assert [entry.name for entry in registry.validated(KnowledgeKind.LANGUAGE)] == ["Python"]
-    assert registry.validated(KnowledgeKind.FRAMEWORK) == ()
+    assert [entry.name for entry in registry.validated(kind=KnowledgeKind.LANGUAGE)] == ["Python"]
+    assert registry.validated(kind=KnowledgeKind.FRAMEWORK) == ()
 
 
 def test_language_catalog_has_required_dimensions_and_java() -> None:
@@ -125,7 +125,7 @@ def test_authoritative_sources_exist_for_validated_language_entries() -> None:
 
 def test_language_catalog_loader_builds_validated_runtime_entries() -> None:
     registry = load_language_catalog(ROOT)
-    assert len(registry.validated(KnowledgeKind.LANGUAGE)) == 12
+    assert len(registry.validated(kind=KnowledgeKind.LANGUAGE)) == 12
     java = registry.get_by_name("java")
     assert java.status is KnowledgeStatus.VALIDATED
     assert java.sources
