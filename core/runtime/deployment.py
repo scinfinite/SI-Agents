@@ -53,10 +53,10 @@ def build_manifest(
     protocol: str = "si.runtime.v1",
 ) -> HarnessDeploymentManifest:
     """Build a deterministic exposure manifest without changing authority."""
-    agent_ids = tuple(sorted(agent.name for agent in agents))
-    team_ids = tuple(sorted(team.name for team in teams))
+    agent_ids = tuple(sorted(agent.id for agent in agents))
+    team_ids = tuple(sorted(team.id for team in teams))
     permissions = tuple(
-        sorted({permission for agent in agents for permission in agent.required_permissions})
+        sorted({permission for agent in agents for permission in agent.permissions})
     )
     return HarnessDeploymentManifest(
         protocol=protocol,
