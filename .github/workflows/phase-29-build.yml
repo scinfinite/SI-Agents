@@ -15,3 +15,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build persona corpus from pinned source inventory
         run: python tools/persona_parity_build.py --commit
+      - name: Synchronize typed catalog
+        run: python tools/phase29_catalog_sync.py
