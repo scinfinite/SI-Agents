@@ -1,18 +1,12 @@
 # Phase 29 Provenance Record
 
-## External references inspected
+## External engineering references inspected
 
-### ECC — `affaan-m/ECC`
+Current external specialist-agent and engineering-automation repositories were inspected during Phase 29 as reference material for general engineering patterns.
 
-Observed useful general patterns in the current repository: specialist agent roles, skills-first reusable engineering procedures, explicit verification/review loops, memory/learning as structured engineering support, and security scanning around agent assets. ECC also distinguishes harness-specific integration concerns from reusable engineering content.
+Observed useful general patterns included specialist decomposition, skills-first reusable procedures, explicit verification/review loops, structured memory and learning support, security scanning around agent assets, readable Markdown role artifacts, division/domain organization, and separation of reusable content from harness-specific integration.
 
-Application to SI-Agents: these ideas informed the decision to make persona files human-readable and specialist-oriented while keeping execution, governance, and harness boundaries in SI typed contracts.
-
-### Agency Agents — `msitarzewski/agency-agents`
-
-Observed useful general patterns in the current repository: each specialist is represented as a readable Markdown artifact with identity/personality, mission, workflow, deliverables, and success-oriented behavior, organized by division/domain.
-
-Application to SI-Agents: these ideas informed the persona section structure and division-oriented file organization, but SI-Agents adds deterministic parsing, typed compilation, governance preservation, validation, provenance, and fail-closed handling.
+Application to SI-Agents: these generalized ideas informed a human-readable persona layer while execution, governance, and harness boundaries remain in SI typed contracts.
 
 ## Independent design decisions
 
@@ -25,12 +19,13 @@ Application to SI-Agents: these ideas informed the persona section structure and
 7. Registry discovery is deterministic and duplicate-safe.
 8. Unsupported schema/version values fail closed.
 9. Security and command-like text inside Markdown is inert data; importing a persona never executes it.
+10. The completed 279-persona corpus is independently normalized into SI's own behavioral and governance vocabulary.
 
 ## Evidence
 
 Implementation files: `core/personas/`.
-Canonical persona artifacts: `agents/engineering/*.md`, `agents/debugging/*.md`, `agents/verification/*.md`, and `agents/security/*.md`.
-Tests: `tests/test_personas.py` plus updated catalog regression coverage.
-Distribution: `pyproject.toml` includes canonical persona Markdown as package data.
+Canonical persona artifacts: `agents/**/*.md`.
+Tests: `tests/test_personas.py` and `tests/test_phase29_persona_parity.py`.
+Distribution: `pyproject.toml` includes the complete persona Markdown corpus as package data.
 
-This record documents generalized influence only; it is not a claim of code or prompt reuse from either external project.
+This record documents generalized engineering influence only; it does not claim code, prompt, prose, or repository-architecture reuse.
