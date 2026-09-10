@@ -1,3 +1,4 @@
+from core.organization.models import AgentDefinition
 from core.runtime.bridge import CallbackHarnessAdapter, adapter_metadata, is_harness_adapter
 from core.runtime.deployment import HarnessDeploymentManifest, build_manifest
 from core.runtime.models import (
@@ -5,6 +6,8 @@ from core.runtime.models import (
     InvocationResponse,
     InvocationStatus,
     RuntimeCapabilities,
+    RuntimeError,
+    RuntimeErrorCode,
     RuntimeEvent,
     RuntimeEventType,
     RuntimeKind,
@@ -18,6 +21,7 @@ from core.runtime.wire import (
     response_status,
     validate_wire_payload,
 )
+from core.teams.models import TaskDefinition, TeamDefinition
 
 
 def test_callback_bridge_exposes_metadata_and_invokes() -> None:
@@ -47,7 +51,11 @@ def test_callback_bridge_exposes_metadata_and_invokes() -> None:
 def test_callback_bridge_requires_cancel_callback_when_capability_is_declared() -> None:
     metadata = HarnessMetadata("test-harness", RuntimeKind.CLI, "1.0")
     try:
-        CallbackHarnessAdapter(metadata, RuntimeCapabilities(cancellation=True), lambda request: InvocationResponse(request.request_id, InvocationStatus.CANCELLED))
+        CallbackHarnessAdapter(
+            metadata,
+            RuntimeCapabilities(cancellation=True),
+            lambda request: InvocationResponse(request.request_id, InvocationStatus.CANCELLED),
+        )
     except ValueError as exc:
         assert "cancel_callback" in str(exc)
     else:
@@ -64,12 +72,16 @@ def test_wire_request_has_stable_protocol_envelope() -> None:
 
 
 def test_wire_helpers_reject_unknown_protocol_and_parse_enums() -> None:
-    response = InvocationResponse("req-1", InvocationStatus.FAILED, error=__import__("core.runtime.models", fromlist=["RuntimeError"]).RuntimeError(__import__("core.runtime.models", fromlist=["RuntimeErrorCode"]).RuntimeErrorCode.TIMEOUT, "timed out"))
+    response = InvocationResponse(
+        "req-1",
+        InvocationStatus.FAILED,
+        error=RuntimeError(RuntimeErrorCode.TIMEOUT, "timed out"),
+    )
     from core.runtime.wire import response_to_dict
 
     payload = response_to_dict(response)
     assert response_status(payload) is InvocationStatus.FAILED
-    assert error_code(payload["error"]).value == "timeout"
+    assert error_code(payload["error"]) is RuntimeErrorCode.TIMEOUT
     try:
         validate_wire_payload({"protocol": "si.runtime.v0"})
     except ValueError as exc:
@@ -90,16 +102,27 @@ def test_capability_serialization_is_complete() -> None:
 
 
 def test_deployment_manifest_is_deterministic_and_non_authorizing() -> None:
-    agent = __import__("core.organization.models", fromlist=["AgentDefinition"]).AgentDefinition(
-        name="developer",
+    agent = AgentDefinition(
+        id="developer",
+        name="Developer",
         division="engineering",
-        responsibility="repair",
+        description="repair code",
+        responsibilities=("repair",),
+        deliverables=("change",),
+        success_criteria=("tests",),
+        boundaries=("no unverified claims",),
         skills=("verify-change",),
         capabilities=("code-edit",),
-        required_permissions=("workspace_write",),
+        permissions=("workspace_write",),
     )
-    team = __import__("core.teams.models", fromlist=["TeamDefinition"]).TeamDefinition(
-        name="repair-team", description="repair", members=("developer",), tasks=(), max_parallelism=1
+    task = TaskDefinition(id="repair", agent_id="developer")
+    team = TeamDefinition(
+        id="repair-team",
+        name="Repair Team",
+        description="repair",
+        members=("developer",),
+        tasks=(task,),
+        max_parallelism=1,
     )
     manifest = build_manifest("test-harness", (agent,), (team,), skills=("verify-change",), capabilities=("streaming",))
     assert manifest.as_dict() == {
