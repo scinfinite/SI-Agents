@@ -66,7 +66,7 @@ def test_parser_rejects_malformed_frontmatter_and_missing_sections() -> None:
         parse_persona(PERSONA.replace("## Evidence Requirements", "## Evidence"))
 
 
-def test_parser_rejects_duplicate_and_dangerous_frontmatter() -> None:
+def test_parser_rejects_duplicate_dangerous_and_unknown_frontmatter() -> None:
     duplicate = PERSONA.replace(
         "description: Example behavioral contract.",
         "description: one\ndescription: two",
@@ -75,10 +75,16 @@ def test_parser_rejects_duplicate_and_dangerous_frontmatter() -> None:
         "description: Example behavioral contract.",
         "permissions: [admin]\ndescription: x",
     )
+    unknown = PERSONA.replace(
+        "description: Example behavioral contract.",
+        "owner: operator\ndescription: x",
+    )
     with pytest.raises(ValueError, match="Duplicate frontmatter"):
         parse_persona(duplicate)
     with pytest.raises(ValueError, match="privilege fields"):
         parse_persona(dangerous)
+    with pytest.raises(ValueError, match="unsupported frontmatter"):
+        parse_persona(unknown)
 
 
 def test_parser_rejects_non_bullet_lists() -> None:
