@@ -1,0 +1,16 @@
+# Provider metadata only; credentials must come from approved secret/runtime stores.
+providers:
+  policy:
+    disabled_by_default: true
+    require_explicit_registration: true
+    require_health_observation: true
+    require_quota_observation_when_available: true
+    fallback:
+      skip_open_circuit: true
+      skip_exhausted_quota: true
+      preserve_capability_constraints: true
+      preserve_cost_constraints: true
+      preserve_latency_constraints: true
+    secrets:
+      never_store_credentials: true
+      never_log_credentials: true
