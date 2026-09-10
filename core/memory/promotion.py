@@ -5,8 +5,19 @@ from dataclasses import replace
 from .models import MemoryEntry, MemoryScope, MemoryStatus, PromotionDecision
 
 
+_SCOPE_ORDER = (
+    MemoryScope.TASK,
+    MemoryScope.PROJECT,
+    MemoryScope.TEAM,
+    MemoryScope.AGENT,
+    MemoryScope.DIVISION,
+    MemoryScope.ORGANIZATION,
+    MemoryScope.GLOBAL,
+)
+
+
 class MemoryPromoter:
-    """Fail-closed policy for moving memories one scope wider at a time."""
+    """Fail-closed promotion policy with explicit evidence and scope ancestry."""
 
     def __init__(self, minimum_confidence: float = 0.8, minimum_verified_evidence: int = 2) -> None:
         if not 0.0 <= minimum_confidence <= 1.0:
@@ -18,7 +29,10 @@ class MemoryPromoter:
 
     @staticmethod
     def _next_scope(scope: MemoryScope) -> MemoryScope | None:
-        return {MemoryScope.TASK: MemoryScope.PROJECT, MemoryScope.PROJECT: MemoryScope.GLOBAL, MemoryScope.GLOBAL: None}[scope]
+        try:
+            return _SCOPE_ORDER[_SCOPE_ORDER.index(scope) + 1]
+        except (ValueError, IndexError):
+            return None
 
     def evaluate(self, entry: MemoryEntry, target_scope: MemoryScope | None = None) -> PromotionDecision:
         expected = self._next_scope(entry.scope)
@@ -37,8 +51,16 @@ class MemoryPromoter:
             reasons.append("Insufficient verified evidence")
         if target is MemoryScope.PROJECT and not entry.project_id:
             reasons.append("Project promotion requires project_id")
-        if target is MemoryScope.GLOBAL and not entry.project_id:
-            reasons.append("Global promotion requires a project provenance anchor")
+        if target is MemoryScope.TEAM and not entry.team_id:
+            reasons.append("Team promotion requires team_id")
+        if target is MemoryScope.AGENT and not entry.agent_id:
+            reasons.append("Agent promotion requires agent_id")
+        if target is MemoryScope.DIVISION and not entry.division_id:
+            reasons.append("Division promotion requires division_id")
+        if target is MemoryScope.ORGANIZATION and not entry.organization_id:
+            reasons.append("Organization promotion requires organization_id")
+        if target is MemoryScope.GLOBAL and not entry.organization_id:
+            reasons.append("Global promotion requires an organization provenance anchor")
         return PromotionDecision(entry.id, not reasons, target, tuple(reasons), self.minimum_verified_evidence, verified)
 
     def promote(self, entry: MemoryEntry, target_scope: MemoryScope | None = None) -> MemoryEntry:
