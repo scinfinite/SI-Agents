@@ -8,6 +8,7 @@ import pytest
 
 from core.organization.loader import load_catalog
 from core.personas import PersonaRegistry, compile_persona, parse_persona, validate_persona
+from core.personas.parser import parse_persona_file
 
 
 PERSONA = """---
@@ -147,8 +148,6 @@ def test_persona_source_is_data_and_never_executed(tmp_path) -> None:
     )
     path = tmp_path / "malicious.md"
     path.write_text(malicious, encoding="utf-8")
-    from core.personas.parser import parse_persona_file
-
     persona = parse_persona_file(path)
     assert "rm -rf" in persona.identity
 
