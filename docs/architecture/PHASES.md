@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–23 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–24 implemented; Phase 24 awaits CI verification.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -25,6 +25,7 @@
 21. Agent Teams & Workflows — canonical teams, dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Complete.**
 22. Universal Harness Integration — versioned language-neutral wire contract, structural callback bridge, adapter discovery, organization deployment manifests, and conformance coverage. **Complete.**
 23. OpenCode Integration — headless-server adapter, session continuity, normalized messages/events, cancellation, safe authentication handling, and distribution/CI verification. **Complete.**
+24. OmniRoute Integration — OpenAI-compatible gateway transport, deterministic model discovery, secure credential handling, fail-closed health/failure classification, correlation/session forwarding, and a governed delegation boundary that keeps provider/model routing authoritative in OmniRoute. **Implementation complete; CI verification pending.**
 
 ## Release targets
 
@@ -38,10 +39,21 @@
 - **Post-v2 orchestration:** Phase 21 — **complete**
 - **Post-v2 interoperability:** Phase 22 — **complete**
 - **Post-v2 OpenCode:** Phase 23 — **complete**
+- **Post-v2 model gateway:** Phase 24 — **implementation complete; verification pending**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 24 completion candidate
+
+Phase 24 adds an external OmniRoute model/provider gateway without creating a second provider-routing authority. `core/provider_intelligence/omniroute.py` provides a stdlib-only OpenAI-compatible client for `/v1/models` and non-streaming `/v1/chat/completions`, deterministic catalog normalization, fail-closed health checks, retryable transport classification, and forwarding of OmniRoute session/idempotency/request-correlation headers. `OmniRouteConfig` defaults to loopback `127.0.0.1:20128`, keeps credentials in memory or an environment variable, and requires HTTPS for non-loopback remote endpoints by default.
+
+`core/provider_intelligence/omniroute_router.py` adds a thin invocation boundary that delegates model/provider routing to OmniRoute. It rejects SI-side cost/latency constraints that cannot be independently verified and rejects `auto` when an SI model allowlist would be required. This avoids shadow pricing, routing, fallback, or circuit-breaker logic around OmniRoute.
+
+Phase 24 intentionally stops before Termux/Codespace installation, the `si` CLI, persistent credential/config management, OpenCode configuration mutation, streaming normalization, cross-environment handoff, and automatic paid-provider activation. Those remain later phases or deployment responsibilities.
+
+The detailed contract is documented in `docs/architecture/PHASE_24_OMNIROUTE_INTEGRATION.md`.
 
 ## Phase 23 completion
 
