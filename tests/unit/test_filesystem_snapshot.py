@@ -24,6 +24,18 @@ def test_filesystem_snapshot_restores_workspace_with_approval(tmp_path) -> None:
     assert not (tmp_path / "new.txt").exists()
 
 
+def test_filesystem_snapshot_can_be_discarded(tmp_path) -> None:
+    store = FilesystemSnapshotStore()
+    snapshot = store.create(tmp_path)
+    snapshot_root = snapshot.snapshot_path.parent
+
+    store.discard(snapshot.id)
+
+    assert not snapshot_root.exists()
+    with pytest.raises(SnapshotError, match="Unknown snapshot"):
+        store.get(snapshot.id)
+
+
 def test_filesystem_snapshot_rejects_symlink_workspace_entry(tmp_path) -> None:
     real = tmp_path / "real"
     real.mkdir()
