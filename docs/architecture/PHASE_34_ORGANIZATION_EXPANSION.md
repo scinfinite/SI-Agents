@@ -62,9 +62,9 @@ Organization configuration is coordination metadata. It cannot declare or inheri
 
 The loader validates unknown agents, unknown divisions, unknown teams, duplicate IDs, invalid workflow dependencies, later-step dependencies, and cross-team agent references. It never executes workflow steps.
 
-## External pattern review
+## Engineering-pattern basis
 
-Current ECC guidance emphasizes focused specialized workers, explicit workflows, tests, review, verification, and evidence rather than simply increasing the number of agents. Current Agency Agents material similarly demonstrates that useful organizations are assembled from small teams and repeatable multi-agent workflows, with division consistency treated as a source-of-truth concern. SI-Agents uses these engineering patterns independently and does not copy external prompts, code, branding, or architecture. citeturn0search1turn0search6turn0search9
+The design uses general engineering patterns such as small specialized teams, explicit workflow stages, source-of-truth validation, independent review, and evidence-backed verification. The implementation is independently designed for SI-Agents and does not copy external prompts, code, branding, or architecture.
 
 ## Verification plan
 
