@@ -37,7 +37,7 @@ def load_config(path: Path | None = None) -> SIConfig:
         return SIConfig()
     payload: Any = json.loads(target.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
-        raise ValueError(f"invalid SI configuration: {target}")
+        raise TypeError(f"invalid SI configuration: {target}")
     allowed = {"environment", "workspace", "opencode_url", "omniroute_url", "omniroute_model"}
     unknown = set(payload) - allowed
     if unknown:
