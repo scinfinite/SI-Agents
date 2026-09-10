@@ -19,14 +19,23 @@ jobs:
         run: |
           git rm -r --ignore-unmatch -- '**/__pycache__' || true
           rm -f phase29-test-debug.txt
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('.gitignore')
-          text = p.read_text(encoding='utf-8')
-          if '__pycache__/' not in text:
-              text += '\n# Python runtime artifacts\n__pycache__/\n*.py[cod]\n'
-          p.write_text(text, encoding='utf-8')
-          PY
+          cat > .gitignore <<'EOF'
+# Python runtime artifacts
+__pycache__/
+*.py[cod]
+
+# Build and test outputs
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Local environments
+.venv/
+venv/
+.ci-wheel-venv/
+EOF
           rm -f .github/workflows/si-cleanup.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
