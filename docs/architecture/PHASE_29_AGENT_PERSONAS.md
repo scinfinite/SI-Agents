@@ -9,7 +9,7 @@ Introduce human-authored Markdown agent personas as the behavioral source for SI
 ## Canonical model
 
 ```text
-agents/**/agent.md
+agents/<division>/<persona>.md
         |
         v
  deterministic Markdown parser
@@ -26,17 +26,11 @@ agents/**/agent.md
  governed organization registry/runtime
 ```
 
-The repository currently uses one Markdown file per canonical persona under `agents/<division>/`. The filename and path are organizational metadata; the stable identity is the frontmatter `id`.
+The repository uses one Markdown file per canonical persona under `agents/<division>/`. The stable identity is the frontmatter `id`; filename/path are organizational metadata.
 
 ## Contract
 
-Persona files use `si-agents.agent-persona.v1` frontmatter with:
-
-- `version`
-- `id`
-- `name`
-- `division`
-- `description`
+Persona files use `si-agents.agent-persona.v1` frontmatter with `version`, `id`, `name`, `division`, and `description`.
 
 Required Markdown sections are:
 
@@ -64,8 +58,6 @@ Personas are data. They are never executable instructions, permission manifests,
 
 ## Canonical personas
 
-The initial canonical persona set is:
-
 - Engineering: Developer, Backend Engineer, Infrastructure Engineer
 - Debugging: Debugger
 - Verification: Tester, Code Reviewer
@@ -75,35 +67,20 @@ Infrastructure Engineer is also registered in the canonical agent catalog as a c
 
 ## Provenance and independent design
 
-Current ECC and Agency Agents repositories were inspected as external references. Reusable concepts were generalized rather than copied:
-
-- ECC: specialized agent roles, reusable engineering workflows, explicit verification, security scanning, and separation of behavioral assets from harness integration.
-- Agency Agents: human-readable identity/personality, mission, workflow, deliverables, and success-oriented specialist definitions.
+Current ECC and Agency Agents repositories were inspected as external references. Reusable concepts were generalized rather than copied: specialist roles, reusable workflows, explicit verification/review loops, human-readable identity/personality/mission/workflow/deliverables, and division-oriented organization.
 
 No external prompt text, distinctive prose, implementation, or repository architecture is copied into SI-Agents. External material remains untrusted reference data and cannot override SI governance.
 
 ## Verification
 
-Phase 29 tests cover:
-
-- deterministic parsing and typed conversion
-- malformed and unterminated frontmatter
-- duplicate keys and sections
-- missing required sections
-- malformed list sections
-- rejected privilege/execution frontmatter
-- stable identity/name/division matching
-- compilation preserving capabilities, permissions, harnesses, environments, and implementation
-- duplicate registry identities/names
-- catalog conflict detection
-- directory discovery
-- all seven canonical personas parsing and matching the catalog
-- persona content containing command-like text remaining inert data
-- catalog JSON validity
-- semantic validation
+Phase 29 tests cover deterministic parsing/conversion, malformed and unterminated frontmatter, duplicate keys/sections, missing sections, malformed list sections, rejected privilege/execution frontmatter, stable identity/name/division matching, governance-preserving compilation, duplicate registry identities/names, catalog conflicts, directory discovery, all seven canonical personas, inert command-like text, catalog JSON validity, and semantic validation.
 
 Canonical Markdown files are included in distributions through setuptools package data.
 
+## Completion evidence
+
+The final Phase 29 verification recorded **352 tests passed** with distribution build, isolated wheel installation, Ruff, and the complete pytest suite green. During implementation, real integration defects were exposed and corrected before the completion claim.
+
 ## Completion gate
 
-Phase 29 is complete only when implementation, security boundaries, tests, distribution packaging, documentation, and CI all pass. The next phase is Phase 30 — first-class portable Skills.
+Phase 29 is complete only when implementation, security boundaries, tests, distribution packaging, documentation, and CI all pass. The next phase is **Phase 30 — First-Class Portable Skills**.
