@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from threading import RLock
-from types import MappingProxyType
 from typing import Any
 
 from core.governance.engine import GovernanceEngine
@@ -46,11 +45,14 @@ class ControlApiService:
 
     def snapshot(self) -> ApiSnapshot:
         with self._lock:
-            return ApiSnapshot(API_VERSION, "SI-Agents Control API", MappingProxyType({
-                "agents": len(self._agents.all()), "teams": len(self._teams.all()),
-                "workflows": len(self._organization.workflows), "runs": len(self._runs),
-                "events": len(self._events),
-            }))
+            counts = (
+                ("agents", len(self._agents.all())),
+                ("teams", len(self._teams.all())),
+                ("workflows", len(self._organization.workflows)),
+                ("runs", len(self._runs)),
+                ("events", len(self._events)),
+            )
+            return ApiSnapshot(API_VERSION, "SI-Agents Control API", counts)
 
     def agents(self) -> list[dict[str, object]]:
         return [{"id": a.id, "name": a.name, "division": a.division, "status": a.status.value}
