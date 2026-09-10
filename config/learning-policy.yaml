@@ -5,6 +5,13 @@ learning_policy:
   require_benchmark_before_update: true
   require_benchmark_after_update: true
   require_regression_test: true
+  require_safety_gate: true
+  require_explicit_approval_before_apply: true
+  allow_automatic_code_mutation: false
+  allow_automatic_capability_promotion: false
+  allow_automatic_global_promotion: false
+  rollback_on_verification_failure: true
+  minimum_verified_evidence: 2
   memory:
     default_promotion_confidence: 0.8
     minimum_verified_evidence: 2
@@ -13,3 +20,7 @@ learning_policy:
     expire_from_retrieval: true
   promotion:
     project_to_global_requires_validation: true
+  capability_intelligence:
+    executable_status: validated
+    unknown_health_is_not_healthy: true
+    unknown_benchmark_is_not_passing: true
