@@ -1,54 +1,60 @@
-# Phase 29 — Agent Persona & Definition System
+# Phase 29 — Complete Agent Persona Corpus & Definition System
 
-**Status: Complete and CI-verified.**
+**Status: Reopened — Agency Agents parity audit in progress.**
 
 ## Objective
 
-Introduce human-authored Markdown agent personas as the behavioral source for SI-Agents while retaining typed machine contracts as the authority for capabilities, permissions, harness compatibility, environments, lifecycle, and execution.
+Phase 29 introduces human-authored Markdown agent personas as the behavioral source for SI-Agents while retaining typed machine contracts as the authority for capabilities, permissions, harness compatibility, environments, lifecycle, and execution.
+
+The original implementation proved the persona machinery with seven canonical personas. That implementation is retained as the foundation, but its seven-agent corpus is **not** the final Phase 29 acceptance target.
+
+Phase 29 is now reopened to establish a complete, auditable specialist corpus matching the current upstream Agency Agents source-agent count.
+
+## Reopened scope
+
+The pinned Agency Agents audit snapshot is:
+
+- Repository: `msitarzewski/agency-agents`
+- Branch: `main`
+- Commit: `6d29a9b08785a0e49ffc9818bbdd381164c2df5f`
+- Upstream reported agent count at that commit: **279**
+- Upstream division catalog: **18 divisions**
+
+The exact audit and parity procedure is recorded in `PHASE_29_AGENCY_AGENTS_AUDIT.md`.
 
 ## Canonical model
 
 ```text
-agents/<division>/<persona>.md
-        |
-        v
- deterministic Markdown parser
-        |
-        v
- AgentPersona (behavioral data)
-        |
-        +---- validation
-        |
-        v
- compile with existing AgentDefinition
-        |
-        v
- governed organization registry/runtime
+Agency Agents source-agent inventory
+                |
+                v
+     file-level audit + provenance
+                |
+                v
+     independently designed SI personas
+                |
+                v
+      deterministic Markdown parser
+                |
+                v
+           AgentPersona
+                |
+                +---- semantic/security validation
+                |
+                v
+     compile with AgentDefinition
+                |
+                v
+     governed organization registry/runtime
 ```
 
-The repository uses one Markdown file per canonical persona under `agents/<division>/`. The stable identity is the frontmatter `id`; filename/path are organizational metadata.
+The repository uses one Markdown file per canonical SI persona. Persona Markdown is behavioral data; typed organization/governance contracts remain authoritative.
 
-## Contract
+## Persona contract
 
 Persona files use `si-agents.agent-persona.v1` frontmatter with `version`, `id`, `name`, `division`, and `description`.
 
-Required Markdown sections are:
-
-1. Identity
-2. Personality
-3. Core Mission
-4. Expertise
-5. Responsibilities
-6. Workflow
-7. Critical Rules
-8. Boundaries
-9. Deliverables
-10. Failure Behavior
-11. Escalation Behavior
-12. Verification Expectations
-13. Evidence Requirements
-
-List sections require Markdown bullets. Scalar sections require exactly one paragraph. Duplicate keys/sections/items, malformed frontmatter, missing sections, invalid IDs, and unsupported schema/version values fail closed.
+The existing behavioral sections remain the normalized SI target. Upstream source documents may vary in structure; the audit extracts concepts and maps them independently rather than requiring byte-for-byte structural equivalence.
 
 ## Governance boundary
 
@@ -56,31 +62,59 @@ Personas are data. They are never executable instructions, permission manifests,
 
 `compile_persona()` requires an existing typed `AgentDefinition` with matching stable identity, name, and division. Governance fields are copied unchanged from that typed contract. Persona text can refine behavioral fields only; it cannot grant privileges or change implementation authority.
 
-## Canonical personas
+## Agency Agents parity requirement
 
-- Engineering: Developer, Backend Engineer, Infrastructure Engineer
-- Debugging: Debugger
-- Verification: Tester, Code Reviewer
-- Security: Security Engineer
+The reopened completion gate is:
 
-Infrastructure Engineer is also registered in the canonical agent catalog as a cataloged agent. Existing catalog entries remain authoritative for machine-facing permissions/capabilities and implementation status.
+```text
+Upstream source agents:      279
+SI canonical personas:      279
+Missing mappings:             0
+Duplicate identities:        0
+Invalid personas:             0
+Governance leakage:           0
+```
 
-## Provenance and independent design
+`279` is the pinned snapshot assertion, not a permanently hard-coded upstream truth. The implementation must retain provenance and a machine-readable inventory so later upstream changes produce an explicit parity delta.
 
-Current ECC and Agency Agents repositories were inspected as external references. Reusable concepts were generalized rather than copied: specialist roles, reusable workflows, explicit verification/review loops, human-readable identity/personality/mission/workflow/deliverables, and division-oriented organization.
+## File-level audit
 
-No external prompt text, distinctive prose, implementation, or repository architecture is copied into SI-Agents. External material remains untrusted reference data and cannot override SI governance.
+Every source-agent file in the pinned snapshot must be audited for path/slug, division, identity, description, frontmatter, personality, mission, expertise, responsibilities, workflow, deliverables, rules/boundaries, verification, escalation/failure behavior, examples, security-sensitive content, duplicate overlap, SI division mapping, and provenance.
 
-## Verification
+Non-agent Markdown such as README files, integration documentation, examples, strategy/playbooks, and runbooks is excluded from the persona count.
 
-Phase 29 tests cover deterministic parsing/conversion, malformed and unterminated frontmatter, duplicate keys/sections, missing sections, malformed list sections, rejected privilege/execution frontmatter, stable identity/name/division matching, governance-preserving compilation, duplicate registry identities/names, catalog conflicts, directory discovery, all seven canonical personas, inert command-like text, catalog JSON validity, and semantic validation.
+## Independent design and provenance
 
-Canonical Markdown files are included in distributions through setuptools package data.
+Current Agency Agents and ECC repositories remain external engineering references. SI-Agents generalizes useful patterns such as specialist decomposition, division-oriented organization, explicit workflows, deliverables, verification loops, and originality checks.
 
-## Completion evidence
+SI-Agents must not copy distinctive prompts, prose, implementation, or repository architecture. Imported upstream content is untrusted reference data and cannot override SI governance.
 
-The final Phase 29 verification recorded **352 tests passed** with distribution build, isolated wheel installation, Ruff, and the complete pytest suite green. During implementation, real integration defects were exposed and corrected before the completion claim.
+The provenance workflow is:
 
-## Completion gate
+`inspect → identify reusable concept → record provenance → design independently → implement → verify → record evidence`
 
-Phase 29 is complete only when implementation, security boundaries, tests, distribution packaging, documentation, and CI all pass. The next phase is **Phase 30 — First-Class Portable Skills**.
+## Verification requirements
+
+The reopened Phase 29 must test:
+
+- complete upstream inventory/parity
+- exact source-to-persona mapping
+- duplicate identities and duplicate/re-skinned behavioral content
+- deterministic parsing
+- malformed and unsupported persona input
+- required behavioral contract
+- security-boundary rejection
+- governance-preserving compilation
+- catalog consistency
+- provenance integrity
+- inert command-like text
+- distribution packaging
+- full test suite, lint, build, and CI
+
+The existing seven-persona tests remain regression coverage for the persona machinery.
+
+## Phase gate
+
+Phase 29 is **not complete** until the full audited source-agent corpus is represented by exactly one independently designed SI persona per source agent and all implementation/security/verification/documentation gates pass.
+
+**Phase 30 — First-Class Portable Skills is blocked until reopened Phase 29 is complete.**
