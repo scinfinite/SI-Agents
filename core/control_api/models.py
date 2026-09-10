@@ -1,9 +1,9 @@
 """Stable, transport-neutral Control API contracts."""
 
+import uuid
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
-import uuid
 
 
 API_VERSION = "v1"
