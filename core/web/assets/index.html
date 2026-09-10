@@ -4,32 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>SI-Agents Web</title>
+  <title>SI-Agents Control Center</title>
   <link rel="stylesheet" href="/assets/app.css">
 </head>
 <body>
-  <main>
-    <header>
-      <p class="eyebrow">SI-AGENTS</p>
-      <h1>Local Web Foundation</h1>
-      <p class="muted">A live, localhost-first operator surface over the Control API.</p>
-    </header>
-    <section aria-labelledby="status-heading">
-      <h2 id="status-heading">Core status</h2>
-      <pre id="status">Loading…</pre>
-    </section>
-    <section aria-labelledby="links-heading">
-      <h2 id="links-heading">Control API</h2>
-      <ul>
-        <li><a href="/api/v1/agents">Agents</a></li>
-        <li><a href="/api/v1/teams">Teams</a></li>
-        <li><a href="/api/v1/workflows">Workflows</a></li>
-        <li><a href="/api/v1/governance">Governance</a></li>
-        <li><a href="/api/v1/runs">Runs</a></li>
-      </ul>
-    </section>
-    <p id="error" class="error" role="alert" hidden></p>
-  </main>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Control Center navigation">
+      <div class="brand"><span class="mark">SI</span><div><strong>SI-Agents</strong><small>Control Center</small></div></div>
+      <nav id="nav" class="nav"></nav>
+      <div class="sidebar-foot"><span class="dot" id="connection-dot"></span><span id="connection-text">Connecting</span></div>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div><p class="eyebrow">OPERATOR CONSOLE</p><h1 id="page-title">Overview</h1><p id="page-subtitle" class="muted">Live state from the Control API.</p></div>
+        <div class="top-actions"><button id="refresh" class="button" type="button">Refresh</button><span id="updated" class="muted">—</span></div>
+      </header>
+      <div id="error" class="error" role="alert" hidden></div>
+      <section id="view" aria-live="polite"></section>
+    </main>
+  </div>
+  <noscript><p class="noscript">JavaScript is required for the Control Center interface. The versioned API remains available directly.</p></noscript>
   <script src="/assets/app.js" defer></script>
 </body>
 </html>

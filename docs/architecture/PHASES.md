@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–36 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–37 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -20,7 +20,7 @@
 12. Engineering Memory — task/project/global memory, evidence-gated promotion, scoped retrieval, lifecycle, supersession, and auditable persistence. **Complete.**
 13. Security + Legal + Cost — executable governance gates, free-first cost controls, data classification/egress, provenance/legal review, risk classification, approvals, and audit evidence. **Complete.**
 14. Model/Provider Intelligence — capability, quota, cost, latency, reliability, fallback, circuit breakers. **Complete.**
-15. Automation — scheduled research, monitoring, maintenance, testing, reporting, retries, idempotency, lifecycle, persistence, and governance-gated execution. **Complete.**
+15. Automation — scheduled research, monitoring, maintenance, testing, reporting, retries, idempotency, persistence, and governance-gated execution. **Complete.**
 16. Controlled Self-Improvement + Capability Intelligence — evidence-backed proposals, benchmark/regression/safety gates, explicit approval, rollback, capability readiness intelligence, conservative unknown handling, and auditable persistence. **Complete.**
 17. Harness & Runtime Interoperability — transport-neutral invocation, capability negotiation, normalized events/errors, project sessions, explicit harness registration, governed local adapter, and conformance tests. **Complete.**
 18. Production Hardening — deterministic readiness, explicit resource limits, telemetry redaction, evidence-based release gates, migration/rollback requirements, and CI hardening. **Complete.**
@@ -42,6 +42,7 @@
 34. Organization Expansion — **Complete and CI-verified.** Immutable team/division/workflow contracts, source-of-truth validation against the canonical 279-agent catalog, five operating teams, single-home assignments for all 18 divisions, four evidence-gated workflows, authority-boundary checks, packaging, and adversarial regression coverage.
 35. Control API — **Complete and CI-verified.** Versioned `/api/v1` machine-facing contract, deterministic OpenAPI description, canonical agent/team/organization/workflow/Skill/governance/event/run read models, governed run creation, localhost-only dependency-free HTTP transport, bounded JSON mutations, security response headers, packaged `si-api` launcher, and adversarial HTTP/governance regression coverage.
 36. Local Web Foundation — **Complete and CI-verified.** Dependency-free localhost-first Web server over the Control API, packaged live browser surface, stable `si web`/`si-web` launchers, strict CSP/security headers, deny-by-default CORS, explicit authenticated remote opt-in, bounded JSON mutations, redacted private audit logging, safe errors, graceful shutdown, packaging, and adversarial Web/security regression coverage.
+37. Control Center — **Complete and CI-verified.** Live dependency-free operator UI over the Control API with Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings views; sanitized read-model extensions; strict no-execution browser boundary; OpenAPI synchronization; and browser/read-model regression coverage.
 
 ## Release targets
 
@@ -50,41 +51,19 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 36:** complete and CI-verified
+- **Post-v2 validation through Phase 37:** complete and CI-verified
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, every CI failure must be fixed and rerun, and documentation must never claim a stronger state than implementation and verification evidence support.
 
-## Phase 31 verification record
-
-Phase 31 was merged to `main` as commit `32db86c560053e831b0740c5614d63bf64d3ce6b` from PR #18. Final CI run **#735** passed on the exact Phase 31 source tree; the full pytest suite reported **381 passed in 6.16s**.
-
-## Phase 32 verification record
-
-Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution build, wheel installation verification, and the full pytest suite (**392 passed in 5.95s**). After merge, mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`; mainline pytest reported **392 passed in 5.47s**. Documentation/naming merge `c1937c70348e7b308c8274d2e3ce71cb9a07f0d8` was also verified by mainline CI **#777**.
-
-## Phase 33 verification record
-
-Phase 33 feature CI run **#785** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite (**402 passed**). The implementation was merged to `main` as commit `765782377def8173ea235f1bbb3f8c3f9c194767`.
-
-Mainline CI run **#786** passed all build, wheel, repository-audit, Ruff, and pytest steps on that exact merge commit.
-
-## Phase 34 verification record
-
-Phase 34 implementation was merged from PR #25 as merge commit `a100282375f4fdb8108f62faf16151e1a8abd8e9`.
-
-Feature CI **#798** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite on the Phase 34 delivery branch. Mainline CI **#799** passed all of the same gates on the exact merge commit. Final pytest diagnostics reported **409 passed in 6.30s**.
-
-## Phase 35 verification record
-
-Phase 35 implementation was merged from PR #27 as merge commit `8e990f225b69fe1822861e1f21af29094c6b481b` after feature CI **#809** passed all build, wheel, repository-audit, Ruff, and pytest gates with **417 passed**. The feature CI cycle caught and resolved Ruff import-order findings before the successful run.
-
-Documentation was synchronized after the implementation merge. The final mainline CI run on the documentation-closed state is the final Phase 35 release gate.
-
 ## Phase 36 verification record
 
-Phase 36 was merged from PR #31 as squash commit `0829e29d7e2b3718e57caf027f9a1cb8534cbcba` after the current-head feature CI run **#830** (`34505281056`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates. The cycle also caught and fixed two real defects before final success: ephemeral port `0` was not accepted by the testable server contract, and wildcard CORS validation returned a non-specific error. The final feature run completed successfully with the full suite at **424+ tests**.
+Phase 36 was merged from PR #31 as squash commit `0829e29d7e2b3718e57caf027f9a1cb8534cbcba` after feature CI **#830** (`34505281056`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates with **434 passed**. The final mainline CI for the documentation-closed state was **#833** (`34505742175`) on main commit `f76717fa11f1ce275e0459724f6e6e871b4d1922`, and it passed all gates.
+
+## Phase 37 verification record
+
+Phase 37 implementation is delivered in PR #33. Feature CI must pass on the final implementation head before merge; the documentation-closed mainline CI is the final release gate. The exact pytest total and final merge/mainline run are recorded here after those gates complete.
 
 ## Documentation structure
 
@@ -97,8 +76,9 @@ Phase 36 was merged from PR #31 as squash commit `0829e29d7e2b3718e57caf027f9a1c
 - `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical Organization Expansion contract and final verification record.
 - `PHASE_35_CONTROL_API.md` — canonical Control API contract and final verification record.
 - `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical Web foundation contract and final verification record.
+- `PHASE_37_CONTROL_CENTER.md` — canonical Control Center contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 37 — Control Center.**
+**Phase 38 — Visual Organization & Workflow.**

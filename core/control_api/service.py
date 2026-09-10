@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import platform
 from pathlib import Path
 from threading import RLock
 from typing import Any
@@ -97,6 +99,44 @@ class ControlApiService:
                           "allow_external_egress": x.allow_external_egress} for x in snapshot.policies],
             "capabilities": [{"name": x.name, "description": x.description, "risk": x.risk.value}
                               for x in snapshot.capabilities],
+        }
+
+    def evidence(self) -> dict[str, object]:
+        """Expose the center's verifiable control-plane evidence without inventing execution evidence."""
+        with self._lock:
+            return {
+                "events": [event.as_dict() for event in self._events],
+                "run_count": len(self._runs),
+                "queued_runs": sum(run.status is RunStatus.QUEUED for run in self._runs.values()),
+                "note": "Execution evidence is produced by downstream execution and verification components; this view reports only control-plane evidence.",
+            }
+
+    def environments(self) -> dict[str, object]:
+        """Return sanitized process context; no credentials or full environment are exposed."""
+        termux = bool(os.environ.get("TERMUX_VERSION")) or "/com.termux/" in os.environ.get("PREFIX", "")
+        codespace = bool(os.environ.get("CODESPACES"))
+        kind = "termux" if termux else "codespace" if codespace else "unknown"
+        return {
+            "current": {"kind": kind, "platform": platform.system().lower(), "architecture": platform.machine(),
+                        "python_version": platform.python_version(), "cwd": str(self.root)},
+            "supported": ["termux", "codespace", "unknown"],
+            "mutations": "read-only",
+        }
+
+    def harnesses(self) -> list[dict[str, object]]:
+        """Describe registered adapter families from repository structure, not runtime claims."""
+        adapters = self.root / "adapters"
+        if not adapters.exists():
+            return []
+        return [{"id": path.name, "path": str(path.relative_to(self.root)), "state": "registered"}
+                for path in sorted(adapters.iterdir()) if path.is_dir() and not path.name.startswith(".")]
+
+    def settings(self) -> dict[str, object]:
+        return {
+            "api_version": API_VERSION,
+            "web": {"default_host": "127.0.0.1", "default_port": 8788, "remote": "explicit opt-in with authentication"},
+            "security": {"cors": "explicit allowlist only", "telemetry": "disabled", "mutation_body_limit": "1 MiB"},
+            "execution": {"run_creation": "governed and queued only", "execution": "downstream"},
         }
 
     def events(self) -> list[dict[str, object]]:

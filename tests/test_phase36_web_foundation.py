@@ -64,7 +64,7 @@ def test_index_is_served_with_security_headers(tmp_path):
     try:
         response = _request(server, "/")
         assert response.status == 200
-        assert "SI-Agents Web" in response.read().decode()
+        assert "SI-Agents Control Center" in response.read().decode()
         assert response.headers["Content-Security-Policy"].startswith("default-src 'self'")
         assert response.headers["X-Frame-Options"] == "DENY"
         assert response.headers["X-Content-Type-Options"] == "nosniff"
