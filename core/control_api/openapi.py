@@ -1,7 +1,5 @@
 """Small OpenAPI description for the stable SI Control API surface."""
 
-from __future__ import annotations
-
 
 OPENAPI_VERSION = "3.1.0"
 

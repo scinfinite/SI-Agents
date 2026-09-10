@@ -1,11 +1,8 @@
 """Stable, transport-neutral Control API contracts."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
-from types import MappingProxyType
 from uuid import uuid4
 
 
@@ -42,13 +39,9 @@ class RunRecord:
 
     def as_dict(self) -> dict[str, object]:
         return {
-            "id": self.id,
-            "action": self.action,
-            "status": self.status.value,
-            "subject": self.subject,
-            "created_at": self.created_at.isoformat(),
-            "governance_status": self.governance_status,
-            "evidence": list(self.evidence),
+            "id": self.id, "action": self.action, "status": self.status.value,
+            "subject": self.subject, "created_at": self.created_at.isoformat(),
+            "governance_status": self.governance_status, "evidence": list(self.evidence),
         }
 
 
@@ -62,11 +55,8 @@ class ApiEvent:
 
     def as_dict(self) -> dict[str, object]:
         return {
-            "id": self.id,
-            "event_type": self.event_type,
-            "subject": self.subject,
-            "timestamp": self.timestamp.isoformat(),
-            "metadata": dict(self.metadata),
+            "id": self.id, "event_type": self.event_type, "subject": self.subject,
+            "timestamp": self.timestamp.isoformat(), "metadata": dict(self.metadata),
         }
 
 
@@ -74,7 +64,7 @@ class ApiEvent:
 class ApiSnapshot:
     api_version: str
     service: str
-    counts: MappingProxyType
+    counts: tuple[tuple[str, int], ...]
 
     def as_dict(self) -> dict[str, object]:
         return {"api_version": self.api_version, "service": self.service, "counts": dict(self.counts)}
