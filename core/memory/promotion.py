@@ -9,7 +9,6 @@ from .models import (
     PromotionDecision,
 )
 
-
 _SCOPE_ORDER = (
     MemoryScope.TASK,
     MemoryScope.PROJECT,
