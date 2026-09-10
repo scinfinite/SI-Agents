@@ -12,6 +12,7 @@ from .models import (
 from .promotion import MemoryPromoter
 from .registry import MemoryRegistry
 from .retrieval import MemoryRetriever
+from .service import MemoryService
 from .store import MemoryStore
 
 __all__ = [
@@ -22,6 +23,7 @@ __all__ = [
     "MemoryRegistry",
     "MemoryRetriever",
     "MemoryScope",
+    "MemoryService",
     "MemoryStatus",
     "MemoryStore",
     "MemoryType",
