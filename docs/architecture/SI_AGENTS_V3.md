@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–29 complete/CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–31 implemented; Phases 19–30 CI-verified and Phase 31 awaiting final mainline CI  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -17,7 +17,7 @@ The v3 layer combines:
 - human-authored agent personas
 - typed machine contracts
 - portable Skills
-- Rules, Hooks, and Events
+- scoped Rules, Hooks, and Events
 - scoped Memory and Knowledge
 - teams and workflows
 - Security and Governance
@@ -52,7 +52,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 onward must build on it rather than creating parallel UI-only or prompt-only agent definitions.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 adds the explicit event/policy layer without creating a parallel permission authority.
 
 ### Web and TUI are views, not authorities
 
@@ -78,7 +78,7 @@ No business logic, authorization logic, agent authority, or workflow engine is d
 
 ### Evidence-first operation
 
-Important operations must remain inspectable: selected agent, selection reason, skill, requested capabilities/tools, governance decisions, execution events, evidence, verification state, and unresolved uncertainty.
+Important operations must remain inspectable: selected agent, selection reason, Skill, requested capabilities/tools, governance decisions, execution events, evidence, verification state, and unresolved uncertainty.
 
 ### Security and provenance
 
@@ -98,11 +98,11 @@ The Web Control Center is localhost-first and requires no cloud control plane or
 
 # Phase 30 — First-Class Portable Skills
 
-**State: Next.**
+**State: Complete.**
 
-Create portable `SKILL.md` artifacts with deterministic discovery, metadata, validation, versioning, compatibility, composition, provenance, regression coverage, evidence requirements, and safe installation/deployment boundaries.
+Portable `SKILL.md` artifacts provide deterministic discovery, metadata, validation, versioning, compatibility, composition, provenance, regression coverage, evidence requirements, and safe installation/deployment boundaries.
 
-A Skill must define identity/version, purpose, inputs/outputs, prerequisites, workflow, tools, capabilities, permissions, verification, failure behavior, evidence, examples, compatibility, and provenance.
+A Skill defines identity/version, purpose, inputs/outputs, prerequisites, workflow, tools, capabilities, permissions, verification, failure behavior, evidence, examples, compatibility, and provenance.
 
 **Invariant:** Skill selection never grants permissions. Skills request capabilities; governance independently authorizes operations.
 
@@ -110,11 +110,28 @@ A Skill must define identity/version, purpose, inputs/outputs, prerequisites, wo
 
 # Phase 31 — Rules, Hooks & Event System
 
-Create an explicit policy/event layer spanning agents, Skills, tools, workflows, runtime, handoffs, and verification.
+**State: Implementation complete; final mainline CI pending.**
 
-Required properties: explicit registration, bounded execution, auditability, policy awareness, deterministic behavior where practical, fail-closed handling for dangerous operations, and no unrestricted arbitrary-command hook system.
+Phase 31 adds an explicit policy/event layer spanning agents, Skills, tools, workflows, runtime, handoffs, and verification.
 
-Core event vocabulary should include events such as `session.created`, `session.closed`, `task.started`, `agent.selected`, `skill.started`, `skill.completed`, `tool.before`, `tool.after`, `handoff.created`, `verification.started`, `verification.failed`, `task.completed`, and `task.failed`.
+Implemented properties:
+
+- explicit Rule and Hook registration;
+- immutable bounded Event envelopes;
+- canonical lifecycle event vocabulary;
+- deterministic exact-match Rule evaluation;
+- declarative Rule catalog loading with no code execution;
+- bounded in-process Hooks with observer/gate separation;
+- per-event hook limits and runtime budgets;
+- fail-closed handling for dangerous events and gate-hook failures;
+- secret-like event payload redaction;
+- Skill lifecycle/verification event integration;
+- separation from existing PermissionEngine/GovernanceEngine authority;
+- regression/adversarial coverage and package inclusion.
+
+Rules and Hooks never grant permissions, credentials, tools, network access, or execution authority. No arbitrary shell/command hook registration is supported.
+
+The canonical implementation record is `docs/architecture/PHASE_31.md` and the canonical declarative Rule catalog is `config/rules.v1.json`.
 
 ---
 
@@ -288,8 +305,8 @@ The v3 program is layered and must be completed in order:
 
 ```text
 29 Personas [complete]
- → 30 Skills
- → 31 Rules/Hooks/Events
+ → 30 Skills [complete]
+ → 31 Rules/Hooks/Events [implementation complete; CI pending]
  → 32 Memory/Knowledge
  → 33 Security/Governance
  → 34 Organization
