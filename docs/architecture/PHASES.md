@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–30 complete; Phase 31 implementation complete pending final mainline CI.**
+**Current status: v2.0 baseline plus Phases 19–31 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -36,7 +36,7 @@
 28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, sanitized/canonical repository identity, explicit Termux↔Codespaces validation, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
 29. Complete SI Agent Persona System — **Complete and CI-verified.** Exactly 279 SI-native specialist personas are organized across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, repository-neutral provenance, packaging coverage, and CI verification.
 30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation/registry, dependency-aware composition, artifact manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, regression coverage, and safety boundaries are implemented.
-31. Rules, Hooks & Event System — **Implementation complete; final mainline CI pending.** Explicit immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and current documentation are implemented.
+31. Rules, Hooks & Event System — **Complete and CI-verified.** Explicit immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation are implemented.
 
 ## Release targets
 
@@ -57,7 +57,7 @@
 - **Post-v2 cross-environment handoff:** Phase 28 — complete
 - **Post-v2 SI persona system:** Phase 29 — complete
 - **Post-v2 portable Skills:** Phase 30 — complete
-- **Post-v2 Rules/Hooks/Events:** Phase 31 — implementation complete, final CI pending
+- **Post-v2 Rules/Hooks/Events:** Phase 31 — complete and CI-verified
 
 ## Phase completion gate
 
@@ -68,6 +68,8 @@ A phase is not complete merely because files exist. Its acceptance criteria must
 Phase 30 was merged to `main` as commit `62972acf20a0da53bf81161c2108a506dbdad907` from PR #17 after its CI passed. Mainline CI run **#727** completed successfully on that merge commit. The Phase 30 Skill catalog contains six canonical Skills with deterministic parsing/validation, dependency composition, SHA-256 artifact manifests, explicit permission and verification gates, CLI discovery/inspection/composition, packaging, and regression coverage.
 
 ## Phase 31 verification record
+
+Phase 31 was merged to `main` as commit `32db86c560053e831b0740c5614d63bf64d3ce6b` from PR #18. Final CI run **#735** passed on the exact Phase 31 source tree before merge. The CI job completed distribution build, wheel installation verification, SI repository audit, Ruff, and the full pytest suite; pytest reported **381 passed in 6.16s**. A previous Ruff failure was fixed and rerun; the passing run is the final verification evidence.
 
 Phase 31 uses `core/events`, `core/rules`, and `core/hooks`. Event payloads are immutable, bounded, and secret-key redacted. Rules are exact-match declarative data and never execute expressions or commands. Hooks are explicitly registered in-process handlers with deterministic ordering, per-event limits, runtime budgets, observer/gate separation, and fail-closed gate errors. Dangerous events fail closed when no applicable Rule exists. `SkillExecutor` can publish Skill and verification lifecycle events through the EventBus without replacing the existing PermissionEngine/GovernanceEngine authority.
 
@@ -87,4 +89,4 @@ Historical phase documents preserve phase-time evidence. Current cross-phase sta
 
 ## Next phase
 
-**Phase 32 — Memory & Knowledge** is next after Phase 31 final mainline CI verification.
+**Phase 32 — Memory & Knowledge** is next.
