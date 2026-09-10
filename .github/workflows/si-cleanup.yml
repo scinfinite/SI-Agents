@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
       - name: Remove generated runtime artifacts
         run: |
-          git rm -r --ignore-unmatch -- '**/__pycache__' || true
+          find . -type d -name '__pycache__' -prune -exec rm -rf {} +
           rm -f phase29-test-debug.txt
           cat > .gitignore <<'EOF'
 # Python runtime artifacts
@@ -30,11 +30,11 @@ dist/
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
+.ci-wheel-venv/
 
 # Local environments
 .venv/
 venv/
-.ci-wheel-venv/
 EOF
           rm -f .github/workflows/si-cleanup.yml
           git config user.name 'github-actions[bot]'
