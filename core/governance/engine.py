@@ -25,13 +25,16 @@ class GovernanceEngine:
             *self.cost.evaluate(request),
             *self.data.evaluate(request),
         ]
-        derived_risk = self.risk.classify(request)
-        if derived_risk.value != request.risk.value:
-            reasons.append(f"derived risk is {derived_risk.value}")
+        effective_risk = self.risk.classify(request)
         if any("denied" in reason for reason in reasons):
             status = DecisionStatus.DENY
         elif reasons:
             status = DecisionStatus.APPROVAL_REQUIRED
         else:
             status = DecisionStatus.ALLOW
-        return Decision(status=status, reasons=tuple(reasons), request=request)
+        return Decision(
+            status=status,
+            reasons=tuple(reasons),
+            request=request,
+            effective_risk=effective_risk,
+        )
