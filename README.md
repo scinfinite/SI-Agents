@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 20 and 21 complete and CI-verified; Phase 22 implementation is in progress pending CI verification.**
+**Post-v2 evolution — Phases 20, 21, and 22 are complete and CI-verified.**
 
-Completed foundation through Production Hardening and the first post-v2 organization/orchestration layers:
+Completed foundation through Production Hardening and the first post-v2 organization/orchestration/interoperability layers:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -29,7 +29,7 @@ Completed foundation through Production Hardening and the first post-v2 organiza
 - **Phase 19 — v2.0 Reality Audit:** executable baseline audit, distribution correctness, isolated wheel verification, runtime E2E acceptance, and explicit future-boundary definition.
 - **Phase 20 — Agent Organization & Catalog:** canonical divisions and agent definitions, typed catalog registry, declarative capability/permission/environment/harness selection, lifecycle status, implementation references, and validation tests.
 - **Phase 21 — Agent Teams & Workflows:** canonical team/workflow catalog, dependency-aware DAG execution, bounded parallelism, shared/isolated context, explicit handoffs, retries, escalation, evidence/verification gates, cancellation, checkpoints, and auditable workflow events.
-- **Phase 22 — Universal Harness Integration:** versioned `si.runtime.v1` wire contract, callback-based universal adapter bridge, normalized harness metadata, and deterministic organization deployment manifests. **Implementation complete; CI verification pending.**
+- **Phase 22 — Universal Harness Integration:** versioned `si.runtime.v1` wire contract, callback-based universal adapter bridge, normalized harness metadata, and deterministic organization deployment manifests. **Complete and CI-verified.**
 
 ## Engineering loop
 
