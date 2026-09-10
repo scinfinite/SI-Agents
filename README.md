@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–32 implemented; Phase 32 final documentation/CI closure pending.**
+**Post-v2 evolution — Phases 19–32 complete and CI-verified.**
 
 Phase 29 provides the complete SI-native specialist persona layer: **279 Markdown personas across 18 SI-owned domain divisions**, with typed catalog parity, deterministic parsing/validation, security boundaries, provenance separation, package coverage, and CI verification.
 
@@ -16,7 +16,7 @@ Phase 32 adds scoped immutable Memory, verified source-backed Knowledge, provena
 
 ## Completed phases
 
-Phases 1–31 are complete and CI-verified. Phase 32 implementation and its full CI test suite are complete; final documentation closure and mainline verification are the remaining release gate.
+Phases 1–32 are complete and CI-verified. Phase 32 feature CI run **#762** passed with **392 tests**, and final mainline CI run **#769** passed with **392 tests** on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`.
 
 ## SI Agent Persona System
 
@@ -108,7 +108,7 @@ Read-only commands do not mutate state. Mutation requires explicit `--apply`. Cr
 - `docs/architecture/PHASE_29.md` — canonical Phase 29 persona/parity/provenance/security/packaging record.
 - `docs/architecture/PHASE_30.md` — canonical Phase 30 portable Skill contract and verification record.
 - `docs/architecture/PHASE_31.md` — canonical Phase 31 Rules/Hooks/Events contract and verification record.
-- `docs/architecture/PHASE_32.md` — canonical Phase 32 Memory/Knowledge contract and verification record.
+- `docs/architecture/PHASE_32.md` — canonical Phase 32 Memory/Knowledge contract and final verification record.
 - `docs/architecture/CLI.md` — current SI CLI surface, behavior, and safety model.
 - `docs/architecture/SI_AGENTS_V3.md` — forward roadmap for Phases 30–43.
 
@@ -131,8 +131,8 @@ Cross-environment handoffs transfer validated state as data only. They cannot gr
 
 ## Verification baseline
 
-Phase 30 was merged to `main` as `62972acf20a0da53bf81161c2108a506dbdad907`, and mainline CI run **#727** passed successfully. Phase 31 was merged as `32db86c560053e831b0740c5614d63bf64d3ce6b` after final CI run **#735** passed on the exact Phase 31 source tree. Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution/wheel checks, and the full test suite (**392 passed in 5.95s**). Mainline verification remains the final release gate.
+Phase 30 was merged to `main` as `62972acf20a0da53bf81161c2108a506dbdad907`, and mainline CI run **#727** passed successfully. Phase 31 was merged as `32db86c560053e831b0740c5614d63bf64d3ce6b` after final CI run **#735** passed on the exact Phase 31 source tree. Phase 32 feature CI run **#762** passed, followed by mainline CI run **#769**, which passed repository audit, Ruff, distribution/wheel checks, and the full test suite (**392 passed in 5.47s**).
 
 ## Next phase
 
-**Phase 33 — Security & Governance Center**, after Phase 32 final mainline verification.
+**Phase 33 — Security & Governance Center.**
