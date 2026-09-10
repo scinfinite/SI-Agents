@@ -80,7 +80,7 @@ Final mainline CI run **#526** passed all gates on commit `4ccfcfe29693d2a0f7681
 - distribution build and isolated wheel installation
 - installed `si` catalog smoke tests
 - Ruff
-- full pytest suite: **339 passed**
+- full pytest suite: **341 passed**
 - handoff serialization and atomic storage
 - SHA-256 tamper detection
 - recursive secret-like field rejection
@@ -89,7 +89,7 @@ Final mainline CI run **#526** passed all gates on commit `4ccfcfe29693d2a0f7681
 - resumable context metadata
 - Phase 28 CLI parser coverage
 
-Two implementation defects were found by CI #525 and corrected rather than suppressed: JSON arrays were not normalized back to typed tuple fields, and SSH repository identity canonicalization did not strip the `git@` transport prefix. CI #526 then passed.
+CI #525 exposed two real implementation defects and they were corrected rather than suppressed: JSON arrays were not normalized back to typed tuple fields, and SSH repository identity canonicalization did not strip the `git@` transport prefix. CI #526 then passed with all **341 tests** green.
 
 ## Deliberate non-goals
 
