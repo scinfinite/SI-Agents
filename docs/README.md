@@ -17,9 +17,10 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 11. **Phase 36 canonical record:** `architecture/PHASE_36_LOCAL_WEB_FOUNDATION.md`
 12. **Phase 37 canonical record:** `architecture/PHASE_37_CONTROL_CENTER.md`
 13. **Phase 38 canonical record:** `architecture/PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md`
-14. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
-15. **Engineering rules:** `../AGENTS.md`
-16. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
+14. **Phase 39 canonical record:** `architecture/PHASE_39_AGENT_BUILDER.md`
+15. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
+16. **Engineering rules:** `../AGENTS.md`
+17. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
 
 ## Documentation map
 
@@ -39,6 +40,7 @@ docs/
     ├── PHASE_36_LOCAL_WEB_FOUNDATION.md
     ├── PHASE_37_CONTROL_CENTER.md
     ├── PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md
+    ├── PHASE_39_AGENT_BUILDER.md
     ├── SI_AGENTS_V3.md
     ├── PHASE_1_FOUNDATION.md
     ├── EXECUTION_BACKENDS.md
@@ -51,7 +53,7 @@ The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been reti
 
 - `PHASES.md` is authoritative for current implementation status and verification.
 - `architecture/README.md` is the maintained architecture navigation/index.
-- `PHASE_29_AGENT_PERSONA.md` through `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` are canonical records for their respective post-v2 phases.
+- `PHASE_29_AGENT_PERSONA.md` through `PHASE_39_AGENT_BUILDER.md` are canonical records for their respective post-v2 phases.
 - `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
 - Earlier `PHASE_<n>_*.md` files are historical implementation records and preserve phase-time evidence.
 - Runtime, governance, executable contracts, and CI results remain authoritative over prose.
@@ -74,6 +76,6 @@ Markdown is documentation/configuration, not an authority boundary. Imported or 
 
 ## Current baseline
 
-**Phases 1–38 are complete and CI-verified.** Phase 36 feature CI **#830** (`34505281056`) passed with **434 tests**, and final mainline CI **#833** (`34505742175`) passed all gates. Phase 37 final mainline CI **#840** (`34507154878`) passed all gates on commit `d54ab5a0e9a0dc5daed72e89bdaf842b8da59078`, with **441 tests passed**. Phase 38 implementation merged as `657530eefa41794fb425cd0fe38d2aced9bd316d`; final mainline CI **#845** (`34508914827`) passed every build, packaging, audit, Ruff, test, diagnostics, and cleanup gate on that exact merge commit.
+**Phases 1–39 are complete and CI-verified.** Phase 39 implementation merged as `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`; feature CI **#853** (`34511009965`) passed all build, packaging, audit, Ruff, test, diagnostics, and cleanup gates. The final documentation-closed mainline CI is recorded in the Phase 39 closure update.
 
-**Next implementation: Phase 39 — Agent Builder & Customization.**
+**Next implementation: Phase 40 — Evidence & Observability.**
