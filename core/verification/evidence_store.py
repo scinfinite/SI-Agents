@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from core.verification.evidence import Evidence
+from core.verification.evidence import Evidence, VerificationStatus
 
 
 class EvidenceStore:
-    """In-memory evidence ledger for the control plane."""
+    """Append-only in-memory evidence ledger for the control plane."""
 
     def __init__(self) -> None:
         self._evidence: dict[str, Evidence] = {}
@@ -23,3 +23,12 @@ class EvidenceStore:
 
     def all(self) -> tuple[Evidence, ...]:
         return tuple(self._evidence.values())
+
+    def for_claim(self, claim: str) -> tuple[Evidence, ...]:
+        return tuple(item for item in self._evidence.values() if item.claim == claim)
+
+    def verified(self) -> tuple[Evidence, ...]:
+        return tuple(item for item in self._evidence.values() if item.verification_status is VerificationStatus.VERIFIED)
+
+    def failed(self) -> tuple[Evidence, ...]:
+        return tuple(item for item in self._evidence.values() if item.verification_status is VerificationStatus.FAILED)
