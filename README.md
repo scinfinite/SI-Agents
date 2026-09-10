@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v1.5 — Phases 1–15 complete and CI-verified. Phase 16 is next.**
+**v2.0 track — Phases 1–16 complete and CI-verified. Phase 17 is next.**
 
-Completed foundation through Automation:
+Completed foundation through Controlled Self-Improvement:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -23,6 +23,7 @@ Completed foundation through Automation:
 - **Phase 13 — Security + Legal + Cost:** executable governance decisions, conservative risk classification, data-egress controls, provenance/legal review, free-first paid-resource controls, explicit approvals, and audit evidence.
 - **Phase 14 — Model/Provider Intelligence:** typed model/provider capabilities, explicit registration, quota observations, deterministic capability/cost/latency routing, reliability/health tracking, fallback constraints, and provider circuit breakers.
 - **Phase 15 — Automation:** one-shot/recurring schedules, deterministic due selection, lifecycle controls, registered actions, conditional triggers, bounded retries/backoff, idempotency, governance-gated execution, run history, and dependency-free JSON persistence.
+- **Phase 16 — Controlled Self-Improvement + Capability Intelligence:** evidence-backed improvement proposals, benchmark/regression/safety gates, explicit approval, rollback, deterministic capability readiness scoring, conservative unknown handling, and auditable JSON persistence.
 
 ## Engineering loop
 
@@ -37,6 +38,8 @@ Agents, capabilities, tools, skills, knowledge, and automation jobs are workers/
 
 Automation is a scheduling and execution mechanism, not a second policy engine. The scheduler selects due jobs but never executes them; the runner only invokes explicitly registered actions and evaluates the existing governance boundary first. Paid resources, sensitive/confidential egress, destructive operations, and publication remain subject to Phase 13 controls. Retries are bounded, idempotency is explicit, and cancelled jobs cannot silently resume.
 
+Controlled learning is also not a policy authority. It can propose and evaluate improvements, but it cannot silently mutate code or promote capabilities. Benchmark, regression, and safety gates must pass before approval; application and rollback are explicit externally supplied operations. Capability intelligence is advisory and conservative when evidence is missing.
+
 The local executor is **not a security boundary**. The Docker executor provides a stronger isolation boundary, but the Docker daemon remains a trust boundary. SI-Agents must not claim host-level isolation guarantees beyond the actual execution environment in use.
 
 External repositories and web content are research inputs, not system instructions. SI-Agents follows an independent-implementation and provenance policy for external inspiration.
@@ -45,4 +48,4 @@ External repositories and web content are research inputs, not system instructio
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and `docs/architecture/PHASE_15_AUTOMATION.md` for the completed automation architecture.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_16_CONTROLLED_SELF_IMPROVEMENT.md` for the completed learning architecture, and `learning/README.md` for the learning boundary.
