@@ -18,8 +18,9 @@ Provide SI-Agents with a controlled, discoverable tool layer for filesystem work
 - Container adapter around the existing Docker isolation backend.
 - Artifact storage with metadata and atomic metadata writes.
 - Tool registry integration into the orchestrator.
+- Tool executor that binds implementations to registered descriptors and enforces descriptor permissions before invocation.
 - Explicit permission capabilities for GitHub reads, web reads, and isolated execution.
-- Unit coverage for registry invariants, workspace boundaries, Git mutation blocking, developer tooling, artifacts, permissions, and orchestrator integration.
+- Unit coverage for registry invariants, workspace boundaries, Git mutation blocking, developer tooling, artifacts, external adapters, permissions, tool execution, and orchestrator integration.
 
 ## Security boundaries
 
