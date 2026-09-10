@@ -94,11 +94,15 @@ The Web Control Center is localhost-first and requires no cloud control plane or
 
 **State: Complete.** Deterministic Markdown personas, typed behavioral contracts, validation, governed compilation, duplicate/conflict detection, canonical personas, provenance, inert-content handling, and distribution packaging are implemented and CI-verified.
 
+Canonical architecture record: `docs/architecture/PHASE_29_AGENT_PERSONA.md`.
+
 ---
 
 # Phase 30 — First-Class Portable Skills
 
 **State: Complete.** Portable `SKILL.md` artifacts provide deterministic discovery, metadata, validation, versioning, compatibility, composition, provenance, regression coverage, evidence requirements, and safe installation/deployment boundaries.
+
+Canonical architecture record: `docs/architecture/PHASE_30_PORTABLE_SKILLS.md`.
 
 **Invariant:** Skill selection never grants permissions. Skills request capabilities; governance independently authorizes operations.
 
@@ -107,6 +111,8 @@ The Web Control Center is localhost-first and requires no cloud control plane or
 # Phase 31 — Rules, Hooks & Event System
 
 **State: Complete + CI verified.** Explicit Rules, bounded in-process Hooks, immutable Events, fail-closed dangerous-event handling, Skill lifecycle integration, declarative Rule catalog loading, and adversarial regression coverage are implemented. Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and full pytest (**381 passed**) before merge.
+
+Canonical architecture record: `docs/architecture/PHASE_31_RULES_HOOKS_EVENTS.md`.
 
 ---
 
