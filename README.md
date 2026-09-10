@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v1.0 track — Phases 1–12 complete and CI-verified. Phase 13 is next.**
+**v1.0 track — Phases 1–13 complete and CI-verified. Phase 14 is next.**
 
-Completed foundation through Engineering Memory:
+Completed foundation through Security, Legal + Cost Governance:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -20,6 +20,7 @@ Completed foundation through Engineering Memory:
 - **Phase 10 — Open-Source Intelligence:** repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract.
 - **Phase 11 — Pattern Extraction:** deterministic observation normalization, conservative candidate extraction, independent evidence validation, counterexample handling, evidence-gated promotion, versioning, provenance, and context matching.
 - **Phase 12 — Engineering Memory:** task/project/global scopes, provenance and verified evidence, fail-closed one-step promotion, deterministic scoped retrieval, expiration, supersession/versioning, and auditable JSON persistence.
+- **Phase 13 — Security + Legal + Cost:** executable governance decisions, conservative risk classification, data-egress controls, provenance/legal review, free-first paid-resource controls, explicit approvals, and audit evidence.
 
 ## Engineering loop
 
@@ -46,8 +47,10 @@ Pattern extraction is evidence-driven. Repetition alone is insufficient for vali
 
 Engineering Memory is also evidence-driven. Task-scoped observations can be promoted to project memory and then global memory only one scope at a time, subject to confidence and verified-evidence gates. Expired memory is excluded from normal retrieval, and supersession is explicit and versioned. Memory never overrides security, legal, cost, permission, or verification policy.
 
+Phase 13 governance is a decision boundary rather than an execution authority. Paid resources require explicit approval; confidential and sensitive external egress requires approval; credential-bearing external egress is denied; destructive/high-risk operations are approval-gated; publication without provenance requires review; and governance audit records exclude arbitrary request payloads to reduce secret-retention risk. Governance policy is not legal advice.
+
 ## Development principle
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–12 architecture documents for the completed verification, knowledge, discovery, open-source intelligence, pattern extraction, and engineering memory architectures.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–13 architecture documents for the completed verification, knowledge, discovery, open-source intelligence, pattern extraction, engineering memory, and governance architectures.
