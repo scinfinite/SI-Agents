@@ -25,12 +25,16 @@ The evidence ledger records a verification claim referencing the execution recor
 
 ## Checkpoints
 
-The current checkpoint implementation is a control-plane marker only. It does not snapshot, revert, or restore workspace state. Git-backed or filesystem-backed rollback must be implemented separately before checkpoints are described as rollback protection.
+`CheckpointStore` records an immutable control-plane checkpoint marker. `FilesystemSnapshotStore` provides an actual workspace snapshot and restore mechanism when rollback protection is required. Restore is a destructive filesystem operation and therefore requires explicit approval.
 
-## Sandbox boundary
+A checkpoint marker alone is **not** a rollback guarantee. Callers must create a filesystem snapshot (or a future Git-backed snapshot) before treating a checkpoint as workspace protection.
 
-`LocalSandbox` is a development executor. It currently uses the host process environment and `shell=True`; its command policy blocks a small set of obviously destructive prefixes. This is insufficient for untrusted code execution. A production executor must use a real isolation boundary such as a container, VM, or equivalent OS sandbox, with explicit resource and network controls.
+## Execution backend boundary
+
+`CommandRunner` depends on an `ExecutionBackend`, not a concrete sandbox. `LocalSandbox` is a development executor: it uses the host process environment and `shell=True`, so it is not a security boundary. `DockerSandbox` provides a stronger container boundary with disabled networking, dropped Linux capabilities, `no-new-privileges`, a read-only container root filesystem, and resource limits.
+
+The Docker daemon remains a trust boundary. Backend-specific security properties must not be generalized to other execution environments.
 
 ## Alpha fixture
 
-`tests/fixtures/broken_project` is a deterministic intentionally broken project. Its acceptance case is executed by an integration harness so the normal repository test suite remains green while the fixture can demonstrate reproducible failure.
+`tests/fixtures/broken_project` is a deterministic intentionally broken project. Its acceptance case is executed by an integration harness so the normal repository test suite remains green while the fixture can demonstrate reproducible failure. `AlphaWorkflow` now provides the ordered control-plane stages for inspection, reproduction, checkpointing, repair, verification, red-team checking, and regression checking.
