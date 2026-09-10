@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable
 from uuid import uuid4
 
 
@@ -50,7 +50,7 @@ class RedTeamSuite:
         for challenge in self._challenges:
             try:
                 flaw_found = bool(challenge.attack())
-            except Exception as exc:  # noqa: BLE001 - attacks are untrusted test code.
+            except Exception as exc:
                 results.append(
                     RedTeamResult(
                         challenge.id,
