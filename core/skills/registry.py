@@ -1,18 +1,23 @@
 from __future__ import annotations
 
-from core.skills.models import Skill, SkillStatus
+from pathlib import Path
+
+from core.skills.models import Skill
+from core.skills.parser import parse_skill_file
+from core.skills.validator import require_valid
 
 
 class SkillRegistry:
-    """Registry for reusable procedures; registration never grants execution permission."""
+    """Deterministic registry; loading or selecting a Skill never grants authority."""
 
     def __init__(self) -> None:
         self._skills: dict[str, Skill] = {}
 
     def register(self, skill: Skill) -> Skill:
+        require_valid(skill)
         if skill.id in self._skills:
             raise ValueError(f"Duplicate skill id: {skill.id}")
-        if any(existing.name == skill.name for existing in self._skills.values()):
+        if any(item.name == skill.name for item in self._skills.values()):
             raise ValueError(f"Duplicate skill name: {skill.name}")
         self._skills[skill.id] = skill
         return skill
@@ -24,30 +29,21 @@ class SkillRegistry:
             raise KeyError(f"Unknown skill: {skill_id}") from exc
 
     def all(self) -> tuple[Skill, ...]:
-        return tuple(self._skills.values())
+        return tuple(sorted(self._skills.values(), key=lambda item: item.id))
 
-    def by_category(self, category: str) -> tuple[Skill, ...]:
-        return tuple(skill for skill in self._skills.values() if skill.category == category)
+    def load_directory(self, root: str | Path) -> tuple[Skill, ...]:
+        root = Path(root)
+        if not root.is_dir():
+            raise FileNotFoundError(f"Skill directory not found: {root}")
+        for path in sorted(root.rglob("SKILL.md")):
+            self.register(parse_skill_file(path))
+        return self.all()
 
-    def by_status(self, status: SkillStatus) -> tuple[Skill, ...]:
-        return tuple(skill for skill in self._skills.values() if skill.status is status)
-
-    def select(
-        self,
-        *,
-        category: str | None = None,
-        required_tools: tuple[str, ...] = (),
-        required_permissions: tuple[str, ...] = (),
-        validated_only: bool = True,
-    ) -> tuple[Skill, ...]:
-        allowed = {SkillStatus.VALIDATED} if validated_only else {
-            SkillStatus.EXPERIMENTAL, SkillStatus.VALIDATED
-        }
+    def select(self, *, category: str | None = None, status: str = "validated", query: str | None = None) -> tuple[Skill, ...]:
+        needle = query.casefold() if query else None
         return tuple(
-            skill
-            for skill in self._skills.values()
-            if skill.status in allowed
+            skill for skill in self.all()
+            if skill.status.value == status
             and (category is None or skill.category == category)
-            and set(required_tools).issubset(skill.required_tools)
-            and set(required_permissions).issubset(skill.required_permissions)
+            and (needle is None or needle in (skill.id + " " + skill.name + " " + skill.purpose).casefold())
         )

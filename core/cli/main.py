@@ -17,6 +17,7 @@ from pathlib import Path
 
 from core.cli.audit import audit_summary
 from core.cli.config import SIConfig, config_path, load_config, save_config
+from core.cli.skills import compose_skills, inspect_skill, print_skills
 from core.environments.codespace import CodespaceRuntime
 from core.environments.models import EnvironmentReport, EnvironmentStatus
 from core.environments.termux import TermuxRuntime
@@ -84,16 +85,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 def cmd_status(args: argparse.Namespace) -> int:
     config = load_config()
     report = _report()
-    payload = {
-        "version": _package_version(),
-        "environment": report.kind.value,
-        "environment_status": report.status.value,
-        "workspace": config.workspace or os.getcwd(),
-        "opencode_url": config.opencode_url,
-        "omniroute_url": config.omniroute_url,
-        "omniroute_model": config.omniroute_model,
-        "config": str(config_path()),
-    }
+    payload = {"version": _package_version(), "environment": report.kind.value, "environment_status": report.status.value, "workspace": config.workspace or os.getcwd(), "opencode_url": config.opencode_url, "omniroute_url": config.omniroute_url, "omniroute_model": config.omniroute_model, "config": str(config_path())}
     if args.json:
         print(json.dumps(payload, indent=2, sort_keys=True))
     else:
@@ -109,19 +101,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 
 
 def _agent_payload(agent) -> dict[str, object]:
-    return {
-        "id": agent.id,
-        "name": agent.name,
-        "division": agent.division,
-        "description": agent.description,
-        "status": agent.status.value,
-        "implementation": agent.implementation,
-        "skills": list(agent.skills),
-        "capabilities": list(agent.capabilities),
-        "permissions": list(agent.permissions),
-        "harnesses": list(agent.harnesses),
-        "environments": list(agent.environments),
-    }
+    return {"id": agent.id, "name": agent.name, "division": agent.division, "description": agent.description, "status": agent.status.value, "implementation": agent.implementation, "skills": list(agent.skills), "capabilities": list(agent.capabilities), "permissions": list(agent.permissions), "harnesses": list(agent.harnesses), "environments": list(agent.environments)}
 
 
 def cmd_agents(args: argparse.Namespace) -> int:
@@ -133,12 +113,7 @@ def cmd_agents(args: argparse.Namespace) -> int:
         agents = [agent for agent in agents if agent.status.value == args.status]
     if args.search:
         needle = args.search.casefold()
-        agents = [
-            agent for agent in agents
-            if needle in agent.id.casefold()
-            or needle in agent.name.casefold()
-            or needle in agent.description.casefold()
-        ]
+        agents = [agent for agent in agents if needle in agent.id.casefold() or needle in agent.name.casefold() or needle in agent.description.casefold()]
     agents.sort(key=lambda agent: (agent.division, agent.name, agent.id))
     if args.json:
         print(json.dumps([_agent_payload(agent) for agent in agents], indent=2, sort_keys=True))
@@ -159,24 +134,10 @@ def cmd_teams(args: argparse.Namespace) -> int:
     teams = list(registry.all())
     if args.search:
         needle = args.search.casefold()
-        teams = [
-            team for team in teams
-            if needle in team.id.casefold()
-            or needle in team.name.casefold()
-            or needle in team.description.casefold()
-        ]
+        teams = [team for team in teams if needle in team.id.casefold() or needle in team.name.casefold() or needle in team.description.casefold()]
     teams.sort(key=lambda team: team.id)
     if args.json:
-        payload = [
-            {
-                "id": team.id,
-                "name": team.name,
-                "description": team.description,
-                "tasks": [task.id for task in team.tasks],
-            }
-            for team in teams
-        ]
-        print(json.dumps(payload, indent=2, sort_keys=True))
+        print(json.dumps([{"id": team.id, "name": team.name, "description": team.description, "tasks": [task.id for task in team.tasks]} for team in teams], indent=2, sort_keys=True))
         return 0
     for team in teams:
         print(f"{team.id}: {team.name}")
@@ -192,10 +153,7 @@ def cmd_personas(args: argparse.Namespace) -> int:
         personas = tuple(persona for persona in personas if persona.division == args.division)
     if args.search:
         needle = args.search.casefold()
-        personas = tuple(
-            persona for persona in personas
-            if needle in persona.id.casefold() or needle in persona.name.casefold()
-        )
+        personas = tuple(persona for persona in personas if needle in persona.id.casefold() or needle in persona.name.casefold())
     personas = tuple(sorted(personas, key=lambda persona: (persona.division, persona.name, persona.id)))
     if args.json:
         print(json.dumps([persona.as_dict() for persona in personas], indent=2, sort_keys=True))
@@ -215,6 +173,18 @@ def cmd_audit(args: argparse.Namespace) -> int:
             state = "ok" if check["ok"] else "FAIL"
             print(f"{state}: {check['name']} — {check['detail']}")
     return 0 if payload["ok"] else 2
+
+
+def cmd_skills(args: argparse.Namespace) -> int:
+    if args.inspect:
+        payload = inspect_skill(ROOT, args.inspect)
+        print(json.dumps(payload, indent=2, sort_keys=True) if args.json else f"{payload['id']}: {payload['name']} [{payload['version']}, {payload['status']}]\n  {payload['purpose']}")
+        return 0
+    if args.compose:
+        payload = compose_skills(ROOT, args.compose)
+        print(json.dumps(payload, indent=2, sort_keys=True) if args.json else " -> ".join(payload["skills"]))
+        return 0
+    return print_skills(ROOT, category=args.category, status=args.status, search=args.search, as_json=args.json)
 
 
 def _setup_plan(report: EnvironmentReport) -> list[tuple[str, ...]]:
@@ -253,7 +223,7 @@ def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
         try:
             payload = json.loads(target.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
-            return False, f"OpenCode config is not plain JSON/contains comments: {target} ({exc})"
+            return False, f"OpenCode config is not plain JSON: {target} ({exc})"
         if not isinstance(payload, dict):
             return False, f"OpenCode config must be a JSON object: {target}"
     providers = payload.setdefault("providers", {})
@@ -262,19 +232,7 @@ def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
     provider = providers.setdefault("omniroute", {})
     if not isinstance(provider, dict):
         return False, "OpenCode 'providers.omniroute' must be an object"
-    provider.update(
-        {
-            "name": "OmniRoute",
-            "package": "@opencode/ai/providers/openai-compatible",
-            "settings": {"baseURL": config.omniroute_url.rstrip("/") + "/v1"},
-            "models": {
-                config.omniroute_model: {
-                    "name": config.omniroute_model,
-                    "modelID": config.omniroute_model,
-                }
-            },
-        }
-    )
+    provider.update({"name": "OmniRoute", "package": "@opencode/ai/providers/openai-compatible", "settings": {"baseURL": config.omniroute_url.rstrip("/") + "/v1"}, "models": {config.omniroute_model: {"name": config.omniroute_model, "modelID": config.omniroute_model}}})
     message = f"OpenCode OmniRoute provider {'would be updated' if not apply else 'updated'} at {target}"
     if not apply:
         return True, message
@@ -286,13 +244,7 @@ def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
 def cmd_setup(args: argparse.Namespace) -> int:
     report = _report()
     config = load_config()
-    updated = SIConfig(
-        environment=report.kind.value,
-        workspace=config.workspace or os.getcwd(),
-        opencode_url=args.opencode_url or config.opencode_url,
-        omniroute_url=args.omniroute_url or config.omniroute_url,
-        omniroute_model=args.model or config.omniroute_model,
-    )
+    updated = SIConfig(environment=report.kind.value, workspace=config.workspace or os.getcwd(), opencode_url=args.opencode_url or config.opencode_url, omniroute_url=args.omniroute_url or config.omniroute_url, omniroute_model=args.model or config.omniroute_model)
     install_plan = _opencode_install_plan() if args.install_opencode else None
     print("setup plan:")
     for command in _setup_plan(report):
@@ -360,15 +312,13 @@ def cmd_run(args: argparse.Namespace) -> int:
     if args.handoff:
         envelope = HandoffStore().load(Path(args.handoff))
         initial.update(resume_context(envelope, Path.cwd()))
-    engine = TeamEngine(registry)
-    execution = engine.run(args.team, initial_context=initial, resolve_worker=_worker_resolver)
+    execution = TeamEngine(registry).run(args.team, initial_context=initial, resolve_worker=_worker_resolver)
     print(f"team: {execution.team_id}")
     print(f"status: {execution.status.value}")
     for task_id, status in execution.task_status.items():
         print(f"  {task_id}: {status.value}")
-    if execution.errors:
-        for error in execution.errors:
-            print(f"error: {error}", file=sys.stderr)
+    for error in execution.errors:
+        print(f"error: {error}", file=sys.stderr)
     return 0 if execution.status.value == "succeeded" else 2
 
 
@@ -378,14 +328,8 @@ def cmd_handoff_create(args: argparse.Namespace) -> int:
         return 2
     registry = load_team_catalog(_catalog_path("team-catalog.json"))
     registry.get(args.team)
-    engine = TeamEngine(registry)
-    execution = engine.run(args.team, initial_context={"objective": args.objective}, resolve_worker=_worker_resolver)
-    envelope = create_handoff(
-        execution,
-        source_environment=args.source,
-        target_environment=args.target,
-        workspace=Path.cwd(),
-    )
+    execution = TeamEngine(registry).run(args.team, initial_context={"objective": args.objective}, resolve_worker=_worker_resolver)
+    envelope = create_handoff(execution, source_environment=args.source, target_environment=args.target, workspace=Path.cwd())
     output = HandoffStore.safe_export_path(Path(args.output))
     output.parent.mkdir(parents=True, exist_ok=True)
     HandoffStore(output.parent).save(envelope)
@@ -434,78 +378,25 @@ def _exit_code(status: EnvironmentStatus) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="si", description="SI-Agents control, audit, and setup CLI")
     sub = parser.add_subparsers(dest="command", required=True)
-
-    doctor = sub.add_parser("doctor", help="check environment readiness")
-    doctor.add_argument("--json", action="store_true")
-    doctor.set_defaults(handler=cmd_doctor)
-
-    status = sub.add_parser("status", help="show runtime and configuration status")
-    status.add_argument("--json", action="store_true")
-    status.set_defaults(handler=cmd_status)
-
-    audit = sub.add_parser("audit", help="run read-only repository integrity checks")
-    audit.add_argument("--json", action="store_true")
-    audit.set_defaults(handler=cmd_audit)
-
-    agents = sub.add_parser("agents", help="list and filter the canonical agent catalog")
-    agents.add_argument("--division")
-    agents.add_argument("--status", choices=("active", "cataloged", "deprecated"))
-    agents.add_argument("--search")
-    agents.add_argument("--json", action="store_true")
-    agents.set_defaults(handler=cmd_agents)
-
-    personas = sub.add_parser("personas", help="list discovered Markdown personas")
-    personas.add_argument("--division")
-    personas.add_argument("--search")
-    personas.add_argument("--json", action="store_true")
-    personas.set_defaults(handler=cmd_personas)
-
-    teams = sub.add_parser("teams", help="list and filter canonical teams and workflows")
-    teams.add_argument("--search")
-    teams.add_argument("--json", action="store_true")
-    teams.set_defaults(handler=cmd_teams)
-
-    setup = sub.add_parser("setup", help="plan or apply safe local setup")
-    setup.add_argument("--apply", action="store_true", help="perform allowlisted local setup")
-    setup.add_argument("--install-opencode", action="store_true", help="install OpenCode using npm when available")
-    setup.add_argument("--configure-opencode", action="store_true", help="add/update an OmniRoute provider in OpenCode JSON config")
-    setup.add_argument("--opencode-url")
-    setup.add_argument("--omniroute-url")
-    setup.add_argument("--model", help="explicit OmniRoute model ID for OpenCode configuration")
-    setup.set_defaults(handler=cmd_setup)
-
-    update = sub.add_parser("update", help="plan or apply package update")
-    update.add_argument("--apply", action="store_true", help="upgrade the installed si-agents package")
-    update.set_defaults(handler=cmd_update)
-
-    run = sub.add_parser("run", help="execute a canonical governed team")
-    run.add_argument("team", help="team/workflow identifier")
-    run.add_argument("--objective", required=True, help="objective passed as initial workflow context")
-    run.add_argument("--handoff", help="validated handoff JSON to resume context from")
-    run.set_defaults(handler=cmd_run)
-
-    handoff = sub.add_parser("handoff", help="transfer verified workflow state between environments")
-    handoff_sub = handoff.add_subparsers(dest="handoff_command", required=True)
-    create = handoff_sub.add_parser("create", help="execute a team and export a portable handoff")
-    create.add_argument("team")
-    create.add_argument("--objective", required=True)
-    create.add_argument("--source", required=True, choices=("termux", "codespace"))
-    create.add_argument("--target", required=True, choices=("termux", "codespace"))
-    create.add_argument("--output", required=True)
-    create.set_defaults(handler=cmd_handoff_create)
-    inspect = handoff_sub.add_parser("inspect", help="verify and inspect a handoff")
-    inspect.add_argument("path")
-    inspect.add_argument("--json", action="store_true")
-    inspect.set_defaults(handler=cmd_handoff_inspect)
-    import_cmd = handoff_sub.add_parser("import", help="validate a handoff for this environment")
-    import_cmd.add_argument("path")
-    import_cmd.set_defaults(handler=cmd_handoff_import)
+    doctor = sub.add_parser("doctor", help="check environment readiness"); doctor.add_argument("--json", action="store_true"); doctor.set_defaults(handler=cmd_doctor)
+    status = sub.add_parser("status", help="show runtime and configuration status"); status.add_argument("--json", action="store_true"); status.set_defaults(handler=cmd_status)
+    audit = sub.add_parser("audit", help="run read-only repository integrity checks"); audit.add_argument("--json", action="store_true"); audit.set_defaults(handler=cmd_audit)
+    agents = sub.add_parser("agents", help="list and filter the canonical agent catalog"); agents.add_argument("--division"); agents.add_argument("--status", choices=("active", "cataloged", "deprecated")); agents.add_argument("--search"); agents.add_argument("--json", action="store_true"); agents.set_defaults(handler=cmd_agents)
+    personas = sub.add_parser("personas", help="list discovered Markdown personas"); personas.add_argument("--division"); personas.add_argument("--search"); personas.add_argument("--json", action="store_true"); personas.set_defaults(handler=cmd_personas)
+    skills = sub.add_parser("skills", help="list, inspect, and compose portable Skills"); skills.add_argument("--category"); skills.add_argument("--status", choices=("experimental", "validated", "deprecated", "blocked"), default="validated"); skills.add_argument("--search"); skills.add_argument("--inspect"); skills.add_argument("--compose", nargs="+"); skills.add_argument("--json", action="store_true"); skills.set_defaults(handler=cmd_skills)
+    teams = sub.add_parser("teams", help="list and filter canonical teams and workflows"); teams.add_argument("--search"); teams.add_argument("--json", action="store_true"); teams.set_defaults(handler=cmd_teams)
+    setup = sub.add_parser("setup", help="plan or apply safe local setup"); setup.add_argument("--apply", action="store_true"); setup.add_argument("--install-opencode", action="store_true"); setup.add_argument("--configure-opencode", action="store_true"); setup.add_argument("--opencode-url"); setup.add_argument("--omniroute-url"); setup.add_argument("--model"); setup.set_defaults(handler=cmd_setup)
+    update = sub.add_parser("update", help="plan or apply package update"); update.add_argument("--apply", action="store_true"); update.set_defaults(handler=cmd_update)
+    run = sub.add_parser("run", help="execute a canonical governed team"); run.add_argument("team"); run.add_argument("--objective", required=True); run.add_argument("--handoff"); run.set_defaults(handler=cmd_run)
+    handoff = sub.add_parser("handoff", help="transfer verified workflow state between environments"); handoff_sub = handoff.add_subparsers(dest="handoff_command", required=True)
+    create = handoff_sub.add_parser("create", help="execute a team and export a portable handoff"); create.add_argument("team"); create.add_argument("--objective", required=True); create.add_argument("--source", required=True, choices=("termux", "codespace")); create.add_argument("--target", required=True, choices=("termux", "codespace")); create.add_argument("--output", required=True); create.set_defaults(handler=cmd_handoff_create)
+    inspect = handoff_sub.add_parser("inspect", help="verify and inspect a handoff"); inspect.add_argument("path"); inspect.add_argument("--json", action="store_true"); inspect.set_defaults(handler=cmd_handoff_inspect)
+    import_cmd = handoff_sub.add_parser("import", help="validate a handoff for this environment"); import_cmd.add_argument("path"); import_cmd.set_defaults(handler=cmd_handoff_import)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
+    parser = build_parser(); args = parser.parse_args(argv)
     try:
         return args.handler(args)
     except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as exc:

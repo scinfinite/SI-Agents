@@ -13,10 +13,11 @@ dependencies = []
 si = "core.cli.main:main"
 
 [tool.setuptools.packages.find]
-include = ["adapters*", "agents*", "core*", "tools*"]
+include = ["adapters*", "agents*", "core*", "skills*", "tools*"]
 
 [tool.setuptools.package-data]
 agents = ["**/*.md"]
+skills = ["**/*.md", "*.json", "*.yaml"]
 
 [tool.setuptools.data-files]
 "share/si-agents/config" = ["config/agent-catalog.json", "config/team-catalog.json", "config/persona-source-index.json"]
@@ -29,4 +30,4 @@ addopts = "-q"
 line-length = 100
 
 [tool.ruff.lint.isort]
-known-first-party = ["adapters", "agents", "core", "tools"]
+known-first-party = ["adapters", "agents", "core", "skills", "tools"]

@@ -37,18 +37,52 @@ jobs:
 
       - name: Verify wheel installation
         run: |
+          set +e
           python -m venv .ci-wheel-venv
-          .ci-wheel-venv/bin/python -m pip install dist/*.whl
-          .ci-wheel-venv/bin/python -c "import adapters, agents, core; from adapters.opencode import OpenCodeAdapter; from agents import AgentSpec; from core.runtime import RuntimeEngine; print('wheel import OK')"
-          .ci-wheel-venv/bin/si agents >/dev/null
-          .ci-wheel-venv/bin/si personas --division si-engineering >/dev/null
-          .ci-wheel-venv/bin/si teams >/dev/null
+          .ci-wheel-venv/bin/python -m pip install dist/*.whl > wheel-smoke.txt 2>&1
+          failed=$?
+          echo "pip install exit=$failed" >> wheel-smoke.txt
+          .ci-wheel-venv/bin/python -c "import adapters, agents, core; from adapters.opencode import OpenCodeAdapter; from agents import AgentSpec; from core.runtime import RuntimeEngine; print('wheel import OK')" >> wheel-smoke.txt 2>&1
+          code=$?; echo "import exit=$code" >> wheel-smoke.txt; if [ $code -ne 0 ]; then failed=1; fi
+          for command in "agents" "personas --division si-engineering" "skills --json" "skills --inspect inspect-repository --json" "skills --compose inspect-repository verify-change --json" "teams"; do
+            echo "--- si $command ---" >> wheel-smoke.txt
+            .ci-wheel-venv/bin/si $command >> wheel-smoke.txt 2>&1
+            code=$?; echo "exit=$code" >> wheel-smoke.txt; if [ $code -ne 0 ]; then failed=1; fi
+          done
+          cat wheel-smoke.txt
+          exit $failed
+
+      - name: Upload wheel diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-diagnostics
+          path: wheel-smoke.txt
+          if-no-files-found: ignore
 
       - name: Run SI repository audit
         run: si audit --json
 
       - name: Run Ruff
-        run: python -m ruff check .
+        run: |
+          python -m ruff check . --output-format=json > ruff-report.json || (cat ruff-report.json; exit 1)
+
+      - name: Upload Ruff diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruff-diagnostics
+          path: ruff-report.json
+          if-no-files-found: ignore
 
       - name: Run tests
-        run: python -m pytest
+        run: |
+          python -m pytest > pytest-report.txt 2>&1 || (cat pytest-report.txt; exit 1)
+
+      - name: Upload pytest diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-diagnostics
+          path: pytest-report.txt
+          if-no-files-found: ignore

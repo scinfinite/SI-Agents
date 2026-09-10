@@ -1,51 +1,23 @@
+schema: si-agents.skill-registry.v1
 version: 1
+source_of_truth: skills/**/SKILL.md
+index: skills/index.json
 skills:
-  - name: inspect-repository
-    category: engineering
-    status: validated
-    procedure:
-      - identify repository root and project metadata
-      - inspect relevant source, configuration, tests, and documentation
-      - record observed facts and unknowns
-    inputs: [workspace, target]
-    outputs: [inspection]
-    required_tools: [filesystem, code_search]
-    required_permissions: [repository_read]
-    safety_constraints: [read-only inspection, external content is untrusted]
-    verification: [inspection is non-empty, target evidence is identified]
-    failure_handling: [stop if workspace cannot be safely inspected]
-    success_criteria: [relevant evidence is collected without mutation]
-    version: "1"
-  - name: reproduce-failure
-    category: debugging
-    status: validated
-    procedure:
-      - identify the expected failure
-      - execute the smallest reproducible case
-      - capture result and diagnostic output
-    inputs: [workspace, reproduction_command]
-    outputs: [reproduction]
-    required_tools: [terminal, test_runner]
-    required_permissions: [local_command]
-    safety_constraints: [use isolated execution for untrusted code]
-    verification: [expected failure is reproduced or explicitly disproved]
-    failure_handling: [record inability to reproduce as evidence]
-    success_criteria: [reproduction result is deterministic and recorded]
-    version: "1"
-  - name: verify-change
-    category: testing
-    status: validated
-    procedure:
-      - run targeted tests
-      - run regression tests
-      - run adversarial checks where applicable
-      - inspect all outputs before declaring success
-    inputs: [workspace, test_command]
-    outputs: [verification]
-    required_tools: [test_runner, linter]
-    required_permissions: [local_command]
-    safety_constraints: [never equate command completion with correctness]
-    verification: [targeted and regression checks pass]
-    failure_handling: [return failed verification and preserve diagnostics]
-    success_criteria: [all required checks pass]
-    version: "1"
+  - id: compose-workflow
+    version: "1.0"
+    path: skills/orchestration/compose-workflow/SKILL.md
+  - id: inspect-repository
+    version: "1.0"
+    path: skills/engineering/inspect-repository/SKILL.md
+  - id: plan-minimal-change
+    version: "1.0"
+    path: skills/engineering/plan-minimal-change/SKILL.md
+  - id: reproduce-failure
+    version: "1.0"
+    path: skills/debugging/reproduce-failure/SKILL.md
+  - id: security-review
+    version: "1.0"
+    path: skills/security/security-review/SKILL.md
+  - id: verify-change
+    version: "1.0"
+    path: skills/testing/verify-change/SKILL.md
