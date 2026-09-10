@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -109,10 +110,18 @@ def _setup_plan(report: EnvironmentReport) -> list[tuple[str, ...]]:
 
 
 def _allowlisted_run(command: tuple[str, ...]) -> None:
-    allowed = {"pkg", "apt-get", "python", "python3", "pip", "pip3"}
+    allowed = {"pkg", "apt-get", "python", "python3", "pip", "pip3", "npm"}
     if not command or Path(command[0]).name not in allowed:
         raise ValueError(f"refusing non-allowlisted setup command: {' '.join(command)}")
     subprocess.run(command, check=True)
+
+
+def _opencode_install_plan() -> tuple[str, ...] | None:
+    if shutil.which("opencode"):
+        return None
+    if shutil.which("npm"):
+        return ("npm", "install", "-g", "opencode-ai")
+    return None
 
 
 def _opencode_config_path() -> Path:
@@ -170,9 +179,17 @@ def cmd_setup(args: argparse.Namespace) -> int:
         omniroute_url=args.omniroute_url or config.omniroute_url,
         omniroute_model=args.model or config.omniroute_model,
     )
+    install_plan = _opencode_install_plan() if args.install_opencode else None
     print("setup plan:")
     for command in _setup_plan(report):
         print("  " + " ".join(command))
+    if args.install_opencode:
+        if install_plan:
+            print("  " + " ".join(install_plan))
+        elif shutil.which("opencode"):
+            print("  OpenCode already installed")
+        else:
+            print("  OpenCode install unavailable: install Node.js/npm first", file=sys.stderr)
     print(f"  persist non-secret SI config: {config_path()}")
     if args.configure_opencode:
         print(f"  configure OpenCode provider: {_opencode_config_path()}")
@@ -184,8 +201,12 @@ def cmd_setup(args: argparse.Namespace) -> int:
     if report.status is EnvironmentStatus.UNSUPPORTED:
         print("refusing setup in an unsupported environment", file=sys.stderr)
         return 3
+    if args.install_opencode and not shutil.which("opencode") and install_plan is None:
+        return 2
     for command in _setup_plan(report):
         _allowlisted_run(command)
+    if install_plan:
+        _allowlisted_run(install_plan)
     save_config(updated)
     if args.configure_opencode:
         ok, message = _configure_opencode(updated, apply=True)
@@ -254,6 +275,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     setup = sub.add_parser("setup", help="plan or apply safe local setup")
     setup.add_argument("--apply", action="store_true", help="perform allowlisted local setup")
+    setup.add_argument("--install-opencode", action="store_true", help="install OpenCode using npm when available")
     setup.add_argument("--configure-opencode", action="store_true", help="add/update an OmniRoute provider in OpenCode JSON config")
     setup.add_argument("--opencode-url")
     setup.add_argument("--omniroute-url")
