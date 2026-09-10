@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 
@@ -15,6 +15,15 @@ class PermissionDenied(PermissionError):
 
 
 @dataclass(frozen=True)
+class PermissionScope:
+    """Optional task/agent/tool scope layered on top of global policy."""
+
+    agent: str | None = None
+    tool: str | None = None
+    capabilities: frozenset[str] = field(default_factory=frozenset)
+
+
+@dataclass(frozen=True)
 class PermissionEngine:
     """Evaluate action capabilities using deny-by-default semantics."""
 
@@ -25,8 +34,16 @@ class PermissionEngine:
     allow_write_repository: bool = False
     allow_local_commands: bool = True
     allow_destructive_commands: bool = False
+    scopes: tuple[PermissionScope, ...] = ()
 
-    def decide(self, capability: str, *, approval_granted: bool = False) -> PermissionDecision:
+    def decide(
+        self,
+        capability: str,
+        *,
+        approval_granted: bool = False,
+        agent: str | None = None,
+        tool: str | None = None,
+    ) -> PermissionDecision:
         normalized = capability.strip().lower()
         if not normalized:
             raise ValueError("Capability must not be empty")
@@ -35,6 +52,10 @@ class PermissionEngine:
                           "credential_rotation", "publication", "paid_resource",
                           "sensitive_data_transfer"}:
             return PermissionDecision.ALLOW if approval_granted else PermissionDecision.APPROVAL_REQUIRED
+
+        scope_matches = [scope for scope in self.scopes if self._scope_matches(scope, agent, tool)]
+        if scope_matches and not any(normalized in scope.capabilities for scope in scope_matches):
+            return PermissionDecision.DENY
 
         allowed = {
             "filesystem_read": self.allow_read_filesystem,
@@ -49,9 +70,25 @@ class PermissionEngine:
             return PermissionDecision.DENY
         return PermissionDecision.ALLOW if allowed else PermissionDecision.DENY
 
-    def require(self, capability: str, *, approval_granted: bool = False) -> None:
-        decision = self.decide(capability, approval_granted=approval_granted)
+    def require(
+        self,
+        capability: str,
+        *,
+        approval_granted: bool = False,
+        agent: str | None = None,
+        tool: str | None = None,
+    ) -> None:
+        decision = self.decide(
+            capability,
+            approval_granted=approval_granted,
+            agent=agent,
+            tool=tool,
+        )
         if decision is PermissionDecision.DENY:
             raise PermissionDenied(f"Capability denied by policy: {capability}")
         if decision is PermissionDecision.APPROVAL_REQUIRED:
             raise PermissionDenied(f"Approval required for capability: {capability}")
+
+    @staticmethod
+    def _scope_matches(scope: PermissionScope, agent: str | None, tool: str | None) -> bool:
+        return (scope.agent is None or scope.agent == agent) and (scope.tool is None or scope.tool == tool)
