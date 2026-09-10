@@ -18,6 +18,8 @@ from core.cli.config import SIConfig, config_path, load_config, save_config
 from core.environments.codespace import CodespaceRuntime
 from core.environments.models import EnvironmentReport, EnvironmentStatus
 from core.environments.termux import TermuxRuntime
+from core.handoff.service import create_handoff, resume_context
+from core.handoff.store import HandoffStore
 from core.organization.loader import load_catalog
 from core.teams.engine import TeamEngine
 from core.teams.loader import load_team_catalog
@@ -237,11 +239,19 @@ def _worker_resolver(agent_id: str):
     return getattr(module, class_name)()
 
 
+def _environment_name() -> str:
+    return _report().kind.value
+
+
 def cmd_run(args: argparse.Namespace) -> int:
     registry = load_team_catalog(_catalog_path("team-catalog.json"))
     registry.get(args.team)
+    initial = {"objective": args.objective}
+    if args.handoff:
+        envelope = HandoffStore().load(Path(args.handoff))
+        initial.update(resume_context(envelope, Path.cwd()))
     engine = TeamEngine(registry)
-    execution = engine.run(args.team, initial_context={"objective": args.objective}, resolve_worker=_worker_resolver)
+    execution = engine.run(args.team, initial_context=initial, resolve_worker=_worker_resolver)
     print(f"team: {execution.team_id}")
     print(f"status: {execution.status.value}")
     for task_id, status in execution.task_status.items():
@@ -250,6 +260,51 @@ def cmd_run(args: argparse.Namespace) -> int:
         for error in execution.errors:
             print(f"error: {error}", file=sys.stderr)
     return 0 if execution.status.value == "succeeded" else 2
+
+
+def cmd_handoff_create(args: argparse.Namespace) -> int:
+    if args.source == args.target:
+        print("source and target environments must differ", file=sys.stderr)
+        return 2
+    registry = load_team_catalog(_catalog_path("team-catalog.json"))
+    registry.get(args.team)
+    engine = TeamEngine(registry)
+    execution = engine.run(args.team, initial_context={"objective": args.objective}, resolve_worker=_worker_resolver)
+    envelope = create_handoff(
+        execution,
+        source_environment=args.source,
+        target_environment=args.target,
+        workspace=Path.cwd(),
+    )
+    output = HandoffStore.safe_export_path(Path(args.output))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    HandoffStore(output.parent).save(envelope)
+    stored = output.parent / f"{envelope.handoff_id}.json"
+    if stored != output:
+        stored.replace(output)
+    print(f"handoff: {output}")
+    print(f"id: {envelope.handoff_id}")
+    print(f"integrity: {envelope.digest()}")
+    print(f"status: {execution.status.value}")
+    return 0 if execution.status.value == "succeeded" else 2
+
+
+def cmd_handoff_inspect(args: argparse.Namespace) -> int:
+    envelope = HandoffStore().load(Path(args.path))
+    print(json.dumps(envelope.as_dict(), indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_handoff_import(args: argparse.Namespace) -> int:
+    envelope = HandoffStore().import_file(Path(args.path), target_environment=_environment_name())
+    resume_context(envelope, Path.cwd())
+    print(f"valid handoff: {envelope.handoff_id}")
+    print(f"source: {envelope.source_environment}")
+    print(f"target: {envelope.target_environment}")
+    print(f"team: {envelope.team_id or 'not specified'}")
+    print(f"execution: {envelope.execution_id or 'not specified'}")
+    print(f"evidence: {len(envelope.evidence_ids)}")
+    return 0
 
 
 def _exit_code(status: EnvironmentStatus) -> int:
@@ -289,7 +344,24 @@ def build_parser() -> argparse.ArgumentParser:
     run = sub.add_parser("run", help="execute a canonical governed team")
     run.add_argument("team", help="team/workflow identifier")
     run.add_argument("--objective", required=True, help="objective passed as initial workflow context")
+    run.add_argument("--handoff", help="validated handoff JSON to resume context from")
     run.set_defaults(handler=cmd_run)
+
+    handoff = sub.add_parser("handoff", help="transfer verified workflow state between environments")
+    handoff_sub = handoff.add_subparsers(dest="handoff_command", required=True)
+    create = handoff_sub.add_parser("create", help="execute a team and export a portable handoff")
+    create.add_argument("team")
+    create.add_argument("--objective", required=True)
+    create.add_argument("--source", required=True, choices=("termux", "codespace"))
+    create.add_argument("--target", required=True, choices=("termux", "codespace"))
+    create.add_argument("--output", required=True)
+    create.set_defaults(handler=cmd_handoff_create)
+    inspect = handoff_sub.add_parser("inspect", help="verify and inspect a handoff")
+    inspect.add_argument("path")
+    inspect.set_defaults(handler=cmd_handoff_inspect)
+    import_cmd = handoff_sub.add_parser("import", help="validate a handoff for this environment")
+    import_cmd.add_argument("path")
+    import_cmd.set_defaults(handler=cmd_handoff_import)
     return parser
 
 
