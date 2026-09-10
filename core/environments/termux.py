@@ -5,7 +5,6 @@ from __future__ import annotations
 import os
 import platform
 import shutil
-import subprocess
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -43,7 +42,9 @@ class TermuxRuntime:
     def is_termux(environ: Mapping[str, str] | None = None) -> bool:
         env = environ or os.environ
         prefix = env.get("PREFIX", "")
-        return bool(env.get("TERMUX_VERSION")) or prefix.endswith("/usr") and "/com.termux/" in prefix
+        return bool(env.get("TERMUX_VERSION")) or (
+            prefix.endswith("/usr") and "/com.termux/" in prefix
+        )
 
     @staticmethod
     def _python_version() -> str:
@@ -51,11 +52,6 @@ class TermuxRuntime:
 
     @staticmethod
     def _command(name: str) -> bool:
-        return shutil.which(name) is not None
-
-    @staticmethod
-    def _termux_command(name: str) -> bool:
-        """Check Termux's package command without requiring it to be installed here."""
         return shutil.which(name) is not None
 
     def _requirements(self) -> tuple[RequirementResult, ...]:
@@ -81,12 +77,13 @@ class TermuxRuntime:
                     detail="available on PATH" if present else "not installed or not on PATH",
                 )
             )
+        pkg_present = self._command("pkg")
         results.append(
             RequirementResult(
                 name="command:pkg",
                 required=True,
-                present=self._termux_command("pkg"),
-                detail="Termux package manager available" if self._termux_command("pkg") else "pkg not found",
+                present=pkg_present,
+                detail="Termux package manager available" if pkg_present else "pkg not found",
             )
         )
         return tuple(results)
@@ -146,18 +143,6 @@ class TermuxRuntime:
         if not os.access(path, os.R_OK):
             raise PermissionError(f"workspace is not readable: {path}")
         return path.resolve()
-
-    def run_command(self, command: tuple[str, ...], *, cwd: str | Path | None = None) -> subprocess.CompletedProcess[str]:
-        """Run an already-authorized local command without shell interpolation."""
-        if not command or any(not item for item in command):
-            raise ValueError("command must contain non-empty arguments")
-        return subprocess.run(
-            list(command),
-            cwd=str(cwd) if cwd is not None else None,
-            check=False,
-            text=True,
-            capture_output=True,
-        )
 
     @staticmethod
     def python_ok() -> bool:
