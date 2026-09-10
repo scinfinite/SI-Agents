@@ -5,7 +5,7 @@
 Use these documents in this order when determining project state:
 
 1. **`PHASES.md`** — current implementation status and verification evidence.
-2. **`SI_AGENTS_V3.md`** — future architecture and Phase 30–43 roadmap after Phase 29 completion.
+2. **`SI_AGENTS_V3.md`** — future architecture and Phase 38–43 roadmap after Phase 37 completion.
 3. **Detailed phase documents** — historical contracts, boundaries, and completion evidence.
 4. **`PHASE_1_FOUNDATION.md` / `EXECUTION_BACKENDS.md`** — cross-cutting architectural boundaries; the Phase 2 control-plane contract is consolidated into `PHASE_2_CONTROL_PLANE.md`.
 
@@ -50,6 +50,8 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 33 | `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` | Complete + CI verified |
 | 34 | `PHASE_34_ORGANIZATION_EXPANSION.md` | Complete + CI verified |
 | 35 | `PHASE_35_CONTROL_API.md` | Complete + CI verified |
+| 36 | `PHASE_36_LOCAL_WEB_FOUNDATION.md` | Complete + CI verified |
+| 37 | `PHASE_37_CONTROL_CENTER.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -67,11 +69,13 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract, scanner, and final verification record.
 - `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical organization/team/workflow contract and final verification record.
 - `PHASE_35_CONTROL_API.md` — canonical versioned Control API contract and final verification record.
+- `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical dependency-free local Web boundary and final verification record.
+- `PHASE_37_CONTROL_CENTER.md` — canonical live Control Center contract and final verification record.
 - `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29–35 are complete and CI-verified.
+`SI_AGENTS_V3.md` defines the remaining **Phases 38–43**. Phases 29–37 are complete and CI-verified.
 
 ```text
 29 SI Agent Personas       [complete]
@@ -88,9 +92,9 @@ Code, executable contracts, governance decisions, and CI results outrank documen
    ↓
 35 Control API             [complete]
    ↓
-36 Web Foundation
+36 Web Foundation          [complete]
    ↓
-37 Control Center
+37 Control Center          [complete]
    ↓
 38 Visual Organization / Workflow
    ↓
