@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "capabilities": [
+    {"name": "repository.read", "risk": "low"},
+    {"name": "repository.write", "risk": "medium"},
+    {"name": "shell.execute", "risk": "high"},
+    {"name": "network.egress", "risk": "high"},
+    {"name": "credential.use", "risk": "critical"},
+    {"name": "production.modify", "risk": "critical"}
+  ],
+  "policies": [
+    {
+      "name": "least-privilege",
+      "description": "Explicit scoped permission is required for declared capabilities.",
+      "deny_capabilities": ["credential.use"],
+      "approval_risks": ["high", "critical"],
+      "max_cost": 0,
+      "allow_external_egress": false
+    }
+  ]
+}
