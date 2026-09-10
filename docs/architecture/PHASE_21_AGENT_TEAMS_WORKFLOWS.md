@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete pending final CI verification.**
+**Complete.** Final CI run **#450** passed after the final orchestration fixes.
 
 Phase 21 turns the Phase 20 agent catalog into an executable, bounded team/workflow control plane. It deliberately remains harness-neutral: the engine executes injected `AgentWorker` implementations and does not depend on OpenCode, Claude Code, Codex, Cline, Antigravity, or OmniRoute.
 
@@ -42,7 +42,7 @@ Parallelism is bounded by the team definition. The engine uses a standard-librar
 
 ## Context and handoff model
 
-`ContextMode.SHARED` allows successful task context/handoff values to become available to downstream tasks. `ContextMode.ISOLATED` receives a snapshot and does not publish arbitrary context mutations. Explicit `AgentResult.handoff` remains the portable handoff surface.
+`ContextMode.SHARED` allows successful task context/handoff values to become available to downstream tasks. `ContextMode.ISOLATED` receives a snapshot and does not publish task output into shared workflow context. Explicit `AgentResult.handoff` remains the portable handoff surface; automatic publication is only enabled for shared context.
 
 This avoids implicit cross-agent memory and keeps the team layer separate from the persistent memory system from earlier phases.
 
@@ -50,7 +50,7 @@ This avoids implicit cross-agent memory and keeps the team layer separate from t
 
 Each task declares `max_attempts`. Failed attempts emit retry events until the limit is reached. If `escalate_to` is declared, the escalation worker receives the failed task's local context. A successful escalation produces `TaskStatus.ESCALATED`, which is treated as a successful dependency outcome while preserving the fact that escalation occurred.
 
-Escalation targets must be declared team members. Team membership does not grant permissions; the injected worker remains responsible for enforcing its own required permissions and the existing governance/runtime layers remain authoritative.
+Escalation targets must be declared team members. Team membership does not grant permissions; the injected worker remains responsible for enforcing its own required permissions and the existing governance/runtime layers remain authoritative. Escalated results remain subject to the same evidence and verification gates as normal results.
 
 ## Evidence and verification gates
 
@@ -101,4 +101,4 @@ The acceptance suite covers:
 - duplicate team rejection;
 - canonical catalog loading and validation.
 
-Phase completion is only declared after the final main CI run verifies distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite.
+Final verification: CI run **#450** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite. The final test result was **284 passed**.
