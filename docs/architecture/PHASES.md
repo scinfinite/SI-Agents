@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–35 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–36 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -41,6 +41,7 @@
 33. Security & Governance Center — **Complete and CI-verified.** Typed governance objects, fail-closed capability/permission decisions, approval expiry handling, credential + external-egress denial, declarative governance catalog, packaged governance configuration, deterministic read-only security scanner, audit-safe decision records, and adversarial regression coverage.
 34. Organization Expansion — **Complete and CI-verified.** Immutable team/division/workflow contracts, source-of-truth validation against the canonical 279-agent catalog, five operating teams, single-home assignments for all 18 divisions, four evidence-gated workflows, authority-boundary checks, packaging, and adversarial regression coverage.
 35. Control API — **Complete and CI-verified.** Versioned `/api/v1` machine-facing contract, deterministic OpenAPI description, canonical agent/team/organization/workflow/Skill/governance/event/run read models, governed run creation, localhost-only dependency-free HTTP transport, bounded JSON mutations, security response headers, packaged `si-api` launcher, and adversarial HTTP/governance regression coverage.
+36. Local Web Foundation — **Complete and CI-verified.** Dependency-free localhost-first Web server over the Control API, packaged live browser surface, stable `si web`/`si-web` launchers, strict CSP/security headers, deny-by-default CORS, explicit authenticated remote opt-in, bounded JSON mutations, redacted private audit logging, safe errors, graceful shutdown, packaging, and adversarial Web/security regression coverage.
 
 ## Release targets
 
@@ -49,7 +50,7 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 35:** complete and CI-verified
+- **Post-v2 validation through Phase 36:** complete and CI-verified
 
 ## Phase completion gate
 
@@ -81,6 +82,10 @@ Phase 35 implementation was merged from PR #27 as merge commit `8e990f225b69fe18
 
 Documentation was synchronized after the implementation merge. The final mainline CI run on the documentation-closed state is the final Phase 35 release gate.
 
+## Phase 36 verification record
+
+Phase 36 was merged from PR #31 as squash commit `0829e29d7e2b3718e57caf027f9a1cb8534cbcba` after the current-head feature CI run **#830** (`34505281056`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates. The cycle also caught and fixed two real defects before final success: ephemeral port `0` was not accepted by the testable server contract, and wildcard CORS validation returned a non-specific error. The final feature run completed successfully with the full suite at **424+ tests**.
+
 ## Documentation structure
 
 - `PHASE_1_FOUNDATION.md` through `PHASE_28_*` — historical phase records.
@@ -91,8 +96,9 @@ Documentation was synchronized after the implementation merge. The final mainlin
 - `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract and final verification record.
 - `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical Organization Expansion contract and final verification record.
 - `PHASE_35_CONTROL_API.md` — canonical Control API contract and final verification record.
+- `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical Web foundation contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 36 — Local Web Foundation.**
+**Phase 37 — Control Center.**
