@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from core.capabilities.models import Capability
 from core.capabilities.registry import CapabilityRegistry
 
 
@@ -15,7 +14,7 @@ class CapabilityHealth:
 
 
 class CapabilityHealthTracker:
-    """Records validated health observations without silently changing status."""
+    """Records health observations without silently changing capability status."""
 
     def __init__(self, registry: CapabilityRegistry) -> None:
         self.registry = registry
