@@ -1,3 +1,4 @@
+import urllib.error
 from unittest.mock import patch
 
 from adapters.opencode import OpenCodeAdapter, OpenCodeConfig
@@ -13,13 +14,6 @@ def request(session_id: str | None = None) -> InvocationRequest:
         session_id=session_id,
         metadata=(("model", "test-model"), ("agent", "developer")),
     )
-
-
-def response(read_value: bytes):
-    result = patch("urllib.request.urlopen")
-    context = result.start().return_value.__enter__.return_value
-    context.read.return_value = read_value
-    return result
 
 
 def test_metadata_and_capabilities_are_declared() -> None:
@@ -44,7 +38,10 @@ def test_invoke_creates_session_and_maps_message() -> None:
     adapter = OpenCodeAdapter(OpenCodeConfig(base_url="http://example.test"))
     with patch("urllib.request.urlopen") as urlopen:
         response_obj = urlopen.return_value.__enter__.return_value
-        response_obj.read.side_effect = [b'{"id":"ses_123"}', b'{"parts":[{"type":"text","text":"world"}]}']
+        response_obj.read.side_effect = [
+            b'{"id":"ses_123"}',
+            b'{"parts":[{"type":"text","text":"world"}]}',
+        ]
         result = adapter.invoke(request())
     assert result.status is InvocationStatus.COMPLETED
     assert result.output == "world"
@@ -54,15 +51,16 @@ def test_invoke_creates_session_and_maps_message() -> None:
 
 def test_invoke_reuses_existing_session() -> None:
     adapter = OpenCodeAdapter(OpenCodeConfig(base_url="http://example.test"))
-    with response(b'{"parts":[{"type":"text","text":"continued"}]}'):
+    with patch("urllib.request.urlopen") as urlopen:
+        response_obj = urlopen.return_value.__enter__.return_value
+        response_obj.read.return_value = b'{"parts":[{"type":"text","text":"continued"}]}'
         result = adapter.invoke(request("ses_existing"))
     assert result.status is InvocationStatus.COMPLETED
     assert result.output == "continued"
+    assert urlopen.call_count == 1
 
 
 def test_invoke_maps_http_429_to_retryable_failure() -> None:
-    import urllib.error
-
     adapter = OpenCodeAdapter(OpenCodeConfig(base_url="http://example.test"))
     with patch("urllib.request.urlopen", side_effect=urllib.error.HTTPError("u", 429, "rate", {}, None)):
         result = adapter.invoke(request("ses_existing"))
@@ -73,5 +71,8 @@ def test_invoke_maps_http_429_to_retryable_failure() -> None:
 
 def test_cancel_uses_session_abort() -> None:
     adapter = OpenCodeAdapter(OpenCodeConfig(base_url="http://example.test"))
-    with response(b"true"):
+    with patch("urllib.request.urlopen") as urlopen:
+        response_obj = urlopen.return_value.__enter__.return_value
+        response_obj.read.return_value = b"true"
         assert adapter.cancel("ses_existing")
+    assert urlopen.call_count == 1
