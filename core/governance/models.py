@@ -1,7 +1,7 @@
 """Typed governance requests and auditable decisions."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 
 
@@ -65,7 +65,7 @@ class Decision:
     reasons: tuple[str, ...]
     request: GovernanceRequest
     effective_risk: RiskLevel
-    evaluated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    evaluated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def allowed(self) -> bool:
