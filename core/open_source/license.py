@@ -1,4 +1,4 @@
-import core.open_source.models as models
+from core.open_source import models  # noqa: I001
 
 
 # Conservative identifiers only. This is not legal advice and does not replace license review.
