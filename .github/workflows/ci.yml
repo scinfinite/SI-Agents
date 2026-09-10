@@ -54,7 +54,7 @@ jobs:
 
       - name: Upload wheel diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: wheel-diagnostics
           path: wheel-smoke.txt
@@ -69,7 +69,7 @@ jobs:
 
       - name: Upload Ruff diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ruff-diagnostics
           path: ruff-report.json
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload pytest diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pytest-diagnostics
           path: pytest-report.txt
