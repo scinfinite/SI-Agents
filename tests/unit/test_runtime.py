@@ -4,12 +4,17 @@ import pytest
 
 from core.governance.models import DataClass, GovernanceRequest, RiskLevel
 from core.runtime import (
-    HarnessRegistry, InvocationRequest, InvocationStatus, LocalHarnessAdapter,
-    RuntimeSession, SessionRegistry, run_conformance,
+    HarnessRegistry,
+    InvocationRequest,
+    InvocationStatus,
+    LocalHarnessAdapter,
+    RuntimeSession,
+    SessionRegistry,
+    run_conformance,
 )
 from core.runtime.adapter import validate_response
-from core.runtime.protocol import HarnessMetadata, normalize_metadata
 from core.runtime.models import RuntimeKind
+from core.runtime.protocol import HarnessMetadata, normalize_metadata
 
 
 def governance() -> GovernanceRequest:
