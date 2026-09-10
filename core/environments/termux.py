@@ -106,11 +106,14 @@ class TermuxRuntime:
             omni_healthy = False
 
         blocking = any(item.blocking for item in requirements)
+        degraded = (
+            blocking
+            or (self.config.require_omniroute and omni_healthy is not True)
+            or (self.config.require_opencode and not open_code_available)
+        )
         if not termux:
             status = EnvironmentStatus.UNSUPPORTED
-        elif blocking or (self.config.require_omniroute and omni_healthy is not True):
-            status = EnvironmentStatus.DEGRADED
-        elif self.config.require_opencode and not open_code_available:
+        elif degraded:
             status = EnvironmentStatus.DEGRADED
         else:
             status = EnvironmentStatus.READY
@@ -154,7 +157,9 @@ class TermuxRuntime:
 def main(argv: list[str] | None = None) -> int:
     """Run a read-only Termux doctor suitable for direct shell use."""
     parser = argparse.ArgumentParser(description="Check SI-Agents Termux runtime readiness")
-    parser.add_argument("--json", action="store_true", help="emit JSON instead of human-readable output")
+    parser.add_argument(
+        "--json", action="store_true", help="emit JSON instead of human-readable output"
+    )
     args = parser.parse_args(argv)
     report = TermuxRuntime().doctor()
     if args.json:
