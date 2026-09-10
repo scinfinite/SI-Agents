@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "frameworks": [
+    {"name":"Spring Boot","language":"Java","domain":"backend","build_tools":["Maven","Gradle"],"testing":["JUnit"],"topics":["dependency_injection","configuration","web","data","security"]},
+    {"name":"Django","language":"Python","domain":"web","build_tools":["pip","uv","poetry"],"testing":["Django test","pytest"],"topics":["ORM","routing","middleware","security","migrations"]},
+    {"name":"FastAPI","language":"Python","domain":"web","build_tools":["pip","uv","poetry"],"testing":["pytest"],"topics":["ASGI","OpenAPI","validation","async","security"]},
+    {"name":"React","language":"JavaScript/TypeScript","domain":"frontend","build_tools":["npm","pnpm","yarn"],"testing":["Vitest","Jest","Testing Library"],"topics":["components","state","hooks","rendering","testing"]},
+    {"name":"Next.js","language":"JavaScript/TypeScript","domain":"web","build_tools":["npm","pnpm","yarn"],"testing":["Vitest","Jest","Playwright"],"topics":["routing","SSR","RSC","deployment","security"]},
+    {"name":"ASP.NET Core","language":"C#","domain":"backend","build_tools":["dotnet","MSBuild"],"testing":["xUnit","NUnit"],"topics":["HTTP","DI","middleware","authentication","deployment"]},
+    {"name":"Flutter","language":"Dart","domain":"mobile/desktop/web","build_tools":["flutter","dart","pub"],"testing":["flutter test"],"topics":["widgets","state","platforms","rendering","testing"]},
+    {"name":"Ktor","language":"Kotlin","domain":"backend","build_tools":["Gradle"],"testing":["JUnit","Ktor test"],"topics":["routing","coroutines","serialization","HTTP","testing"]},
+    {"name":"Tokio","language":"Rust","domain":"async runtime","build_tools":["Cargo"],"testing":["cargo test"],"topics":["async","tasks","IO","concurrency","runtime"]},
+    {"name":"Gin","language":"Go","domain":"web","build_tools":["go"],"testing":["go test"],"topics":["routing","middleware","HTTP","JSON","testing"]}
+  ]
+}
