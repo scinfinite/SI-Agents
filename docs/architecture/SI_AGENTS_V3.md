@@ -38,7 +38,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 adds a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary.
 
 ### Web and TUI are views, not authorities
 
@@ -137,16 +137,25 @@ Canonical record: `docs/architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`.
 
 # Phase 34 — Organization Expansion
 
-Expand the SI organization according to actual responsibilities and verified workflows rather than importing hundreds of external personas.
+**State: Implementation complete; final verification pending.**
 
-A mature agent combines:
+Phase 34 turns the canonical 279-agent catalog into an inspectable operating organization without importing an external persona roster or creating a second permission authority.
 
-```text
-Markdown Persona + Typed Contract + Skills + Rules
-+ Governance + Verification + Memory scope
-```
+Implemented organization contracts define:
 
-Catalog consistency and source-of-truth validation remain mandatory.
+- five bounded operating teams;
+- a single organizational home for each of the 18 canonical divisions;
+- immutable workflow steps and ordered dependencies;
+- four reusable evidence-gated workflows;
+- source-of-truth validation against the canonical agent catalog;
+- explicit checks that workflow agents belong to their declared team;
+- division/team consistency validation;
+- authority-boundary checks ensuring organization configuration cannot declare permissions, capabilities, or credentials;
+- packaged declarative organization configuration.
+
+The organization layer coordinates responsibilities only. It does not execute workflows and does not grant authority. Governance remains the authorization boundary.
+
+Canonical record: `docs/architecture/PHASE_34_ORGANIZATION_EXPANSION.md`.
 
 ---
 
@@ -214,7 +223,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 31 Rules/Hooks/Events [complete]
  → 32 Memory/Knowledge [complete]
  → 33 Security/Governance [complete]
- → 34 Organization
+ → 34 Organization [implementation complete]
  → 35 Control API
  → 36 Web Foundation
  → 37 Control Center
