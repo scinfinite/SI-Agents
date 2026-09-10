@@ -73,8 +73,10 @@ def test_opencode_install_plan_uses_official_npm_package(monkeypatch) -> None:
 
 
 def test_catalog_commands_use_canonical_sources(capsys) -> None:
-    assert cmd_agents(type("Args", (), {})()) == 0
-    assert cmd_teams(type("Args", (), {})()) == 0
+    args = type("Args", (), {"division": None, "status": None, "search": None, "json": False})()
+    team_args = type("Args", (), {"search": None, "json": False})()
+    assert cmd_agents(args) == 0
+    assert cmd_teams(team_args) == 0
     output = capsys.readouterr().out
     assert "engineering" in output.lower()
     assert "engineering-repair" in output
