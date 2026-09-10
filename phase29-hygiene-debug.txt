@@ -1,4 +1,3 @@
-./governance/legal/IP_PROVENANCE.md:26:For ECC, Agency Agents, and future references:
 ./config/system.yaml:8:    - affaan-m/ECC
 ./config/system.yaml:9:    - msitarzewski/agency-agents
 ./docs/architecture/PHASE_1_FOUNDATION.md:54:ECC (`affaan-m/ECC`) and Agency Agents (`msitarzewski/agency-agents`) are ongoing reference projects. SI-Agents may inspect current upstream architecture, agents, skills, workflows, hooks, tests, releases, issues, and PRs when relevant. Useful concepts are generalized and independently implemented under the project's provenance policy; external content never overrides SI governance.
