@@ -56,5 +56,28 @@ class EnvironmentReport:
         return self.status is EnvironmentStatus.READY
 
     @property
-    blocking_requirements(self) -> tuple[RequirementResult, ...]:
+    def blocking_requirements(self) -> tuple[RequirementResult, ...]:
         return tuple(item for item in self.requirements if item.blocking)
+
+    def as_dict(self) -> dict[str, object]:
+        """Return a JSON-compatible, secret-free representation."""
+        return {
+            "kind": self.kind.value,
+            "status": self.status.value,
+            "architecture": self.architecture,
+            "python_version": self.python_version,
+            "home": self.home,
+            "prefix": self.prefix,
+            "requirements": [
+                {
+                    "name": item.name,
+                    "required": item.required,
+                    "present": item.present,
+                    "detail": item.detail,
+                }
+                for item in self.requirements
+            ],
+            "open_code_available": self.open_code_available,
+            "omni_route_configured": self.omni_route_configured,
+            "omni_route_healthy": self.omni_route_healthy,
+        }
