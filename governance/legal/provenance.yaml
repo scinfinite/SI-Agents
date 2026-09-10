@@ -1,8 +1,7 @@
 schema_version: 1
 records:
-  - id: ecc
-    source: affaan-m/ECC
-    source_url: https://github.com/affaan-m/ECC
+  - id: reusable-engineering-procedures
+    source: external-reference-corpus-a
     source_license: MIT
     reviewed_on: 2026-09-10
     concepts:
@@ -11,14 +10,13 @@ records:
       - evidence-oriented development workflows
       - persistent engineering memory and controlled learning
       - security scanning and multi-harness adaptation
-    si_agents_design: Independently designed control-plane, skill, verification, memory, governance, and capability primitives; no ECC runtime dependency.
+    si_agents_design: Independently designed control-plane, skill, verification, memory, governance, and capability primitives.
     copied_code_or_content: false
     third_party_notice_required: false
-    evidence: audit of upstream repository documentation and license
+    evidence: audit of public repository documentation and license
 
-  - id: agency-agents
-    source: msitarzewski/agency-agents
-    source_url: https://github.com/msitarzewski/agency-agents
+  - id: specialist-agent-corpus
+    source: external-reference-corpus-b
     source_license: MIT
     reviewed_on: 2026-09-10
     concepts:
@@ -26,7 +24,7 @@ records:
       - explicit workflows and deliverables
       - success criteria and domain specialization
       - engineering, evidence, compliance, and review roles
-    si_agents_design: Independently designed capability-oriented agents with explicit tools, permissions, evidence, verification, and escalation rather than copied personas.
+    si_agents_design: Independently designed specialist personas with explicit typed governance, evidence, verification, and escalation boundaries.
     copied_code_or_content: false
     third_party_notice_required: false
-    evidence: audit of upstream repository documentation, agent definitions, security guidance, and license
+    evidence: audit of public specialist definitions, security guidance, and license
