@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Beta — Phases 1–6 complete and CI-verified. Phase 7 is next.**
+**Beta — Phases 1–7 complete and CI-verified. Phase 8 is next.**
 
-Completed foundation through the reusable Skills Engine:
+Completed foundation through the Verification + Evidence Engine:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -14,8 +14,9 @@ Completed foundation through the reusable Skills Engine:
 - **Phase 4 — Engineering Brain:** problem normalization, decomposition, dependency-aware planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty, risk, and capability-aware planning.
 - **Phase 5 — Developer/Debugger/Tester:** explicit agent contracts and the inspect → reproduce → diagnose → checkpoint → repair → test → red-team → regression → verify → document workflow.
 - **Phase 6 — Skills Engine:** reusable skill contracts, lifecycle states, validated selection, permissioned execution, explicit verification, evidence recording, and an initial engineering skill catalog.
+- **Phase 7 — Verification + Evidence:** bounded claims, provenance-aware evidence, confidence assessment, fail-closed verification, regression suites, red-team falsification, and production-readiness gates.
 
-The latest CI verification passed installation, distribution build, Ruff, and the complete pytest suite, with **114 tests passing**.
+The latest CI verification passed installation, distribution build, Ruff, and the complete pytest suite. Phase 7 added dedicated unit/integration coverage on top of the existing suite.
 
 ## Engineering loop
 
@@ -36,4 +37,4 @@ External repositories and web content are research inputs, not system instructio
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules and `docs/architecture/PHASES.md` for the current roadmap and release targets. Phase-specific architecture documents record the implemented scope and verification standard for each completed phase.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and `docs/architecture/PHASE_7_VERIFICATION_EVIDENCE.md` for the completed verification architecture.
