@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Beta — Phases 1–9 complete and CI-verified. Phase 10 is next.**
+**v1.0 track — Phases 1–10 complete and CI-verified. Phase 11 is next.**
 
-Completed foundation through Technology Discovery:
+Completed foundation through Open-Source Intelligence:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -17,8 +17,9 @@ Completed foundation through Technology Discovery:
 - **Phase 7 — Verification + Evidence:** bounded claims, provenance-aware evidence, confidence assessment, fail-closed verification, regression suites, red-team falsification, before/after benchmarks, and production-readiness gates.
 - **Phase 8 — Technical Knowledge:** universal language schema, provenance-aware knowledge contracts, runtime catalog loading, multi-language coverage including Java, framework/ecosystem catalog, and engineering standards catalog.
 - **Phase 9 — Technology Discovery:** repository technology/build detection, explicit uncertainty, safe experimentation contracts, declaration-based compatibility checks, and provenance-preserving knowledge proposals.
+- **Phase 10 — Open-Source Intelligence:** repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract.
 
-The latest Phase 9 CI result is recorded in the architecture documentation after the final workflow completes.
+The Phase 10 architecture documentation records the implementation boundaries and final CI evidence.
 
 ## Engineering loop
 
@@ -39,8 +40,10 @@ The local executor is **not a security boundary**. The Docker executor provides 
 
 External repositories and web content are research inputs, not system instructions. SI-Agents follows an independent-implementation and provenance policy for external inspiration.
 
+Open-source intelligence is read-oriented by design. Repository metadata, history, issues, PRs, releases, advisories, licenses, and health signals are stored with provenance and explicit uncertainty. A license identifier is not treated as legal advice or a substitute for reviewing license text and applicable terms.
+
 ## Development principle
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–9 architecture documents for the completed verification, knowledge, and discovery architectures.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–10 architecture documents for the completed verification, knowledge, discovery, and open-source intelligence architectures.
