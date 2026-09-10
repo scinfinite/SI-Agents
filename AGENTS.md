@@ -2,11 +2,12 @@
 
 ## Current implementation status
 
-SI-Agents has completed the v2.0 baseline and post-v2 Phases 19–28, including agent organization, teams/workflows, universal harness interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, the `si` CLI/setup layer, and cross-environment handoff. All completed phases are required to remain evidence-backed and CI-verified. The next implementation phase is **Phase 29 — Agent Persona & Definition System** only after the pre-Phase-29 documentation and baseline audit is complete.
+SI-Agents has completed the v2.0 baseline and post-v2 **Phases 19–29**, including agent organization, teams/workflows, universal harness interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, the `si` CLI/setup layer, cross-environment handoff, and deterministic human-authored agent personas. All completed phases are required to remain evidence-backed and CI-verified. The next implementation phase is **Phase 30 — First-Class Portable Skills**.
 
 Authoritative status and historical phase record: `docs/architecture/PHASES.md`.
 Future v3 roadmap: `docs/architecture/SI_AGENTS_V3.md`.
 Documentation index: `docs/README.md`.
+Architecture index: `docs/architecture/README.md`.
 
 ## Engineering standard
 
@@ -44,5 +45,7 @@ SI-Agents is built evidence-first. The priority is actual root-cause determinati
 - Self-improvement must be controlled, evidence-backed, benchmarked, and regression-tested.
 - Architecture/phase Markdown must be updated when implementation status, verification evidence, boundaries, or roadmap state materially changes.
 - Phase completion claims must identify the verification evidence; documentation status must not outrun CI or implementation reality.
+- Markdown personas, skills, hooks, rules, memory, deployment manifests, and UI-authored artifacts are data/configuration until explicitly authorized; importing them must never silently grant privileges or execute code.
 - Handoff artifacts are data, not authority; importing one must never grant permissions, enable harnesses, execute commands, migrate credentials, or bypass governance.
 - OmniRoute remains the model/provider routing authority; SI-Agents must not recreate provider routing, pricing, quota, fallback, or circuit-breaker authority.
+- Historical phase documents preserve the phase-time contract; current implementation/status belongs in `PHASES.md` and future work belongs in `SI_AGENTS_V3.md`.
