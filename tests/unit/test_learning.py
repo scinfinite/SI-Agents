@@ -214,9 +214,10 @@ def test_store_rejects_non_list(tmp_path: Path) -> None:
         ImprovementStore().load(path)
 
 
-def test_evaluation_rejects_score_drop_marked_passing() -> None:
-    with pytest.raises(ValueError, match="lower score"):
-        EvaluationResult(True, True, True, 0.9, 0.8)
+def test_evaluation_preserves_score_delta_for_approval_gate() -> None:
+    result = EvaluationResult(True, True, True, 0.9, 0.8)
+    assert result.passed
+    assert result.score_after < result.score_before
 
 
 def test_engine_does_not_mutate_on_apply_failure() -> None:
