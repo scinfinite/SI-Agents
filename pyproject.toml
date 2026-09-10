@@ -10,8 +10,9 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.scripts]
-si = "core.cli.main:main"
+si = "core.cli.dispatch:main"
 si-api = "core.control_api.cli:main"
+si-web = "core.web.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["adapters*", "agents*", "core*", "skills*", "tools*"]
@@ -19,6 +20,7 @@ include = ["adapters*", "agents*", "core*", "skills*", "tools*"]
 [tool.setuptools.package-data]
 agents = ["**/*.md"]
 skills = ["**/*.md", "*.json", "*.yaml"]
+core.web = ["assets/*.html", "assets/*.js", "assets/*.css"]
 
 [tool.setuptools.data-files]
 "share/si-agents/config" = ["config/agent-catalog.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
