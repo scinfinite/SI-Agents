@@ -12,18 +12,32 @@ Rollback = Callable[[ImprovementProposal], None]
 class ImprovementEngine:
     """Fail-closed improvement workflow: propose -> evaluate -> approve -> apply -> verify."""
 
-    def __init__(self, registry: ImprovementRegistry, evaluator: ImprovementEvaluator) -> None:
+    def __init__(
+        self,
+        registry: ImprovementRegistry,
+        evaluator: ImprovementEvaluator,
+        *,
+        minimum_verified_evidence: int = 2,
+    ) -> None:
+        if minimum_verified_evidence < 1:
+            raise ValueError("Minimum verified evidence must be positive")
         self.registry = registry
         self.evaluator = evaluator
+        self.minimum_verified_evidence = minimum_verified_evidence
 
     def propose(self, proposal: ImprovementProposal) -> ImprovementProposal:
+        if proposal.verified_evidence_count < self.minimum_verified_evidence:
+            raise ValueError("Improvement proposal lacks required verified evidence")
         return self.registry.register(proposal)
 
     def evaluate(self, proposal_id: str, *, score_before: float) -> ImprovementProposal:
         proposal = self.registry.get(proposal_id)
         result = self.evaluator.evaluate(proposal, score_before=score_before)
-        status = ImprovementStatus.EVALUATED
-        return self.registry.transition(proposal_id, status, evaluation=result)
+        return self.registry.transition(
+            proposal_id,
+            ImprovementStatus.EVALUATED,
+            evaluation=result,
+        )
 
     def approve(self, proposal_id: str) -> ImprovementProposal:
         proposal = self.registry.get(proposal_id)
