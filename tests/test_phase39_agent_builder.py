@@ -40,7 +40,7 @@ def test_new_agent_cannot_self_grant_authority(tmp_path):
 
 def test_existing_customization_cannot_add_capability(tmp_path):
     service = AgentBuilderService(tmp_path)
-    base = service.from_agent("developer")
+    base = service.from_agent(service.catalog.all()[0].id)
     base["capabilities"] = list(base["capabilities"]) + ["new.privileged.capability"]
     result = service.validate_payload(base)
     assert not result.valid
@@ -49,7 +49,7 @@ def test_existing_customization_cannot_add_capability(tmp_path):
 
 def test_existing_customization_must_keep_identity_and_division(tmp_path):
     service = AgentBuilderService(tmp_path)
-    base = service.from_agent("developer")
+    base = service.from_agent(service.catalog.all()[0].id)
     base["division"] = "finance"
     result = service.validate_payload(base)
     assert not result.valid
