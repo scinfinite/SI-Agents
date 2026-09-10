@@ -19,6 +19,7 @@ from core.runtime.wire import (
     error_code,
     request_to_dict,
     response_status,
+    response_to_dict,
     validate_wire_payload,
 )
 from core.teams.models import TaskDefinition, TeamDefinition
@@ -37,7 +38,12 @@ def test_callback_bridge_exposes_metadata_and_invokes() -> None:
             events=(RuntimeEvent(RuntimeEventType.COMPLETED, request.request_id, 0),),
         )
 
-    adapter = CallbackHarnessAdapter(metadata, capabilities, invoke, lambda request_id: cancelled.append(request_id) or True)
+    adapter = CallbackHarnessAdapter(
+        metadata,
+        capabilities,
+        invoke,
+        lambda request_id: cancelled.append(request_id) or True,
+    )
     request = InvocationRequest("echo", "hello", "project")
     response = adapter.invoke(request)
 
@@ -77,9 +83,8 @@ def test_wire_helpers_reject_unknown_protocol_and_parse_enums() -> None:
         InvocationStatus.FAILED,
         error=RuntimeError(RuntimeErrorCode.TIMEOUT, "timed out"),
     )
-    from core.runtime.wire import response_to_dict
-
     payload = response_to_dict(response)
+
     assert response_status(payload) is InvocationStatus.FAILED
     assert error_code(payload["error"]) is RuntimeErrorCode.TIMEOUT
     try:
@@ -88,6 +93,16 @@ def test_wire_helpers_reject_unknown_protocol_and_parse_enums() -> None:
         assert "protocol" in str(exc)
     else:
         raise AssertionError("expected protocol rejection")
+
+
+def test_wire_rejects_non_json_values() -> None:
+    request = InvocationRequest("echo", {"bad": object()}, "project")
+    try:
+        request_to_dict(request)
+    except ValueError as exc:
+        assert "JSON-compatible" in str(exc)
+    else:
+        raise AssertionError("expected JSON compatibility validation")
 
 
 def test_capability_serialization_is_complete() -> None:
@@ -124,7 +139,13 @@ def test_deployment_manifest_is_deterministic_and_non_authorizing() -> None:
         tasks=(task,),
         max_parallelism=1,
     )
-    manifest = build_manifest("test-harness", (agent,), (team,), skills=("verify-change",), capabilities=("streaming",))
+    manifest = build_manifest(
+        "test-harness",
+        (agent,),
+        (team,),
+        skills=("verify-change",),
+        capabilities=("streaming",),
+    )
     assert manifest.as_dict() == {
         "protocol": "si.runtime.v1",
         "harness_id": "test-harness",
