@@ -75,7 +75,7 @@ class VerificationEngine:
         for item in checks:
             try:
                 passed = bool(item.check())
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - checker failures must fail closed.
                 passed = False
                 detail = f"check raised: {exc}"
             else:
