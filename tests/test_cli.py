@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import importlib
 import json
 from pathlib import Path
 
 from core.cli.config import SIConfig, config_path, load_config, save_config
 from core.cli.main import _opencode_install_plan, build_parser, cmd_agents, cmd_teams
+
+
+CLI_MODULE = importlib.import_module("core.cli.main")
 
 
 def test_cli_parser_exposes_phase_27_commands() -> None:
@@ -47,7 +51,7 @@ def test_config_path_honors_explicit_environment(monkeypatch, tmp_path: Path) ->
 
 
 def test_opencode_install_plan_uses_official_npm_package(monkeypatch) -> None:
-    monkeypatch.setattr("core.cli.main.shutil.which", lambda name: "npm" if name == "npm" else None)
+    monkeypatch.setattr(CLI_MODULE.shutil, "which", lambda name: "npm" if name == "npm" else None)
     assert _opencode_install_plan() == ("npm", "install", "-g", "opencode-ai")
 
 
