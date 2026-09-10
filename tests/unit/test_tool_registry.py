@@ -70,10 +70,11 @@ def test_git_and_developer_tool_adapters_return_results() -> None:
         assert subprocess.run(["git", "init", "-q", str(root)], check=False).returncode == 0
         assert GitTool(root).status().succeeded
         assert not GitTool(root).run(("commit", "--allow-empty", "-m", "blocked")).succeeded
+        Path(root / "app.py").write_text("answer = 42\n", encoding="utf-8")
         assert TestRunnerTool(root).available("python")
-        assert CompilerTool(root).python_compile(".").succeeded
-        assert LinterTool(root).ruff("check", "tools/registry").succeeded
-        assert FormatterTool(root).ruff_format_check("tools/registry").succeeded
+        assert CompilerTool(root).python_compile("app.py").succeeded
+        assert LinterTool(root).ruff("check", "app.py").succeeded
+        assert FormatterTool(root).ruff_format_check("app.py").succeeded
         assert PackageManagerTool(root).pip_check().succeeded
 
 
