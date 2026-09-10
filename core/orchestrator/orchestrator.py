@@ -6,6 +6,8 @@ from core.capabilities.registry import CapabilityRegistry
 from core.execution.command_runner import CommandRunner
 from core.execution.execution_record import ExecutionRecord
 from core.orchestrator.agent_coordinator import AgentCoordinator
+from core.orchestrator.brain import BrainResult, EngineeringBrain
+from core.orchestrator.brain_models import Problem
 from core.orchestrator.capability_selector import CapabilitySelector
 from core.orchestrator.context_manager import ContextManager
 from core.orchestrator.task_manager import TaskManager
@@ -50,6 +52,7 @@ class Orchestrator:
         self.approvals = approval_engine or ApprovalEngine()
         self.capabilities = capability_registry or CapabilityRegistry()
         self.capability_selector = CapabilitySelector(self.capabilities)
+        self.brain = EngineeringBrain(self.capabilities)
         self.contexts = context_manager or ContextManager()
         self.agents = agent_coordinator or AgentCoordinator()
         self.execution_states = execution_state_store or ExecutionStateStore()
@@ -70,6 +73,10 @@ class Orchestrator:
         task.succeed(result)
         self.tasks.persist()
         return result
+
+    def build_plan(self, problem: Problem, *, capability_category: str | None = None) -> BrainResult:
+        """Build and validate an engineering plan without executing it."""
+        return self.brain.build(problem, category=capability_category)
 
     def register_builtin_tools(self) -> None:
         """Register standard tool descriptors; registration grants no permissions."""
