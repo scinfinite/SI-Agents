@@ -43,7 +43,7 @@ class RepositoryDetector:
         if not root.exists() or not root.is_dir():
             raise ValueError(f"Discovery root is not a directory: {root}")
         checks = (
-            ("language", "Python", ("pyproject.toml", "requirements.txt", "setup.py", "\.python-version")),
+            ("language", "Python", ("pyproject.toml", "requirements.txt", "setup.py", ".python-version")),
             ("language", "Java", ("pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle")),
             ("language", "Rust", ("Cargo.toml",)),
             ("language", "Go", ("go.mod",)),
