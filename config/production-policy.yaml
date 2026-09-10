@@ -1,0 +1,25 @@
+# Production hardening is fail-closed and dependency-free.
+production:
+  readiness:
+    require_tests: true
+    require_lint: true
+    require_build: true
+    require_security_review: true
+    require_migration_review: true
+    require_rollback_test: true
+  limits:
+    max_input_bytes: 1048576
+    max_output_bytes: 4194304
+    max_events: 10000
+    max_metadata_items: 64
+    max_timeout_seconds: 900
+  telemetry:
+    redact_secrets: true
+    never_log_credentials: true
+    never_log_raw_sensitive_payloads: true
+  compatibility:
+    minimum_python: "3.11"
+  recovery:
+    retries_must_be_bounded: true
+    rollback_must_be_explicit: true
+    fail_closed_on_unknown_state: true
