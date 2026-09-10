@@ -1,8 +1,8 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–29 implemented and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–29 complete.**
 
-> This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap for Phases 30–43. `docs/README.md` and `docs/architecture/README.md` are the documentation navigation indexes.
+> This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
 ## Completed phases
 
@@ -34,7 +34,7 @@
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
 27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode/OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete.**
 28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, sanitized/canonical repository identity, explicit Termux↔Codespaces validation, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
-29. Agent Persona & Definition System — deterministic Markdown personas, typed behavioral contracts, validation, governed compilation, duplicate/conflict detection, canonical persona set, provenance, inert/untrusted persona handling, and packaged persona artifacts. **Complete and CI-verified.**
+29. Complete SI Agent Persona System — **Complete.** Exactly 279 SI-native specialist personas are organized across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, repository-neutral provenance, packaging coverage, and CI verification.
 
 ## Release targets
 
@@ -53,7 +53,7 @@
 - **Post-v2 Codespaces runtime:** Phase 26 — complete
 - **Post-v2 CLI/setup:** Phase 27 — complete
 - **Post-v2 cross-environment handoff:** Phase 28 — complete
-- **Post-v2 agent personas:** Phase 29 — complete
+- **Post-v2 SI persona system:** Phase 29 — complete
 
 ## Phase completion gate
 
@@ -61,33 +61,24 @@ A phase is not complete merely because files exist. Its acceptance criteria must
 
 ## Phase 29 verification record
 
-Phase 29 introduces `AgentPersona`, a deterministic Markdown parser, semantic validator, governed compiler, and duplicate-safe persona registry. Seven canonical personas are present under `agents/`: Developer, Backend Engineer, Infrastructure Engineer, Debugger, Tester, Code Reviewer, and Security Engineer. Infrastructure Engineer is registered in the canonical catalog as a cataloged agent.
+Phase 29 contains exactly **279** canonical persona Markdown files across **18** SI-owned divisions and a typed catalog containing exactly **279** matching SI-native identities. The persona registry loads the complete corpus, security regression checks reject hidden Unicode control characters, provenance remains separate from governance, and package builds include the complete corpus.
 
-The persona contract intentionally contains behavioral content only. The parser rejects privilege/execution frontmatter, including capabilities, permissions, harnesses, environments, tools, commands, shell, network, credentials, and secrets. Compilation requires stable identity/name/division agreement and preserves typed governance fields unchanged. Command-like text in Markdown is inert data and is never executed.
+The final CI verification recorded **358 tests passing**, successful distribution build, isolated wheel installation/import, CLI smoke checks, and Ruff. GitHub Actions now uses `actions/checkout@v5` and `actions/setup-python@v6`, removing the deprecated Node 20 action majors.
 
-Verification includes deterministic parsing, malformed input, duplicate detection, required-section enforcement, semantic validation, persona-to-catalog matching, governance-preserving compilation, security boundary tests, catalog regression tests, and distribution packaging of persona Markdown. Real integration defects found during implementation were corrected before completion.
+The single canonical Phase 29 document is `PHASE_29.md`. Non-persona Markdown such as documentation, examples, integrations, strategy/playbooks, and runbooks is excluded from the persona count.
 
-The latest documentation-synchronization mainline CI run is **#590**, commit `f02c3cad8fca4bf6b69f3a2c44f624f915371c36`. It passed distribution build, isolated wheel installation/import, packaged `si agents`/`si teams` smoke tests, Ruff, and the complete pytest suite with **352 passed in 5.36s**. The built distribution also includes all seven canonical persona Markdown artifacts.
-
-## Phase 28 verification record
-
-Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f4`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**. The same verification covered handoff serialization/atomic storage, SHA-256 tamper detection, recursive secret-like field rejection, Termux/Codespaces target validation, repository identity sanitization/canonicalization, resumable context metadata, and Phase 28 CLI parser coverage.
-
-CI #525 exposed two real defects—JSON sequence fields did not normalize back to typed tuples, and SSH repository identity canonicalization retained the `git@` transport prefix. Both were fixed and CI #526 passed. No failure was suppressed or reclassified as success.
-
-The detailed contract is `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md`.
+The four legacy Python modules under `agents/` remain runtime compatibility/model modules. The canonical 279-agent corpus is the SI-native Markdown hierarchy under `agents/si-*/`.
 
 ## Documentation structure
 
-The historical architecture record is explicitly indexed from Phase 1 onward:
-
 - `PHASE_1_FOUNDATION.md` — renamed Phase 1 foundation record.
-- `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; the duplicate `CONTROL_PLANE.md` has been removed.
-- `PHASE_3_*` through `PHASE_29_*` — detailed historical phase records.
+- `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; duplicate `CONTROL_PLANE.md` removed.
+- `PHASE_3_*` through `PHASE_28_*` — detailed historical phase records.
+- `PHASE_29.md` — single canonical Phase 29 architecture, parity, provenance, security, packaging, and verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 Historical phase documents preserve phase-time evidence. Current cross-phase state belongs here, and future planning belongs in `SI_AGENTS_V3.md`.
 
 ## Next phase
 
-**Phase 30 — First-Class Portable Skills** is the next implementation phase. It must begin only from the verified Phase 29 baseline and synchronized documentation set.
+**Phase 30 — First-Class Portable Skills** is the planned next implementation phase.

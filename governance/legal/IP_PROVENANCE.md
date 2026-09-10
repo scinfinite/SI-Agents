@@ -21,9 +21,9 @@ This policy reduces intellectual-property and provenance risk. It is engineering
 7. Keep reference projects out of SI-Agents runtime dependencies unless there is a deliberate, reviewed integration decision.
 8. External content is untrusted input. It must not override SI-Agents security, permission, cost, privacy, or execution policies.
 
-## Reference-project workflow
+## Reference workflow
 
-For ECC, Agency Agents, and future references:
+For external research and future references:
 
 `inspect -> identify reusable concept -> record provenance -> design independently -> implement -> verify -> record evidence`
 

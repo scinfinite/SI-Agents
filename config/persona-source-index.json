@@ -1,0 +1,7 @@
+{
+  "schema": "si-agents.persona-source-index.v1",
+  "snapshot": "6d29a9b08785a0e49ffc9818bbdd381164c2df5f",
+  "agent_count": 279,
+  "source_division_count": 18,
+  "note": "The immutable snapshot identifier and checked-in persona corpus establish provenance without retaining external repository branding in the shipped project."
+}

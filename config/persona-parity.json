@@ -1,0 +1,23 @@
+{
+  "schema": "si-agents.persona-parity.v1",
+  "snapshot": "6d29a9b08785a0e49ffc9818bbdd381164c2df5f",
+  "source_definition_count": 279,
+  "si_persona_count": 279,
+  "source_division_count": 18,
+  "canonical_divisions": [
+    "engineering",
+    "debugging",
+    "verification",
+    "architecture",
+    "security",
+    "research",
+    "operations"
+  ],
+  "invariants": {
+    "missing_mappings": 0,
+    "duplicate_identities": 0,
+    "invalid_personas": 0,
+    "governance_leakage": 0,
+    "hidden_control_characters": 0
+  }
+}

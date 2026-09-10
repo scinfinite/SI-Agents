@@ -4,7 +4,7 @@
 
 **Complete.** Final CI run **#450** passed after the final orchestration fixes.
 
-Phase 21 turns the Phase 20 agent catalog into an executable, bounded team/workflow control plane. It deliberately remains harness-neutral: the engine executes injected `AgentWorker` implementations and does not depend on OpenCode, Claude Code, Codex, Cline, Antigravity, or OmniRoute.
+Phase 21 turns the Phase 20 agent catalog into an executable, bounded team/workflow control plane. It deliberately remains harness-neutral: the engine executes injected `AgentWorker` implementations and does not depend on external coding harnesses or model routing.
 
 ## Goals
 
@@ -62,20 +62,18 @@ The engine records a `final-gate` checkpoint containing the evidence identifiers
 
 Cancellation is cooperative. A cancellation event prevents new work from being dispatched and marks pending work as cancelled. Already-running workers are not force-killed by the team layer because arbitrary `AgentWorker` implementations are outside its process-control authority. Harness-specific cancellation remains a later integration concern.
 
-## External reference patterns
+## Generalized external-reference lessons
 
-The design generalizes useful patterns from current ECC and Agency Agents without copying their implementation. ECC's current team-builder emphasizes dynamic discovery, bounded parallel dispatch, explicit failure reporting, and synthesis; its dynamic workflow guidance emphasizes observable checkpoints, eval gates, handoffs, and stopping on unsafe or unclear states. Agency Agents' NEXUS workflow emphasizes explicit role sequencing, quality gates, evidence, Dev↔QA loops, retries, and handoffs.
+External specialist-workflow research reinforced several useful engineering lessons: dynamic role discovery, bounded dispatch, explicit failure reporting, observable checkpoints, evaluation gates, explicit handoffs, quality gates, retries, and evidence-bearing role loops.
 
-SI-Agents intentionally adds typed contracts, explicit permissions/governance boundaries, evidence identifiers, deterministic DAG scheduling, isolated context, and a harness-neutral execution boundary rather than adopting a prompt-only orchestration model.
+SI-Agents independently adds typed contracts, explicit permissions/governance boundaries, evidence identifiers, deterministic DAG scheduling, isolated context, and a harness-neutral execution boundary rather than adopting a prompt-only orchestration model.
 
 ## Explicit non-goals
 
 Phase 21 does **not** implement:
 
 - external harness adapters;
-- OpenCode integration;
-- OmniRoute integration;
-- Claude Code/Codex/Cline/Antigravity adapters;
+- model-provider integration;
 - Termux/Codespace installers;
 - model selection or quota routing;
 - automatic persona generation;

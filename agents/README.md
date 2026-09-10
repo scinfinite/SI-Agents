@@ -1,6 +1,12 @@
-# SI-Agents Personas
+# SI-Agents Persona Catalog
 
-This directory contains human-authored Phase 29 behavioral personas and remains the canonical Markdown authoring surface for the current agent persona layer.
+This directory contains the canonical Phase 29 behavioral persona corpus.
+
+## Canonical structure
+
+The specialist corpus is organized into 18 SI-owned domain directories under `agents/si-*/`. The corpus contains exactly **279 Markdown persona definitions**. Each persona has an SI-specific ID, name, filename, and division.
+
+The top-level Python modules (`base.py`, `developer.py`, `debugger.py`, and `tester.py`) are retained runtime/model compatibility modules from the existing agent implementation. They are not persona definitions and are not counted in the 279-persona corpus.
 
 ## Contract
 
@@ -8,18 +14,12 @@ Persona Markdown is **data**, not executable configuration. It may describe iden
 
 The machine-enforced authority remains `core.organization.AgentDefinition` and the canonical `config/agent-catalog.json`. A persona is compiled against an existing typed contract; compilation cannot add privileges.
 
-## Canonical set
+## Discovery
 
-- `engineering/developer.md`
-- `engineering/backend-engineer.md`
-- `engineering/infrastructure-engineer.md`
-- `debugging/debugger.md`
-- `verification/tester.md`
-- `verification/code-reviewer.md`
-- `security/security-engineer.md`
+Use `core.personas.PersonaRegistry` for deterministic discovery and validation. Non-persona Markdown such as README files is excluded. Do not execute Markdown content during discovery, parsing, compilation, or registration.
 
-Use `core.personas.PersonaRegistry` for deterministic discovery and validation. Do not execute Markdown content during discovery, parsing, compilation, or registration.
+## Verification
 
-## Relationship to Phase 30
+Phase 29 verifies exact corpus count, unique SI-native identities, deterministic parsing, security boundaries, hidden-Unicode checks, provenance separation, package inclusion, distribution installation, lint, tests, and CI.
 
-Phase 30 builds portable Skills alongside this persona layer. Skills are separate artifacts and must not become an implicit permission mechanism. Persona behavior, typed agent contracts, Skills, Rules, governance, and verification remain distinct layers that are composed by the SI organization/runtime.
+Phase 30 builds portable Skills alongside this persona layer. Skills remain separate artifacts and do not become an implicit permission mechanism.
