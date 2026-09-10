@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–23 implemented; Phase 23 is pending final CI verification.**
+**Post-v2 evolution — Phases 19–23 complete and CI-verified.**
 
 Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, and OpenCode integration layers:
 
@@ -30,7 +30,7 @@ Completed foundation through Production Hardening and the post-v2 organization, 
 - **Phase 20 — Agent Organization & Catalog:** canonical divisions and agent definitions, typed catalog registry, declarative capability/permission/environment/harness selection, lifecycle status, implementation references, and validation tests.
 - **Phase 21 — Agent Teams & Workflows:** canonical team/workflow catalog, dependency-aware DAG execution, bounded parallelism, shared/isolated context, explicit handoffs, retries, escalation, evidence/verification gates, cancellation, checkpoints, and auditable workflow events.
 - **Phase 22 — Universal Harness Integration:** versioned `si.runtime.v1` wire contract, callback-based universal adapter bridge, normalized harness metadata, and deterministic organization deployment manifests. **Complete and CI-verified.**
-- **Phase 23 — OpenCode Integration:** stdlib-only OpenCode headless-server adapter, session creation/continuity, normalized synchronous messages, request-to-session cancellation, optional in-memory HTTP basic authentication, and fail-closed streaming capability declaration.
+- **Phase 23 — OpenCode Integration:** stdlib-only OpenCode headless-server adapter, session creation/continuity, normalized synchronous messages, request-to-session cancellation, optional in-memory HTTP basic authentication, and fail-closed streaming capability declaration. **Complete and CI-verified.**
 
 ## Engineering loop
 
