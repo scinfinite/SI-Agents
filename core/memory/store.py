@@ -8,7 +8,14 @@ from enum import Enum
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from .models import KnowledgeEntry, MemoryEntry, MemoryEvidence, MemoryScope, MemoryStatus, MemoryType
+from .models import (
+    KnowledgeEntry,
+    MemoryEntry,
+    MemoryEvidence,
+    MemoryScope,
+    MemoryStatus,
+    MemoryType,
+)
 from .registry import MemoryRegistry
 
 
