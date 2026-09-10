@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: Beta — Phases 1–9 complete and CI-verified. Phase 10 is next.**
+**Current status: v1.0 track — Phases 1–10 complete and CI-verified. Phase 11 is next.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -11,7 +11,7 @@
 7. Verification + Evidence — claims, evidence provenance, confidence, regression, red-team checks, production-readiness gates. **Complete.**
 8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards. **Complete.**
 9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies. **Complete.**
-10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health.
+10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health. **Complete.**
 11. Pattern Extraction — generalize and independently validate reusable engineering patterns.
 12. Engineering Memory — task/project/global memory with controlled promotion.
 13. Security + Legal + Cost — governance gates, free-first routing, data rights, security and compliance.
@@ -25,7 +25,7 @@
 
 - **Alpha:** phases 0–5 — achieved
 - **Beta:** phases 6–9 — **complete**
-- **v1.0:** phases 10–13 — next major release track
+- **v1.0:** phases 10–13 — **Phase 10 complete; phases 11–13 remain**
 - **v1.5:** phases 14–15
 - **v2.0:** phases 16–18
 
@@ -33,6 +33,6 @@
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
 
-## Phase 9 completion
+## Phase 10 completion
 
-Phase 9 delivered repository technology/build detection, explicit uncertainty, safe experimentation contracts, declaration-based compatibility checks, and provenance-preserving knowledge proposals. Discovery does not execute untrusted repository code or silently promote discoveries into validated knowledge. Final CI evidence is recorded in `docs/architecture/PHASE_9_TECHNOLOGY_DISCOVERY.md` after the final workflow completes.
+Phase 10 delivered a provenance-preserving open-source intelligence layer covering repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract. External repository content remains untrusted research input and is never treated as system policy. Unknown license/health signals remain explicitly uncertain. Final CI evidence is recorded in `docs/architecture/PHASE_10_OPEN_SOURCE_INTELLIGENCE.md` after the final workflow completes.
