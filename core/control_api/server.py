@@ -34,6 +34,9 @@ class ControlApiHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _read_json(self) -> dict[str, object]:
+        content_type = self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
+        if content_type != "application/json":
+            raise ValueError("Content-Type must be application/json")
         raw_length = self.headers.get("Content-Length")
         if raw_length is None:
             raise ValueError("Content-Length is required")
