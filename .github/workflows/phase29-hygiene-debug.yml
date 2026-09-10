@@ -1,0 +1,19 @@
+name: Phase 29 Hygiene Debug
+on:
+  push:
+    branches: [phase-29-agency-parity]
+permissions:
+  contents: write
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          grep -RniE 'Agency Agents|agency-agents|\bECC\b' --exclude-dir=.git --exclude='phase29-hygiene-debug.txt' --exclude='.github/workflows/phase29-hygiene-debug.yml' . > phase29-hygiene-debug.txt || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add phase29-hygiene-debug.txt
+          git commit -m 'chore(phase29): capture remaining branding matches' || true
+          git push || true
