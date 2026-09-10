@@ -1,6 +1,6 @@
 # Phase 32 — Memory & Knowledge
 
-**Status:** Implementation complete; final CI verification pending.  
+**Status:** In progress — final CI verification pending.  
 **Baseline:** Phase 31 merged and CI-verified on `main`.  
 **Design principle:** memory is scoped context; knowledge is verified, source-backed information. Retrieval never constitutes proof or authorization.
 
