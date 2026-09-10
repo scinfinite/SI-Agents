@@ -157,16 +157,16 @@ def test_accepted_mutation_is_a_queued_run(tmp_path):
 
 
 def test_remote_requires_bearer_auth(tmp_path):
-    config = WebConfig(host="127.0.0.1", port=0, audit_log=tmp_path / "audit.jsonl")
-    config = WebConfig(host=config.host, port=config.port, allow_remote=True, auth_token="t" * 32, audit_log=config.audit_log)
+    config = WebConfig(host="0.0.0.0", port=0, allow_remote=True, auth_token="t" * 32, audit_log=tmp_path / "audit.jsonl")
     server = create_server(config, ControlApiService(ROOT))
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        server.config = WebConfig(host="0.0.0.0", port=server.server_port, allow_remote=True, auth_token="t" * 32, audit_log=config.audit_log)
         with pytest.raises(HTTPError) as exc:
             _request(server, "/api/v1/health")
         assert exc.value.code == 401
+        response = _request(server, "/api/v1/health", headers={"Authorization": "Bearer " + "t" * 32})
+        assert response.status == 200
     finally:
         server.shutdown()
         server.server_close()
