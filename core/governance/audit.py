@@ -1,7 +1,7 @@
 """Append-only in-memory audit records for governance decisions."""
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from core.governance.models import Decision, DecisionStatus
 
@@ -27,7 +27,7 @@ class AuditLog:
             status=decision.status,
             effective_risk=decision.effective_risk.value,
             reasons=decision.reasons,
-            recorded_at=datetime.now(timezone.utc),
+            recorded_at=datetime.now(UTC),
         )
         self._records.append(record)
         return record
