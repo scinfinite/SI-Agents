@@ -136,15 +136,9 @@ def test_all_canonical_personas_parse_and_match_catalog() -> None:
     registry = PersonaRegistry()
     registry.load_directory("agents")
     assert registry.validate_against_catalog(catalog) == ()
-    assert {persona.id for persona in registry.all()} == {
-        "developer",
-        "debugger",
-        "tester",
-        "backend-engineer",
-        "infrastructure-engineer",
-        "code-reviewer",
-        "security-engineer",
-    }
+    ids = {persona.id for persona in registry.all()}
+    assert len(ids) == 279
+    assert {"developer", "debugger", "tester", "backend-engineer", "infrastructure-engineer", "code-reviewer", "security-engineer"}.issubset(ids)
 
 
 def test_persona_source_is_data_and_never_executed(tmp_path) -> None:
