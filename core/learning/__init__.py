@@ -3,10 +3,10 @@
 from core.learning.engine import ImprovementEngine
 from core.learning.intelligence import CapabilityIntelligence
 from core.learning.models import (
-    ImprovementProposal,
-    ImprovementStatus,
     EvaluationResult,
     EvidenceItem,
+    ImprovementProposal,
+    ImprovementStatus,
 )
 
 __all__ = [
