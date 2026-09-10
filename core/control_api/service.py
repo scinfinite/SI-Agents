@@ -139,6 +139,76 @@ class ControlApiService:
             "execution": {"run_creation": "governed and queued only", "execution": "downstream"},
         }
 
+    def visualization(self) -> dict[str, object]:
+        """Return a deterministic graph projection for the read-only operator UI."""
+        agents = sorted(self._agents.all(), key=lambda item: item.id)
+        teams = sorted(self._organization.teams, key=lambda item: item.id)
+        assignments = {item.division_id: item.team_id for item in self._organization.division_assignments}
+        nodes: dict[str, dict[str, object]] = {}
+        edges: set[tuple[str, str, str]] = set()
+
+        def add_node(node_id: str, kind: str, label: str, **extra: object) -> None:
+            nodes[node_id] = {"id": node_id, "kind": kind, "label": label, **extra}
+
+        def add_edge(source: str, target: str, relation: str) -> None:
+            if source != target:
+                edges.add((source, target, relation))
+
+        for team in teams:
+            add_node(f"team:{team.id}", "team", team.name, description=team.purpose)
+        for agent in agents:
+            division_id = agent.division
+            add_node(f"division:{division_id}", "division", division_id)
+            add_node(f"agent:{agent.id}", "agent", agent.name, status=agent.status.value, division=division_id,
+                     skills=list(agent.skills), capabilities=list(agent.capabilities), permissions=list(agent.permissions))
+            team_id = assignments.get(division_id)
+            if team_id:
+                add_edge(f"team:{team_id}", f"division:{division_id}", "owns")
+            add_edge(f"division:{division_id}", f"agent:{agent.id}", "contains")
+            for skill in agent.skills:
+                skill_id = f"skill:{skill}"
+                add_node(skill_id, "skill", skill)
+                add_edge(f"agent:{agent.id}", skill_id, "uses")
+            for capability in agent.capabilities:
+                cap_id = f"capability:{capability}"
+                add_node(cap_id, "capability", capability)
+                add_edge(f"agent:{agent.id}", cap_id, "requests")
+            for permission in agent.permissions:
+                perm_id = f"permission:{agent.id}:{permission}"
+                add_node(perm_id, "permission", permission, subject=agent.id)
+                add_edge(f"agent:{agent.id}", perm_id, "declares")
+
+        for permission in self.governance.store.snapshot().permissions:
+            cap_id = f"capability:{permission.capability}"
+            add_node(cap_id, "capability", permission.capability)
+            subject_id = f"agent:{permission.subject}"
+            if subject_id in nodes:
+                add_edge(subject_id, cap_id, f"governance:{permission.effect.value}")
+
+        for workflow in self._organization.workflows:
+            workflow_id = f"workflow:{workflow.id}"
+            add_node(workflow_id, "workflow", workflow.name, purpose=workflow.purpose)
+            for step in workflow.steps:
+                step_id = f"step:{workflow.id}:{step.id}"
+                add_node(step_id, "step", step.id, workflow=workflow.id, step_kind=step.kind.value, purpose=step.purpose)
+                add_edge(workflow_id, step_id, "contains")
+                target = f"agent:{step.agent_id}" if step.agent_id else f"team:{step.team_id}"
+                if target in nodes:
+                    add_edge(step_id, target, "assigned")
+                for dependency in step.depends_on:
+                    add_edge(f"step:{workflow.id}:{dependency}", step_id, "depends_on")
+
+        with self._lock:
+            runs = [run.as_dict() for run in self._runs.values()]
+        return {
+            "version": "v1",
+            "nodes": [nodes[key] for key in sorted(nodes)],
+            "edges": [{"source": source, "target": target, "relation": relation}
+                       for source, target, relation in sorted(edges)],
+            "runs": runs,
+            "state_note": "Run state is control-plane state; execution progress is downstream and is not inferred here.",
+        }
+
     def events(self) -> list[dict[str, object]]:
         with self._lock:
             return [event.as_dict() for event in self._events]
