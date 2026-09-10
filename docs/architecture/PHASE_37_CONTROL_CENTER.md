@@ -1,6 +1,6 @@
 # Phase 37 — Control Center
 
-**Status: implementation complete; final status is gated on mainline CI after merge.**
+**Status: complete + CI verified.**
 
 ## Purpose
 
@@ -56,7 +56,7 @@ The Phase 37 regression suite covers:
 - avoidance of unsafe `innerHTML` rendering;
 - live run state after an accepted governed mutation.
 
-The repository-wide CI gate remains authoritative for distribution build, isolated wheel installation, repository audit, Ruff, and the full pytest suite. Phase 37 is not considered complete until the implementation PR, documentation synchronization, and final mainline CI all pass.
+Final mainline CI **#840** (`34507154878`) passed the repository distribution build, isolated wheel installation, repository audit, Ruff, and full pytest gates on main commit `d54ab5a0e9a0dc5daed72e89bdaf842b8da59078`, with **441 tests passed**. This is the authoritative final verification for the documentation-closed Phase 37 state.
 
 ## Phase boundary
 
