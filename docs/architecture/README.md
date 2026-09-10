@@ -46,7 +46,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 29 | `PHASE_29_AGENT_PERSONA.md` | Complete + CI verified |
 | 30 | `PHASE_30_PORTABLE_SKILLS.md` | Complete + CI verified |
 | 31 | `PHASE_31_RULES_HOOKS_EVENTS.md` | Complete + CI verified |
-| 32 | `PHASE_32.md` | Complete + CI verified |
+| 32 | `PHASE_32_MEMORY_KNOWLEDGE.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -60,7 +60,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_29_AGENT_PERSONA.md` — canonical SI persona, parity, provenance, security, packaging, and verification record.
 - `PHASE_30_PORTABLE_SKILLS.md` — canonical portable Skill contract and verification record.
 - `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events contract and verification record.
-- `PHASE_32.md` — canonical Memory/Knowledge contract and final verification record.
+- `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
 - `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
