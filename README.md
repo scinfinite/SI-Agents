@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–26 implemented and CI-verified; Phase 27 implementation complete and CI verification in progress.**
+**Post-v2 evolution — Phases 19–27 implemented and CI-verified.**
 
 Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, and user-facing CLI/setup layers:
 
@@ -34,7 +34,7 @@ Completed foundation through Production Hardening and the post-v2 organization, 
 - **Phase 24 — OmniRoute Integration:** stdlib-only OpenAI-compatible gateway client, deterministic model discovery, fail-closed health checks, secure credential handling, retryable transport classification, session/idempotency/request correlation forwarding, and a governed invocation layer that delegates provider/model routing to OmniRoute. **Complete and CI-verified.**
 - **Phase 25 — Termux Runtime:** vendor-neutral environment readiness contracts, Termux detection, Python/Git/curl/OpenSSH/pkg checks, OpenCode readiness, optional fail-closed OmniRoute health, read-only Termux doctor, secret-free JSON reporting, conservative package planning, and workspace validation. **Complete and CI-verified.**
 - **Phase 26 — GitHub Codespaces Runtime:** Codespaces detection, Python/Git/curl/OpenSSH/workspace checks, OpenCode readiness, optional GitHub CLI and OmniRoute requirements, read-only toolchain planning, workspace validation, and secret-free doctor reporting. **Complete and CI-verified.**
-- **Phase 27 — `si` CLI + Easy Setup:** user-facing doctor/status/agents/teams/setup/update/run commands, non-secret configuration, explicit mutation gates, safe OpenCode OmniRoute configuration, and governed team execution. **Implementation complete; CI verification in progress.**
+- **Phase 27 — `si` CLI + Easy Setup:** user-facing doctor/status/agents/teams/setup/update/run commands, non-secret configuration, explicit mutation gates, safe OpenCode OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete and CI-verified.**
 
 ## `si` CLI
 
