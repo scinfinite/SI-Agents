@@ -122,7 +122,7 @@ def response_to_dict(value: InvocationResponse) -> dict[str, Any]:
 
 def validate_wire_payload(payload: object) -> dict[str, Any]:
     if not isinstance(payload, dict):
-        raise ValueError("wire payload must be an object")
+        raise TypeError("wire payload must be an object")
     if payload.get("protocol") != WIRE_PROTOCOL:
         raise ValueError("unsupported or missing runtime wire protocol")
     return _wire_safe(payload)
@@ -138,7 +138,7 @@ def response_status(payload: dict[str, Any]) -> InvocationStatus:
 
 def error_code(payload: dict[str, Any]) -> RuntimeErrorCode:
     if not isinstance(payload, dict):
-        raise ValueError("error payload must be an object")
+        raise TypeError("error payload must be an object")
     try:
         return RuntimeErrorCode(str(payload["code"]))
     except (KeyError, ValueError) as exc:
