@@ -1,10 +1,3 @@
-./governance/legal/provenance.yaml:3:  - id: ecc
-./governance/legal/provenance.yaml:4:    source: affaan-m/ECC
-./governance/legal/provenance.yaml:5:    source_url: https://github.com/affaan-m/ECC
-./governance/legal/provenance.yaml:14:    si_agents_design: Independently designed control-plane, skill, verification, memory, governance, and capability primitives; no ECC runtime dependency.
-./governance/legal/provenance.yaml:19:  - id: agency-agents
-./governance/legal/provenance.yaml:20:    source: msitarzewski/agency-agents
-./governance/legal/provenance.yaml:21:    source_url: https://github.com/msitarzewski/agency-agents
 ./governance/legal/IP_PROVENANCE.md:26:For ECC, Agency Agents, and future references:
 ./config/system.yaml:8:    - affaan-m/ECC
 ./config/system.yaml:9:    - msitarzewski/agency-agents
