@@ -6,7 +6,7 @@ from .models import MemoryEntry, MemoryScope, MemoryStatus, PromotionDecision
 
 
 class MemoryPromoter:
-    """Fail-closed promotion policy for moving memories to broader scopes."""
+    """Fail-closed policy for moving memories one scope wider at a time."""
 
     def __init__(self, minimum_confidence: float = 0.8, minimum_verified_evidence: int = 2) -> None:
         if not 0.0 <= minimum_confidence <= 1.0:
@@ -18,19 +18,18 @@ class MemoryPromoter:
 
     @staticmethod
     def _next_scope(scope: MemoryScope) -> MemoryScope | None:
-        return {
-            MemoryScope.TASK: MemoryScope.PROJECT,
-            MemoryScope.PROJECT: MemoryScope.GLOBAL,
-            MemoryScope.GLOBAL: None,
-        }[scope]
+        return {MemoryScope.TASK: MemoryScope.PROJECT, MemoryScope.PROJECT: MemoryScope.GLOBAL, MemoryScope.GLOBAL: None}[scope]
 
     def evaluate(self, entry: MemoryEntry, target_scope: MemoryScope | None = None) -> PromotionDecision:
-        target = target_scope or self._next_scope(entry.scope)
-        if target is None:
+        expected = self._next_scope(entry.scope)
+        target = target_scope or expected
+        if expected is None:
             return PromotionDecision(entry.id, False, entry.scope, ("Global memory cannot be promoted further",))
         reasons: list[str] = []
         verified = sum(1 for item in entry.evidence if item.verified)
-        if entry.status is not MemoryStatus.CANDIDATE and entry.status is not MemoryStatus.VALIDATED:
+        if target is not expected:
+            reasons.append("Memory may only be promoted one scope at a time")
+        if entry.status not in {MemoryStatus.CANDIDATE, MemoryStatus.VALIDATED}:
             reasons.append("Memory is not eligible for promotion")
         if entry.confidence < self.minimum_confidence:
             reasons.append("Confidence is below promotion threshold")
@@ -40,11 +39,7 @@ class MemoryPromoter:
             reasons.append("Project promotion requires project_id")
         if target is MemoryScope.GLOBAL and not entry.project_id:
             reasons.append("Global promotion requires a project provenance anchor")
-        if target.value == entry.scope.value:
-            reasons.append("Target scope must be broader than current scope")
-        return PromotionDecision(
-            entry.id, not reasons, target, tuple(reasons), self.minimum_verified_evidence, verified
-        )
+        return PromotionDecision(entry.id, not reasons, target, tuple(reasons), self.minimum_verified_evidence, verified)
 
     def promote(self, entry: MemoryEntry, target_scope: MemoryScope | None = None) -> MemoryEntry:
         decision = self.evaluate(entry, target_scope)
