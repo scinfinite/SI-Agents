@@ -1,1 +1,0 @@
-./.github/workflows/phase29-hygiene-debug.yml:15:          grep -RniE 'Agency Agents|agency-agents|\bECC\b' --exclude-dir=.git . > phase29-hygiene-debug.txt || true
