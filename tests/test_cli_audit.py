@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 import json
 from pathlib import Path
 
@@ -42,7 +43,7 @@ def test_enhanced_catalog_commands_support_json(capsys) -> None:
 
 
 def test_status_json_is_structured(monkeypatch, capsys, tmp_path: Path) -> None:
-    from core.cli import main as cli
+    cli = importlib.import_module("core.cli.main")
 
     monkeypatch.setenv("SI_CONFIG", str(tmp_path / "config.json"))
     monkeypatch.setattr(cli, "_report", lambda: type(
