@@ -1,0 +1,15 @@
+environments:
+  development:
+    execution_backend: local
+    trust_level: trusted
+
+  untrusted:
+    execution_backend: docker
+    trust_level: untrusted
+    network: disabled
+
+policy:
+  untrusted_requires_isolated_backend: true
+  allowed_backends:
+    - local
+    - docker
