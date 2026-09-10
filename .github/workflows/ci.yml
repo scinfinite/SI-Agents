@@ -38,7 +38,7 @@ jobs:
         run: |
           python -m venv .ci-wheel-venv
           .ci-wheel-venv/bin/python -m pip install dist/*.whl
-          .ci-wheel-venv/bin/python -c "import agents, core; from agents import AgentSpec; from core.runtime import RuntimeEngine; print('wheel import OK')"
+          .ci-wheel-venv/bin/python -c "import adapters, agents, core; from adapters.opencode import OpenCodeAdapter; from agents import AgentSpec; from core.runtime import RuntimeEngine; print('wheel import OK')"
 
       - name: Run Ruff
         run: python -m ruff check .
