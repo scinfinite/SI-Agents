@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import re
 from pathlib import Path
+import re
 
 from core.personas.models import AgentPersona
 
@@ -173,4 +173,6 @@ def _parse_int(value: str, name: str) -> int:
 def _reject_unknown_or_dangerous(frontmatter: dict[str, str]) -> None:
     dangerous = sorted(set(frontmatter) & _FORBIDDEN_FRONTMATTER)
     if dangerous:
-        raise ValueError("Persona cannot declare execution or privilege fields: " + ", ".join(dangerous))
+        raise ValueError(
+            "Persona cannot declare execution or privilege fields: " + ", ".join(dangerous)
+        )
