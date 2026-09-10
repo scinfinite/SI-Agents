@@ -4,7 +4,6 @@ from core.learning.evaluator import ImprovementEvaluator
 from core.learning.models import ImprovementProposal, ImprovementStatus
 from core.learning.registry import ImprovementRegistry
 
-
 Apply = Callable[[ImprovementProposal], None]
 Rollback = Callable[[ImprovementProposal], None]
 
