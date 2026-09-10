@@ -1,6 +1,8 @@
 """Harness and runtime interoperability primitives."""
 
+from core.runtime.bridge import CallbackHarnessAdapter, adapter_metadata, is_harness_adapter
 from core.runtime.conformance import ConformanceFailure, run_conformance
+from core.runtime.deployment import HarnessDeploymentManifest, build_manifest
 from core.runtime.engine import RuntimeEngine
 from core.runtime.local import LocalHarnessAdapter
 from core.runtime.models import (
@@ -17,10 +19,13 @@ from core.runtime.models import (
 from core.runtime.protocol import HarnessAdapter, HarnessMetadata, normalize_metadata
 from core.runtime.registry import HarnessRegistry
 from core.runtime.session import RuntimeSession, SessionRegistry, SessionStatus
+from core.runtime.wire import WIRE_PROTOCOL, capabilities_to_dict, request_to_dict, response_to_dict
 
 __all__ = [
+    "CallbackHarnessAdapter",
     "ConformanceFailure",
     "HarnessAdapter",
+    "HarnessDeploymentManifest",
     "HarnessMetadata",
     "HarnessRegistry",
     "InvocationRequest",
@@ -37,6 +42,13 @@ __all__ = [
     "RuntimeSession",
     "SessionRegistry",
     "SessionStatus",
+    "WIRE_PROTOCOL",
+    "adapter_metadata",
+    "build_manifest",
+    "capabilities_to_dict",
+    "is_harness_adapter",
     "normalize_metadata",
+    "request_to_dict",
+    "response_to_dict",
     "run_conformance",
 ]
