@@ -75,7 +75,7 @@ class LocalHarnessAdapter:
         started = monotonic()
         try:
             output = self._capabilities[request.capability_id](request.input)
-        except Exception as exc:  # adapter boundary: normalize implementation failures
+        except Exception as exc:  # noqa: BLE001 - local capability boundary normalizes arbitrary handlers
             return InvocationResponse(
                 request.request_id,
                 InvocationStatus.FAILED,

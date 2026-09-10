@@ -66,8 +66,7 @@ class RuntimeEngine:
 
         try:
             response = adapter.invoke(request)
-        except Exception:
-            # Do not expose adapter internals or potentially sensitive exception text.
+        except Exception:  # noqa: BLE001 - adapter boundary must normalize arbitrary implementations
             return self._failure(request, RuntimeErrorCode.EXECUTION_FAILED, "harness invocation failed")
         try:
             validate_response(request, response)
