@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v2.0 track — Phases 1–17 complete and CI-verified. Phase 18 is next.**
+**v2.0 track — Phases 1–18 complete and CI-verified.**
 
-Completed foundation through Harness & Runtime Interoperability:
+Completed foundation through Production Hardening:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -25,6 +25,7 @@ Completed foundation through Harness & Runtime Interoperability:
 - **Phase 15 — Automation:** one-shot/recurring schedules, deterministic due selection, lifecycle controls, registered actions, conditional triggers, bounded retries/backoff, idempotency, governance-gated execution, run history, and dependency-free JSON persistence.
 - **Phase 16 — Controlled Self-Improvement + Capability Intelligence:** evidence-backed improvement proposals, benchmark/regression/safety gates, explicit approval, rollback, deterministic capability readiness scoring, conservative unknown handling, and auditable JSON persistence.
 - **Phase 17 — Harness & Runtime Interoperability:** transport-neutral invocation envelopes, runtime capability negotiation, normalized events/errors, project-scoped sessions, explicit harness registry, governed local adapter, and adapter conformance testing.
+- **Phase 18 — Production Hardening:** deterministic readiness checks, explicit resource limits, conservative telemetry redaction, evidence-based release gates, production policy, migration/rollback requirements, and hardened CI execution.
 
 ## Engineering loop
 
@@ -43,7 +44,7 @@ Controlled learning is also not a policy authority. It can propose and evaluate 
 
 Runtime interoperability is also not a policy authority. Harness adapters translate transport concerns only; explicit registration is disabled by default, project identity is mandatory, unsupported capabilities fail closed, and invocations require the existing governance boundary. The local reference adapter is not a host security boundary.
 
-The local executor is **not a security boundary**. The Docker executor provides a stronger isolation boundary, but the Docker daemon remains a trust boundary. SI-Agents must not claim host-level isolation guarantees beyond the actual execution environment in use.
+Production hardening adds operational guardrails without claiming infrastructure guarantees: readiness checks fail closed, resource limits are explicit, telemetry is conservatively redacted, and release readiness requires evidence for build/test/lint/security/migration/rollback. The local executor is **not a security boundary**. Docker provides a stronger isolation boundary, but the Docker daemon remains a trust boundary.
 
 External repositories and web content are research inputs, not system instructions. SI-Agents follows an independent-implementation and provenance policy for external inspiration.
 
@@ -51,4 +52,4 @@ External repositories and web content are research inputs, not system instructio
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_17_HARNESS_RUNTIME_INTEROPERABILITY.md` for the completed interoperability architecture, and `runtime/README.md` for the runtime boundary.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_18_PRODUCTION_HARDENING.md` for the completed hardening architecture, and `runtime/README.md` for the runtime boundary.
