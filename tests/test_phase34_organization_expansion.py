@@ -3,14 +3,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import core.organization.expansion as organization_expansion
 from core.organization import load_catalog, load_expansion
-from core.organization.expansion import (
-    OrganizationExpansion,
-    TeamDefinition,
-    WorkflowDefinition,
-    WorkflowStep,
-    WorkflowStepKind,
-)
 
 
 ROOT = Path(__file__).parents[1]
@@ -36,24 +30,24 @@ class OrganizationExpansionTests(unittest.TestCase):
     def test_workflow_agents_must_belong_to_the_declared_team(self) -> None:
         expansion = load_expansion(EXPANSION, CATALOG)
         workflow = expansion.workflows[0]
-        invalid_step = WorkflowStep(
+        invalid_step = organization_expansion.WorkflowStep(
             id="invalid",
-            kind=WorkflowStepKind.EXECUTION,
+            kind=organization_expansion.WorkflowStepKind.EXECUTION,
             team_id="security-verification",
             agent_id="si-engineering-senior-developer",
             purpose="invalid cross-team membership",
             depends_on=(),
         )
-        malformed = WorkflowDefinition(
+        malformed = organization_expansion.WorkflowDefinition(
             id="malformed",
             name="Malformed",
             purpose="Test invalid team membership",
             steps=(
                 workflow.steps[0],
                 invalid_step,
-                WorkflowStep(
+                organization_expansion.WorkflowStep(
                     id="verify",
-                    kind=WorkflowStepKind.VERIFICATION,
+                    kind=organization_expansion.WorkflowStepKind.VERIFICATION,
                     team_id="security-verification",
                     agent_id="si-verification-evidence-collector",
                     purpose="verify",
@@ -61,7 +55,7 @@ class OrganizationExpansionTests(unittest.TestCase):
                 ),
             ),
         )
-        candidate = OrganizationExpansion(
+        candidate = organization_expansion.OrganizationExpansion(
             version=1,
             teams=expansion.teams,
             division_assignments=expansion.division_assignments,
@@ -71,24 +65,26 @@ class OrganizationExpansionTests(unittest.TestCase):
         self.assertTrue(any("is not a member" in error for error in errors))
 
     def test_later_step_dependency_is_rejected(self) -> None:
-        step_a = WorkflowStep(
+        step_a = organization_expansion.WorkflowStep(
             id="a",
-            kind=WorkflowStepKind.PLANNING,
+            kind=organization_expansion.WorkflowStepKind.PLANNING,
             team_id="engineering-delivery",
             agent_id="si-delivery-project-manager-senior",
             purpose="plan",
             depends_on=("b",),
         )
-        step_b = WorkflowStep(
+        step_b = organization_expansion.WorkflowStep(
             id="b",
-            kind=WorkflowStepKind.VERIFICATION,
+            kind=organization_expansion.WorkflowStepKind.VERIFICATION,
             team_id="engineering-delivery",
             agent_id="si-verification-reality-checker",
             purpose="verify",
         )
-        workflow = WorkflowDefinition("bad-order", "Bad order", "dependency regression", (step_a, step_b))
+        workflow = organization_expansion.WorkflowDefinition(
+            "bad-order", "Bad order", "dependency regression", (step_a, step_b)
+        )
         expansion = load_expansion(EXPANSION, CATALOG)
-        candidate = OrganizationExpansion(
+        candidate = organization_expansion.OrganizationExpansion(
             version=1,
             teams=expansion.teams,
             division_assignments=expansion.division_assignments,
@@ -99,7 +95,7 @@ class OrganizationExpansionTests(unittest.TestCase):
 
     def test_unknown_agent_in_expansion_is_rejected(self) -> None:
         expansion = load_expansion(EXPANSION, CATALOG)
-        broken_team = TeamDefinition(
+        broken_team = organization_expansion.TeamDefinition(
             id="broken",
             name="Broken",
             purpose="test",
@@ -107,7 +103,7 @@ class OrganizationExpansionTests(unittest.TestCase):
             member_agent_ids=("does-not-exist",),
             lead_agent_id="does-not-exist",
         )
-        candidate = OrganizationExpansion(
+        candidate = organization_expansion.OrganizationExpansion(
             version=1,
             teams=expansion.teams + (broken_team,),
             division_assignments=expansion.division_assignments,
