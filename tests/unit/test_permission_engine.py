@@ -1,6 +1,6 @@
 import pytest
 
-from core.policies.permission_engine import PermissionDenied, PermissionDecision, PermissionEngine
+from core.policies.permission_engine import PermissionDecision, PermissionDenied, PermissionEngine
 
 
 def test_unknown_capability_is_denied() -> None:
