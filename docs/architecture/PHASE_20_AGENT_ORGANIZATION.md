@@ -23,9 +23,9 @@ The Phase 20 catalog contained 7 divisions and 12 roles. Three roles were execut
 
 Agents can be selected by division, required skills, required capabilities, required permissions, harness, environment, and lifecycle status. Selection is declarative and does not spawn an agent, grant permission, invoke a harness, or bypass governance.
 
-## Reference-derived decisions
+## Independent design lesson
 
-ECC's separation of agents, skills, rules, and harness surfaces, plus dynamic discovery, and Agency Agents' division/catalog source-of-truth pattern informed the design. SI-Agents independently added typed capabilities, permissions, environments, lifecycle status, and explicit implementation references.
+General patterns from external specialist-organization research reinforced the usefulness of explicit source-of-truth catalogs and dynamic discovery. SI-Agents independently implemented typed capabilities, permissions, environments, lifecycle status, and explicit implementation references.
 
 ## Verification
 
