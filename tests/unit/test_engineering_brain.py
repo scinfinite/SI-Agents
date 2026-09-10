@@ -40,11 +40,9 @@ def test_plan_validation_rejects_cycles() -> None:
         validate_plan(cyclic)
 
 
-def test_plan_validation_rejects_unknown_dependencies() -> None:
-    step = PlanStep("step", StepKind.TEST, dependencies=("missing",))
-    plan = Plan("bad dependency", (step,), ("done",))
-    with pytest.raises(PlanValidationError):
-        validate_plan(plan)
+def test_plan_model_rejects_unknown_dependencies() -> None:
+    with pytest.raises(ValueError, match="known step"):
+        Plan("bad dependency", (PlanStep("step", StepKind.TEST, dependencies=("missing",)),), ("done",))
 
 
 def test_plan_topological_order_is_dependency_safe() -> None:
