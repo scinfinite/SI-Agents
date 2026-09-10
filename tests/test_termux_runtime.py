@@ -6,6 +6,7 @@ from pathlib import Path
 
 from core.environments import EnvironmentKind, EnvironmentStatus, TermuxRuntime
 from core.environments.termux import TermuxConfig
+from core.provider_intelligence.omniroute import OmniRouteConfig
 
 
 def test_termux_detection_uses_environment_markers():
@@ -61,9 +62,7 @@ def test_doctor_can_require_healthy_omniroute(monkeypatch):
     runtime = TermuxRuntime(
         TermuxConfig(
             require_omniroute=True,
-            omni_route=__import__(
-                "core.provider_intelligence.omniroute", fromlist=["OmniRouteConfig"]
-            ).OmniRouteConfig("http://127.0.0.1:20128"),
+            omni_route=OmniRouteConfig("http://127.0.0.1:20128"),
         )
     )
     commands = {"git", "python", "curl", "ssh", "opencode", "pkg"}
