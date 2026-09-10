@@ -1,6 +1,6 @@
 """Provider health observations used by routing policy."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
 
@@ -9,7 +9,7 @@ class HealthObservation:
     provider_id: str
     success: bool
     latency_ms: float
-    observed_at: datetime = datetime.now(UTC)
+    observed_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def __post_init__(self) -> None:
         if not self.provider_id.strip():
