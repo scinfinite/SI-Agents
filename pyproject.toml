@@ -25,10 +25,14 @@ skills = ["**/*.md", "*.json", "*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q --strict-config --strict-markers"
 
 [tool.ruff]
 line-length = 100
+required-version = "==0.13.1"
 
 [tool.ruff.lint.isort]
 known-first-party = ["adapters", "agents", "core", "skills", "tools"]
+
+[tool.ruff.format]
+line-ending = "lf"
