@@ -29,7 +29,7 @@ class PersonaRegistry:
         root = Path(directory)
         if not root.is_dir():
             raise ValueError(f"Persona directory does not exist: {root}")
-        paths = sorted(root.rglob("*.md"))
+        paths = sorted(path for path in root.rglob("*.md") if path.name != "README.md")
         loaded = tuple(parse_persona_file(path) for path in paths)
         for persona in loaded:
             self.register(persona)
