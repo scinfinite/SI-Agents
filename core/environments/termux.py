@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import argparse
+import json
 import os
 import platform
 import shutil
@@ -147,3 +149,35 @@ class TermuxRuntime:
     @staticmethod
     def python_ok() -> bool:
         return sys.version_info >= (3, 11)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run a read-only Termux doctor suitable for direct shell use."""
+    parser = argparse.ArgumentParser(description="Check SI-Agents Termux runtime readiness")
+    parser.add_argument("--json", action="store_true", help="emit JSON instead of human-readable output")
+    args = parser.parse_args(argv)
+    report = TermuxRuntime().doctor()
+    if args.json:
+        print(json.dumps(report.as_dict(), sort_keys=True))
+    else:
+        print(f"environment: {report.kind.value}")
+        print(f"status: {report.status.value}")
+        print(f"architecture: {report.architecture}")
+        print(f"python: {report.python_version}")
+        print(f"opencode: {'available' if report.open_code_available else 'missing'}")
+        print(f"omniroute configured: {'yes' if report.omni_route_configured else 'no'}")
+        if report.omni_route_healthy is not None:
+            print(f"omniroute healthy: {'yes' if report.omni_route_healthy else 'no'}")
+        for item in report.requirements:
+            state = "ok" if item.present else "missing"
+            marker = "required" if item.required else "optional"
+            print(f"{state}: {item.name} ({marker})")
+    return {
+        EnvironmentStatus.READY: 0,
+        EnvironmentStatus.DEGRADED: 2,
+        EnvironmentStatus.UNSUPPORTED: 3,
+    }[report.status]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
