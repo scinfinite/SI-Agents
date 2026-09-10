@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
+from threading import Lock
 from typing import Any
 from uuid import uuid4
 
@@ -140,6 +141,7 @@ class TeamExecution:
     events: list[WorkflowEvent] = field(default_factory=list)
     checkpoints: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    _event_lock: Lock = field(default_factory=Lock, init=False, repr=False)
 
     def emit(
         self,
@@ -148,15 +150,16 @@ class TeamExecution:
         task_id: str | None = None,
         data: object = None,
     ) -> None:
-        self.events.append(
-            WorkflowEvent(
-                event_type,
-                self.execution_id,
-                len(self.events),
-                task_id=task_id,
-                data=data,
+        with self._event_lock:
+            self.events.append(
+                WorkflowEvent(
+                    event_type,
+                    self.execution_id,
+                    len(self.events),
+                    task_id=task_id,
+                    data=data,
+                )
             )
-        )
 
 
 def _require_id(value: str, label: str) -> None:
