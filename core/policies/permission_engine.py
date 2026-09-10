@@ -34,6 +34,9 @@ class PermissionEngine:
     allow_write_repository: bool = False
     allow_local_commands: bool = True
     allow_destructive_commands: bool = False
+    allow_github_read: bool = True
+    allow_web_read: bool = True
+    allow_isolated_execution: bool = True
     scopes: tuple[PermissionScope, ...] = ()
 
     def decide(
@@ -73,6 +76,9 @@ class PermissionEngine:
             "repository_write": self.allow_write_repository,
             "local_command": self.allow_local_commands,
             "destructive_command": self.allow_destructive_commands,
+            "github_read": self.allow_github_read,
+            "web_read": self.allow_web_read,
+            "isolated_execution": self.allow_isolated_execution,
         }.get(normalized)
         if allowed is None:
             return PermissionDecision.DENY
