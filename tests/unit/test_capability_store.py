@@ -1,4 +1,4 @@
-from core.capabilities import Capability, CapabilityStatus, CapabilityStore, CapabilityRegistry
+from core.capabilities import Capability, CapabilityRegistry, CapabilityStatus, CapabilityStore
 
 
 def test_capability_store_round_trip(tmp_path):
