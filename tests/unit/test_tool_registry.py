@@ -6,7 +6,13 @@ from pathlib import Path
 from tools.registry.artifacts import ArtifactStore
 from tools.registry.builtins import register_builtin_tools
 from tools.registry.code_search import CodeSearchTool
-from tools.registry.command_tools import CompilerTool, FormatterTool, LinterTool, PackageManagerTool, TestRunnerTool
+from tools.registry.command_tools import (
+    CompilerTool,
+    FormatterTool,
+    LinterTool,
+    PackageManagerTool,
+    TestRunnerTool,
+)
 from tools.registry.filesystem import FileSystemToolImpl
 from tools.registry.git import GitTool
 from tools.registry.python_parser import PythonParserTool
