@@ -65,11 +65,13 @@ Phase 29 introduces `AgentPersona`, a deterministic Markdown parser, semantic va
 
 The persona contract intentionally contains behavioral content only. The parser rejects privilege/execution frontmatter, including capabilities, permissions, harnesses, environments, tools, commands, shell, network, credentials, and secrets. Compilation requires stable identity/name/division agreement and preserves typed governance fields unchanged. Command-like text in Markdown is inert data and is never executed.
 
-Verification includes deterministic parsing, malformed input, duplicate detection, required-section enforcement, semantic validation, persona-to-catalog matching, governance-preserving compilation, security boundary tests, catalog regression tests, and distribution packaging of persona Markdown. A first CI pass exposed two integration issues (persona README discovery and an expected catalog-selection set); both were corrected. The final Phase 29 mainline verification recorded **352 tests passed** with distribution build, isolated wheel installation, Ruff, and the complete pytest suite green.
+Verification includes deterministic parsing, malformed input, duplicate detection, required-section enforcement, semantic validation, persona-to-catalog matching, governance-preserving compilation, security boundary tests, catalog regression tests, and distribution packaging of persona Markdown. Real integration defects found during implementation were corrected before completion.
+
+The latest documentation-synchronization mainline CI run is **#590**, commit `f02c3cad8fca4bf6b69f3a2c44f624f915371c36`. It passed distribution build, isolated wheel installation/import, packaged `si agents`/`si teams` smoke tests, Ruff, and the complete pytest suite with **352 passed in 5.36s**. The built distribution also includes all seven canonical persona Markdown artifacts.
 
 ## Phase 28 verification record
 
-Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**. The same verification covered handoff serialization/atomic storage, SHA-256 tamper detection, recursive secret-like field rejection, Termux/Codespaces target validation, repository identity sanitization/canonicalization, resumable context metadata, and Phase 28 CLI parser coverage.
+Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f4`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**. The same verification covered handoff serialization/atomic storage, SHA-256 tamper detection, recursive secret-like field rejection, Termux/Codespaces target validation, repository identity sanitization/canonicalization, resumable context metadata, and Phase 28 CLI parser coverage.
 
 CI #525 exposed two real defects—JSON sequence fields did not normalize back to typed tuples, and SSH repository identity canonicalization retained the `git@` transport prefix. Both were fixed and CI #526 passed. No failure was suppressed or reclassified as success.
 
@@ -77,7 +79,7 @@ The detailed contract is `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md`.
 
 ## Documentation structure
 
-The historical architecture record is now explicitly indexed from Phase 1 onward:
+The historical architecture record is explicitly indexed from Phase 1 onward:
 
 - `PHASE_1_FOUNDATION.md` — renamed Phase 1 foundation record.
 - `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; the duplicate `CONTROL_PLANE.md` has been removed.
