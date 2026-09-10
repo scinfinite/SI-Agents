@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–23 complete and CI-verified.**
+**Post-v2 evolution — Phases 19–24 implemented; Phase 24 awaits CI verification.**
 
-Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, and OpenCode integration layers:
+Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, and OmniRoute integration layers:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -31,6 +31,7 @@ Completed foundation through Production Hardening and the post-v2 organization, 
 - **Phase 21 — Agent Teams & Workflows:** canonical team/workflow catalog, dependency-aware DAG execution, bounded parallelism, shared/isolated context, explicit handoffs, retries, escalation, evidence/verification gates, cancellation, checkpoints, and auditable workflow events.
 - **Phase 22 — Universal Harness Integration:** versioned `si.runtime.v1` wire contract, callback-based universal adapter bridge, normalized harness metadata, and deterministic organization deployment manifests. **Complete and CI-verified.**
 - **Phase 23 — OpenCode Integration:** stdlib-only OpenCode headless-server adapter, session creation/continuity, normalized synchronous messages, request-to-session cancellation, optional in-memory HTTP basic authentication, and fail-closed streaming capability declaration. **Complete and CI-verified.**
+- **Phase 24 — OmniRoute Integration:** stdlib-only OpenAI-compatible gateway client, deterministic model discovery, fail-closed health checks, secure credential handling, retryable transport classification, session/idempotency/request correlation forwarding, and a governed invocation layer that delegates provider/model routing to OmniRoute. **Implementation complete; CI verification pending.**
 
 ## Engineering loop
 
@@ -43,8 +44,10 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 Agents, capabilities, tools, skills, knowledge, automation jobs, teams, and harness adapters are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
 
-OpenCode integration is a transport boundary, not a model/provider router. OpenCode owns its server, provider credentials, and harness lifecycle. SI-Agents sends normalized runtime requests and consumes normalized results. OmniRoute/model routing remains a separate concern.
+OpenCode integration is a transport boundary, not a model/provider router. OpenCode owns its server, provider credentials, and harness lifecycle. SI-Agents sends normalized runtime requests and consumes normalized results. OmniRoute is the external model/provider routing authority for Phase 24.
+
+Phase 24 deliberately does not create a second provider-fallback or circuit-breaker system around OmniRoute. OmniRoute owns provider selection, upstream credentials, provider fallback, gateway-side quotas, routing policies, and provider circuit state. SI-Agents owns its invocation contract and fail-closed local governance boundaries.
 
 Universal harness deployment is descriptive, not authoritative. A deployment manifest can describe agents, teams, skills, required permissions, and capabilities for a harness, but it cannot enable the harness, grant permissions, execute workers, or bypass governance. Vendor-specific adapters remain separate from the core.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, `docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` for the universal harness architecture, `docs/architecture/PHASE_23_OPENCODE_INTEGRATION.md` for the OpenCode adapter, and `runtime/README.md` for the runtime boundary.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, `docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` for the universal harness architecture, `docs/architecture/PHASE_23_OPENCODE_INTEGRATION.md` for the OpenCode adapter, `docs/architecture/PHASE_24_OMNIROUTE_INTEGRATION.md` for the OmniRoute gateway, and `runtime/README.md` for the runtime boundary.

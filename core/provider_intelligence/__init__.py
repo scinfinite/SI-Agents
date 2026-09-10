@@ -9,6 +9,19 @@ from core.provider_intelligence.models import (
     RoutingDecision,
     RoutingRequest,
 )
+from core.provider_intelligence.omniroute import (
+    OmniRouteClient,
+    OmniRouteConfig,
+    OmniRouteError,
+    OmniRouteHealth,
+    OmniRouteModel,
+)
+from core.provider_intelligence.omniroute_router import (
+    OmniRouteGateway,
+    OmniRouteInvocation,
+    OmniRoutePolicyError,
+    OmniRouteResult,
+)
 from core.provider_intelligence.registry import ProviderRegistry
 from core.provider_intelligence.router import ModelRouter
 
@@ -17,6 +30,15 @@ __all__ = [
     "CircuitBreaker",
     "ModelProfile",
     "ModelRouter",
+    "OmniRouteClient",
+    "OmniRouteConfig",
+    "OmniRouteError",
+    "OmniRouteGateway",
+    "OmniRouteHealth",
+    "OmniRouteInvocation",
+    "OmniRouteModel",
+    "OmniRoutePolicyError",
+    "OmniRouteResult",
     "ProviderProfile",
     "ProviderRegistry",
     "QuotaSnapshot",
