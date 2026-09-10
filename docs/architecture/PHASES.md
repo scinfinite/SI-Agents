@@ -63,7 +63,7 @@ Phase 36 was merged from PR #31 as squash commit `0829e29d7e2b3718e57caf027f9a1c
 
 ## Phase 37 verification record
 
-Phase 37 implementation is delivered in PR #33. Feature CI must pass on the final implementation head before merge; the documentation-closed mainline CI is the final release gate. The exact pytest total and final merge/mainline run are recorded here after those gates complete.
+Phase 37 was merged from PR #33 as squash commit `d54ab5a0e9a0dc5daed72e89bdaf842b8da59078`. Final mainline CI **#840** (`34507154878`) passed all build, wheel-install, repository-audit, Ruff, and pytest gates on that exact main commit, with **441 tests passed**. The documentation-closed state is therefore fully verified on `main`.
 
 ## Documentation structure
 
