@@ -44,6 +44,8 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 27 | `PHASE_27_SI_CLI.md` | Complete |
 | 28 | `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` | Complete + CI verified |
 | 29 | `PHASE_29.md` | Complete + CI verified |
+| 30 | `PHASE_30.md` | Complete + CI verified |
+| 31 | `PHASE_31.md` | Implementation complete; final mainline CI pending |
 
 ## Cross-cutting architecture
 
@@ -55,18 +57,20 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_24_OMNIROUTE_INTEGRATION.md` — model/provider delegation boundary.
 - `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` — portable state-transfer boundary.
 - `PHASE_29.md` — canonical SI persona, parity, provenance, security, packaging, and verification record.
+- `PHASE_30.md` — canonical portable Skill contract and verification record.
+- `PHASE_31.md` — canonical Rules/Hooks/Events contract and verification record.
 - `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phase 29 is complete.
+`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29 and 30 are complete; Phase 31 implementation is complete pending final mainline CI.
 
 ```text
 29 SI Agent Personas       [complete]
    ↓
-30 Skills
+30 Skills                  [complete]
    ↓
-31 Rules / Hooks / Events
+31 Rules / Hooks / Events  [implementation complete; CI pending]
    ↓
 32 Memory / Knowledge
    ↓

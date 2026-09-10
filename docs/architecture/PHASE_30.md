@@ -1,34 +1,15 @@
 # Phase 30 — Portable Skills
 
-**Status:** Complete pending final CI evidence  
+**Status:** Complete + CI verified  
 **Scope:** first-class portable `SKILL.md` artifacts
-
-## Delivered
 
 Phase 30 establishes Skills as portable, inspectable data artifacts that sit between agent definitions and governed execution.
 
-### Contract
+## Delivered
 
-Every canonical Skill uses `si-agents.skill.v1` and declares:
+Every canonical Skill uses `si-agents.skill.v1` and declares identity/version, purpose, inputs/outputs, prerequisites, workflow, tools, requested capabilities/permissions, verification, failure behavior, evidence, examples, compatibility, provenance, optional dependencies, and lifecycle status.
 
-- identity, semantic version, category, and purpose;
-- inputs and outputs;
-- prerequisites and deterministic workflow;
-- tools;
-- requested capabilities and permissions;
-- verification and failure behavior;
-- evidence requirements;
-- examples;
-- compatibility requirements;
-- provenance;
-- optional Skill dependencies;
-- lifecycle status.
-
-### Source of truth
-
-`skills/**/SKILL.md` is authoritative. `skills/index.json` and `skills/registry.yaml` are discovery indexes and do not grant authority.
-
-### Runtime model
+`skills/**/SKILL.md` is authoritative. Discovery indexes do not grant authority.
 
 ```text
 SKILL.md
@@ -48,17 +29,9 @@ Execution handler
 Verification + evidence
 ```
 
-Selecting, importing, registering, or composing a Skill never grants permissions, tools, credentials, network access, or execution authority.
+Selecting, importing, registering, or composing a Skill never grants permissions, tools, credentials, network access, or execution authority. The parser rejects authority-bearing frontmatter; execution requires explicit permission evaluation and verification. Composition validates dependencies and rejects cycles. Artifact tooling computes SHA-256 digests.
 
-### Safety boundaries
-
-The parser rejects authority-bearing frontmatter such as execution, shell, network, credential, secret, and installation fields. Skill execution requires explicit permission evaluation and an explicit verifier. Blocked/deprecated Skills cannot execute. Missing outputs, failed verification, and handler failures remain failures.
-
-Skill composition validates dependencies and rejects cycles. Artifact tooling computes SHA-256 digests so deployment and verification layers can identify exact Skill content.
-
-### Canonical Skills
-
-The initial SI-native library contains six validated Skills:
+## Canonical Skills
 
 1. `inspect-repository`
 2. `reproduce-failure`
@@ -67,26 +40,10 @@ The initial SI-native library contains six validated Skills:
 5. `security-review`
 6. `compose-workflow`
 
-They are deliberately procedural and reusable rather than copies of any external persona corpus.
+## Verification evidence
 
-## Verification requirements
+The Phase 30 acceptance suite covered parsing, validation, deterministic registry discovery/selection, duplicate and malformed input rejection, authority-bearing input rejection, dependency resolution/cycle rejection, stable artifact digests, explicit permission/verification enforcement, failure/evidence behavior, packaging, CLI smoke checks, Ruff, and complete pytest.
 
-The Phase 30 gate requires:
+PR #17 was merged to `main` as commit `62972acf20a0da53bf81161c2108a506dbdad907`. Mainline CI run **#727** completed successfully, satisfying the Phase 30 exit gate.
 
-- every canonical `SKILL.md` parses;
-- every Skill validates;
-- deterministic registry discovery and selection;
-- duplicate rejection;
-- malformed and dangerous-input rejection;
-- dependency resolution and cycle rejection;
-- stable artifact digest generation;
-- explicit permission enforcement;
-- explicit verification enforcement;
-- failure/evidence behavior coverage;
-- wheel packaging and installed CLI smoke tests;
-- Ruff and complete pytest;
-- current documentation synchronized with implementation.
-
-## Exit gate
-
-Phase 31 may begin only after final mainline CI is green and the current repository documentation reports the verified Skill inventory and safety model.
+Phase 31 builds on this verified Skill boundary rather than replacing or duplicating it.

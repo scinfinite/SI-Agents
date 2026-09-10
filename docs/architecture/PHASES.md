@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–29 complete.**
+**Current status: v2.0 baseline plus Phases 19–30 complete; Phase 31 implementation complete pending final mainline CI.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -34,7 +34,9 @@
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
 27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode/OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete.**
 28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, sanitized/canonical repository identity, explicit Termux↔Codespaces validation, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
-29. Complete SI Agent Persona System — **Complete.** Exactly 279 SI-native specialist personas are organized across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, repository-neutral provenance, packaging coverage, and CI verification.
+29. Complete SI Agent Persona System — **Complete and CI-verified.** Exactly 279 SI-native specialist personas are organized across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, repository-neutral provenance, packaging coverage, and CI verification.
+30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation/registry, dependency-aware composition, artifact manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, regression coverage, and safety boundaries are implemented.
+31. Rules, Hooks & Event System — **Implementation complete; final mainline CI pending.** Explicit immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and current documentation are implemented.
 
 ## Release targets
 
@@ -54,31 +56,35 @@
 - **Post-v2 CLI/setup:** Phase 27 — complete
 - **Post-v2 cross-environment handoff:** Phase 28 — complete
 - **Post-v2 SI persona system:** Phase 29 — complete
+- **Post-v2 portable Skills:** Phase 30 — complete
+- **Post-v2 Rules/Hooks/Events:** Phase 31 — implementation complete, final CI pending
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete. Documentation must never claim a stronger state than the implementation and verification evidence support.
 
-## Phase 29 verification record
+## Phase 30 verification record
 
-Phase 29 contains exactly **279** canonical persona Markdown files across **18** SI-owned divisions and a typed catalog containing exactly **279** matching SI-native identities. The persona registry loads the complete corpus, security regression checks reject hidden Unicode control characters, provenance remains separate from governance, and package builds include the complete corpus.
+Phase 30 was merged to `main` as commit `62972acf20a0da53bf81161c2108a506dbdad907` from PR #17 after its CI passed. Mainline CI run **#727** completed successfully on that merge commit. The Phase 30 Skill catalog contains six canonical Skills with deterministic parsing/validation, dependency composition, SHA-256 artifact manifests, explicit permission and verification gates, CLI discovery/inspection/composition, packaging, and regression coverage.
 
-The final CI verification recorded **358 tests passing**, successful distribution build, isolated wheel installation/import, CLI smoke checks, and Ruff. GitHub Actions now uses `actions/checkout@v5` and `actions/setup-python@v6`, removing the deprecated Node 20 action majors.
+## Phase 31 verification record
 
-The single canonical Phase 29 document is `PHASE_29.md`. Non-persona Markdown such as documentation, examples, integrations, strategy/playbooks, and runbooks is excluded from the persona count.
+Phase 31 uses `core/events`, `core/rules`, and `core/hooks`. Event payloads are immutable, bounded, and secret-key redacted. Rules are exact-match declarative data and never execute expressions or commands. Hooks are explicitly registered in-process handlers with deterministic ordering, per-event limits, runtime budgets, observer/gate separation, and fail-closed gate errors. Dangerous events fail closed when no applicable Rule exists. `SkillExecutor` can publish Skill and verification lifecycle events through the EventBus without replacing the existing PermissionEngine/GovernanceEngine authority.
 
-The four legacy Python modules under `agents/` remain runtime compatibility/model modules. The canonical 279-agent corpus is the SI-native Markdown hierarchy under `agents/si-*/`.
+The canonical Rule catalog is `config/rules.v1.json`; the canonical Phase 31 architecture and acceptance record is `PHASE_31.md`.
 
 ## Documentation structure
 
 - `PHASE_1_FOUNDATION.md` — renamed Phase 1 foundation record.
 - `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; duplicate `CONTROL_PLANE.md` removed.
 - `PHASE_3_*` through `PHASE_28_*` — detailed historical phase records.
-- `PHASE_29.md` — single canonical Phase 29 architecture, parity, provenance, security, packaging, and verification record.
+- `PHASE_29.md` — canonical SI persona, parity, provenance, security, packaging, and verification record.
+- `PHASE_30.md` — canonical portable Skill contract and verification record.
+- `PHASE_31.md` — canonical Rules/Hooks/Events contract and verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 Historical phase documents preserve phase-time evidence. Current cross-phase state belongs here, and future planning belongs in `SI_AGENTS_V3.md`.
 
 ## Next phase
 
-**Phase 30 — First-Class Portable Skills** is the planned next implementation phase.
+**Phase 32 — Memory & Knowledge** is next after Phase 31 final mainline CI verification.
