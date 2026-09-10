@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
-from threading import Event, Lock
+from threading import Event
 from typing import Callable
 
 from agents.base import AgentContext, AgentResult, AgentWorker
@@ -65,10 +65,13 @@ class TeamEngine:
             for task in ready:
                 execution.emit(WorkflowEventType.TASK_READY, task_id=task.id)
 
+            batch = ready[: team.max_parallelism]
+            for task in batch:
+                execution.task_status[task.id] = TaskStatus.RUNNING
             with ThreadPoolExecutor(max_workers=team.max_parallelism) as pool:
                 futures = {
                     pool.submit(self._run_task, task, execution, resolve_worker, cancel_event): task
-                    for task in ready[: team.max_parallelism]
+                    for task in batch
                 }
                 for future in as_completed(futures):
                     task = futures[future]
