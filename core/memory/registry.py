@@ -34,15 +34,20 @@ class MemoryRegistry:
             entries = tuple(e for e in entries if not e.is_expired(now) and e.status is not MemoryStatus.EXPIRED)
         return tuple(sorted(entries, key=lambda entry: (entry.created_at, entry.id), reverse=True))
 
-    def supersede(self, memory_id: str, replacement: MemoryEntry) -> MemoryEntry:
-        current = self.get(memory_id)
-        if replacement.supersedes != current.id:
-            raise ValueError("Replacement must explicitly supersede the current memory")
-        if replacement.version <= current.version:
-            raise ValueError("Replacement version must be greater than current version")
-        self._entries[replacement.id] = replacement
+    def promote(self, current_id: str, promoted: MemoryEntry) -> MemoryEntry:
+        current = self.get(current_id)
+        if promoted.id == current.id:
+            raise ValueError("Promoted memory must have a new id")
+        if promoted.supersedes != current.id:
+            raise ValueError("Promoted memory must supersede its current version")
+        if promoted.version <= current.version:
+            raise ValueError("Promoted memory version must be greater than current version")
+        self._entries[promoted.id] = promoted
         self._entries[current.id] = replace(current, status=MemoryStatus.EXPIRED)
-        return replacement
+        return promoted
+
+    def supersede(self, memory_id: str, replacement: MemoryEntry) -> MemoryEntry:
+        return self.promote(memory_id, replacement)
 
     def expire(self, memory_id: str) -> MemoryEntry:
         current = self.get(memory_id)
