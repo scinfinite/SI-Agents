@@ -1,3 +1,5 @@
+# isort: skip_file
+
 import tempfile
 import unittest
 from pathlib import Path
