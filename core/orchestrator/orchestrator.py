@@ -20,8 +20,18 @@ from core.state.checkpoints import Checkpoint, CheckpointStore
 from core.state.execution_state import ExecutionState
 from core.state.execution_state_store import ExecutionStateStore
 from core.state.filesystem_snapshot import FilesystemSnapshotStore
+from core.verification.claim_store import ClaimStore
+from core.verification.claims import Claim
 from core.verification.evidence import Evidence, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
+from core.verification.production_readiness import ProductionReadiness, ReadinessGate, evaluate
+from core.verification.red_team import RedTeamSuite
+from core.verification.regression import RegressionSuite
+from core.verification.verification_engine import (
+    VerificationCheck,
+    VerificationEngine,
+    VerificationReport,
+)
 from tools.registry.builtins import register_builtin_tools
 from tools.registry.executor import ToolExecutor
 from tools.registry.registry import ToolDescriptor, ToolRegistry
@@ -47,10 +57,13 @@ class Orchestrator:
         tool_executor: ToolExecutor | None = None,
         skill_registry: SkillRegistry | None = None,
         skill_executor: SkillExecutor | None = None,
+        claim_store: ClaimStore | None = None,
     ) -> None:
         self.tasks = task_manager or TaskManager()
         self.checkpoints = checkpoint_store or CheckpointStore()
         self.evidence = evidence_store or EvidenceStore()
+        self.claims = claim_store or ClaimStore()
+        self.verification = VerificationEngine(self.claims, self.evidence)
         self.commands = command_runner
         self.snapshots = snapshot_store
         self.permissions = permission_engine or PermissionEngine()
@@ -148,6 +161,32 @@ class Orchestrator:
             approval_granted=approval_granted,
             verifier=verifier,
         )
+
+    def register_claim(self, claim: Claim) -> Claim:
+        """Register a bounded engineering claim before attempting to verify it."""
+        return self.claims.record(claim)
+
+    def verify_claim(
+        self,
+        claim_id: str,
+        checks: tuple[VerificationCheck, ...],
+        *,
+        regression: RegressionSuite | None = None,
+        red_team: RedTeamSuite | None = None,
+        source_prefix: str = "verification",
+    ) -> VerificationReport:
+        claim = self.claims.get(claim_id)
+        return self.verification.verify(
+            claim,
+            checks,
+            regression=regression,
+            red_team=red_team,
+            source_prefix=source_prefix,
+        )
+
+    def evaluate_readiness(self, gates: tuple[ReadinessGate, ...]) -> ProductionReadiness:
+        """Evaluate release readiness; no gate is considered passed without evidence."""
+        return evaluate(gates)
 
     def select_capabilities(
         self,
