@@ -34,7 +34,7 @@ def test_governance_is_required_and_denials_fail_closed() -> None:
     adapter = LocalHarnessAdapter({"echo": lambda value: value})
     request = InvocationRequest("echo", "x", "project")
     assert adapter.invoke(request).error.code.value == "governance_denied"
-    denied = replace(governance(), destructive=True, production=True)
+    denied = replace(governance(), risk=RiskLevel.HIGH, destructive=True, production=True)
     request = replace(request, governance=denied)
     assert adapter.invoke(request).error.code.value == "governance_denied"
 
