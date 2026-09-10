@@ -13,10 +13,12 @@ def main() -> int:
     paths = sorted(p for p in (ROOT / "agents").rglob("*.md") if p.name != "README.md")
     index = json.loads((ROOT / "config/persona-source-index.json").read_text(encoding="utf-8"))
     catalog = json.loads((ROOT / "config/agent-catalog.json").read_text(encoding="utf-8"))
-    if len(paths) != 279 or index["agent_count"] != 279 or len(index["agents"]) != 279 or len(catalog["agents"]) != 279:
+    if len(paths) != 279 or index["agent_count"] != 279 or index["source_division_count"] != 18 or len(catalog["agents"]) != 279:
         raise SystemExit("persona parity count failure")
-    ids = {item["id"] for item in index["agents"]}
-    if len(ids) != 279 or len({item["source_path"] for item in index["agents"]}) != 279:
+    if len(index["snapshot"]) != 40 or "repository" in index:
+        raise SystemExit("repository-neutral provenance failure")
+    ids = [agent["id"] for agent in catalog["agents"]]
+    if len(set(ids)) != 279:
         raise SystemExit("persona parity identity failure")
     for path in paths:
         text = path.read_text(encoding="utf-8")
