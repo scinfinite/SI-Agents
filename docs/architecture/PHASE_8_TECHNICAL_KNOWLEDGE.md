@@ -72,6 +72,10 @@ Validated runtime knowledge requires authoritative source records and verificati
 - [x] Unit tests cover core contracts and catalog integrity.
 - [x] CI verifies installation/build/lint/tests before completion.
 
+## CI evidence
+
+CI is the authoritative completion gate. A Phase 8 completion claim is valid only for a commit whose build, Ruff, and complete pytest workflow all pass. Any failure discovered on the phase's implementation commits must be repaired and the workflow rerun on the repaired head.
+
 ## Boundaries
 
 Phase 8 does not attempt to encode every programming language or framework in detail. It establishes the scalable knowledge model and a meaningful initial corpus. Technology Discovery (Phase 9) will expand coverage dynamically through evidence-backed research and experimentation.
