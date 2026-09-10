@@ -10,7 +10,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [tool.setuptools.packages.find]
-include = ["agents*", "core*", "tools*"]
+include = ["adapters*", "agents*", "core*", "tools*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -20,4 +20,4 @@ addopts = "-q"
 line-length = 100
 
 [tool.ruff.lint.isort]
-known-first-party = ["agents", "core", "tools"]
+known-first-party = ["adapters", "agents", "core", "tools"]
