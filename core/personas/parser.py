@@ -9,20 +9,11 @@ from core.personas.models import AgentPersona
 
 
 _REQUIRED_SECTIONS = (
-    "Identity",
-    "Personality",
-    "Core Mission",
-    "Expertise",
-    "Responsibilities",
-    "Workflow",
-    "Critical Rules",
-    "Boundaries",
-    "Deliverables",
-    "Failure Behavior",
-    "Escalation Behavior",
-    "Verification Expectations",
-    "Evidence Requirements",
+    "Identity", "Personality", "Core Mission", "Expertise", "Responsibilities", "Workflow",
+    "Critical Rules", "Boundaries", "Deliverables", "Failure Behavior", "Escalation Behavior",
+    "Verification Expectations", "Evidence Requirements",
 )
+_ALLOWED_FRONTMATTER = {"schema", "version", "id", "name", "division", "description"}
 _FORBIDDEN_FRONTMATTER = {
     "capabilities", "permissions", "harnesses", "environments", "tools", "commands",
     "exec", "execute", "shell", "network", "credentials", "secrets",
@@ -159,3 +150,6 @@ def _reject_unknown_or_dangerous(frontmatter: dict[str, str]) -> None:
         raise ValueError(
             "Persona cannot declare execution or privilege fields: " + ", ".join(dangerous)
         )
+    unknown = sorted(set(frontmatter) - _ALLOWED_FRONTMATTER)
+    if unknown:
+        raise ValueError("Persona has unsupported frontmatter fields: " + ", ".join(unknown))
