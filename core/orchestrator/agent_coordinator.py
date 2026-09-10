@@ -1,6 +1,8 @@
-from collections.abc import Callable
+from __future__ import annotations
 
 from core.orchestrator.context_manager import TaskContext
+
+from collections.abc import Callable
 
 
 AgentWorker = Callable[[str, TaskContext], str]
