@@ -1,6 +1,6 @@
 # Phase 29 — SI Agent Persona System
 
-**Status: Complete — 279 SI-native specialist personas represented, validated, packaged, and tested.**
+**Status:** Complete — 279 SI-native specialist personas represented, validated, packaged, and tested.
 
 ## 1. Purpose
 

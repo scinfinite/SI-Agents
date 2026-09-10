@@ -47,7 +47,7 @@ def _tracked_artifacts(root: Path) -> list[str]:
 def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     root = Path(root).resolve()
     checks: list[AuditCheck] = []
-    required = ("README.md", "pyproject.toml", "config/agent-catalog.json", "config/team-catalog.json", "core/personas/registry.py", "core/skills/models.py", "core/skills/parser.py", "docs/architecture/PHASE_29.md", "docs/architecture/PHASE_30.md")
+    required = ("README.md", "pyproject.toml", "config/agent-catalog.json", "config/team-catalog.json", "core/personas/registry.py", "core/skills/models.py", "core/skills/parser.py", "docs/architecture/PHASE_29_AGENT_PERSONA.md", "docs/architecture/PHASE_30_PORTABLE_SKILLS.md", "docs/architecture/PHASE_31_RULES_HOOKS_EVENTS.md")
     missing = [item for item in required if not (root / item).is_file()]
     checks.append(AuditCheck("required-files", not missing, "missing: " + ", ".join(missing) if missing else "all present"))
     try:

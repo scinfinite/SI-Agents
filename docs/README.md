@@ -6,9 +6,9 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 
 1. **Project overview:** `../README.md`
 2. **Current phase/status:** `architecture/PHASES.md`
-3. **Phase 29 canonical record:** `architecture/PHASE_29.md`
-4. **Phase 30 canonical record:** `architecture/PHASE_30.md`
-5. **Phase 31 canonical record:** `architecture/PHASE_31.md`
+3. **Phase 29 canonical record:** `architecture/PHASE_29_AGENT_PERSONA.md`
+4. **Phase 30 canonical record:** `architecture/PHASE_30_PORTABLE_SKILLS.md`
+5. **Phase 31 canonical record:** `architecture/PHASE_31_RULES_HOOKS_EVENTS.md`
 6. **Phase 32 canonical record:** `architecture/PHASE_32.md`
 7. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
 8. **Architecture index:** `architecture/README.md`
@@ -23,9 +23,9 @@ docs/
 └── architecture/
     ├── README.md
     ├── PHASES.md
-    ├── PHASE_29.md
-    ├── PHASE_30.md
-    ├── PHASE_31.md
+    ├── PHASE_29_AGENT_PERSONA.md
+    ├── PHASE_30_PORTABLE_SKILLS.md
+    ├── PHASE_31_RULES_HOOKS_EVENTS.md
     ├── PHASE_32.md                            # Canonical Phase 32 Memory/Knowledge record
     ├── SI_AGENTS_V3.md
     ├── PHASE_1_FOUNDATION.md
@@ -38,9 +38,9 @@ The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been reti
 ## Source-of-truth rules
 
 - `PHASES.md` is authoritative for current implementation status and verification.
-- `PHASE_29.md` is the canonical Phase 29 architecture/parity/provenance/verification record.
-- `PHASE_30.md` is the canonical portable Skill contract and verification record.
-- `PHASE_31.md` is the canonical Rules/Hooks/Events contract and verification record.
+- `PHASE_29_AGENT_PERSONA.md` is the canonical Phase 29 architecture/parity/provenance/verification record.
+- `PHASE_30_PORTABLE_SKILLS.md` is the canonical portable Skill contract and verification record.
+- `PHASE_31_RULES_HOOKS_EVENTS.md` is the canonical Rules/Hooks/Events contract and verification record.
 - `PHASE_32.md` is the canonical Memory/Knowledge contract and verification record.
 - `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
 - Earlier `PHASE_<n>_*.md` files are historical implementation records and preserve phase-time evidence.
