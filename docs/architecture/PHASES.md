@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–33 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–33 complete and CI-verified; Phase 34 implementation complete and undergoing final verification.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -39,6 +39,7 @@
 31. Rules, Hooks & Event System — **Complete and CI-verified.** Immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation.
 32. Memory & Knowledge — **Complete and CI-verified.** Immutable scoped Memory, verified source-backed Knowledge, provenance/evidence contracts, fail-closed promotion, explicit supersession/contradiction tracking, deterministic context-aware retrieval, atomic schema-versioned persistence, lifecycle event integration, and targeted regression coverage.
 33. Security & Governance Center — **Complete and CI-verified.** Typed governance objects, fail-closed capability/permission decisions, approval expiry handling, credential + external-egress denial, declarative governance catalog, packaged governance configuration, deterministic read-only security scanner, audit-safe decision records, and adversarial regression coverage.
+34. Organization Expansion — **Implementation complete; final CI verification pending.** Immutable team/division/workflow contracts, source-of-truth validation against the canonical 279-agent catalog, five operating teams, single-home assignments for all 18 divisions, four evidence-gated workflows, authority-boundary checks, packaging, and adversarial regression coverage are implemented.
 
 ## Release targets
 
@@ -67,6 +68,10 @@ Phase 33 feature CI run **#785** passed build/distribution verification, wheel i
 
 Mainline CI run **#786** passed all build, wheel, repository-audit, Ruff, and pytest steps on that exact merge commit.
 
+## Phase 34 verification record
+
+Implementation PR **#25** is the Phase 34 delivery branch. Early CI runs caught and fixed import-lint issues in the new regression tests. The current branch includes the final import fix and division-assignment consistency validation; final feature CI must pass before merge.
+
 ## Documentation structure
 
 - `PHASE_1_FOUNDATION.md` through `PHASE_28_*` — historical phase records.
@@ -75,8 +80,9 @@ Mainline CI run **#786** passed all build, wheel, repository-audit, Ruff, and py
 - `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events record.
 - `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
 - `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract and final verification record.
+- `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical Organization Expansion contract and verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 34 — Organization Expansion.**
+**Phase 35 — Control API.**
