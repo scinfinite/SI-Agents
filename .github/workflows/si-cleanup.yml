@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
       - name: Remove generated runtime artifacts
         run: |
-          find . -type d -name '__pycache__' -prune -exec rm -rf {} +
+          git ls-files -z | grep -z '__pycache__' | xargs -0 -r git rm
           rm -f phase29-test-debug.txt
           cat > .gitignore <<'EOF'
 # Python runtime artifacts
