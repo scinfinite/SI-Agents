@@ -2,7 +2,7 @@
 
 ## Current implementation status
 
-SI-Agents is currently at **Alpha** with Phases 1–5 complete and CI-verified. Phase 6 (Skills Engine) is the next implementation target. The authoritative roadmap is `docs/architecture/PHASES.md`.
+SI-Agents is currently on the **v1.0 track** with Phases 1–13 complete and CI-verified. Phase 14 (Model/Provider Intelligence) is the next implementation target. The authoritative roadmap is `docs/architecture/PHASES.md`.
 
 ## Engineering standard
 
@@ -33,6 +33,7 @@ SI-Agents is built evidence-first. The priority is actual root-cause determinati
 - Create a checkpoint before risky or broad modifications.
 - Never expose secrets or credentials in source, logs, tests, commits, or reports.
 - High-risk destructive, production, credential, publication, paid-resource, or sensitive-data actions require explicit human approval.
+- Credential-bearing external egress is denied even when an approval is supplied.
 - Learn from external repositories by inspecting and generalizing patterns; do not blindly copy implementations.
 - ECC and Agency Agents are ongoing reference projects. Relevant upstream changes, issues, PRs, tests, releases, and design patterns should be reviewed when they materially affect a SI-Agents feature.
 - Keep project-specific knowledge isolated from global reusable knowledge.
