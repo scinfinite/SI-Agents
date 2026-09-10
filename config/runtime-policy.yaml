@@ -1,0 +1,18 @@
+# Runtime/harness policy is declarative; enforcement lives in core/runtime.
+runtime_policy:
+  enabled: true
+  require_explicit_harness_registration: true
+  harnesses_disabled_by_default: true
+  require_governance_before_invocation: true
+  fail_closed_on_unsupported_capability: true
+  preserve_project_isolation: true
+  preserve_request_correlation: true
+  normalize_events: true
+  credentials:
+    never_store_in_runtime_envelopes: true
+    never_log_credentials: true
+  external_runtime_services:
+    allowed_by_default: false
+    require_governance: true
+  cancellation:
+    supported_as_adapter_contract: true
