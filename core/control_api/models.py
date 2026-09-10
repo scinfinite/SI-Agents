@@ -3,7 +3,7 @@
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
-from uuid import uuid4
+import uuid
 
 
 API_VERSION = "v1"
@@ -71,4 +71,4 @@ class ApiSnapshot:
 
 
 def new_id(prefix: str) -> str:
-    return f"{prefix}_{uuid4().hex}"
+    return f"{prefix}_{uuid.uuid4().hex}"
