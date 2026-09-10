@@ -1,5 +1,9 @@
 # Execution Backends
 
+## Status
+
+**Active and verified as part of the completed Phase 2 Control Plane and Phase 3 Tool System.**
+
 SI-Agents separates task orchestration from command execution through the `ExecutionBackend` contract.
 
 ## Backends
@@ -12,5 +16,9 @@ The Docker daemon is itself a trust boundary. SI-Agents must not describe Docker
 ## Design rule
 
 `CommandRunner` depends only on `ExecutionBackend`. New backends can therefore be introduced without changing orchestration, task state, or evidence handling.
+
+## Agent integration
+
+Phase 5 agents do not call a backend as a policy bypass. Execution requests flow through the control-plane command/tool path so task correlation, permission evaluation, execution records, and evidence remain intact.
 
 Before an untrusted workload is executed, the control plane must select an actually isolated backend. A development-only host executor must never be silently upgraded to an isolation guarantee.
