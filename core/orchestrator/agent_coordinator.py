@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from collections.abc import Callable
 
 from core.orchestrator.context_manager import TaskContext
