@@ -1,6 +1,8 @@
+from core.governance.models import DataClass, GovernanceRequest, RiskLevel
 from core.organization.models import AgentDefinition
 from core.runtime.bridge import CallbackHarnessAdapter, adapter_metadata, is_harness_adapter
 from core.runtime.deployment import HarnessDeploymentManifest, build_manifest
+from core.runtime.engine import RuntimeEngine
 from core.runtime.models import (
     InvocationRequest,
     InvocationResponse,
@@ -13,6 +15,7 @@ from core.runtime.models import (
     RuntimeKind,
 )
 from core.runtime.protocol import HarnessMetadata
+from core.runtime.registry import HarnessRegistry
 from core.runtime.wire import (
     WIRE_PROTOCOL,
     capabilities_to_dict,
@@ -52,6 +55,29 @@ def test_callback_bridge_exposes_metadata_and_invokes() -> None:
     assert adapter.cancel(request.request_id) is True
     assert cancelled == [request.request_id]
     assert adapter_metadata(adapter)["harness"]["harness_id"] == "test-harness"
+
+
+def test_callback_bridge_through_runtime_keeps_governance_boundary() -> None:
+    metadata = HarnessMetadata("test-harness", RuntimeKind.AGENT, "1.0")
+
+    def invoke(request: InvocationRequest) -> InvocationResponse:
+        return InvocationResponse(request.request_id, InvocationStatus.COMPLETED, output="ok")
+
+    adapter = CallbackHarnessAdapter(metadata, RuntimeCapabilities(), invoke)
+    registry = HarnessRegistry()
+    registry.register(adapter)
+    registry.enable("test-harness")
+    engine = RuntimeEngine(registry=registry)
+    request = InvocationRequest(
+        "echo",
+        "hello",
+        "project",
+        governance=GovernanceRequest("runtime.test", RiskLevel.LOW, DataClass.PUBLIC),
+    )
+
+    response = engine.invoke("test-harness", request)
+    assert response.status is InvocationStatus.COMPLETED
+    assert response.output == "ok"
 
 
 def test_callback_bridge_requires_cancel_callback_when_capability_is_declared() -> None:
