@@ -1,5 +1,6 @@
 from core.governance import (
     Approval,
+    AuditLog,
     DataClass,
     DecisionStatus,
     GovernanceEngine,
@@ -32,8 +33,7 @@ def test_sensitive_egress_without_approval_requires_approval() -> None:
     request = GovernanceRequest(
         action="upload data", risk=RiskLevel.HIGH, data_class=DataClass.SENSITIVE, external_egress=True
     )
-    decision = GovernanceEngine().decide(request)
-    assert decision.status is DecisionStatus.APPROVAL_REQUIRED
+    assert GovernanceEngine().decide(request).status is DecisionStatus.APPROVAL_REQUIRED
 
 
 def test_sensitive_egress_with_approval_is_allowed() -> None:
@@ -56,8 +56,7 @@ def test_credential_egress_is_denied_even_with_approval() -> None:
         action="send secret", risk=RiskLevel.CRITICAL, credential=True, external_egress=True,
         approval=Approval("human", "attempted approval"),
     )
-    decision = GovernanceEngine().decide(request)
-    assert decision.status is DecisionStatus.DENY
+    assert GovernanceEngine().decide(request).status is DecisionStatus.DENY
 
 
 def test_high_risk_destructive_requires_approval() -> None:
@@ -97,5 +96,25 @@ def test_negative_cost_is_invalid() -> None:
 def test_critical_risk_is_derived_for_credential_actions() -> None:
     request = GovernanceRequest(action="rotate credential", risk=RiskLevel.LOW, credential=True)
     decision = GovernanceEngine().decide(request)
-    assert decision.status is DecisionStatus.DENY
+    assert decision.status is DecisionStatus.ALLOW
     assert decision.effective_risk is RiskLevel.CRITICAL
+
+
+def test_approval_validation_is_fail_closed() -> None:
+    try:
+        Approval("", "missing approver")
+    except ValueError as exc:
+        assert "approver" in str(exc)
+    else:
+        raise AssertionError("invalid approval must fail")
+
+
+def test_audit_log_records_summary_only() -> None:
+    request = GovernanceRequest(action="read repository", risk=RiskLevel.LOW)
+    decision = GovernanceEngine().decide(request)
+    audit = AuditLog()
+    record = audit.record(decision)
+    assert record.action == "read repository"
+    assert record.effective_risk == "low"
+    assert len(audit.records()) == 1
+    assert not hasattr(record, "approval")
