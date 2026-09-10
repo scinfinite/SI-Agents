@@ -52,25 +52,19 @@ class ControlApiHandler(BaseHTTPRequestHandler):
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise ValueError("request body must be valid UTF-8 JSON") from exc
         if not isinstance(payload, dict):
-            raise ValueError("request body must be a JSON object")
+            raise TypeError("request body must be a JSON object")
         return payload
 
-    def do_GET(self) -> None:  # noqa: N802
+    def do_GET(self):
         path = urlparse(self.path).path.rstrip("/") or "/"
         routes: dict[str, object] = {
-            "/": self.service.snapshot().as_dict(),
-            "/api/v1": self.service.snapshot().as_dict(),
+            "/": self.service.snapshot().as_dict(), "/api/v1": self.service.snapshot().as_dict(),
             "/api/v1/health": {"status": "ok", "api_version": "v1"},
-            "/api/v1/openapi.json": document(),
-            "/api/v1/agents": self.service.agents(),
-            "/api/v1/teams": self.service.teams(),
-            "/api/v1/workflows": self.service.workflows(),
-            "/api/v1/organization": self.service.organization(),
-            "/api/v1/skills": self.service.skills(),
-            "/api/v1/memory": self.service.memory(),
-            "/api/v1/governance": self.service.governance_state(),
-            "/api/v1/events": self.service.events(),
-            "/api/v1/runs": self.service.runs(),
+            "/api/v1/openapi.json": document(), "/api/v1/agents": self.service.agents(),
+            "/api/v1/teams": self.service.teams(), "/api/v1/workflows": self.service.workflows(),
+            "/api/v1/organization": self.service.organization(), "/api/v1/skills": self.service.skills(),
+            "/api/v1/memory": self.service.memory(), "/api/v1/governance": self.service.governance_state(),
+            "/api/v1/events": self.service.events(), "/api/v1/runs": self.service.runs(),
         }
         if path in routes:
             self._send(200, routes[path])
@@ -84,7 +78,7 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             return
         self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
 
-    def do_POST(self) -> None:  # noqa: N802
+    def do_POST(self):
         path = urlparse(self.path).path.rstrip("/")
         if path != "/api/v1/runs":
             self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
@@ -100,7 +94,7 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             return
         self._send(202, result)
 
-    def log_message(self, format: str, *args: object) -> None:
+    def log_message(self, format, *args):
         return
 
 
