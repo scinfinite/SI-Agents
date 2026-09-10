@@ -11,8 +11,8 @@ __all__ = [
     "KnowledgeCatalogError",
     "KnowledgeEntry",
     "KnowledgeKind",
+    "KnowledgeRegistry",
     "KnowledgeSource",
     "KnowledgeStatus",
-    "KnowledgeRegistry",
     "load_language_catalog",
 ]
