@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import replace
-
 from core.events.bus import EventBus
 from core.events.models import Event, EventName, EventSource
 
-from .models import KnowledgeEntry, MemoryEntry, MemoryScope, MemoryStatus, PromotionDecision
+from .models import KnowledgeEntry, MemoryEntry, MemoryScope, PromotionDecision
 from .promotion import MemoryPromoter
 from .registry import MemoryRegistry
 from .retrieval import MemoryRetriever
@@ -30,31 +28,44 @@ class MemoryService:
         self.retriever = MemoryRetriever(self.registry)
 
     def _publish(self, name: EventName, subject: str, payload: dict[str, object]) -> None:
-        if self.events is None:
-            return
-        self.events.publish(Event(name.value, EventSource.RUNTIME, subject, payload))
+        if self.events is not None:
+            self.events.publish(Event(name.value, EventSource.RUNTIME, subject, payload))
 
     def record(self, entry: MemoryEntry) -> MemoryEntry:
         self.registry.add(entry)
         self._persist()
-        self._publish(EventName.MEMORY_CREATED, entry.id, {"scope": entry.scope.value, "status": entry.status.value})
+        self._publish(
+            EventName.MEMORY_CREATED,
+            entry.id,
+            {"scope": entry.scope.value, "status": entry.status.value},
+        )
         return entry
 
-    def evaluate_promotion(self, memory_id: str, target_scope: MemoryScope | None = None) -> PromotionDecision:
+    def evaluate_promotion(
+        self, memory_id: str, target_scope: MemoryScope | None = None
+    ) -> PromotionDecision:
         return self.promoter.evaluate(self.registry.get(memory_id), target_scope)
 
     def promote(self, memory_id: str, target_scope: MemoryScope | None = None) -> MemoryEntry:
         current = self.registry.get(memory_id)
         promoted = self.promoter.promote(current, target_scope)
-        self.registry._entries[promoted.id] = promoted  # lifecycle replacement remains in the registry boundary
+        self.registry.promote(current.id, promoted)
         self._persist()
-        self._publish(EventName.MEMORY_PROMOTED, promoted.id, {"scope": promoted.scope.value, "version": promoted.version})
+        self._publish(
+            EventName.MEMORY_PROMOTED,
+            promoted.id,
+            {"scope": promoted.scope.value, "version": promoted.version},
+        )
         return promoted
 
     def add_knowledge(self, entry: KnowledgeEntry) -> KnowledgeEntry:
         self.registry.add_knowledge(entry)
         self._persist()
-        self._publish(EventName.KNOWLEDGE_CREATED, entry.id, {"version": entry.version, "confidence": entry.confidence})
+        self._publish(
+            EventName.KNOWLEDGE_CREATED,
+            entry.id,
+            {"version": entry.version, "confidence": entry.confidence},
+        )
         return entry
 
     def expire(self, memory_id: str) -> MemoryEntry:
