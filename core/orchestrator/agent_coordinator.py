@@ -1,10 +1,7 @@
-from __future__ import annotations
-
 from collections.abc import Callable
-from typing import Any
 
 
-AgentWorker = Callable[[str, Any], str]
+AgentWorker = Callable[[str, object], str]
 
 
 class AgentCoordinator:
@@ -30,7 +27,7 @@ class AgentCoordinator:
     def names(self) -> tuple[str, ...]:
         return tuple(self._agents)
 
-    def delegate(self, name: str, task_description: str, context: Any) -> str:
+    def delegate(self, name: str, task_description: str, context: object) -> str:
         if not task_description.strip():
             raise ValueError("Task description must not be empty")
         return self.get(name)(task_description, context)
