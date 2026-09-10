@@ -43,7 +43,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 26 | `PHASE_26_CODESPACE_RUNTIME.md` | Complete |
 | 27 | `PHASE_27_SI_CLI.md` | Complete |
 | 28 | `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` | Complete + CI verified |
-| 29 | `PHASE_29_AGENT_PERSONAS.md` | Complete + CI verified |
+| 29 | `PHASE_29.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -54,15 +54,14 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` — language-neutral harness contract.
 - `PHASE_24_OMNIROUTE_INTEGRATION.md` — model/provider delegation boundary.
 - `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` — portable state-transfer boundary.
-- `PHASE_29_AGENT_PERSONAS.md` — human-authored persona to typed-contract boundary.
-- `PHASE_29_PROVENANCE.md` — external-reference provenance and independent design record.
+- `PHASE_29.md` — canonical SI persona, parity, provenance, security, packaging, and verification record.
 
 ## v3 roadmap
 
 `SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phase 29 is complete.
 
 ```text
-29 Personas                 [complete]
+29 SI Agent Personas       [complete]
    ↓
 30 Skills
    ↓
