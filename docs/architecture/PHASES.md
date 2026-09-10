@@ -1,8 +1,8 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–28 implemented and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–29 implemented and CI-verified.**
 
-> This file is the authoritative historical implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap for Phases 29–43. `docs/README.md` is the documentation navigation index.
+> This file is the authoritative historical implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap for Phases 30–43. `docs/README.md` is the documentation navigation index.
 
 ## Completed phases
 
@@ -34,6 +34,7 @@
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
 27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode/OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete.**
 28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, sanitized/canonical repository identity, explicit Termux↔Codespaces validation, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
+29. Agent Persona & Definition System — deterministic Markdown personas, typed behavioral contract, validation, governed compilation, duplicate/conflict detection, canonical persona set, provenance, inert/untrusted persona handling, and packaged persona artifacts. **Complete and CI-verified.**
 
 ## Release targets
 
@@ -52,56 +53,27 @@
 - **Post-v2 Codespaces runtime:** Phase 26 — complete
 - **Post-v2 CLI/setup:** Phase 27 — complete
 - **Post-v2 cross-environment handoff:** Phase 28 — complete
+- **Post-v2 agent personas:** Phase 29 — complete
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete. Documentation must never claim a stronger state than the implementation and verification evidence support.
 
+## Phase 29 verification record
+
+Phase 29 introduces `AgentPersona`, a deterministic Markdown parser, semantic validator, governed compiler, and duplicate-safe persona registry. Seven canonical personas are present under `agents/`: Developer, Backend Engineer, Infrastructure Engineer, Debugger, Tester, Code Reviewer, and Security Engineer. Infrastructure Engineer is registered in the canonical catalog as a cataloged agent.
+
+The persona contract intentionally contains behavioral content only. The parser rejects privilege/execution frontmatter, including capabilities, permissions, harnesses, environments, tools, commands, shell, network, credentials, and secrets. Compilation requires stable identity/name/division agreement and preserves typed governance fields unchanged. Command-like text in Markdown is inert data and is never executed.
+
+Verification includes deterministic parsing, malformed input, duplicate detection, required-section enforcement, semantic validation, persona-to-catalog matching, governance-preserving compilation, security boundary tests, catalog regression tests, and distribution packaging of persona Markdown. The detailed contract is `PHASE_29_AGENT_PERSONAS.md`; provenance is `PHASE_29_PROVENANCE.md`.
+
 ## Phase 28 verification record
 
-Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f4`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**. The same verification covered handoff serialization/atomic storage, SHA-256 tamper detection, recursive secret-like field rejection, Termux/Codespaces target validation, repository identity sanitization/canonicalization, resumable context metadata, and Phase 28 CLI parser coverage.
+Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**. The same verification covered handoff serialization/atomic storage, SHA-256 tamper detection, recursive secret-like field rejection, Termux/Codespaces target validation, repository identity sanitization/canonicalization, resumable context metadata, and Phase 28 CLI parser coverage.
 
 CI #525 exposed two real defects—JSON sequence fields did not normalize back to typed tuples, and SSH repository identity canonicalization retained the `git@` transport prefix. Both were fixed and CI #526 passed. No failure was suppressed or reclassified as success.
 
 The detailed contract is `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md`.
-
-## Phase 27 verification record
-
-Phase 27 added the `si` console entry point and a single user-facing control surface over existing SI-Agents contracts. `si doctor` delegates to environment readiness; `si status` reports non-secret configuration; `si agents` and `si teams` load canonical catalogs; `si setup` is dry-run by default and requires `--apply` for mutation; `si update` requires `--apply`; and `si run` executes canonical teams through `TeamEngine` without creating a second permission system.
-
-Verification evidence: PR #14 CI run **#499** passed distribution build, isolated wheel installation/import plus installed `si agents`/`si teams` catalog checks, Ruff, and the complete pytest suite with **330 tests passing**. Earlier #495 and #497 failures exposed and corrected a Ruff exception-type defect and a parser-coverage defect. The merged implementation was followed by mainline verification.
-
-## Phase 26 verification record
-
-Phase 26 added the read-only Codespaces readiness boundary. It detects Codespaces, validates Python/Git/curl/OpenSSH/workspace requirements, optionally requires GitHub CLI and OmniRoute, validates OpenCode readiness, and exposes a non-executing toolchain plan plus sanitized doctor output. Verification evidence: mainline CI #494 passed distribution build, isolated wheel installation/import, Ruff, and the full pytest suite with **327 tests passing** after fixing #493.
-
-## Phase 25 verification record
-
-Phase 25 added Termux readiness contracts, detection, command checks, OpenCode readiness, optional fail-closed OmniRoute health, read-only doctor, secret-free JSON reporting, conservative package planning, and workspace validation. Verification evidence: PR #13 CI #485 passed build, isolated wheel verification, Ruff, and **319 tests passing**; #482 exposed a Ruff SIM114 issue that was fixed before the successful run.
-
-## Phase 24 verification record
-
-Phase 24 added the stdlib-only OmniRoute gateway client and governed invocation boundary while keeping provider/model routing authoritative in OmniRoute. Verification evidence: PR #12 CI #478 passed build, isolated wheel verification, Ruff, and **310 tests passing**; mainline #479 passed afterward.
-
-## Phase 23 verification record
-
-Phase 23 added the vendor-specific OpenCode headless-server adapter on top of the universal runtime boundary. Streaming remains fail-closed until it can be normalized safely. Verification evidence: PR #11 CI #470 and mainline #471 passed build, isolated wheel verification, Ruff, and **299 tests passing**.
-
-## Phase 22 verification record
-
-Phase 22 added the versioned `si.runtime.v1` wire envelope, callback bridge, normalized metadata, and descriptive organization deployment manifests. Verification evidence: PR #7 CI #465 and mainline #466 passed with **293 tests** and distribution/wheel/Ruff gates.
-
-## Phase 21 verification record
-
-Phase 21 added canonical teams/workflows, deterministic dependency-DAG scheduling, bounded parallelism, context isolation, handoffs, retries, escalation, evidence gates, cancellation, checkpoints, and workflow events. Final CI #450 passed with **284 tests**.
-
-## Phase 20 verification record
-
-Phase 20 established the canonical organization layer with 7 divisions and 12 agent definitions, typed contracts, duplicate-safe registration, deterministic selection, and validation. Final main CI #442 passed all required gates.
-
-## Phase 19 verification record
-
-Phase 19 established the evidence-backed post-v2 boundary through executable audit, runtime E2E, distribution correctness, isolated wheel verification, and explicit future-boundary definition. PR #2 CI #431 passed all required gates; baseline #428 and documentation synchronization #429 were also successful.
 
 ## Detailed phase documents
 
@@ -109,4 +81,4 @@ Historical phase contracts are retained as `PHASE_<n>_*.md` documents in this di
 
 ## Next phase
 
-**Phase 29 — Agent Persona & Definition System** is the next implementation phase. It must begin only from the verified Phase 28 baseline and the synchronized documentation set.
+**Phase 30 — Skills** is the next implementation phase. It must begin only from the verified Phase 29 baseline and synchronized documentation set.
