@@ -22,9 +22,9 @@ The bridge accepts callbacks rather than importing SDKs. Vendor-specific adapter
 
 `HarnessDeploymentManifest` describes agents, teams, skills, required permissions, and capabilities for an external exposure surface. Required permissions are descriptive and are never automatically granted by manifest generation.
 
-## External reference patterns
+## Generalized external-reference lesson
 
-Current ECC and Agency Agents reinforced the engineering lesson of canonical contracts with adapter-specific projections and source-of-truth consistency. SI-Agents independently implemented those principles with typed governance boundaries.
+External integration research reinforced the value of canonical contracts, adapter-specific projections, and a single source of truth. SI-Agents independently implemented those principles with typed governance boundaries.
 
 ## Verification
 
@@ -32,7 +32,7 @@ The completed Phase 22 acceptance gate included distribution build, isolated whe
 
 ## Historical boundary
 
-The original Phase 22 document intentionally listed OpenCode, OmniRoute, environment installers, and other integrations as future work. Those concerns were implemented by later phases 23–29. They should not be interpreted as missing from the current repository.
+The original Phase 22 document intentionally listed later harnesses, model gateways, environment installers, and other integrations as future work. Those concerns were implemented by later phases 23–29. They should not be interpreted as missing from the current repository.
 
 ## Current-state addendum
 
