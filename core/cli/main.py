@@ -69,6 +69,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     print(f"workspace: {config.workspace or os.getcwd()}")
     print(f"OpenCode: {config.opencode_url}")
     print(f"OmniRoute: {config.omniroute_url}")
+    print(f"OmniRoute model: {config.omniroute_model or 'not selected'}")
     print(f"config: {config_path()}")
     return _exit_code(report.status)
 
@@ -111,6 +112,8 @@ def _opencode_config_path() -> Path:
 
 
 def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
+    if not config.omniroute_model:
+        return False, "an explicit --model is required before configuring an OpenCode OmniRoute provider"
     target = _opencode_config_path()
     if not target.exists():
         payload: dict[str, object] = {"$schema": "https://opencode.ai/config.json"}
@@ -133,12 +136,14 @@ def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
             "name": "OmniRoute",
             "package": "@opencode/ai/providers/openai-compatible",
             "settings": {"baseURL": config.omniroute_url.rstrip("/") + "/v1"},
+            "models": {
+                config.omniroute_model: {
+                    "name": config.omniroute_model,
+                    "modelID": config.omniroute_model,
+                }
+            },
         }
     )
-    models = provider.setdefault("models", {})
-    if not isinstance(models, dict):
-        return False, "OpenCode 'providers.omniroute.models' must be an object"
-
     message = f"OpenCode OmniRoute provider {'would be updated' if not apply else 'updated'} at {target}"
     if not apply:
         return True, message
@@ -149,16 +154,17 @@ def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
 
 def cmd_setup(args: argparse.Namespace) -> int:
     report = _report()
-    print("setup plan:")
-    for command in _setup_plan(report):
-        print("  " + " ".join(command))
     config = load_config()
     updated = SIConfig(
         environment=report.kind.value,
         workspace=config.workspace or os.getcwd(),
         opencode_url=args.opencode_url or config.opencode_url,
         omniroute_url=args.omniroute_url or config.omniroute_url,
+        omniroute_model=args.model or config.omniroute_model,
     )
+    print("setup plan:")
+    for command in _setup_plan(report):
+        print("  " + " ".join(command))
     print(f"  persist non-secret SI config: {config_path()}")
     if args.configure_opencode:
         print(f"  configure OpenCode provider: {_opencode_config_path()}")
@@ -243,6 +249,7 @@ def build_parser() -> argparse.ArgumentParser:
     setup.add_argument("--configure-opencode", action="store_true", help="add/update an OmniRoute provider in OpenCode JSON config")
     setup.add_argument("--opencode-url")
     setup.add_argument("--omniroute-url")
+    setup.add_argument("--model", help="explicit OmniRoute model ID for OpenCode configuration")
     setup.set_defaults(handler=cmd_setup)
 
     update = sub.add_parser("update", help="plan or apply package update")

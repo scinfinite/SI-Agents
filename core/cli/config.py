@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
@@ -18,6 +18,7 @@ class SIConfig:
     workspace: str | None = None
     opencode_url: str = "http://127.0.0.1:4096"
     omniroute_url: str = "http://127.0.0.1:20128"
+    omniroute_model: str | None = None
 
 
 def config_path(environ: dict[str, str] | None = None) -> Path:
@@ -37,7 +38,7 @@ def load_config(path: Path | None = None) -> SIConfig:
     payload: Any = json.loads(target.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError(f"invalid SI configuration: {target}")
-    allowed = {"environment", "workspace", "opencode_url", "omniroute_url"}
+    allowed = {"environment", "workspace", "opencode_url", "omniroute_url", "omniroute_model"}
     unknown = set(payload) - allowed
     if unknown:
         raise ValueError(f"unknown SI configuration keys: {', '.join(sorted(unknown))}")
