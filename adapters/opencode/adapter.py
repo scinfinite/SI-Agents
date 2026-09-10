@@ -18,12 +18,12 @@ from core.runtime.models import (
     InvocationResponse,
     InvocationStatus,
     RuntimeCapabilities,
-    RuntimeError as RuntimeFailure,
     RuntimeErrorCode,
     RuntimeEvent,
     RuntimeEventType,
     RuntimeKind,
 )
+from core.runtime.models import RuntimeError as RuntimeFailure
 from core.runtime.protocol import HarnessAdapter, HarnessMetadata
 
 from .config import OpenCodeConfig
@@ -113,7 +113,6 @@ class OpenCodeAdapter:
         with self._lock:
             session_id = self._sessions.get(request_id)
         if session_id is None:
-            # Accept a raw OpenCode session ID as a useful administrative fallback.
             session_id = request_id
         try:
             self._post(f"/session/{session_id}/abort", {})
@@ -170,7 +169,7 @@ class OpenCodeAdapter:
             return {}
         parsed = json.loads(raw)
         if not isinstance(parsed, dict):
-            raise ValueError("OpenCode response must be a JSON object")
+            raise TypeError("OpenCode response must be a JSON object")
         return parsed
 
 
