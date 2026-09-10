@@ -1,6 +1,7 @@
-"""Engineering memory primitives and controlled promotion."""
+"""Evidence-gated, scoped engineering memory and knowledge primitives."""
 
 from .models import (
+    KnowledgeEntry,
     MemoryEntry,
     MemoryEvidence,
     MemoryScope,
@@ -14,6 +15,7 @@ from .retrieval import MemoryRetriever
 from .store import MemoryStore
 
 __all__ = [
+    "KnowledgeEntry",
     "MemoryEntry",
     "MemoryEvidence",
     "MemoryPromoter",
