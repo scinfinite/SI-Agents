@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v1.0 track — Phases 1–11 complete and CI-verified. Phase 12 is next.**
+**Current status: v1.0 track — Phases 1–12 complete and CI-verified. Phase 13 is next.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -13,7 +13,7 @@
 9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies. **Complete.**
 10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health. **Complete.**
 11. Pattern Extraction — deterministic normalization, conservative extraction, independent validation, counterexamples, provenance, promotion, and matching. **Complete.**
-12. Engineering Memory — task/project/global memory with controlled promotion.
+12. Engineering Memory — task/project/global memory, evidence-gated promotion, scoped retrieval, lifecycle, supersession, and auditable persistence. **Complete.**
 13. Security + Legal + Cost — governance gates, free-first routing, data rights, security and compliance.
 14. Model/Provider Intelligence — capability, quota, cost, latency, reliability, fallback, circuit breakers.
 15. Automation — scheduled research, monitoring, maintenance, testing, and reporting.
@@ -25,7 +25,7 @@
 
 - **Alpha:** phases 0–5 — achieved
 - **Beta:** phases 6–9 — **complete**
-- **v1.0:** phases 10–13 — **Phases 10–11 complete; phases 12–13 remain**
+- **v1.0:** phases 10–13 — **Phases 10–12 complete; phase 13 remains**
 - **v1.5:** phases 14–15
 - **v2.0:** phases 16–18
 
@@ -33,10 +33,6 @@
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
 
-## Phase 10 completion
+## Phase 12 completion
 
-Phase 10 delivered a provenance-preserving open-source intelligence layer covering repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract. External repository content remains untrusted research input and is never treated as system policy. Unknown license/health signals remain explicitly uncertain. Final CI evidence is recorded in `docs/architecture/PHASE_10_OPEN_SOURCE_INTELLIGENCE.md` after the final workflow completes.
-
-## Phase 11 completion
-
-Phase 11 delivers deterministic normalization of engineering observations, conservative candidate extraction, independent verified-evidence validation, explicit counterexample handling, provenance retention, evidence-gated registry promotion/versioning, and context matching. A pattern match is a ranking signal, not proof. Promotion remains fail-closed until the documented evidence and confidence criteria pass. Final CI evidence is recorded by the repository workflow on the completed Phase 11 head.
+Phase 12 delivers task/project/global engineering memory with mandatory provenance, verified-evidence and confidence gates, fail-closed one-step promotion, deterministic scope-aware retrieval, expiration, explicit supersession/versioning, and dependency-free JSON persistence. Memory is data rather than policy and cannot override security, legal, cost, permission, or verification controls. Final CI evidence must verify the completed Phase 12 head before closure.
