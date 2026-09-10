@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
+from core.events.models import EventName
 from core.memory import (
     KnowledgeEntry,
     MemoryEntry,
@@ -12,6 +13,7 @@ from core.memory import (
     MemoryRegistry,
     MemoryRetriever,
     MemoryScope,
+    MemoryService,
     MemoryStatus,
     MemoryStore,
     MemoryType,
@@ -123,3 +125,17 @@ def test_store_rejects_unknown_schema(tmp_path) -> None:
     path.write_text('{"schema_version": 999}', encoding="utf-8")
     with pytest.raises(ValueError, match="Unsupported memory store schema"):
         MemoryStore(path).load()
+
+
+def test_memory_service_publishes_lifecycle_events() -> None:
+    from core.events.bus import EventBus
+
+    registry = MemoryRegistry()
+    bus = EventBus()
+    service = MemoryService(registry, events=bus)
+    entry = memory()
+    service.record(entry)
+    promoted = service.promote(entry.id, MemoryScope.PROJECT)
+    assert promoted.status is MemoryStatus.PROMOTED
+    journal = bus.store.list()
+    assert [event.name for event in journal] == [EventName.MEMORY_CREATED.value, EventName.MEMORY_PROMOTED.value]
