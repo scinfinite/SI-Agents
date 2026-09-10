@@ -46,7 +46,10 @@ def _tracked_artifacts(root: Path) -> list[str]:
         return []
     try:
         result = subprocess.run(
-            ("git", "-C", str(root), "ls-files", "--cached", "--", "*.pyc", "*.pyo", "**/__pycache__/**"),
+            (
+                "git", "-C", str(root), "ls-files", "--cached", "--",
+                "*.pyc", "*.pyo", "**/__pycache__/**",
+            ),
             check=True,
             capture_output=True,
             text=True,
@@ -70,11 +73,23 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
         "docs/architecture/PHASE_29.md",
     )
     missing = [item for item in required if not (root / item).is_file()]
-    checks.append(AuditCheck("required-files", not missing, "missing: " + ", ".join(missing) if missing else "all present"))
+    checks.append(
+        AuditCheck(
+            "required-files",
+            not missing,
+            "missing: " + ", ".join(missing) if missing else "all present",
+        )
+    )
 
     try:
         catalog = load_catalog(root / "config/agent-catalog.json")
-        checks.append(AuditCheck("agent-catalog", True, f"{len(catalog.all())} agents across {len(catalog.all_divisions())} divisions"))
+        checks.append(
+            AuditCheck(
+                "agent-catalog",
+                True,
+                f"{len(catalog.all())} agents across {len(catalog.all_divisions())} divisions",
+            )
+        )
     except (OSError, TypeError, ValueError) as exc:
         catalog = None
         checks.append(AuditCheck("agent-catalog", False, str(exc)))
@@ -82,13 +97,23 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     registry = PersonaRegistry()
     try:
         personas = registry.load_directory(root / "agents")
-        persona_errors = registry.validate_against_catalog(catalog) if catalog is not None else ("catalog unavailable",)
+        persona_errors = (
+            registry.validate_against_catalog(catalog)
+            if catalog is not None
+            else ("catalog unavailable",)
+        )
         detail = f"{len(personas)} personas"
         if persona_errors:
             detail += "; " + "; ".join(persona_errors[:5])
         checks.append(AuditCheck("persona-registry", not persona_errors, detail))
         if catalog is not None:
-            checks.append(AuditCheck("persona-count", len(personas) == len(catalog.all()), f"personas={len(personas)}, agents={len(catalog.all())}"))
+            checks.append(
+                AuditCheck(
+                    "persona-count",
+                    len(personas) == len(catalog.all()),
+                    f"personas={len(personas)}, agents={len(catalog.all())}",
+                )
+            )
     except (OSError, TypeError, ValueError) as exc:
         checks.append(AuditCheck("persona-registry", False, str(exc)))
 
@@ -106,7 +131,11 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     checks.append(AuditCheck("hidden-unicode", not hidden, "clean" if not hidden else ", ".join(hidden[:10])))
     checks.append(AuditCheck("external-branding", not branding, "clean" if not branding else ", ".join(branding[:10])))
 
-    transient = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_file() and path.name in TRANSIENT_NAMES]
+    transient = [
+        str(path.relative_to(root))
+        for path in root.rglob("*")
+        if path.is_file() and path.name in TRANSIENT_NAMES
+    ]
     compiled = _tracked_artifacts(root)
     checks.append(AuditCheck("temporary-artifacts", not transient, "clean" if not transient else ", ".join(transient)))
     checks.append(AuditCheck("compiled-artifacts", not compiled, "clean" if not compiled else ", ".join(compiled[:10])))
@@ -114,7 +143,13 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     try:
         pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
         ok = "**/*.md" in pyproject
-        checks.append(AuditCheck("persona-packaging", ok, "agents Markdown package data configured" if ok else "agents Markdown package data missing"))
+        checks.append(
+            AuditCheck(
+                "persona-packaging",
+                ok,
+                "agents Markdown package data configured" if ok else "agents Markdown package data missing",
+            )
+        )
     except OSError as exc:
         checks.append(AuditCheck("persona-packaging", False, str(exc)))
 
