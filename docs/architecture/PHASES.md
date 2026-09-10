@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–32 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–32 complete and CI-verified; Phase 33 implementation complete pending final mainline verification.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -38,6 +38,7 @@
 30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation, dependency-aware composition, manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, and safety boundaries.
 31. Rules, Hooks & Event System — **Complete and CI-verified.** Immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation.
 32. Memory & Knowledge — **Complete and CI-verified.** Immutable scoped Memory, verified source-backed Knowledge, provenance/evidence contracts, fail-closed promotion, explicit supersession/contradiction tracking, deterministic context-aware retrieval, atomic schema-versioned persistence, lifecycle event integration, and targeted regression coverage.
+33. Security & Governance Center — **Implementation complete; final mainline CI verification pending.** Typed governance objects, fail-closed capability/permission decisions, approval expiry handling, declarative governance catalog, packaged governance configuration, deterministic read-only security scanner, audit-safe decision records, and adversarial regression coverage.
 
 ## Release targets
 
@@ -58,7 +59,11 @@ Phase 31 was merged to `main` as commit `32db86c560053e831b0740c5614d63bf64d3ce6
 
 ## Phase 32 verification record
 
-Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution build, wheel installation verification, and the full pytest suite (**392 passed in 5.95s**). After merge, mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`; mainline pytest reported **392 passed in 5.47s**.
+Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution build, wheel installation verification, and the full pytest suite (**392 passed in 5.95s**). After merge, mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`; mainline pytest reported **392 passed in 5.47s**. The subsequent documentation/naming merge is at `c1937c70348e7b308c8274d2e3ce71cb9a07f0d8`, and mainline CI run **#777** passed all build, audit, Ruff, and test steps on that exact merge commit.
+
+## Phase 33 verification record
+
+Phase 33 implementation is on branch `phase-33-security-governance`. Final feature-branch and mainline CI results will be recorded here only after the implementation PR is merged and the exact resulting `main` commit receives a green CI run.
 
 ## Documentation structure
 
@@ -66,7 +71,8 @@ Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distr
 - `PHASE_29_AGENT_PERSONA.md` — canonical persona/parity/provenance/security/packaging record.
 - `PHASE_30_PORTABLE_SKILLS.md` — canonical portable Skill record.
 - `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events record.
-- `PHASE_32.md` — canonical Memory/Knowledge contract and final verification record.
+- `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
+- `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
