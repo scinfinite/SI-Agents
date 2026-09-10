@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from time import monotonic
 
 from core.events.models import Event
-from core.hooks.models import Hook, HookDecision, HookPhase
+from core.hooks.models import HookDecision, HookPhase
 from core.hooks.registry import HookRegistry
 
 
