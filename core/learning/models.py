@@ -63,16 +63,25 @@ class ImprovementProposal:
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def __post_init__(self) -> None:
-        for value, label in ((self.target, "target"), (self.summary, "summary"),
-                             (self.rationale, "rationale"), (self.change_ref, "change_ref")):
+        required = (
+            (self.target, "target"),
+            (self.summary, "summary"),
+            (self.rationale, "rationale"),
+            (self.change_ref, "change_ref"),
+        )
+        for value, label in required:
             if not value.strip():
                 raise ValueError(f"Proposal {label} must not be empty")
         if self.version < 1:
             raise ValueError("Proposal version must be positive")
         if not self.evidence:
             raise ValueError("Improvement proposal requires evidence")
-        if self.status in (ImprovementStatus.EVALUATED, ImprovementStatus.APPROVED,
-                            ImprovementStatus.APPLIED) and self.evaluation is None:
+        evaluated_states = {
+            ImprovementStatus.EVALUATED,
+            ImprovementStatus.APPROVED,
+            ImprovementStatus.APPLIED,
+        }
+        if self.status in evaluated_states and self.evaluation is None:
             raise ValueError("Evaluated, approved, and applied proposals require evaluation")
 
     @property
