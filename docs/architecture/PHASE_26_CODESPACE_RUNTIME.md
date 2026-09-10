@@ -1,8 +1,6 @@
 # Phase 26 — GitHub Codespaces Runtime
 
-## Status
-
-**Complete and CI-verified.**
+**Status: Complete and CI-verified.**
 
 ## Objective
 
@@ -10,51 +8,27 @@ Make SI-Agents inspectable and operationally ready inside GitHub Codespaces whil
 
 ## Contract
 
-`core/environments/codespace.py` provides `CodespaceRuntime` and `CodespaceConfig`.
+`core/environments/codespace.py` provides `CodespaceRuntime` and `CodespaceConfig`. The runtime detects Codespaces, validates Python/Git/curl/OpenSSH/workspace/OpenCode by default, and can optionally require OmniRoute health. GitHub CLI, Node, and npm are optional unless explicitly required.
 
-The runtime detects Codespaces using the `CODESPACES=true` marker or the Codespaces port-forwarding domain. It validates Python, Git, curl, OpenSSH, the Codespace workspace, and OpenCode by default. GitHub CLI, Node, and npm are optional unless explicitly required by configuration.
-
-The runtime can optionally require OmniRoute health. When required, failure to configure or health-check OmniRoute degrades readiness rather than silently proceeding.
-
-Reports reuse the vendor-neutral environment contracts from `core/environments/models.py`. JSON output contains readiness metadata only; API-key values are never emitted.
-
-The runtime exposes a deterministic, read-only toolchain plan and workspace validation helper. Neither executes commands, installs packages, mutates OpenCode configuration, persists credentials, or bypasses Phase 13 governance.
+Reports contain readiness metadata only; API-key values are never emitted. Toolchain planning and workspace validation are read-only and do not execute commands, install packages, mutate OpenCode configuration, persist credentials, or bypass governance.
 
 ## CLI
 
-Human-readable:
-
 ```bash
 python -m core.environments.codespace
-```
-
-Machine-readable:
-
-```bash
 python -m core.environments.codespace --json
 ```
 
-Exit codes:
-
-- `0` — ready
-- `2` — degraded
-- `3` — unsupported
+Exit codes: `0` ready, `2` degraded, `3` unsupported.
 
 ## Boundaries
 
-Phase 26 does not claim:
-
-- automatic Codespace creation or lifecycle management;
-- automatic package installation;
-- automatic OpenCode installation or configuration;
-- credential provisioning or persistence;
-- model/provider routing outside OmniRoute;
-- arbitrary shell-command execution;
-- cross-environment state synchronization;
-- the `si` CLI.
-
-Those concerns remain in later phases or deployment infrastructure.
+Phase 26 does not itself create Codespaces, install packages, provision credentials, execute arbitrary shell commands, synchronize cross-environment state, or implement the `si` CLI. Those were deliberately delegated to later layers.
 
 ## Verification
 
-The phase acceptance suite covers Codespaces detection, unsupported environments, missing OpenCode degradation, ready-state dependency checks, optional GitHub CLI requirements, non-executing toolchain planning, workspace validation, and secret-free reporting. CI must verify distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite before completion is claimed.
+The phase acceptance suite covers Codespaces detection, unsupported environments, missing OpenCode degradation, ready-state dependency checks, optional GitHub CLI requirements, non-executing toolchain planning, workspace validation, and secret-free reporting. Distribution build, isolated wheel installation, Ruff, and the complete pytest suite are part of the completion gate.
+
+## Current-state addendum
+
+Later Phase 27 introduced the governed `si` CLI/setup layer and Phase 28 introduced explicit portable handoff. Phase 29 introduced agent personas. Those later capabilities surround, rather than replace, the Codespaces readiness contract. Current status is Phase 29 complete; Phase 30 is next.
