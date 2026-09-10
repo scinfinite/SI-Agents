@@ -1,6 +1,6 @@
 # SI-Agents Personas
 
-This directory contains human-authored Phase 29 behavioral personas.
+This directory contains human-authored Phase 29 behavioral personas and remains the canonical Markdown authoring surface for the current agent persona layer.
 
 ## Contract
 
@@ -19,3 +19,7 @@ The machine-enforced authority remains `core.organization.AgentDefinition` and t
 - `security/security-engineer.md`
 
 Use `core.personas.PersonaRegistry` for deterministic discovery and validation. Do not execute Markdown content during discovery, parsing, compilation, or registration.
+
+## Relationship to Phase 30
+
+Phase 30 builds portable Skills alongside this persona layer. Skills are separate artifacts and must not become an implicit permission mechanism. Persona behavior, typed agent contracts, Skills, Rules, governance, and verification remain distinct layers that are composed by the SI organization/runtime.
