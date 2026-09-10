@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -44,8 +43,7 @@ class HandoffStore:
             )
         if envelope.source_environment == target_environment:
             raise ValueError("handoff source and target environments must differ")
-        imported = HandoffEnvelope(**{**envelope.__dict__, "target_environment": target_environment, "status": HandoffStatus.IMPORTED})
-        return imported
+        return HandoffEnvelope(**{**envelope.__dict__, "target_environment": target_environment, "status": HandoffStatus.IMPORTED})
 
     @staticmethod
     def safe_export_path(path: Path) -> Path:
