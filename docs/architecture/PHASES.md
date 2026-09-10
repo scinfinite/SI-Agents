@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–21 implemented; Phase 21 awaits final CI verification.**
+**Current status: v2.0 baseline plus Phases 19–21 complete and CI-verified.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -22,7 +22,7 @@
 18. Production Hardening — deterministic readiness, explicit resource limits, telemetry redaction, evidence-based release gates, migration/rollback requirements, and CI hardening. **Complete.**
 19. v2.0 Reality Audit — executable baseline audit, runtime E2E acceptance, distribution correctness, isolated wheel verification, documentation/roadmap consistency, and evidence-backed future-boundary definition. **Complete.**
 20. Agent Organization & Catalog — canonical divisions, typed agent definitions, declarative selection, lifecycle status, implementation references, and organization validation. **Complete.**
-21. Agent Teams & Workflows — canonical teams, dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Implemented; final CI pending.**
+21. Agent Teams & Workflows — canonical teams, dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Complete.**
 
 ## Release targets
 
@@ -33,7 +33,7 @@
 - **v2.0:** phases 16–18 — **complete**
 - **Post-v2 validation:** Phase 19 — **complete**
 - **Post-v2 organization:** Phase 20 — **complete**
-- **Post-v2 orchestration:** Phase 21 — **implemented; final CI pending**
+- **Post-v2 orchestration:** Phase 21 — **complete**
 
 ## Verification rule
 
@@ -49,7 +49,7 @@ Team membership does not grant permissions or governance authority. Workers are 
 
 The canonical `engineering-repair` workflow models debugger → developer → tester sequencing with evidence and verification gates. The acceptance suite covers dependency handoff, shared/isolated context, bounded parallelism, retry, escalation, verification/evidence gates, blocked downstream work, cancellation, cycle rejection, duplicate team rejection, and canonical catalog loading.
 
-Verification evidence: final completion requires a successful main CI run covering distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite. Phase 21 is not declared complete until that run passes.
+Final verification evidence: CI run **#450** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite, with **284 tests passing**. The final completion fixes included enforcing isolated-context non-publication and keeping verification gates active during escalation.
 
 Phase 21 intentionally does **not** claim external harness adapters, OpenCode/OmniRoute integration, Claude Code/Codex/Cline/Antigravity adapters, Termux/Codespace installers, model/quota routing, automatic persona generation, self-modifying promotion, or forced termination of arbitrary workers. Those remain later phases or deployment responsibilities. The detailed contract is documented in `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md`.
 
