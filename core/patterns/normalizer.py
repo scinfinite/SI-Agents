@@ -14,7 +14,7 @@ class PatternNormalizer:
     def normalize_text(cls, value: str) -> str:
         normalized = unicodedata.normalize("NFKC", value).lower().strip()
         normalized = cls._punctuation.sub(" ", normalized)
-        return cls._space.sub(" ", normalized)
+        return cls._space.sub(" ", normalized).strip()
 
     @classmethod
     def normalize_tags(cls, tags: tuple[str, ...]) -> tuple[str, ...]:
