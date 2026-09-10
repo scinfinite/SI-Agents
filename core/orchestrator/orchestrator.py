@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +13,9 @@ from core.orchestrator.context_manager import ContextManager
 from core.orchestrator.task_manager import TaskManager
 from core.policies.approval_engine import ApprovalEngine
 from core.policies.permission_engine import PermissionEngine
+from core.skills.executor import SkillExecutor
+from core.skills.models import Skill, SkillResult
+from core.skills.registry import SkillRegistry
 from core.state.checkpoints import Checkpoint, CheckpointStore
 from core.state.execution_state import ExecutionState
 from core.state.execution_state_store import ExecutionStateStore
@@ -25,7 +28,7 @@ from tools.registry.registry import ToolDescriptor, ToolRegistry
 
 
 class Orchestrator:
-    """Control-plane entry point coordinating tasks, capabilities, tools, and evidence."""
+    """Control-plane entry point coordinating tasks, capabilities, tools, skills, and evidence."""
 
     def __init__(
         self,
@@ -42,6 +45,8 @@ class Orchestrator:
         execution_state_store: ExecutionStateStore | None = None,
         tool_registry: ToolRegistry | None = None,
         tool_executor: ToolExecutor | None = None,
+        skill_registry: SkillRegistry | None = None,
+        skill_executor: SkillExecutor | None = None,
     ) -> None:
         self.tasks = task_manager or TaskManager()
         self.checkpoints = checkpoint_store or CheckpointStore()
@@ -58,6 +63,10 @@ class Orchestrator:
         self.execution_states = execution_state_store or ExecutionStateStore()
         self.tools = tool_registry or ToolRegistry()
         self.tool_executor = tool_executor or ToolExecutor(self.tools, permissions=self.permissions)
+        self.skills = skill_registry or SkillRegistry()
+        self.skill_executor = skill_executor or SkillExecutor(
+            self.skills, self.permissions, self.evidence
+        )
 
     def run(self, description: str, worker: Callable[[str], str]) -> str:
         task = self.tasks.create(description)
@@ -99,12 +108,45 @@ class Orchestrator:
         **kwargs: Any,
     ) -> Any:
         return self.tool_executor.invoke(
-            tool_id,
-            operation,
-            *args,
+            tool_id, operation, *args, agent=agent, approval_granted=approval_granted, **kwargs
+        )
+
+    def register_skill(self, skill: Skill) -> Skill:
+        """Register a reusable skill; registration never grants execution permission."""
+        return self.skills.register(skill)
+
+    def select_skills(
+        self,
+        *,
+        category: str | None = None,
+        required_tools: tuple[str, ...] = (),
+        required_permissions: tuple[str, ...] = (),
+        validated_only: bool = True,
+    ) -> tuple[Skill, ...]:
+        return self.skills.select(
+            category=category,
+            required_tools=required_tools,
+            required_permissions=required_permissions,
+            validated_only=validated_only,
+        )
+
+    def execute_skill(
+        self,
+        skill_id: str,
+        handler: Callable[[Mapping[str, object]], Mapping[str, object]],
+        inputs: Mapping[str, object],
+        *,
+        agent: str | None = None,
+        approval_granted: bool = False,
+        verifier: Callable[[Mapping[str, object]], bool] | None = None,
+    ) -> SkillResult:
+        return self.skill_executor.execute(
+            skill_id,
+            handler,
+            inputs,
             agent=agent,
             approval_granted=approval_granted,
-            **kwargs,
+            verifier=verifier,
         )
 
     def select_capabilities(
@@ -165,10 +207,7 @@ class Orchestrator:
         if task.status.value != "running":
             raise ValueError(f"Cannot execute command for task in state {task.status.value}")
         self.permissions.require(
-            "local_command",
-            approval_granted=approval_granted,
-            agent=agent,
-            tool=tool,
+            "local_command", approval_granted=approval_granted, agent=agent, tool=tool
         )
         state = ExecutionState(task_id=task_id)
         self.execution_states.record(state)
