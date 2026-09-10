@@ -8,3 +8,7 @@ cost_policy:
     - lowest_cost_suitable_provider
   prohibit_silent_paid_usage: true
   record_estimated_cost: true
+  reject_negative_cost_estimates: true
+  budget:
+    unspecified_paid_budget: deny
+    require_cost_estimate_before_paid_action: true
