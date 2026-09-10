@@ -76,22 +76,28 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             "/api/v1/settings": self.service.settings(), "/api/v1/visualization": self.service.visualization(),
             "/api/v1/events": self.service.events(), "/api/v1/runs": self.service.runs(),
         }
+        if path in routes:
+            self._send(200, routes[path])
+            return
         if path.startswith("/api/v1/evidence/"):
             evidence_id = path.removeprefix("/api/v1/evidence/")
             if evidence_id.endswith("/verify"):
-                raise KeyError(path)
-            return self._send(200, self.evidence.get(evidence_id))
+                self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
+                return
+            try:
+                self._send(200, self.evidence.get(evidence_id))
+            except KeyError:
+                self._send(404, {"error": "not_found", "message": "evidence not found", "request_id": self._request_id()})
+            return
         if path.startswith("/api/v1/runs/"):
             suffix = path.removeprefix("/api/v1/runs/")
             if suffix.endswith("/timeline"):
-                return self._send(200, self.evidence.timeline(suffix.removesuffix("/timeline")))
+                self._send(200, self.evidence.timeline(suffix.removesuffix("/timeline")))
+                return
             try:
                 self._send(200, self.service.get_run(suffix))
             except KeyError:
                 self._send(404, {"error": "not_found", "message": "run not found", "request_id": self._request_id()})
-            return
-        if path in routes:
-            self._send(200, routes[path])
             return
         self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
 
