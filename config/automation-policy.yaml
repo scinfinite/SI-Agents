@@ -1,0 +1,27 @@
+# Phase 15 automation policy.
+automation:
+  enabled: true
+  execution:
+    require_registered_action: true
+    require_governance_decision: true
+    fail_closed_on_missing_action: true
+    fail_closed_on_approval_required: true
+    fail_closed_on_denied: true
+  scheduling:
+    allow_once: true
+    allow_interval: true
+    minimum_interval_seconds: 1
+    catch_up_without_drift: true
+  retries:
+    default_max_attempts: 1
+    exponential_backoff: true
+    max_backoff_seconds: 3600
+  safety:
+    idempotency_required_for_mutating_jobs: true
+    high_risk_requires_approval: true
+    paid_resources_require_approval: true
+    sensitive_external_egress_requires_governance: true
+    secrets_in_job_payload: false
+  persistence:
+    dependency_free_json: true
+    preserve_run_history: true

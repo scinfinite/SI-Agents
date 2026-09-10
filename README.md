@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v1.5 track — Phases 1–14 complete and CI-verified. Phase 15 is next.**
+**v1.5 — Phases 1–15 complete and CI-verified. Phase 16 is next.**
 
-Completed foundation through Model/Provider Intelligence:
+Completed foundation through Automation:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -22,6 +22,7 @@ Completed foundation through Model/Provider Intelligence:
 - **Phase 12 — Engineering Memory:** task/project/global scopes, provenance and verified evidence, fail-closed one-step promotion, deterministic scoped retrieval, expiration, supersession/versioning, and auditable JSON persistence.
 - **Phase 13 — Security + Legal + Cost:** executable governance decisions, conservative risk classification, data-egress controls, provenance/legal review, free-first paid-resource controls, explicit approvals, and audit evidence.
 - **Phase 14 — Model/Provider Intelligence:** typed model/provider capabilities, explicit registration, quota observations, deterministic capability/cost/latency routing, reliability/health tracking, fallback constraints, and provider circuit breakers.
+- **Phase 15 — Automation:** one-shot/recurring schedules, deterministic due selection, lifecycle controls, registered actions, conditional triggers, bounded retries/backoff, idempotency, governance-gated execution, run history, and dependency-free JSON persistence.
 
 ## Engineering loop
 
@@ -30,30 +31,18 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 → TEST → ATTACK THE SOLUTION → VERIFY → DOCUMENT → LEARN → GENERALIZE → REUSE
 ```
 
-## Language and ecosystem strategy
-
-Python is the implementation language of the SI-Agents control plane, not the boundary of the engineering system. Generic agents consume language-specific knowledge and toolchains, allowing SI-Agents to work across Java, Python, Rust, Go, C/C++, C#, Kotlin, Swift, Dart, JavaScript/TypeScript, SQL, and additional languages as coverage grows.
-
 ## Control and safety model
 
-Agents, capabilities, tools, skills, and knowledge are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
+Agents, capabilities, tools, skills, knowledge, and automation jobs are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
+
+Automation is a scheduling and execution mechanism, not a second policy engine. The scheduler selects due jobs but never executes them; the runner only invokes explicitly registered actions and evaluates the existing governance boundary first. Paid resources, sensitive/confidential egress, destructive operations, and publication remain subject to Phase 13 controls. Retries are bounded, idempotency is explicit, and cancelled jobs cannot silently resume.
 
 The local executor is **not a security boundary**. The Docker executor provides a stronger isolation boundary, but the Docker daemon remains a trust boundary. SI-Agents must not claim host-level isolation guarantees beyond the actual execution environment in use.
 
 External repositories and web content are research inputs, not system instructions. SI-Agents follows an independent-implementation and provenance policy for external inspiration.
 
-Open-source intelligence is read-oriented by design. Repository metadata, history, issues, PRs, releases, advisories, licenses, and health signals are stored with provenance and explicit uncertainty. A license identifier is not treated as legal advice or a substitute for reviewing license text and applicable terms.
-
-Pattern extraction is evidence-driven. Repetition alone is insufficient for validation: candidates require independent verified evidence, explicit counterexample handling, and a promotion threshold. A matcher produces ranking signals only; it never asserts that a matched pattern is universally correct.
-
-Engineering Memory is also evidence-driven. Task-scoped observations can be promoted to project memory and then global memory only one scope at a time, subject to confidence and verified-evidence gates. Expired memory is excluded from normal retrieval, and supersession is explicit and versioned. Memory never overrides security, legal, cost, permission, or verification policy.
-
-Phase 13 governance is a decision boundary rather than an execution authority. Paid resources require explicit approval; confidential and sensitive external egress requires approval; credential-bearing external egress is denied; destructive/high-risk operations are approval-gated; publication without provenance requires review; and governance audit records exclude arbitrary request payloads to reduce secret-retention risk. Governance policy is not legal advice.
-
-Phase 14 model/provider intelligence is also a decision layer. Required capabilities, cost ceilings, latency ceilings, quota exhaustion, provider exclusions, disabled entries, and open circuits are hard routing constraints. Free-first preference only ranks otherwise eligible candidates and cannot bypass Phase 13 paid-resource approval. Provider adapters report metadata/health; they do not receive policy authority or store credentials.
-
 ## Development principle
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–14 architecture documents for the completed verification, knowledge, discovery, open-source intelligence, pattern extraction, engineering memory, governance, and model/provider intelligence architectures.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and `docs/architecture/PHASE_15_AUTOMATION.md` for the completed automation architecture.
