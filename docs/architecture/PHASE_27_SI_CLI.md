@@ -1,6 +1,6 @@
 # Phase 27 — `si` CLI + Easy Setup
 
-**Status: implementation complete; final post-enhancement CI verification is queued.**
+**Status: complete and CI-verified.**
 
 ## Objective
 
@@ -70,19 +70,16 @@ Current OpenCode configuration supports an OpenAI-compatible provider with `prov
 
 ## Verification evidence
 
-The core Phase 27 acceptance was verified by PR #14 CI run **#499**:
+Final post-enhancement mainline CI run **#509** passed:
 
-1. The built wheel exposed the `si` console entry point.
-2. The isolated wheel imported the core packages and executed `si agents` and `si teams`, proving canonical catalogs are available after installation.
-3. CLI unit tests covered all commands, non-secret configuration persistence, restrictive configuration permissions, and canonical catalog discovery.
-4. Ruff passed.
-5. The complete pytest suite passed with **330 tests**.
+1. Distribution build completed successfully.
+2. The isolated wheel installed successfully and the installed `si agents` / `si teams` commands loaded packaged canonical catalogs.
+3. Ruff passed.
+4. The complete pytest suite passed with **331 tests**.
 
-Two earlier failures were corrected rather than suppressed: CI #495 exposed an invalid exception type under Ruff; CI #497 exposed an incomplete CLI parser test. The corrected CI #499 run passed all build, wheel, lint, and test gates.
+Earlier failures were corrected rather than suppressed: CI #495 exposed an invalid exception type under Ruff; CI #497 exposed incomplete CLI parser coverage; CI #505 exposed a test monkeypatch defect in the new OpenCode installer regression test. The corrected final run #509 passed all gates.
 
-After that verification, the setup layer was strengthened with explicit `--install-opencode` support and its regression test. CI #505 caught a test monkeypatch defect in that new regression test; the test was corrected in commit `e95bb8b6cda8f60446c3c3b1034c3f925f46e891`. The resulting CI run #506 is queued for final verification.
-
-The PR was merged as commit **7308549553e9cc15f3d393b283974a26c9425a73**. README and the phase roadmap were synchronized to the verified core state; this document records the post-verification installer enhancement separately so status never outruns CI.
+The Phase 27 PR was merged as commit **7308549553e9cc15f3d393b283974a26c9425a73**. README and the phase roadmap are synchronized with the verified implementation.
 
 ## Deliberate non-goals
 
