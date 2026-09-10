@@ -1,6 +1,8 @@
 name: Cleanup tracked Python artifacts
 
 on:
+  push:
+    branches: [pre-phase-30-audit-cli]
   workflow_dispatch:
 
 permissions:
