@@ -17,7 +17,7 @@ class AgentCatalogTests(unittest.TestCase):
         catalog = load_catalog(CATALOG)
 
         self.assertEqual(len(catalog.all_divisions()), 7)
-        self.assertEqual(len(catalog.all()), 12)
+        self.assertEqual(len(catalog.all()), 13)
         self.assertEqual(catalog.validate(), ())
         self.assertIs(catalog.get("developer").status, AgentStatus.IMPLEMENTED)
         self.assertEqual(catalog.get("developer").implementation, "agents.developer.DeveloperAgent")
