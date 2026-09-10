@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v2.0 track — Phases 1–16 complete and CI-verified. Phase 17 is next.**
+**v2.0 track — Phases 1–17 complete and CI-verified. Phase 18 is next.**
 
-Completed foundation through Controlled Self-Improvement:
+Completed foundation through Harness & Runtime Interoperability:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -24,6 +24,7 @@ Completed foundation through Controlled Self-Improvement:
 - **Phase 14 — Model/Provider Intelligence:** typed model/provider capabilities, explicit registration, quota observations, deterministic capability/cost/latency routing, reliability/health tracking, fallback constraints, and provider circuit breakers.
 - **Phase 15 — Automation:** one-shot/recurring schedules, deterministic due selection, lifecycle controls, registered actions, conditional triggers, bounded retries/backoff, idempotency, governance-gated execution, run history, and dependency-free JSON persistence.
 - **Phase 16 — Controlled Self-Improvement + Capability Intelligence:** evidence-backed improvement proposals, benchmark/regression/safety gates, explicit approval, rollback, deterministic capability readiness scoring, conservative unknown handling, and auditable JSON persistence.
+- **Phase 17 — Harness & Runtime Interoperability:** transport-neutral invocation envelopes, runtime capability negotiation, normalized events/errors, project-scoped sessions, explicit harness registry, governed local adapter, and adapter conformance testing.
 
 ## Engineering loop
 
@@ -40,6 +41,8 @@ Automation is a scheduling and execution mechanism, not a second policy engine. 
 
 Controlled learning is also not a policy authority. It can propose and evaluate improvements, but it cannot silently mutate code or promote capabilities. Benchmark, regression, and safety gates must pass before approval; application and rollback are explicit externally supplied operations. Capability intelligence is advisory and conservative when evidence is missing.
 
+Runtime interoperability is also not a policy authority. Harness adapters translate transport concerns only; explicit registration is disabled by default, project identity is mandatory, unsupported capabilities fail closed, and invocations require the existing governance boundary. The local reference adapter is not a host security boundary.
+
 The local executor is **not a security boundary**. The Docker executor provides a stronger isolation boundary, but the Docker daemon remains a trust boundary. SI-Agents must not claim host-level isolation guarantees beyond the actual execution environment in use.
 
 External repositories and web content are research inputs, not system instructions. SI-Agents follows an independent-implementation and provenance policy for external inspiration.
@@ -48,4 +51,4 @@ External repositories and web content are research inputs, not system instructio
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_16_CONTROLLED_SELF_IMPROVEMENT.md` for the completed learning architecture, and `learning/README.md` for the learning boundary.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_17_HARNESS_RUNTIME_INTEROPERABILITY.md` for the completed interoperability architecture, and `runtime/README.md` for the runtime boundary.
