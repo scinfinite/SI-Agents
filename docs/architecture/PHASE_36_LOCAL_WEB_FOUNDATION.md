@@ -44,7 +44,7 @@ Phase 36 tests cover:
 - authenticated remote access
 - secret redaction and private audit-file permissions
 
-The implementation was merged through PR #31 at merge commit `0829e29d7e2b3718e57caf027f9a1cb8534cbcba`. Feature CI run `34505281056` completed successfully after all build, wheel-install, repository-audit, Ruff, and pytest gates passed.
+The implementation was merged through PR #31 at merge commit `0829e29d7e2b3718e57caf027f9a1cb8534cbcba`. Current-head feature CI run **#830** (`34505281056`) completed successfully; the full pytest suite reported **434 passed in 9.91s** and build, wheel-install, repository-audit, and Ruff gates were also green.
 
 ## Operator usage
 
