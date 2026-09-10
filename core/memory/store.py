@@ -37,7 +37,7 @@ class MemoryStore:
             return registry
         payload = json.loads(self.path.read_text(encoding="utf-8"))
         if not isinstance(payload, list):
-            raise ValueError("Memory store must contain a JSON list")
+            raise TypeError("Memory store must contain a JSON list")
         for raw in payload:
             evidence = tuple(MemoryEvidence(**item) for item in raw.pop("evidence", []))
             raw["evidence"] = evidence
