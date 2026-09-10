@@ -3,7 +3,12 @@ from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 
-from core.learning.models import EvidenceItem, EvaluationResult, ImprovementProposal, ImprovementStatus
+from core.learning.models import (
+    EvaluationResult,
+    EvidenceItem,
+    ImprovementProposal,
+    ImprovementStatus,
+)
 
 
 def _encode(value: object) -> object:
@@ -28,7 +33,8 @@ class ImprovementStore:
     """Dependency-free JSON persistence for auditable improvement proposals."""
 
     def save(self, path: str | Path, proposals: tuple[ImprovementProposal, ...]) -> None:
-        Path(path).write_text(json.dumps(_encode([asdict(item) for item in proposals]), indent=2), encoding="utf-8")
+        payload = _encode([asdict(item) for item in proposals])
+        Path(path).write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def load(self, path: str | Path) -> tuple[ImprovementProposal, ...]:
         data = json.loads(Path(path).read_text(encoding="utf-8"))
