@@ -10,6 +10,7 @@ from pathlib import Path
 from threading import Event, Thread
 from urllib.parse import urlparse
 
+from core.agent_builder.service import AgentBuilderService
 from core.control_api.openapi import document
 from core.control_api.service import ControlApiService
 
@@ -112,11 +113,20 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             "/api/v1/visualization": service.visualization(),
             "/api/v1/events": service.events(),
             "/api/v1/runs": service.runs(),
+            "/api/v1/agent-builder": self.web_server.builder.list(),
         }
         if path == "/api/v1/control-center":
             return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(),
                     "environments": service.environments(), "harnesses": service.harnesses(),
-                    "evidence": service.evidence(), "visualization": service.visualization()}
+                    "evidence": service.evidence(), "visualization": service.visualization(),
+                    "agent_builder": self.web_server.builder.list()}
+        if path.startswith("/api/v1/agent-builder/drafts/"):
+            draft_id = path.removeprefix("/api/v1/agent-builder/drafts/")
+            if draft_id.endswith("/test"):
+                return self.web_server.builder.test(draft_id.removesuffix("/test")).__dict__
+            return self.web_server.builder.get(draft_id)
+        if path.startswith("/api/v1/agent-builder/from/"):
+            return self.web_server.builder.from_agent(path.removeprefix("/api/v1/agent-builder/from/"))
         if path in routes:
             return routes[path]
         if path.startswith("/api/v1/runs/"):
@@ -177,27 +187,50 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             self._audit(401)
             return
         path = urlparse(self.path).path.rstrip("/")
-        if path != "/api/v1/runs":
+        try:
+            payload = self._read_json()
+            if path == "/api/v1/runs":
+                result = self.web_server.service.create_run(payload)
+                self._send(202, result)
+                self._audit(202, {"mutation": "run_create", "decision": "accepted", "run_id": result.get("id")})
+                return
+            if path == "/api/v1/agent-builder/validate":
+                result = self.web_server.builder.validate_payload(payload)
+                self._send(200, {"valid": result.valid, "errors": list(result.errors), "warnings": list(result.warnings), "agent": result.agent, "markdown": result.markdown})
+                self._audit(200, {"mutation": "agent_builder_validate", "valid": result.valid})
+                return
+            if path == "/api/v1/agent-builder/drafts":
+                result = self.web_server.builder.save(payload)
+                self._send(201, result)
+                self._audit(201, {"mutation": "agent_builder_save", "draft_id": result.get("id")})
+                return
+            if path.startswith("/api/v1/agent-builder/drafts/") and path.endswith("/archive"):
+                draft_id = path.removeprefix("/api/v1/agent-builder/drafts/").removesuffix("/archive")
+                result = self.web_server.builder.archive(draft_id)
+                self._send(200, result)
+                self._audit(200, {"mutation": "agent_builder_archive", "draft_id": draft_id})
+                return
+            if path.startswith("/api/v1/agent-builder/drafts/") and path.endswith("/test"):
+                draft_id = path.removeprefix("/api/v1/agent-builder/drafts/").removesuffix("/test")
+                result = self.web_server.builder.test(draft_id)
+                self._send(200, {"valid": result.valid, "errors": list(result.errors), "warnings": list(result.warnings), "agent": result.agent, "markdown": result.markdown})
+                self._audit(200, {"mutation": "agent_builder_test", "draft_id": draft_id, "valid": result.valid})
+                return
             self._error(404, "not_found")
             self._audit(404)
             return
-        try:
-            payload = self._read_json()
-            result = self.web_server.service.create_run(payload)
         except PermissionError:
             self._error(403, "governance_denied")
-            self._audit(403, {"mutation": "run_create", "decision": "denied"})
-            return
+            self._audit(403)
+        except KeyError:
+            self._error(404, "not_found")
+            self._audit(404)
         except (TypeError, ValueError, UnicodeDecodeError):
             self._error(400, "invalid_request")
-            self._audit(400, {"mutation": "run_create", "decision": "invalid"})
-            return
+            self._audit(400, {"mutation": "agent_builder", "decision": "invalid"})
         except Exception:
             self._error(500, "internal_error")
-            self._audit(500, {"mutation": "run_create", "decision": "error"})
-            return
-        self._send(202, result)
-        self._audit(202, {"mutation": "run_create", "decision": "accepted", "run_id": result.get("id")})
+            self._audit(500, {"mutation": "agent_builder", "decision": "error"})
 
     def log_message(self, format: str, *args: object) -> None:
         return
@@ -214,6 +247,7 @@ class WebServer(ThreadingHTTPServer):
         super().__init__((config.host, config.port), WebRequestHandler)
         self.config = config
         self.service = service
+        self.builder = AgentBuilderService(service.root)
         self.audit = audit
 
 
