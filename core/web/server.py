@@ -95,6 +95,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
     def _api_get(self, path: str) -> object:
         service = self.web_server.service
         routes: dict[str, object] = {
+            "/api/v1": service.snapshot().as_dict(),
             "/api/v1/health": {"status": "ok", "api_version": "v1"},
             "/api/v1/openapi.json": document(),
             "/api/v1/agents": service.agents(),
@@ -104,9 +105,17 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             "/api/v1/skills": service.skills(),
             "/api/v1/memory": service.memory(),
             "/api/v1/governance": service.governance_state(),
+            "/api/v1/evidence": service.evidence(),
+            "/api/v1/environments": service.environments(),
+            "/api/v1/harnesses": service.harnesses(),
+            "/api/v1/settings": service.settings(),
             "/api/v1/events": service.events(),
             "/api/v1/runs": service.runs(),
         }
+        if path == "/api/v1/control-center":
+            return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(),
+                    "environments": service.environments(), "harnesses": service.harnesses(),
+                    "evidence": service.evidence()}
         if path in routes:
             return routes[path]
         if path.startswith("/api/v1/runs/"):
