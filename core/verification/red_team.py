@@ -50,7 +50,7 @@ class RedTeamSuite:
         for challenge in self._challenges:
             try:
                 flaw_found = bool(challenge.attack())
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - attack failures are flaws.
                 results.append(
                     RedTeamResult(
                         challenge.id,
