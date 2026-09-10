@@ -7,25 +7,40 @@ from core.capabilities.registry import CapabilityRegistry
 from core.learning.engine import ImprovementEngine
 from core.learning.evaluator import ImprovementEvaluator
 from core.learning.intelligence import CapabilityIntelligence
-from core.learning.models import EvidenceItem, ImprovementProposal, ImprovementStatus
+from core.learning.models import EvaluationResult, EvidenceItem, ImprovementProposal, ImprovementStatus
 from core.learning.registry import ImprovementRegistry
 from core.learning.store import ImprovementStore
 
 
 def evidence(*names: str, verified: bool = True) -> tuple[EvidenceItem, ...]:
-    return tuple(EvidenceItem(name, f"verified observation from {name}", verified) for name in names)
+    return tuple(
+        EvidenceItem(name, f"verified observation from {name}", verified)
+        for name in names
+    )
 
 
 def proposal(**kwargs: object) -> ImprovementProposal:
-    defaults = dict(target="router", summary="improve ranking", rationale="measured latency issue", change_ref="change-1", evidence=evidence("test", "benchmark"))
+    defaults = {
+        "target": "router",
+        "summary": "improve ranking",
+        "rationale": "measured latency issue",
+        "change_ref": "change-1",
+        "evidence": evidence("test", "benchmark"),
+    }
     defaults.update(kwargs)
     return ImprovementProposal(**defaults)
 
 
-def evaluator(score: float = 0.9, *, safety: bool = True, regression: bool = True) -> ImprovementEvaluator:
+def evaluator(
+    score: float = 0.9, *, safety: bool = True, regression: bool = True
+) -> ImprovementEvaluator:
     return ImprovementEvaluator(
         benchmark=lambda _: (score, True, evidence("benchmark")),
-        regression=lambda _: (regression, () if regression else ("regression",), evidence("regression")),
+        regression=lambda _: (
+            regression,
+            () if regression else ("regression",),
+            evidence("regression"),
+        ),
         safety=lambda _: (safety, evidence("safety")),
     )
 
@@ -37,8 +52,12 @@ def test_evidence_count_and_model_validation() -> None:
 
 
 def test_evaluation_fails_closed_when_gates_missing() -> None:
+    evaluator_without_benchmark = ImprovementEvaluator(
+        regression=lambda _: (True, (), ()),
+        safety=lambda _: (True, ()),
+    )
     with pytest.raises(ValueError, match="Benchmark"):
-        ImprovementEvaluator(regression=lambda _: (True, (), ()), safety=lambda _: (True, ())).evaluate(proposal(), score_before=0.5)
+        evaluator_without_benchmark.evaluate(proposal(), score_before=0.5)
 
 
 def test_engine_requires_all_gates_before_approval() -> None:
@@ -97,7 +116,18 @@ def test_failed_regression_blocks_approval() -> None:
 
 def test_capability_intelligence_is_deterministic() -> None:
     registry = CapabilityRegistry()
-    capability = registry.register(Capability("code", "engineering", CapabilityStatus.VALIDATED, verification=("tests",), evidence=("e1", "e2"), confidence=0.9, health=1.0, benchmark_score=0.9))
+    capability = registry.register(
+        Capability(
+            "code",
+            "engineering",
+            CapabilityStatus.VALIDATED,
+            verification=("tests",),
+            evidence=("e1", "e2"),
+            confidence=0.9,
+            health=1.0,
+            benchmark_score=0.9,
+        )
+    )
     intelligence = CapabilityIntelligence(registry)
     first = intelligence.score(capability)
     second = intelligence.score(capability)
@@ -113,16 +143,31 @@ def test_blocked_capability_has_zero_readiness() -> None:
 
 def test_intelligence_does_not_treat_experimental_as_executable() -> None:
     registry = CapabilityRegistry()
-    registry.register(Capability("x", "engineering", CapabilityStatus.EXPERIMENTAL, health=1.0))
+    registry.register(
+        Capability("x", "engineering", CapabilityStatus.EXPERIMENTAL, health=1.0)
+    )
     assert CapabilityIntelligence(registry).executable_candidates() == ()
 
 
 def test_capability_ranking_is_stable() -> None:
     registry = CapabilityRegistry()
-    registry.register(Capability("b", "engineering", CapabilityStatus.VALIDATED, verification=("v",), evidence=("e",), health=1.0, benchmark_score=0.8))
-    registry.register(Capability("a", "engineering", CapabilityStatus.VALIDATED, verification=("v",), evidence=("e",), health=1.0, benchmark_score=0.8))
+    for name in ("b", "a"):
+        registry.register(
+            Capability(
+                name,
+                "engineering",
+                CapabilityStatus.VALIDATED,
+                verification=("v",),
+                evidence=("e",),
+                health=1.0,
+                benchmark_score=0.8,
+            )
+        )
     ranked = CapabilityIntelligence(registry).rank()
-    assert [item.capability_id for item in ranked] == [registry.get_by_name("a").id, registry.get_by_name("b").id]
+    assert [item.capability_id for item in ranked] == [
+        registry.get_by_name("a").id,
+        registry.get_by_name("b").id,
+    ]
 
 
 def test_store_round_trip(tmp_path: Path) -> None:
@@ -143,7 +188,6 @@ def test_store_rejects_non_list(tmp_path: Path) -> None:
 
 def test_evaluation_rejects_score_drop_marked_passing() -> None:
     with pytest.raises(ValueError, match="lower score"):
-        from core.learning.models import EvaluationResult
         EvaluationResult(True, True, True, 0.9, 0.8)
 
 
@@ -154,7 +198,10 @@ def test_engine_does_not_mutate_on_apply_failure() -> None:
     engine.evaluate(item.id, score_before=0.8)
     engine.approve(item.id)
     with pytest.raises(RuntimeError):
-        engine.apply(item.id, lambda _: (_ for _ in ()).throw(RuntimeError("boom")))
+        engine.apply(
+            item.id,
+            lambda _: (_ for _ in ()).throw(RuntimeError("boom")),
+        )
     assert registry.get(item.id).status is ImprovementStatus.APPROVED
 
 
@@ -166,5 +213,8 @@ def test_rollback_failure_preserves_applied_state() -> None:
     engine.approve(item.id)
     engine.apply(item.id, lambda _: None)
     with pytest.raises(RuntimeError):
-        engine.rollback(item.id, lambda _: (_ for _ in ()).throw(RuntimeError("boom")))
+        engine.rollback(
+            item.id,
+            lambda _: (_ for _ in ()).throw(RuntimeError("boom")),
+        )
     assert registry.get(item.id).status is ImprovementStatus.APPLIED
