@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from pathlib import Path
 from uuid import uuid4
+import json
 
 
 class CheckpointError(RuntimeError):
@@ -19,8 +21,11 @@ class Checkpoint:
 class CheckpointStore:
     """Store immutable task checkpoints and optional workspace snapshot IDs."""
 
-    def __init__(self) -> None:
+    def __init__(self, state_path: str | Path | None = None) -> None:
         self._checkpoints: dict[str, Checkpoint] = {}
+        self._state_path = Path(state_path) if state_path is not None else None
+        if self._state_path is not None and self._state_path.exists():
+            self._load()
 
     def create(
         self,
@@ -41,6 +46,7 @@ class CheckpointStore:
             snapshot_id=snapshot_id.strip() if snapshot_id else None,
         )
         self._checkpoints[checkpoint.id] = checkpoint
+        self._persist()
         return checkpoint
 
     def get(self, checkpoint_id: str) -> Checkpoint:
@@ -57,3 +63,36 @@ class CheckpointStore:
             for checkpoint in self._checkpoints.values()
             if checkpoint.task_id == task_id.strip()
         )
+
+    def all(self) -> tuple[Checkpoint, ...]:
+        return tuple(self._checkpoints.values())
+
+    def _persist(self) -> None:
+        if self._state_path is None:
+            return
+        self._state_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = [
+            {
+                "task_id": checkpoint.task_id,
+                "description": checkpoint.description,
+                "id": checkpoint.id,
+                "created_at": checkpoint.created_at.isoformat(),
+                "snapshot_id": checkpoint.snapshot_id,
+            }
+            for checkpoint in self._checkpoints.values()
+        ]
+        temporary = self._state_path.with_suffix(self._state_path.suffix + ".tmp")
+        temporary.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+        temporary.replace(self._state_path)
+
+    def _load(self) -> None:
+        payload = json.loads(self._state_path.read_text(encoding="utf-8"))
+        for item in payload:
+            checkpoint = Checkpoint(
+                task_id=str(item["task_id"]),
+                description=str(item["description"]),
+                id=str(item["id"]),
+                created_at=datetime.fromisoformat(str(item["created_at"])),
+                snapshot_id=str(item["snapshot_id"]) if item.get("snapshot_id") else None,
+            )
+            self._checkpoints[checkpoint.id] = checkpoint
