@@ -121,9 +121,9 @@ Unverified memory remains unverified context. Promotion and knowledge creation a
 
 ## External pattern review
 
-Current ECC patterns were reviewed for scoped local memory, explicit provenance, state stores, bounded retrieval, verification-before-promotion, and keeping memory separate from executable policy. ECC's current Memory Vault similarly treats memory as inspectable context and warns that important claims must be verified before promotion. citeturn0search0turn0search4
+Current ECC patterns were reviewed for scoped local memory, explicit provenance, state stores, bounded retrieval, verification-before-promotion, and keeping memory separate from executable policy. ECC's current Memory Vault similarly treats memory as inspectable context and warns that important claims must be verified before promotion.
 
-Agency Agents' current knowledge-graph-oriented material was also reviewed for explicit entities, relationships, confidence, unresolved contradictions, and source traceability. SI-Agents intentionally implements a dependency-free structured model first rather than introducing a graph database prematurely. citeturn0search11
+Agency Agents' current knowledge-graph-oriented material was also reviewed for explicit entities, relationships, confidence, unresolved contradictions, and source traceability. SI-Agents intentionally implements a dependency-free structured model first rather than introducing a graph database prematurely.
 
 No external code, prompts, branding, or architecture was copied.
 
