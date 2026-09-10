@@ -1,5 +1,9 @@
 # SI-Agents Intellectual Property and Provenance Policy
 
+## Status
+
+**Active governance policy.** Applied to the completed Alpha implementation and required for future phases, including Skills Engine work.
+
 ## Purpose
 
 SI-Agents may study public software projects, documentation, research, and other external material for engineering knowledge. External references must inform independently designed implementations rather than become an accidental source of copied expression.
