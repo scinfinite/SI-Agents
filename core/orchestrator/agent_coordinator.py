@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from core.orchestrator.context_manager import TaskContext
+from typing import Any
 
 
-AgentWorker = Callable[[str, TaskContext], str]
+AgentWorker = Callable[[str, Any], str]
 
 
 class AgentCoordinator:
@@ -33,7 +30,7 @@ class AgentCoordinator:
     def names(self) -> tuple[str, ...]:
         return tuple(self._agents)
 
-    def delegate(self, name: str, task_description: str, context: TaskContext) -> str:
+    def delegate(self, name: str, task_description: str, context: Any) -> str:
         if not task_description.strip():
             raise ValueError("Task description must not be empty")
         return self.get(name)(task_description, context)
