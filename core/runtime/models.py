@@ -63,6 +63,8 @@ class RuntimeEvent:
     def __post_init__(self) -> None:
         if not self.request_id.strip() or self.sequence < 0:
             raise ValueError("event requires request_id and non-negative sequence")
+        if self.emitted_at.tzinfo is None:
+            raise ValueError("event timestamp must be timezone-aware")
 
 
 @dataclass(frozen=True)
@@ -93,8 +95,14 @@ class InvocationRequest:
             raise ValueError("capability_id and project_id are required")
         if not self.request_id.strip():
             raise ValueError("request_id must not be empty")
+        if self.session_id is not None and not self.session_id.strip():
+            raise ValueError("session_id must not be empty when supplied")
         if self.timeout_seconds is not None and self.timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
+        if any(not key.strip() for key, _ in self.metadata):
+            raise ValueError("metadata keys must not be empty")
+        if len({key for key, _ in self.metadata}) != len(self.metadata):
+            raise ValueError("metadata keys must be unique")
 
 
 @dataclass(frozen=True)
@@ -116,3 +124,9 @@ class InvocationResponse:
         sequences = [event.sequence for event in self.events]
         if sequences != sorted(sequences) or len(sequences) != len(set(sequences)):
             raise ValueError("events must have unique, ordered sequence numbers")
+        if any(event.request_id != self.request_id for event in self.events):
+            raise ValueError("all events must belong to the response request")
+        if any(not key.strip() or value < 0 for key, value in self.usage):
+            raise ValueError("usage keys must be non-empty and values non-negative")
+        if len({key for key, _ in self.usage}) != len(self.usage):
+            raise ValueError("usage keys must be unique")

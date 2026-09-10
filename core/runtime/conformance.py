@@ -1,16 +1,17 @@
-"""Minimal adapter conformance suite."""
+"""Transport-neutral adapter conformance checks."""
 
 from core.governance.models import DataClass, GovernanceRequest, RiskLevel
+from core.runtime.adapter import validate_response
 from core.runtime.models import InvocationRequest, InvocationStatus
 from core.runtime.protocol import HarnessAdapter
 
 
 class ConformanceFailure(AssertionError):
-    pass
+    """Raised when an adapter violates the runtime contract."""
 
 
 def run_conformance(adapter: HarnessAdapter, capability_id: str = "echo") -> tuple[str, ...]:
-    """Exercise only transport-neutral guarantees; return passed checks."""
+    """Exercise correlation, terminal-state, response, and cancellation guarantees."""
     checks: list[str] = []
     request = InvocationRequest(
         capability_id=capability_id,
@@ -22,10 +23,20 @@ def run_conformance(adapter: HarnessAdapter, capability_id: str = "echo") -> tup
     if response.request_id != request.request_id:
         raise ConformanceFailure("response correlation failed")
     checks.append("correlation")
-    if response.status not in (InvocationStatus.COMPLETED, InvocationStatus.FAILED):
+    if response.status not in {
+        InvocationStatus.COMPLETED,
+        InvocationStatus.FAILED,
+        InvocationStatus.CANCELLED,
+    }:
         raise ConformanceFailure("invalid terminal status")
     checks.append("terminal-status")
-    if adapter.cancel(request.request_id) is not True:
-        raise ConformanceFailure("cancellation contract failed")
-    checks.append("cancellation")
+    try:
+        validate_response(request, response)
+    except ValueError as exc:
+        raise ConformanceFailure(str(exc)) from exc
+    checks.append("response-shape")
+    if adapter.capabilities.cancellation:
+        if adapter.cancel(request.request_id) is not True:
+            raise ConformanceFailure("cancellation contract failed")
+        checks.append("cancellation")
     return tuple(checks)

@@ -1,6 +1,7 @@
 """Harness and runtime interoperability primitives."""
 
 from core.runtime.conformance import ConformanceFailure, run_conformance
+from core.runtime.engine import RuntimeEngine
 from core.runtime.local import LocalHarnessAdapter
 from core.runtime.models import (
     InvocationRequest,
@@ -18,9 +19,24 @@ from core.runtime.registry import HarnessRegistry
 from core.runtime.session import RuntimeSession, SessionRegistry, SessionStatus
 
 __all__ = [
-    "ConformanceFailure", "HarnessAdapter", "HarnessMetadata", "HarnessRegistry",
-    "InvocationRequest", "InvocationResponse", "InvocationStatus", "LocalHarnessAdapter",
-    "RuntimeCapabilities", "RuntimeError", "RuntimeErrorCode", "RuntimeEvent", "RuntimeEventType",
-    "RuntimeKind", "RuntimeSession", "SessionRegistry", "SessionStatus",
-    "normalize_metadata", "run_conformance",
+    "ConformanceFailure",
+    "HarnessAdapter",
+    "HarnessMetadata",
+    "HarnessRegistry",
+    "InvocationRequest",
+    "InvocationResponse",
+    "InvocationStatus",
+    "LocalHarnessAdapter",
+    "RuntimeCapabilities",
+    "RuntimeEngine",
+    "RuntimeError",
+    "RuntimeErrorCode",
+    "RuntimeEvent",
+    "RuntimeEventType",
+    "RuntimeKind",
+    "RuntimeSession",
+    "SessionRegistry",
+    "SessionStatus",
+    "normalize_metadata",
+    "run_conformance",
 ]

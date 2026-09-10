@@ -8,6 +8,7 @@ runtime_policy:
   preserve_project_isolation: true
   preserve_request_correlation: true
   normalize_events: true
+  structured_errors: true
   credentials:
     never_store_in_runtime_envelopes: true
     never_log_credentials: true
@@ -16,3 +17,11 @@ runtime_policy:
     require_governance: true
   cancellation:
     supported_as_adapter_contract: true
+    forced_termination: false
+  timeout:
+    mode: cooperative
+    adapters_must_honor_declared_deadline: true
+    local_adapter_is_not_a_hard_timeout_boundary: true
+  conformance:
+    require_before_production: true
+    transport_neutral: true

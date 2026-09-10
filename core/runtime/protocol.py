@@ -24,6 +24,8 @@ class HarnessMetadata:
 
 @runtime_checkable
 class HarnessAdapter(Protocol):
+    """Transport-neutral contract implemented by a CLI/API/IDE/agent harness."""
+
     @property
     def metadata(self) -> HarnessMetadata: ...
 
@@ -35,6 +37,6 @@ class HarnessAdapter(Protocol):
     def cancel(self, request_id: str) -> bool: ...
 
 
+# Transport metadata is normalized before it enters the core runtime boundary.
 def normalize_metadata(metadata: dict[str, object]) -> tuple[tuple[str, str], ...]:
-    """Normalize transport-specific metadata into a deterministic envelope."""
     return tuple(sorted((str(key), str(value)) for key, value in metadata.items()))
