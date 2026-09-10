@@ -1,8 +1,8 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–28 complete; Phase 29 complete.**
+**Current status: v2.0 baseline plus Phases 19–29 complete.**
 
-> This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are the documentation navigation indexes.
+> This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
 ## Completed phases
 
@@ -34,7 +34,7 @@
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
 27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode/OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete.**
 28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, sanitized/canonical repository identity, explicit Termux↔Codespaces validation, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
-29. Complete Agent Persona Corpus & Definition System — **Complete.** The corpus contains exactly 279 verified personas, with deterministic parsing, typed catalog parity, repository-neutral provenance, hidden-Unicode checks, packaging coverage, and CI verification.
+29. Complete SI Agent Persona System — **Complete.** Exactly 279 SI-native specialist personas are organized across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, repository-neutral provenance, packaging coverage, and CI verification.
 
 ## Release targets
 
@@ -53,7 +53,7 @@
 - **Post-v2 Codespaces runtime:** Phase 26 — complete
 - **Post-v2 CLI/setup:** Phase 27 — complete
 - **Post-v2 cross-environment handoff:** Phase 28 — complete
-- **Post-v2 agent personas:** Phase 29 — complete
+- **Post-v2 SI persona system:** Phase 29 — complete
 
 ## Phase completion gate
 
@@ -61,28 +61,24 @@ A phase is not complete merely because files exist. Its acceptance criteria must
 
 ## Phase 29 verification record
 
-Phase 29 now contains exactly **279** persona Markdown files and a typed catalog containing exactly **279** matching identities. The persona registry loads the complete corpus, the security regression rejects hidden Unicode control characters, and the repository-neutral provenance manifest records the immutable snapshot identifier and 279-definition count.
+Phase 29 contains exactly **279** canonical persona Markdown files across **18** SI-owned divisions and a typed catalog containing exactly **279** matching SI-native identities. The persona registry loads the complete corpus, security regression checks reject hidden Unicode control characters, provenance remains separate from governance, and package builds include the complete corpus.
 
-The final audit is recorded in `PHASE_29_PERSONA_PARITY_AUDIT.md`. Non-persona Markdown such as documentation, examples, integrations, strategy/playbooks, and runbooks is excluded from the persona count.
+The final CI verification recorded **358 tests passing**, successful distribution build, isolated wheel installation/import, CLI smoke checks, and Ruff. GitHub Actions now uses `actions/checkout@v5` and `actions/setup-python@v6`, removing the deprecated Node 20 action majors.
 
-The completed phase preserves the original seven-persona tests as regression coverage for the persona machinery while superseding their former role as the completion gate.
+The single canonical Phase 29 document is `PHASE_29.md`. Non-persona Markdown such as documentation, examples, integrations, strategy/playbooks, and runbooks is excluded from the persona count.
 
-## Phase 28 verification record
-
-Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f4`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**.
+The four legacy Python modules under `agents/` remain runtime compatibility/model modules. The canonical 279-agent corpus is the SI-native Markdown hierarchy under `agents/si-*/`.
 
 ## Documentation structure
 
-The historical architecture record is explicitly indexed from Phase 1 onward:
-
 - `PHASE_1_FOUNDATION.md` — renamed Phase 1 foundation record.
-- `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; the duplicate `CONTROL_PLANE.md` has been removed.
-- `PHASE_3_*` through `PHASE_29_*` — detailed historical/current phase records.
-- `PHASE_29_PERSONA_PARITY_AUDIT.md` — final Phase 29 audit and parity contract.
+- `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; duplicate `CONTROL_PLANE.md` removed.
+- `PHASE_3_*` through `PHASE_28_*` — detailed historical phase records.
+- `PHASE_29.md` — single canonical Phase 29 architecture, parity, provenance, security, packaging, and verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 Historical phase documents preserve phase-time evidence. Current cross-phase state belongs here, and future planning belongs in `SI_AGENTS_V3.md`.
 
 ## Next phase
 
-**Phase 30 — First-Class Portable Skills** is now the planned next implementation phase.
+**Phase 30 — First-Class Portable Skills** is the planned next implementation phase.
