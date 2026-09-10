@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from core.automation.models import AutomationJob, ScheduleKind
+from core.automation.models import AutomationJob, JobState
 from core.automation.registry import AutomationRegistry
 
 
@@ -16,7 +16,6 @@ class AutomationScheduler:
     def mark_triggered(self, job: AutomationJob, now: datetime) -> AutomationJob:
         next_schedule = job.schedule.advance(now)
         if next_schedule is None:
-            from core.automation.models import JobState
             updated = AutomationJob(**{**job.__dict__, "schedule": job.schedule, "state": JobState.CANCELLED})
         else:
             updated = AutomationJob(**{**job.__dict__, "schedule": next_schedule})
