@@ -1,10 +1,11 @@
-"""OpenCode HTTP adapter.
+"""OpenCode headless-server adapter.
 
-The adapter intentionally speaks the OpenAI-compatible chat-completions shape
-used by OpenCode-compatible providers. SI-Agents remains independent of the
-OpenCode SDK and never owns provider credentials.
+The adapter talks to OpenCode's documented HTTP server API. Provider/model
+credentials remain owned by OpenCode (or its configured gateway), not by
+SI-Agents.
 """
 
+import base64
 import json
 import urllib.error
 import urllib.request
@@ -18,8 +19,11 @@ from core.runtime.models import (
     RuntimeCapabilities,
     RuntimeError as RuntimeFailure,
     RuntimeErrorCode,
+    RuntimeEvent,
+    RuntimeEventType,
+    RuntimeKind,
 )
-from core.runtime.protocol import HarnessKind, HarnessMetadata
+from core.runtime.protocol import HarnessAdapter, HarnessMetadata
 
 from .config import OpenCodeConfig
 
@@ -30,50 +34,54 @@ class OpenCodeAdapter:
 
     @property
     def metadata(self) -> HarnessMetadata:
-        return HarnessMetadata(harness_id="opencode", kind=HarnessKind.CLI, version="v1")
+        return HarnessMetadata(harness_id="opencode", kind=RuntimeKind.AGENT, version="server-v1")
 
     @property
     def capabilities(self) -> RuntimeCapabilities:
         return RuntimeCapabilities(
-            streaming=True,
-            cancellation=False,
+            streaming=False,
+            cancellation=True,
             tool_calls=True,
             structured_output=True,
             session_continuity=True,
         )
 
     def invoke(self, request: InvocationRequest) -> InvocationResponse:
-        if request.streaming and not self.capabilities.streaming:
-            return InvocationResponse(
-                request_id=request.request_id,
-                status=InvocationStatus.REJECTED,
-                error=RuntimeFailure(
-                    code=RuntimeErrorCode.CAPABILITY_UNSUPPORTED,
-                    message="OpenCode adapter does not support requested streaming",
-                    retryable=False,
-                ),
-            )
-
-        payload = self._payload(request)
-        body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
-        headers = {"Content-Type": "application/json", "Accept": "application/json"}
-        if self.config.api_key:
-            headers["Authorization"] = f"Bearer {self.config.api_key}"
-        endpoint = self.config.base_url.rstrip("/") + "/chat/completions"
-        http_request = urllib.request.Request(endpoint, data=body, headers=headers, method="POST")
-        try:
-            with urllib.request.urlopen(http_request, timeout=self.config.timeout_seconds) as response:
-                raw = response.read().decode("utf-8")
-            return self._response(request.request_id, json.loads(raw))
-        except urllib.error.HTTPError as exc:
-            retryable = exc.code in {408, 409, 425, 429} or exc.code >= 500
+        if request.streaming:
             return InvocationResponse(
                 request_id=request.request_id,
                 status=InvocationStatus.FAILED,
                 error=RuntimeFailure(
-                    code=RuntimeErrorCode.UPSTREAM_ERROR,
-                    message=f"OpenCode returned HTTP {exc.code}",
-                    retryable=retryable,
+                    code=RuntimeErrorCode.NOT_SUPPORTED,
+                    message="OpenCode server adapter currently uses the synchronous message endpoint",
+                    retryable=False,
+                ),
+            )
+        try:
+            session_id = request.session_id or self._create_session(request.project_id)
+            payload = self._message_payload(request)
+            result = self._post(f"/session/{session_id}/message", payload)
+            output = self._extract_text(result)
+            event = RuntimeEvent(
+                type=RuntimeEventType.COMPLETED,
+                request_id=request.request_id,
+                sequence=0,
+                data={"session_id": session_id},
+            )
+            return InvocationResponse(
+                request_id=request.request_id,
+                status=InvocationStatus.COMPLETED,
+                output=output,
+                events=(event,),
+            )
+        except _OpenCodeHTTPError as exc:
+            return InvocationResponse(
+                request_id=request.request_id,
+                status=InvocationStatus.FAILED,
+                error=RuntimeFailure(
+                    code=RuntimeErrorCode.EXECUTION_FAILED,
+                    message=f"OpenCode returned HTTP {exc.status}",
+                    retryable=exc.status in {408, 409, 425, 429} or exc.status >= 500,
                 ),
             )
         except (urllib.error.URLError, TimeoutError) as exc:
@@ -81,44 +89,85 @@ class OpenCodeAdapter:
                 request_id=request.request_id,
                 status=InvocationStatus.FAILED,
                 error=RuntimeFailure(
-                    code=RuntimeErrorCode.UPSTREAM_UNAVAILABLE,
-                    message=f"OpenCode endpoint unavailable: {exc}",
+                    code=RuntimeErrorCode.EXECUTION_FAILED,
+                    message=f"OpenCode server unavailable: {exc}",
                     retryable=True,
                 ),
             )
-        except (json.JSONDecodeError, UnicodeDecodeError, OSError) as exc:
+        except (json.JSONDecodeError, UnicodeDecodeError, OSError, ValueError) as exc:
             return InvocationResponse(
                 request_id=request.request_id,
                 status=InvocationStatus.FAILED,
                 error=RuntimeFailure(
-                    code=RuntimeErrorCode.PROTOCOL_ERROR,
+                    code=RuntimeErrorCode.EXECUTION_FAILED,
                     message=f"Invalid OpenCode response: {exc}",
                     retryable=False,
                 ),
             )
 
     def cancel(self, request_id: str) -> bool:
-        del request_id
-        return False
+        # The universal request ID is not necessarily an OpenCode session ID.
+        # Cancellation therefore requires the caller to pass the OpenCode session
+        # ID in this adapter's cancel boundary.
+        try:
+            self._post(f"/session/{request_id}/abort", {})
+            return True
+        except (_OpenCodeHTTPError, urllib.error.URLError, TimeoutError, OSError):
+            return False
+
+    def _create_session(self, project_id: str) -> str:
+        result = self._post("/session", {"title": f"SI-Agent:{project_id}"})
+        session_id = result.get("id") if isinstance(result, dict) else None
+        if not isinstance(session_id, str) or not session_id:
+            raise ValueError("OpenCode did not return a session id")
+        return session_id
 
     @staticmethod
-    def _payload(request: InvocationRequest) -> dict[str, Any]:
+    def _message_payload(request: InvocationRequest) -> dict[str, Any]:
         content = request.input if isinstance(request.input, str) else json.dumps(request.input)
-        return {
-            "model": str(request.metadata.get("model", "default")),
-            "messages": [{"role": "user", "content": content}],
-            "stream": request.streaming,
-        }
+        metadata = dict(request.metadata)
+        payload: dict[str, Any] = {"parts": [{"type": "text", "text": content}]}
+        if metadata.get("model"):
+            payload["model"] = metadata["model"]
+        if metadata.get("agent"):
+            payload["agent"] = metadata["agent"]
+        return payload
 
     @staticmethod
-    def _response(request_id: str, payload: dict[str, Any]) -> InvocationResponse:
-        choices = payload.get("choices", [])
-        output: Any = None
-        if choices and isinstance(choices[0], dict):
-            output = choices[0].get("message", {}).get("content")
-        return InvocationResponse(
-            request_id=request_id,
-            status=InvocationStatus.COMPLETED,
-            output=output,
-            usage=payload.get("usage", {}) if isinstance(payload.get("usage", {}), dict) else {},
+    def _extract_text(payload: dict[str, Any]) -> str:
+        parts = payload.get("parts", [])
+        texts = [part.get("text", "") for part in parts if isinstance(part, dict) and part.get("type") == "text"]
+        return "".join(texts)
+
+    def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+        body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
+        if self.config.password:
+            token = base64.b64encode(f"{self.config.username}:{self.config.password}".encode()).decode()
+            headers["Authorization"] = f"Basic {token}"
+        request = urllib.request.Request(
+            self.config.base_url.rstrip("/") + path,
+            data=body,
+            headers=headers,
+            method="POST",
         )
+        try:
+            with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:
+                raw = response.read().decode("utf-8")
+        except urllib.error.HTTPError as exc:
+            raise _OpenCodeHTTPError(exc.code) from exc
+        if not raw:
+            return {}
+        parsed = json.loads(raw)
+        if not isinstance(parsed, dict):
+            raise ValueError("OpenCode response must be a JSON object")
+        return parsed
+
+
+class _OpenCodeHTTPError(Exception):
+    def __init__(self, status: int) -> None:
+        self.status = status
+        super().__init__(f"HTTP {status}")
+
+
+assert isinstance(OpenCodeAdapter(), HarnessAdapter)
