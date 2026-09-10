@@ -1,6 +1,6 @@
 # Phase 34 — Organization Expansion
 
-**Status:** Implementation complete; pending merge and final mainline CI.
+**Status:** Complete + CI verified.
 
 ## Scope
 
@@ -60,23 +60,18 @@ Every workflow contains an explicit verification step. Dependencies are ordered 
 
 Organization configuration is coordination metadata. It cannot declare or inherit `permissions`, `capabilities`, `credentials`, or other authority fields. Existing Governance remains the only authorization boundary.
 
-The loader validates unknown agents, unknown divisions, unknown teams, duplicate IDs, invalid workflow dependencies, later-step dependencies, and cross-team agent references. It never executes workflow steps.
+The loader validates unknown agents, unknown divisions, unknown teams, duplicate IDs, invalid workflow dependencies, later-step dependencies, cross-team agent references, and team/division assignment consistency. It never executes workflow steps.
 
 ## Engineering-pattern basis
 
 The design uses general engineering patterns such as small specialized teams, explicit workflow stages, source-of-truth validation, independent review, and evidence-backed verification. The implementation is independently designed for SI-Agents and does not copy external prompts, code, branding, or architecture.
 
-## Verification plan
+## Final verification record
 
-Exit gates require:
+Phase 34 implementation was merged to `main` from PR #25 as merge commit `a100282375f4fdb8108f62faf16151e1a8abd8e9`.
 
-- canonical 279-agent catalog remains valid;
-- all 18 divisions have exactly one organizational home;
-- all team and workflow references resolve to canonical agents;
-- every workflow has a verification gate;
-- adversarial malformed organization data is rejected;
-- distribution packaging includes the expansion catalog;
-- Ruff and full pytest pass;
-- documentation is synchronized;
-- implementation is merged to `main`;
-- final mainline CI is green on the documentation-synchronized merge commit.
+Feature CI **#798** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite on the Phase 34 delivery branch.
+
+Mainline CI **#799** passed the same gates on the exact Phase 34 merge commit `a100282375f4fdb8108f62faf16151e1a8abd8e9`. The final pytest diagnostics reported **409 passed in 6.30s**.
+
+This record is complete only because implementation, adversarial tests, packaging, documentation, merge, and final mainline CI verification all passed.
