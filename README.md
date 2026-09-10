@@ -14,9 +14,9 @@ Completed foundation through the Verification + Evidence Engine:
 - **Phase 4 — Engineering Brain:** problem normalization, decomposition, dependency-aware planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty, risk, and capability-aware planning.
 - **Phase 5 — Developer/Debugger/Tester:** explicit agent contracts and the inspect → reproduce → diagnose → checkpoint → repair → test → red-team → regression → verify → document workflow.
 - **Phase 6 — Skills Engine:** reusable skill contracts, lifecycle states, validated selection, permissioned execution, explicit verification, evidence recording, and an initial engineering skill catalog.
-- **Phase 7 — Verification + Evidence:** bounded claims, provenance-aware evidence, confidence assessment, fail-closed verification, regression suites, red-team falsification, and production-readiness gates.
+- **Phase 7 — Verification + Evidence:** bounded claims, provenance-aware evidence, confidence assessment, fail-closed verification, regression suites, red-team falsification, before/after benchmarks, and production-readiness gates.
 
-The latest CI verification passed installation, distribution build, Ruff, and the complete pytest suite. Phase 7 added dedicated unit/integration coverage on top of the existing suite.
+The Phase 7 CI verification run passed installation, distribution build, Ruff, and the complete pytest suite: **131 tests passed in 1.11s**.
 
 ## Engineering loop
 
