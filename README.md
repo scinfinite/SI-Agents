@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–27 implemented and CI-verified.**
+**Post-v2 evolution — Phases 19–28 implemented and CI-verified.**
 
-Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, and user-facing CLI/setup layers:
+Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, CLI/setup, and cross-environment handoff layers.
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -35,6 +35,7 @@ Completed foundation through Production Hardening and the post-v2 organization, 
 - **Phase 25 — Termux Runtime:** vendor-neutral environment readiness contracts, Termux detection, Python/Git/curl/OpenSSH/pkg checks, OpenCode readiness, optional fail-closed OmniRoute health, read-only Termux doctor, secret-free JSON reporting, conservative package planning, and workspace validation. **Complete and CI-verified.**
 - **Phase 26 — GitHub Codespaces Runtime:** Codespaces detection, Python/Git/curl/OpenSSH/workspace checks, OpenCode readiness, optional GitHub CLI and OmniRoute requirements, read-only toolchain planning, workspace validation, and secret-free doctor reporting. **Complete and CI-verified.**
 - **Phase 27 — `si` CLI + Easy Setup:** user-facing doctor/status/agents/teams/setup/update/run commands, non-secret configuration, explicit mutation gates, safe OpenCode OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete and CI-verified.**
+- **Phase 28 — Cross-environment & Handoff:** portable `si.handoff.v1` workflow envelopes, SHA-256 integrity verification, secret rejection, sanitized project identity, explicit Termux↔Codespaces import/export validation, resumable workflow context, atomic handoff storage, and CLI handoff commands. **Complete and CI-verified.**
 
 ## `si` CLI
 
@@ -45,7 +46,10 @@ si agents
 si teams
 si setup [--apply] [--configure-opencode] [--model MODEL]
 si update [--apply]
-si run TEAM --objective TEXT
+si run TEAM --objective TEXT [--handoff FILE]
+si handoff create TEAM --objective TEXT --source termux|codespace --target termux|codespace --output FILE
+si handoff inspect FILE
+si handoff import FILE
 ```
 
 `doctor`, `status`, `agents`, and `teams` are read-only. `setup` and `update` are dry-run by default and require `--apply` before mutation. Setup commands come from the existing environment runtime plan and are checked against an allowlist; arbitrary shell strings are rejected.
@@ -54,9 +58,22 @@ The CLI stores only non-secret configuration at `~/.config/si-agents/config.json
 
 With `si setup --configure-opencode --model <model> --apply`, the CLI can add/update an OmniRoute OpenAI-compatible provider in the current OpenCode JSON configuration. It refuses JSONC rather than rewriting it unsafely and requires an explicit model instead of guessing capabilities from OmniRoute's mixed `/v1/models` catalog.
 
-`si run` executes canonical Phase 21 teams through the existing TeamEngine and worker/runtime governance. The CLI does not grant permissions, enable disabled harnesses, bypass approvals, or replace OmniRoute routing.
+`si run` executes canonical Phase 21 teams through the existing TeamEngine and worker/runtime governance. The optional `--handoff` input only restores validated workflow context; it does not grant permissions or bypass target-environment authorization.
 
-See `docs/architecture/PHASE_27_SI_CLI.md` for the detailed Phase 27 contract and `docs/architecture/PHASES.md` for the roadmap.
+### Cross-environment handoff
+
+A handoff is an explicit portable JSON artifact. For example:
+
+```text
+si handoff create engineering-repair --objective "repair the failing build" --source termux --target codespace --output repair-handoff.json
+si handoff inspect repair-handoff.json
+si handoff import repair-handoff.json
+si run engineering-repair --objective "continue the repair" --handoff repair-handoff.json
+```
+
+Handoffs preserve task state, workflow context, result summaries, checkpoints, and evidence references. They never contain credentials. Imports verify the SHA-256 integrity digest, target environment, and repository identity when available. No automatic file transfer, Git synchronization, credential migration, Codespace creation, or remote state service is introduced.
+
+See `docs/architecture/PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` for the detailed Phase 28 contract and `docs/architecture/PHASES.md` for the roadmap.
 
 ## Engineering loop
 
@@ -67,12 +84,14 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 ## Control and safety model
 
-Agents, capabilities, tools, skills, knowledge, automation jobs, teams, harness adapters, and environment runtimes are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
+Agents, capabilities, tools, skills, knowledge, automation jobs, teams, harness adapters, environment runtimes, and handoff artifacts are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
 
 OpenCode integration is a transport boundary, not a model/provider router. OpenCode owns its server, provider credentials, and harness lifecycle. SI-Agents sends normalized runtime requests and consumes normalized results. OmniRoute is the external model/provider routing authority for Phase 24 and remains so inside the Termux and Codespaces runtimes and Phase 27 CLI setup.
 
 Phase 24 deliberately does not create a second provider-fallback or circuit-breaker system around OmniRoute. OmniRoute owns provider selection, upstream credentials, provider fallback, gateway-side quotas, routing policies, and provider circuit state. SI-Agents owns its invocation contract and fail-closed local governance boundaries.
 
 Phase 25 and Phase 26 provide read-only environment readiness. Phase 27 is the first explicit mutation layer: setup/update actions require `--apply`, execution is allowlisted, credentials are not persisted, and OpenCode configuration is changed only through a narrow, parse-safe provider configuration path.
+
+Phase 28 adds explicit state transfer but not state authority. Handoff import is validation plus context restoration; the target environment, target workspace, target harness, and existing governance remain authoritative. A handoff cannot enable a harness, grant a permission, execute an imported command, or migrate credentials.
 
 Universal harness deployment is descriptive, not authoritative. A deployment manifest can describe agents, teams, skills, required permissions, and capabilities for a harness, but it cannot enable the harness, grant permissions, execute workers, or bypass governance. Vendor-specific adapters remain separate from the core.
