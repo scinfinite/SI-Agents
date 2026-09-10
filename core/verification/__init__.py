@@ -1,6 +1,11 @@
 """Verification, evidence, regression, and readiness primitives."""
 
-from core.verification.benchmark import Benchmark, BenchmarkComparison, BenchmarkRun, BenchmarkStatus
+from core.verification.benchmark import (
+    Benchmark,
+    BenchmarkComparison,
+    BenchmarkRun,
+    BenchmarkStatus,
+)
 from core.verification.claim_store import ClaimStore
 from core.verification.claims import Claim
 from core.verification.confidence import ConfidenceAssessment, ConfidenceLevel, assess, level_for
