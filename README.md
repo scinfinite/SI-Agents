@@ -47,18 +47,20 @@ Persona Markdown is behavioral data only. It cannot grant permissions, tools, cr
 
 ```text
 si doctor [--json]
-si status
-si agents
-si teams
-si setup [--apply] [--configure-opencode] [--model MODEL]
+si status [--json]
+si audit [--json]
+si agents [--division DIVISION] [--status STATUS] [--search TEXT] [--json]
+si personas [--division DIVISION] [--search TEXT] [--json]
+si teams [--search TEXT] [--json]
+si setup [--apply] [--install-opencode] [--configure-opencode] [--model MODEL]
 si update [--apply]
 si run TEAM --objective TEXT [--handoff FILE]
 si handoff create TEAM --objective TEXT --source termux|codespace --target termux|codespace --output FILE
-si handoff inspect FILE
+si handoff inspect FILE [--json]
 si handoff import FILE
 ```
 
-Read-only commands do not mutate state. Mutation requires explicit `--apply`. Credentials are not stored by SI-Agents.
+Read-only commands do not mutate state. Mutation requires explicit `--apply`. Credentials are not stored by SI-Agents. See `docs/architecture/CLI.md` for command behavior and safety invariants.
 
 ## Documentation
 
@@ -66,6 +68,7 @@ Read-only commands do not mutate state. Mutation requires explicit `--apply`. Cr
 - `docs/architecture/README.md` — architecture navigation and phase index.
 - `docs/architecture/PHASES.md` — authoritative implementation/status and verification record.
 - `docs/architecture/PHASE_29.md` — single canonical Phase 29 persona/parity/provenance/security/packaging record.
+- `docs/architecture/CLI.md` — current SI CLI surface, behavior, and safety model.
 - `docs/architecture/SI_AGENTS_V3.md` — forward roadmap for Phases 30–43.
 
 Historical phase records preserve their phase-time evidence; current state belongs in `PHASES.md` and the relevant current phase record.
