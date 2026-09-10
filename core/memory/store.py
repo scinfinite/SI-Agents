@@ -95,7 +95,11 @@ class MemoryStore:
             for raw in payload:
                 registry.add(self._memory(raw))
             return registry
-        if not isinstance(payload, dict) or payload.get("schema_version") != 2:
+        if not isinstance(payload, dict):
+            raise TypeError("Memory store must contain a JSON list or versioned object")
+        if "schema_version" not in payload:
+            raise TypeError("Memory store object must declare schema_version")
+        if payload["schema_version"] != 2:
             raise ValueError("Unsupported memory store schema")
         for raw in payload.get("memories", ()):
             registry.add(self._memory(raw))
