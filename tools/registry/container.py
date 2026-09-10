@@ -18,6 +18,6 @@ class ContainerTool:
     def run(self, command: str, *, timeout: float = 60.0) -> ToolResult:
         try:
             result = self.backend.run(command, timeout=timeout)
-        except Exception as exc:
+        except (OSError, RuntimeError, ValueError) as exc:
             return ToolResult(False, error=str(exc))
         return ToolResult(result.succeeded, result.stdout, result.stderr)
