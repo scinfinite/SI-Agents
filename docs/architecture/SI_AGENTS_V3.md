@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–39 implemented and CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–40 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -38,7 +38,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 established the stable machine-facing API over those existing authorities. Phase 36 established the first Web transport/presentation boundary over that API. Phase 37 turned that foundation into the live Control Center. Phase 38 added visual organization/workflow inspection while preserving the same authority boundary. Phase 39 added a governed authoring boundary for agent customization without mutating the canonical catalog or granting new authority.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 established the stable machine-facing API over those existing authorities. Phase 36 established the first Web transport/presentation boundary over that API. Phase 37 turned that foundation into the live Control Center. Phase 38 added visual organization/workflow inspection while preserving the same authority boundary. Phase 39 added a governed authoring boundary for agent customization without mutating the canonical catalog or granting new authority. Phase 40 made evidence and observability explicit at the inspection boundary with typed claims, provenance, confidence, verification, supersession/contradiction state, and per-run timelines.
 
 ### Web and TUI are views, not authorities
 
@@ -60,15 +60,15 @@ Phase 29 established the persona-to-typed-contract boundary. Phase 30 establishe
                        OmniRoute
 ```
 
-No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces. Phase 38 graph rendering remains read-only, and Phase 39 authoring is validation/storage only; neither surface becomes an execution authority.
+No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces. Phase 38 graph rendering remains read-only, Phase 39 authoring is validation/storage only, and Phase 40 evidence recording is a provenance/inspection boundary; none becomes an independent execution authority.
 
 ### Evidence-first operation
 
-Important operations must remain inspectable: selected agent, selection reason, Skill, requested capabilities/tools, governance decisions, execution events, evidence, verification state, and unresolved uncertainty.
+Important operations must remain inspectable: selected agent, selection reason, Skill, requested capabilities/tools, governance decisions, execution events, evidence, verification state, provenance, supersession/contradiction, confidence, and unresolved uncertainty.
 
 ### Security and provenance
 
-Markdown personas, Skills, Rules, Hooks, Memory, deployment manifests, and UI-authored artifacts are data/configuration until explicitly authorized. Importing or editing an artifact must never silently grant permission or execute code. Public implementation claims must match independently verified SI-owned behavior and current repository evidence.
+Markdown personas, Skills, Rules, Hooks, Memory, deployment manifests, UI-authored artifacts, and evidence are data/configuration until explicitly authorized. Importing or editing an artifact must never silently grant permission or execute code. Public implementation claims must match independently verified SI-owned behavior and current repository evidence.
 
 ### Local-first
 
@@ -104,7 +104,15 @@ Canonical record: `docs/architecture/PHASE_39_AGENT_BUILDER.md`.
 
 # Phase 40 — Evidence & Observability
 
-Make the evidence-first architecture visible through inspectable run timelines and evidence detail. Evidence views distinguish facts, observations, inferences, and unresolved uncertainty and expose provenance, confidence, verification state, and supersession/contradiction where applicable.
+**State: Complete + CI verified.**
+
+Phase 40 makes the evidence-first architecture directly inspectable. `EvidenceRecord` distinguishes facts, observations, inferences, and explicit uncertainties and carries source, provenance, confidence, verification state, optional run linkage, related records, and supersession. Verification states are explicit (`unverified`, `verified`, `contradicted`, `superseded`), uncertainty cannot be marked verified, and confidence is bounded to `[0, 1]`.
+
+Evidence is persisted atomically in local `.si/` state with restrictive permissions. The Control API exposes evidence listing/detail/recording/verification and run timelines; OpenAPI is synchronized. A dependency-free Evidence Explorer is packaged and linked from the Control Center. Evidence recording and inspection never execute workers or grant authority.
+
+Mainline CI **#860** (`34512774276`) intentionally caught one route-shadowing regression with **457 passed, 1 failed**. The fix was merged in PR #41 as `4900401c48af52a6e8d901b622575bc49bdab563`. Final mainline CI **#862** (`34513000130`) passed every repository gate with **458 passed**.
+
+Canonical record: `docs/architecture/PHASE_40_EVIDENCE_OBSERVABILITY.md`.
 
 # Phase 41 — SI TUI
 
@@ -134,7 +142,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 37 Control Center [complete]
  → 38 Visual Graphs [complete]
  → 39 Agent Builder [complete]
- → 40 Evidence/Observability
+ → 40 Evidence/Observability [complete]
  → 41 TUI
  → 42 Harness Deployment
  → 43 Integration/Hardening
