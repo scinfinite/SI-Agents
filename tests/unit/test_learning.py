@@ -114,6 +114,14 @@ def test_failed_regression_blocks_approval() -> None:
         engine.approve(item.id)
 
 
+def test_proposal_requires_verified_evidence() -> None:
+    registry = ImprovementRegistry()
+    engine = ImprovementEngine(registry, evaluator())
+    unverified = proposal(evidence=evidence("one", "two", verified=False))
+    with pytest.raises(ValueError, match="verified evidence"):
+        engine.propose(unverified)
+
+
 def test_capability_intelligence_is_deterministic() -> None:
     registry = CapabilityRegistry()
     capability = registry.register(
@@ -139,6 +147,21 @@ def test_blocked_capability_has_zero_readiness() -> None:
     registry = CapabilityRegistry()
     capability = registry.register(Capability("unsafe", "security", CapabilityStatus.BLOCKED))
     assert CapabilityIntelligence(registry).score(capability).readiness == 0.0
+
+
+def test_unknown_health_is_not_executable() -> None:
+    registry = CapabilityRegistry()
+    registry.register(
+        Capability(
+            "unknown-health",
+            "engineering",
+            CapabilityStatus.VALIDATED,
+            verification=("tests",),
+            evidence=("e1", "e2"),
+            benchmark_score=0.9,
+        )
+    )
+    assert CapabilityIntelligence(registry).executable_candidates() == ()
 
 
 def test_intelligence_does_not_treat_experimental_as_executable() -> None:
