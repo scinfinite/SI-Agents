@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "schema": "si-agents.organization-expansion.v1",
+  "principle": "Organization coordinates responsibilities; it does not grant capabilities or permissions.",
+  "teams": [
+    {
+      "id": "engineering-delivery",
+      "name": "Engineering & Delivery",
+      "purpose": "Turn scoped work into tested, reviewable, traceable changes.",
+      "division_ids": ["si-engineering", "si-delivery", "si-verification"],
+      "member_agent_ids": ["si-engineering-senior-developer", "si-engineering-code-reviewer", "si-verification-test-automation-engineer", "si-delivery-project-manager-senior", "si-verification-reality-checker"],
+      "lead_agent_id": "si-delivery-project-manager-senior"
+    },
+    {
+      "id": "security-verification",
+      "name": "Security & Governance Assurance",
+      "purpose": "Review security, compliance, incidents, and evidence without granting authority.",
+      "division_ids": ["si-security"],
+      "member_agent_ids": ["si-security-architect", "si-security-compliance-auditor", "si-security-incident-responder", "si-verification-evidence-collector", "si-verification-reality-checker"],
+      "lead_agent_id": "si-security-architect"
+    },
+    {
+      "id": "research-strategy",
+      "name": "Research & Strategy",
+      "purpose": "Convert research, market signals, cognition, and specialist analysis into evidence-backed decisions.",
+      "division_ids": ["si-cognition", "si-research", "si-market", "si-geospatial", "si-health"],
+      "member_agent_ids": ["si-research-synthesist", "si-cognition-statistician", "si-market-agentic-search-optimizer", "si-geospatial-analyst", "si-health-clinical-evidence-agent"],
+      "lead_agent_id": "si-research-synthesist"
+    },
+    {
+      "id": "product-experience",
+      "name": "Product & Experience",
+      "purpose": "Shape product direction and user experiences across creative, product, game, and spatial work.",
+      "division_ids": ["si-product", "si-creative", "si-game", "si-spatial"],
+      "member_agent_ids": ["si-product-manager", "si-product-trend-researcher", "si-creative-ux-researcher", "si-creative-ux-architect", "si-creative-ui-designer"],
+      "lead_agent_id": "si-product-manager"
+    },
+    {
+      "id": "operations-support",
+      "name": "Operations & Support",
+      "purpose": "Coordinate operational support, revenue, finance, growth, and specialist services around governed delivery.",
+      "division_ids": ["si-finance", "si-growth", "si-revenue", "si-support", "si-specialized"],
+      "member_agent_ids": ["si-delivery-project-shepherd", "si-delivery-studio-operations", "si-support-support-responder", "si-support-analytics-reporter", "si-specialized-chief-of-staff"],
+      "lead_agent_id": "si-specialized-chief-of-staff"
+    }
+  ],
+  "division_assignments": [
+    {"division_id": "si-cognition", "team_id": "research-strategy", "rationale": "Cognition specialists primarily support evidence synthesis and analytical strategy."},
+    {"division_id": "si-creative", "team_id": "product-experience", "rationale": "Creative specialists shape product and experience outcomes."},
+    {"division_id": "si-engineering", "team_id": "engineering-delivery", "rationale": "Engineering owns implementation and technical delivery."},
+    {"division_id": "si-finance", "team_id": "operations-support", "rationale": "Finance supports governed operational and commercial decisions."},
+    {"division_id": "si-game", "team_id": "product-experience", "rationale": "Game specialists contribute to product and interactive experience work."},
+    {"division_id": "si-geospatial", "team_id": "research-strategy", "rationale": "Geospatial specialists contribute domain analysis and evidence."},
+    {"division_id": "si-health", "team_id": "research-strategy", "rationale": "Health specialists contribute evidence-focused domain analysis."},
+    {"division_id": "si-market", "team_id": "research-strategy", "rationale": "Market intelligence informs discovery and strategic decisions."},
+    {"division_id": "si-growth", "team_id": "operations-support", "rationale": "Growth execution is coordinated with operational and commercial delivery."},
+    {"division_id": "si-product", "team_id": "product-experience", "rationale": "Product owns product direction and prioritization."},
+    {"division_id": "si-delivery", "team_id": "engineering-delivery", "rationale": "Delivery coordinates execution, traceability, and completion."},
+    {"division_id": "si-research", "team_id": "research-strategy", "rationale": "Research provides evidence and synthesis for decisions."},
+    {"division_id": "si-revenue", "team_id": "operations-support", "rationale": "Revenue work belongs to governed commercial operations."},
+    {"division_id": "si-security", "team_id": "security-verification", "rationale": "Security owns assurance and incident responsibilities."},
+    {"division_id": "si-spatial", "team_id": "product-experience", "rationale": "Spatial computing is an experience and product specialty."},
+    {"division_id": "si-specialized", "team_id": "operations-support", "rationale": "Specialists are routed according to the operational mission they support."},
+    {"division_id": "si-support", "team_id": "operations-support", "rationale": "Support owns operational response and reporting."},
+    {"division_id": "si-verification", "team_id": "engineering-delivery", "rationale": "Verification closes delivery loops with evidence and quality gates."
+    }
+  ],
+  "workflows": [
+    {
+      "id": "governed-change-delivery",
+      "name": "Governed Change Delivery",
+      "purpose": "A repeatable implementation path with explicit review and evidence verification.",
+      "steps": [
+        {"id": "scope", "kind": "planning", "team_id": "engineering-delivery", "agent_id": "si-delivery-project-manager-senior", "purpose": "Translate the request into bounded deliverables and success criteria."},
+        {"id": "implement", "kind": "execution", "team_id": "engineering-delivery", "agent_id": "si-engineering-senior-developer", "purpose": "Implement the smallest scoped change." , "depends_on": ["scope"]},
+        {"id": "review", "kind": "review", "team_id": "engineering-delivery", "agent_id": "si-engineering-code-reviewer", "purpose": "Independently inspect correctness, maintainability, and regressions.", "depends_on": ["implement"]},
+        {"id": "verify", "kind": "verification", "team_id": "engineering-delivery", "agent_id": "si-verification-reality-checker", "purpose": "Verify evidence and confirm the change matches the stated scope.", "depends_on": ["review"]}
+      ]
+    },
+    {
+      "id": "security-assurance",
+      "name": "Security Assurance",
+      "purpose": "Inspect a proposed change for security and compliance risks before acceptance.",
+      "steps": [
+        {"id": "threat-review", "kind": "review", "team_id": "security-verification", "agent_id": "si-security-architect", "purpose": "Identify material trust-boundary and security risks."},
+        {"id": "compliance-review", "kind": "review", "team_id": "security-verification", "agent_id": "si-security-compliance-auditor", "purpose": "Check applicable compliance controls and evidence.", "depends_on": ["threat-review"]},
+        {"id": "evidence", "kind": "verification", "team_id": "security-verification", "agent_id": "si-verification-evidence-collector", "purpose": "Collect only the evidence required to support the assurance decision.", "depends_on": ["compliance-review"]}
+      ]
+    },
+    {
+      "id": "evidence-backed-discovery",
+      "name": "Evidence-Backed Discovery",
+      "purpose": "Move from research signals to a traceable decision without turning research into authority.",
+      "steps": [
+        {"id": "research", "kind": "discovery", "team_id": "research-strategy", "agent_id": "si-research-synthesist", "purpose": "Collect and synthesize relevant evidence."},
+        {"id": "analysis", "kind": "planning", "team_id": "research-strategy", "agent_id": "si-cognition-statistician", "purpose": "Analyze uncertainty, assumptions, and competing explanations.", "depends_on": ["research"]},
+        {"id": "decision", "kind": "review", "team_id": "research-strategy", "agent_id": "si-market-agentic-search-optimizer", "purpose": "Frame an evidence-backed strategic recommendation without claiming execution authority.", "depends_on": ["analysis"]},
+        {"id": "verify", "kind": "verification", "team_id": "research-strategy", "agent_id": "si-research-synthesist", "purpose": "Confirm sources, unresolved uncertainty, and provenance before handoff.", "depends_on": ["decision"]}
+      ]
+    },
+    {
+      "id": "product-discovery-to-delivery",
+      "name": "Product Discovery to Delivery",
+      "purpose": "Coordinate product discovery, experience design, implementation, and evidence-based acceptance.",
+      "steps": [
+        {"id": "discover", "kind": "discovery", "team_id": "product-experience", "agent_id": "si-product-trend-researcher", "purpose": "Identify user and market signals that justify the opportunity."},
+        {"id": "product-plan", "kind": "planning", "team_id": "product-experience", "agent_id": "si-product-manager", "purpose": "Convert evidence into bounded product outcomes.", "depends_on": ["discover"]},
+        {"id": "experience", "kind": "planning", "team_id": "product-experience", "agent_id": "si-creative-ux-architect", "purpose": "Define experience structure and acceptance expectations.", "depends_on": ["product-plan"]},
+        {"id": "delivery", "kind": "execution", "team_id": "engineering-delivery", "agent_id": "si-engineering-senior-developer", "purpose": "Implement the approved scope without changing governance boundaries.", "depends_on": ["experience"]},
+        {"id": "accept", "kind": "verification", "team_id": "engineering-delivery", "agent_id": "si-verification-reality-checker", "purpose": "Verify delivered behavior against the evidence-backed acceptance criteria.", "depends_on": ["delivery"]}
+      ]
+    }
+  ]
+}
