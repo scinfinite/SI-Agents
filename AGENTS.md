@@ -1,5 +1,9 @@
 # SI-Agents Engineering Rules
 
+## Current implementation status
+
+SI-Agents is currently at **Alpha** with Phases 1–5 complete and CI-verified. Phase 6 (Skills Engine) is the next implementation target. The authoritative roadmap is `docs/architecture/PHASES.md`.
+
 ## Engineering standard
 
 SI-Agents is built evidence-first. The priority is actual root-cause determination and verified, maintainable solutions rather than quick plausible answers.
@@ -33,3 +37,5 @@ SI-Agents is built evidence-first. The priority is actual root-cause determinati
 - ECC and Agency Agents are ongoing reference projects. Relevant upstream changes, issues, PRs, tests, releases, and design patterns should be reviewed when they materially affect a SI-Agents feature.
 - Keep project-specific knowledge isolated from global reusable knowledge.
 - Self-improvement must be controlled, evidence-backed, benchmarked, and regression-tested.
+- Architecture/phase Markdown must be updated when implementation status, verification evidence, boundaries, or roadmap state materially changes.
+- Phase completion claims must identify the verification evidence; documentation status must not outrun CI or implementation reality.
