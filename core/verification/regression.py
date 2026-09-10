@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable
 from uuid import uuid4
 
 
@@ -60,7 +60,7 @@ class RegressionSuite:
         for case in self._cases:
             try:
                 passed = bool(case.check())
-            except Exception as exc:  # noqa: BLE001 - a regression harness must fail closed.
+            except Exception as exc:
                 results.append(
                     RegressionResult(case.id, case.name, RegressionStatus.FAILED, f"check raised: {exc}")
                 )
