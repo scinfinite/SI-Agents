@@ -93,4 +93,4 @@ tests/test_repository_hygiene.py:31: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_repository_hygiene.py::test_temporary_phase29_artifacts_are_absent - AssertionError: /home/runner/work/SI-Agents/SI-Agents/phase29-test-debug.txt
 !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
-========================= 1 failed, 62 passed in 5.20s =========================
+========================= 1 failed, 62 passed in 4.72s =========================
