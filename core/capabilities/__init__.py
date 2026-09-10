@@ -6,6 +6,7 @@ from core.capabilities.health import CapabilityHealth, CapabilityHealthTracker
 from core.capabilities.lifecycle import CapabilityLifecycle, CapabilityProposal
 from core.capabilities.models import Capability, CapabilityStatus
 from core.capabilities.registry import CapabilityRegistry
+from core.capabilities.store import CapabilityStore
 from core.capabilities.versioning import CapabilityVersionManager, bump_version, validate_version
 
 __all__ = [
@@ -20,6 +21,7 @@ __all__ = [
     "CapabilityProposal",
     "CapabilityRegistry",
     "CapabilityStatus",
+    "CapabilityStore",
     "CapabilityVersionManager",
     "bump_version",
     "validate_version",
