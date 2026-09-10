@@ -75,9 +75,7 @@ Coverage includes:
 
 ## External pattern review
 
-Current external references were reviewed for security scanning, least-privilege configuration, evidence-backed remediation, and fail-closed security workflows. ECC's current AgentShield model emphasizes scanning secrets, permissions, hooks, MCP/configuration, and agent definitions with CI-friendly structured output; Agency Agents emphasizes explicit security scope, no credentials in Markdown agent definitions, and evidence-backed remediation. citeturn1search0turn1search1turn1search7turn0search0turn0search2
-
-SI-Agents generalizes these patterns into its dependency-free Python governance boundary rather than copying external code, prompts, or implementation structure.
+Current public engineering references were reviewed for least privilege, configuration scanning, secret detection, hook/MCP risk analysis, explicit security scope, evidence-backed remediation, and CI-friendly structured reports. SI-Agents generalizes those engineering patterns into its dependency-free Python governance boundary rather than copying external code, prompts, branding, or implementation structure.
 
 ## Exit gate
 
