@@ -35,7 +35,7 @@ The universal bridge intentionally accepts callbacks rather than importing SDKs.
 
 ## External reference patterns
 
-Current ECC demonstrates the value of a harness-neutral session substrate and normalized cross-harness surfaces, while its latest release describes session adapters covering Claude Code, Codex, OpenCode, and dmux. citeturn0search0turn0search7 Current Agency Agents reinforces the need for a canonical division source of truth plus generated tool-specific integration outputs and CI consistency checks. SI-Agents adopts the underlying engineering lesson—canonical contracts with adapter-specific projections—without copying those implementations. citeturn0search2turn0search4turn0search5
+Current ECC demonstrates the value of a harness-neutral session substrate and normalized cross-harness surfaces; its current release notes describe session adapters covering Claude Code, Codex, OpenCode, and dmux. Current Agency Agents reinforces the need for a canonical division source of truth plus generated tool-specific integration outputs and CI consistency checks. SI-Agents adopts the underlying engineering lesson—canonical contracts with adapter-specific projections—without copying those implementations.
 
 ## Explicit non-goals
 
