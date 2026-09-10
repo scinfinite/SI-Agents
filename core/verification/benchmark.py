@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable
 from uuid import uuid4
 
 
@@ -52,7 +52,7 @@ class Benchmark:
     def execute(self) -> BenchmarkRun:
         try:
             score = float(self._run())
-        except Exception as exc:  # noqa: BLE001 - benchmark failure is explicit.
+        except Exception as exc:
             raise RuntimeError(f"Benchmark execution failed: {exc}") from exc
         return BenchmarkRun(self.name, score)
 
