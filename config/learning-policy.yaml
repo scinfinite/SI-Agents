@@ -5,5 +5,11 @@ learning_policy:
   require_benchmark_before_update: true
   require_benchmark_after_update: true
   require_regression_test: true
+  memory:
+    default_promotion_confidence: 0.8
+    minimum_verified_evidence: 2
+    allow_automatic_global_promotion: false
+    allow_secret_storage: false
+    expire_from_retrieval: true
   promotion:
     project_to_global_requires_validation: true
