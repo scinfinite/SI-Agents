@@ -7,7 +7,7 @@ from core.skills.models import Skill, SkillRequirement, SkillStatus
 
 _REQUIRED = ("Purpose", "Inputs", "Outputs", "Prerequisites", "Workflow", "Tools", "Capabilities", "Permissions", "Verification", "Failure Behavior", "Evidence Requirements", "Examples", "Compatibility", "Provenance")
 _ALLOWED = {"schema", "version", "id", "name", "category", "status", "dependencies"}
-_FORBIDDEN = {"commands", "shell", "exec", "execute", "credentials", "secrets", "network", "install"}
+_FORBIDDEN = {"commands", "shell", "exec", "execute", "credentials", "secrets", "network", "install", "permissions", "capabilities", "tools", "harnesses", "environments"}
 _KEY = re.compile(r"^[a-z][a-z0-9_-]*$")
 
 
