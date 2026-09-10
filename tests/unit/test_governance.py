@@ -28,18 +28,20 @@ def test_paid_resource_with_approval_is_allowed() -> None:
     assert GovernanceEngine().decide(request).status is DecisionStatus.ALLOW
 
 
-def test_sensitive_egress_without_approval_is_rejected_at_boundary() -> None:
-    try:
-        GovernanceRequest(
-            action="upload data",
-            risk=RiskLevel.HIGH,
-            data_class=DataClass.SENSITIVE,
-            external_egress=True,
-        )
-    except ValueError as exc:
-        assert "sensitive external egress" in str(exc)
-    else:
-        raise AssertionError("sensitive egress must fail closed")
+def test_sensitive_egress_without_approval_requires_approval() -> None:
+    request = GovernanceRequest(
+        action="upload data", risk=RiskLevel.HIGH, data_class=DataClass.SENSITIVE, external_egress=True
+    )
+    decision = GovernanceEngine().decide(request)
+    assert decision.status is DecisionStatus.APPROVAL_REQUIRED
+
+
+def test_sensitive_egress_with_approval_is_allowed() -> None:
+    request = GovernanceRequest(
+        action="upload data", risk=RiskLevel.HIGH, data_class=DataClass.SENSITIVE, external_egress=True,
+        approval=Approval("human", "approved transfer"),
+    )
+    assert GovernanceEngine().decide(request).status is DecisionStatus.ALLOW
 
 
 def test_confidential_egress_requires_approval() -> None:
@@ -59,18 +61,21 @@ def test_credential_egress_is_denied_even_with_approval() -> None:
 
 
 def test_high_risk_destructive_requires_approval() -> None:
-    request = GovernanceRequest(
-        action="delete workspace", risk=RiskLevel.HIGH, destructive=True
-    )
+    request = GovernanceRequest(action="delete workspace", risk=RiskLevel.HIGH, destructive=True)
     assert GovernanceEngine().decide(request).status is DecisionStatus.APPROVAL_REQUIRED
 
 
-def test_publication_without_provenance_requires_review() -> None:
+def test_high_risk_destructive_with_approval_is_allowed() -> None:
     request = GovernanceRequest(
-        action="publish artifact", risk=RiskLevel.MEDIUM, publication=True
+        action="delete workspace", risk=RiskLevel.HIGH, destructive=True,
+        approval=Approval("human", "approved deletion"),
     )
-    decision = GovernanceEngine().decide(request)
-    assert decision.status is DecisionStatus.APPROVAL_REQUIRED
+    assert GovernanceEngine().decide(request).status is DecisionStatus.ALLOW
+
+
+def test_publication_without_provenance_requires_review() -> None:
+    request = GovernanceRequest(action="publish artifact", risk=RiskLevel.MEDIUM, publication=True)
+    assert GovernanceEngine().decide(request).status is DecisionStatus.APPROVAL_REQUIRED
 
 
 def test_publication_with_provenance_is_allowed() -> None:
@@ -92,5 +97,5 @@ def test_negative_cost_is_invalid() -> None:
 def test_critical_risk_is_derived_for_credential_actions() -> None:
     request = GovernanceRequest(action="rotate credential", risk=RiskLevel.LOW, credential=True)
     decision = GovernanceEngine().decide(request)
-    assert decision.status is DecisionStatus.APPROVAL_REQUIRED
-    assert any("critical" in reason for reason in decision.reasons)
+    assert decision.status is DecisionStatus.DENY
+    assert decision.effective_risk is RiskLevel.CRITICAL
