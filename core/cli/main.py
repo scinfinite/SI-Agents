@@ -22,8 +22,16 @@ from core.teams.engine import TeamEngine
 from core.teams.loader import load_team_catalog
 
 ROOT = Path(__file__).resolve().parents[2]
-AGENT_CATALOG = ROOT / "config" / "agent-catalog.json"
-TEAM_CATALOG = ROOT / "config" / "team-catalog.json"
+
+
+def _catalog_path(filename: str) -> Path:
+    source_path = ROOT / "config" / filename
+    if source_path.exists():
+        return source_path
+    installed_path = Path(sys.prefix) / "share" / "si-agents" / "config" / filename
+    if installed_path.exists():
+        return installed_path
+    raise FileNotFoundError(f"canonical catalog not found: {filename}")
 
 
 def _runtime() -> TermuxRuntime | CodespaceRuntime:
@@ -75,7 +83,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 
 
 def cmd_agents(args: argparse.Namespace) -> int:
-    catalog = load_catalog(AGENT_CATALOG)
+    catalog = load_catalog(_catalog_path("agent-catalog.json"))
     for division in catalog.all_divisions():
         print(f"[{division.id}] {division.name}")
         for agent in catalog.by_division(division.id):
@@ -85,7 +93,7 @@ def cmd_agents(args: argparse.Namespace) -> int:
 
 
 def cmd_teams(args: argparse.Namespace) -> int:
-    registry = load_team_catalog(TEAM_CATALOG)
+    registry = load_team_catalog(_catalog_path("team-catalog.json"))
     for team in registry.all():
         print(f"{team.id}: {team.name}")
         print(f"  {team.description}")
@@ -199,7 +207,7 @@ def cmd_update(args: argparse.Namespace) -> int:
 
 
 def _worker_resolver(agent_id: str):
-    catalog = load_catalog(AGENT_CATALOG)
+    catalog = load_catalog(_catalog_path("agent-catalog.json"))
     definition = catalog.get(agent_id)
     if not definition.implementation:
         raise ValueError(f"agent {agent_id} is catalog-only and cannot be executed")
@@ -209,7 +217,7 @@ def _worker_resolver(agent_id: str):
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    registry = load_team_catalog(TEAM_CATALOG)
+    registry = load_team_catalog(_catalog_path("team-catalog.json"))
     registry.get(args.team)
     engine = TeamEngine(registry)
     execution = engine.run(args.team, initial_context={"objective": args.objective}, resolve_worker=_worker_resolver)
