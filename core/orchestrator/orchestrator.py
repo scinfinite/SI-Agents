@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from core.capabilities.registry import CapabilityRegistry
 from core.execution.command_runner import CommandRunner
@@ -17,6 +18,7 @@ from core.state.filesystem_snapshot import FilesystemSnapshotStore
 from core.verification.evidence import Evidence, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
 from tools.registry.builtins import register_builtin_tools
+from tools.registry.executor import ToolExecutor
 from tools.registry.registry import ToolDescriptor, ToolRegistry
 
 
@@ -37,6 +39,7 @@ class Orchestrator:
         agent_coordinator: AgentCoordinator | None = None,
         execution_state_store: ExecutionStateStore | None = None,
         tool_registry: ToolRegistry | None = None,
+        tool_executor: ToolExecutor | None = None,
     ) -> None:
         self.tasks = task_manager or TaskManager()
         self.checkpoints = checkpoint_store or CheckpointStore()
@@ -51,6 +54,7 @@ class Orchestrator:
         self.agents = agent_coordinator or AgentCoordinator()
         self.execution_states = execution_state_store or ExecutionStateStore()
         self.tools = tool_registry or ToolRegistry()
+        self.tool_executor = tool_executor or ToolExecutor(self.tools, permissions=self.permissions)
 
     def run(self, description: str, worker: Callable[[str], str]) -> str:
         task = self.tasks.create(description)
@@ -74,6 +78,27 @@ class Orchestrator:
     def register_tool(self, tool: ToolDescriptor) -> ToolDescriptor:
         """Register a tool descriptor without executing or authorizing it."""
         return self.tools.register(tool)
+
+    def bind_tool(self, tool_id: str, implementation: object) -> None:
+        self.tool_executor.bind(tool_id, implementation)
+
+    def invoke_tool(
+        self,
+        tool_id: str,
+        operation: str,
+        *args: Any,
+        agent: str | None = None,
+        approval_granted: bool = False,
+        **kwargs: Any,
+    ) -> Any:
+        return self.tool_executor.invoke(
+            tool_id,
+            operation,
+            *args,
+            agent=agent,
+            approval_granted=approval_granted,
+            **kwargs,
+        )
 
     def select_capabilities(
         self,
