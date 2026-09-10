@@ -31,8 +31,6 @@ class GovernanceEngine:
 
         if request.approval is not None and not request.approval.active():
             reasons.append("approval is expired")
-        if request.approval is not None and not request.provenance:
-            reasons.append("approval-bearing request requires provenance")
 
         snapshot = self.store.snapshot()
         for policy in snapshot.policies:
