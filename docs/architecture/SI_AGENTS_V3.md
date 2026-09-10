@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–31 implemented and CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–32 implemented; Phase 32 feature CI green and mainline closure pending  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -52,7 +52,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 adds the explicit event/policy layer without creating a parallel permission authority.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 adds the explicit event/policy layer without creating a parallel permission authority. Phase 32 adds scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority.
 
 ### Web and TUI are views, not authorities
 
@@ -139,10 +139,12 @@ Final CI run **#735** passed the repository audit, Ruff, distribution/wheel veri
 
 # Phase 32 — Memory & Knowledge
 
-Build durable, provenance-aware memory/knowledge across:
+**State: Implementation complete + feature CI verified; final mainline closure pending.**
+
+Phase 32 delivers durable, provenance-aware memory and source-backed knowledge across:
 
 ```text
-Global → Organization → Division → Agent → Team → Project → Task → Evidence
+Task → Project → Team → Agent → Division → Organization → Global
 ```
 
 Lifecycle:
@@ -151,7 +153,23 @@ Lifecycle:
 Observation → Candidate → Evidence → Validation → Promotion → Scoped memory/knowledge
 ```
 
-Track source, scope, timestamps, confidence, provenance, evidence references, version, supersession, expiration, and validation state. Retrieval is not proof; promotion remains evidence-gated and fail-closed.
+Implemented properties:
+
+- immutable scoped MemoryEntry and MemoryEvidence contracts;
+- scope identity for task/project/team/agent/division/organization;
+- provenance, confidence, lifecycle, expiry, supersession, and contradiction tracking;
+- source-backed KnowledgeEntry records requiring verified evidence;
+- fail-closed one-scope-at-a-time promotion;
+- deterministic context-aware memory and knowledge retrieval;
+- atomic schema-versioned JSON persistence with backward-compatible list loading;
+- explicit MemoryService lifecycle coordination;
+- memory lifecycle EventBus integration;
+- security boundary preserving Rules, Hooks, PermissionEngine, and GovernanceEngine authority;
+- targeted regression/adversarial coverage.
+
+Feature-branch CI run **#762** passed repository audit, Ruff, distribution/wheel verification, and the complete pytest suite (**392 passed in 5.95s**). The final mainline verification remains the release gate.
+
+The canonical implementation record is `docs/architecture/PHASE_32.md`.
 
 ---
 
@@ -309,7 +327,7 @@ The v3 program is layered and must be completed in order:
 29 Personas [complete]
  → 30 Skills [complete]
  → 31 Rules/Hooks/Events [complete]
- → 32 Memory/Knowledge
+ → 32 Memory/Knowledge [implementation complete]
  → 33 Security/Governance
  → 34 Organization
  → 35 Control API
