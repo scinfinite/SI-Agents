@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–20 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–21 implemented; Phase 21 awaits final CI verification.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -22,6 +22,7 @@
 18. Production Hardening — deterministic readiness, explicit resource limits, telemetry redaction, evidence-based release gates, migration/rollback requirements, and CI hardening. **Complete.**
 19. v2.0 Reality Audit — executable baseline audit, runtime E2E acceptance, distribution correctness, isolated wheel verification, documentation/roadmap consistency, and evidence-backed future-boundary definition. **Complete.**
 20. Agent Organization & Catalog — canonical divisions, typed agent definitions, declarative selection, lifecycle status, implementation references, and organization validation. **Complete.**
+21. Agent Teams & Workflows — canonical teams, dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Implemented; final CI pending.**
 
 ## Release targets
 
@@ -32,10 +33,25 @@
 - **v2.0:** phases 16–18 — **complete**
 - **Post-v2 validation:** Phase 19 — **complete**
 - **Post-v2 organization:** Phase 20 — **complete**
+- **Post-v2 orchestration:** Phase 21 — **implemented; final CI pending**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 21 completion
+
+Phase 21 adds the executable organization/team layer on top of Phase 20. `config/team-catalog.json` is the canonical source for declarative team/workflow definitions. `core/teams` provides typed team/task/execution/event contracts, a duplicate-safe registry, a stdlib-only loader, and a bounded dependency-aware executor.
+
+The workflow engine schedules a dependency DAG deterministically, limits concurrency with team-level `max_parallelism`, supports explicit shared or isolated task context, uses `AgentResult.handoff` for portable handoffs, bounds retries, supports explicit escalation to declared team members, blocks downstream work after dependency failure, supports cooperative cancellation, and records ordered workflow events plus a final evidence checkpoint.
+
+Team membership does not grant permissions or governance authority. Workers are injected into the engine and remain responsible for their existing permission checks; the existing governance/runtime layers remain authoritative. This preserves the separation established by Phases 13, 17, and 18.
+
+The canonical `engineering-repair` workflow models debugger → developer → tester sequencing with evidence and verification gates. The acceptance suite covers dependency handoff, shared/isolated context, bounded parallelism, retry, escalation, verification/evidence gates, blocked downstream work, cancellation, cycle rejection, duplicate team rejection, and canonical catalog loading.
+
+Verification evidence: final completion requires a successful main CI run covering distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite. Phase 21 is not declared complete until that run passes.
+
+Phase 21 intentionally does **not** claim external harness adapters, OpenCode/OmniRoute integration, Claude Code/Codex/Cline/Antigravity adapters, Termux/Codespace installers, model/quota routing, automatic persona generation, self-modifying promotion, or forced termination of arbitrary workers. Those remain later phases or deployment responsibilities. The detailed contract is documented in `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md`.
 
 ## Phase 20 completion
 
@@ -43,7 +59,7 @@ Phase 20 establishes the first canonical organization layer. `config/agent-catal
 
 Catalog membership and selection do not grant permissions, invoke workers, spawn harnesses, or bypass governance. Runtime authorization remains with the existing permission and governance layers. This keeps organization data separate from execution authority and preserves the Phase 17/18 boundaries.
 
-Verification evidence: the Phase 20 test suite covers canonical loading, catalog consistency, capability/permission selection, skill/harness/environment selection, duplicate rejection, and invalid status rejection. Final main CI run **#440** completed successfully on commit `8a53078f8a1f745ab49813d3c27d71cefd271b25`, verifying distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Final PR verification run **#439** also completed successfully.
+Verification evidence: the Phase 20 test suite covers canonical loading, catalog consistency, capability/permission selection, skill/harness/environment selection, duplicate rejection, and invalid status rejection. Final main CI run **#442** completed successfully on the Phase 20 mainline, verifying distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Final PR verification was also successful.
 
 Phase 20 intentionally does **not** claim multi-agent orchestration, dynamic team execution, external harness adapters, OpenCode/OmniRoute integration, environment installers, automatic persona generation, or self-modifying agent promotion. Those remain separate future workstreams.
 
