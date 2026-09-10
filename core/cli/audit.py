@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import json
+import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -38,6 +38,22 @@ def _text_files(root: Path):
             continue
         if path.suffix in TEXT_SUFFIXES:
             yield path
+
+
+def _tracked_artifacts(root: Path) -> list[str]:
+    git_dir = root / ".git"
+    if not git_dir.exists():
+        return []
+    try:
+        result = subprocess.run(
+            ("git", "-C", str(root), "ls-files", "--cached", "--", "*.pyc", "*.pyo", "**/__pycache__/**"),
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    return [line for line in result.stdout.splitlines() if line]
 
 
 def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
@@ -91,15 +107,13 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     checks.append(AuditCheck("external-branding", not branding, "clean" if not branding else ", ".join(branding[:10])))
 
     transient = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_file() and path.name in TRANSIENT_NAMES]
-    compiled = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_file() and (path.suffix in {".pyc", ".pyo"} or "__pycache__" in path.parts)]
+    compiled = _tracked_artifacts(root)
     checks.append(AuditCheck("temporary-artifacts", not transient, "clean" if not transient else ", ".join(transient)))
-    checks.append(AuditCheck("compiled-artifacts", not compiled, "clean" if not compiled else f"{len(compiled)} tracked/runtime artifacts"))
+    checks.append(AuditCheck("compiled-artifacts", not compiled, "clean" if not compiled else ", ".join(compiled[:10])))
 
     try:
-        package_data = json.loads(json.dumps({"persona_markdown": True}))
-        del package_data
         pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
-        ok = '"**/*.md"' in pyproject or "**/*.md" in pyproject
+        ok = "**/*.md" in pyproject
         checks.append(AuditCheck("persona-packaging", ok, "agents Markdown package data configured" if ok else "agents Markdown package data missing"))
     except OSError as exc:
         checks.append(AuditCheck("persona-packaging", False, str(exc)))
