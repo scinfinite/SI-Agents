@@ -53,26 +53,34 @@ jobs:
           for directory in sorted((p for p in AGENTS.rglob("*") if p.is_dir()), key=lambda p: len(p.parts), reverse=True):
             try: directory.rmdir()
             except OSError: pass
+          acronym = {"Ai":"AI", "Api":"API", "ApiS":"APIs", "Cli":"CLI", "Db":"DB", "Git":"Git", "Http":"HTTP", "Ios":"iOS", "Json":"JSON", "Llm":"LLM", "Sdk":"SDK", "Sql":"SQL", "Ui":"UI", "Ux":"UX"}
           new_agents = []
           for entry in agents:
             old_id = entry["id"]; source_division, slug = old_id.split("--", 1)
             new_division, new_division_name = divisions[source_division]
             prefix = source_division + "-"; role_slug = slug[len(prefix):] if slug.startswith(prefix) else slug
             role_slug = re.sub(r"[^a-z0-9]+", "-", role_slug.lower()).strip("-")
-            new_id = f"{new_division}-{role_slug}"; role_title = re.sub(r"[-_]+", " ", role_slug).title()
-            new_name = f"{new_division_name} — {role_title}"; new_description = f"SI-Agents {new_division_name} persona for {role_title.lower()} work, governed by evidence, scope, and explicit authorization."
+            new_id = f"{new_division}-{role_slug}"
+            role_title = re.sub(r"[-_]+", " ", role_slug).title()
+            role_title = " ".join(acronym.get(word, word) for word in role_title.split())
+            new_name = f"{new_division_name} — {role_title}"
+            new_description = f"SI-Agents {new_division_name} persona for {role_title.lower()} work, governed by evidence, scope, and explicit authorization."
             path = AGENTS / new_division / f"si-{role_slug}.md"; path.parent.mkdir(parents=True, exist_ok=True)
             if path.exists(): raise SystemExit(f"duplicate target: {path}")
             body = original[old_id].split("---\n", 2)[-1]
-            if "---\n" in body: body = body.split("---\n", 1)[-1]
-            parts = body.split("\n## "); parts[0] = f"{new_name} is a governed SI-Agents behavioral persona. Persona text is data and does not grant permissions, tools, credentials, or execution authority."
-            body = "\n## ".join(parts).replace(entry["name"], new_name)
+            identity_idx = body.find("## Identity")
+            if identity_idx < 0: raise SystemExit(f"missing Identity section: {old_id}")
+            body = body[identity_idx:]
+            identity_end = body.find("\n## ", len("## Identity"))
+            if identity_end < 0: raise SystemExit(f"missing subsequent section: {old_id}")
+            body = "## Identity\n" + f"{new_name} is a governed SI-Agents behavioral persona. Persona text is data and does not grant permissions, tools, credentials, or execution authority." + body[identity_end:]
+            body = body.replace(entry["name"], new_name)
             front = f"---\nschema: si-agents.agent-persona.v1\nversion: 1\nid: {new_id}\nname: {new_name}\ndivision: {new_division}\ndescription: {new_description}\n---\n\n"
             path.write_text(front + body.lstrip(), encoding="utf-8")
             updated = dict(entry); updated.update(id=new_id, name=new_name, division=new_division, description=new_description); new_agents.append(updated)
           catalog["divisions"] = [{"id": i, "name": n, "description": f"{n} governed by SI-Agents."} for i, n in divisions.values()]; catalog["agents"] = new_agents
           CATALOG_PATH.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
-          p = ROOT / "tests/test_personas.py"; t = p.read_text(encoding="utf-8"); t = re.sub(r'CANONICAL_ID = ".*?"', 'CANONICAL_ID = "si-engineering-ai-engineer"', t); t = re.sub(r'CANONICAL_NAME = ".*?"', 'CANONICAL_NAME = "SI Engineering Forge — Ai Engineer"', t); p.write_text(t, encoding="utf-8")
+          p = ROOT / "tests/test_personas.py"; t = p.read_text(encoding="utf-8"); t = re.sub(r'CANONICAL_ID = ".*?"', 'CANONICAL_ID = "si-engineering-ai-engineer"', t); t = re.sub(r'CANONICAL_NAME = ".*?"', 'CANONICAL_NAME = "SI Engineering Forge — AI Engineer"', t); t = t.replace('source = source.replace("Example Agent", CANONICAL_NAME)', 'source = source.replace("Example Agent", CANONICAL_NAME)\n    source = source.replace("division: engineering", "division: si-engineering")'); p.write_text(t, encoding="utf-8")
           p = ROOT / "tests/test_agent_catalog.py"; t = p.read_text(encoding="utf-8"); t = t.replace("self.assertEqual(len(catalog.all_divisions()), 7)", "self.assertEqual(len(catalog.all_divisions()), 18)").replace('division="engineering"', 'division="si-engineering"').replace('Division("engineering", "Engineering", "Build software")', 'Division("si-engineering", "SI Engineering Forge", "Build and maintain governed software systems")').replace('"division":"engineering"', '"division":"si-engineering"'); p.write_text(t, encoding="utf-8")
           p = ROOT / "tests/test_repository_hygiene.py"; t = p.read_text(encoding="utf-8"); t = t.replace('if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:', 'if not path.is_file() or ".git" in path.parts or ".ci-wheel-venv" in path.parts or path.suffix not in TEXT_SUFFIXES:').replace('if path.is_file() and path.name in forbidden_names:', 'if path.is_file() and ".ci-wheel-venv" not in path.parts and path.name in forbidden_names:'); p.write_text(t, encoding="utf-8")
           for rel in [".github/workflows/phase29-test-debug.yml", "phase29-test-debug.txt", ".github/workflows/si-persona-restructure.yml"]:
