@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import pytest
 from pathlib import Path
+
+import pytest
 
 from core.skills.artifacts import build_manifest, load_artifact
 from core.skills.composer import compose
