@@ -71,4 +71,4 @@ class PatternExtractor:
             score += 0.2
         if counters:
             score -= min(0.2, 0.05 * len(counters))
-        return max(0.0, min(1.0, score))
+        return round(max(0.0, min(1.0, score)), 4)
