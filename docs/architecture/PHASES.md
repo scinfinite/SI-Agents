@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 track — Phases 1–18 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phase 19 reality audit complete and CI-verified.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -20,6 +20,7 @@
 16. Controlled Self-Improvement + Capability Intelligence — evidence-backed proposals, benchmark/regression/safety gates, explicit approval, rollback, capability readiness intelligence, conservative unknown handling, and auditable persistence. **Complete.**
 17. Harness & Runtime Interoperability — transport-neutral invocation, capability negotiation, normalized events/errors, project sessions, explicit harness registration, governed local adapter, and conformance tests. **Complete.**
 18. Production Hardening — deterministic readiness, explicit resource limits, telemetry redaction, evidence-based release gates, migration/rollback requirements, and CI hardening. **Complete.**
+19. v2.0 Reality Audit — executable baseline audit, runtime E2E acceptance, distribution correctness, isolated wheel verification, documentation/roadmap consistency, and evidence-backed future-boundary definition. **Complete.**
 
 ## Release targets
 
@@ -28,10 +29,19 @@
 - **v1.0:** phases 10–13 — **complete**
 - **v1.5:** phases 14–15 — **complete**
 - **v2.0:** phases 16–18 — **complete**
+- **Post-v2 validation:** Phase 19 — **complete**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 19 completion
+
+Phase 19 established the evidence-backed boundary for the next SI-Agents evolution. The audit confirmed that the v2.0 runtime boundary is executable and governed, while also identifying the missing user-facing cross-harness/environment layer. The `agents` package distribution gap was fixed; CI now installs the built wheel in an isolated environment and imports the agent/runtime APIs; and a dedicated integration test exercises a registered, enabled, governed runtime session through `RuntimeEngine` with streaming events.
+
+The audit explicitly does **not** claim OpenCode, OmniRoute, Claude Code, Codex, Cline, Antigravity, Termux, Codespaces, unified setup/doctor CLI, agent divisions/teams, or cross-environment handoff as implemented. These remain future work and are documented in `docs/architecture/PHASE_19_REALITY_AUDIT.md`.
+
+Verification evidence: PR #2 CI run #430 completed successfully with distribution build, isolated wheel installation/import, Ruff, and the full pytest suite. Main baseline CI run #428 and the v2 status synchronization PR #1 CI run #429 were also successful.
 
 ## Phase 18 completion
 
