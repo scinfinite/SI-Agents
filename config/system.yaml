@@ -4,9 +4,7 @@ system:
   evidence_first: true
   verify_before_claim: true
   project_isolation: true
-  upstream_references:
-    - affaan-m/ECC
-    - msitarzewski/agency-agents
+  external_research_allowed: true
 
 execution:
   create_checkpoint_before_change: true
