@@ -107,6 +107,7 @@ class OrganizationExpansion:
         division_ids = {division.id for division in divisions}
         agent_ids = {agent.id for agent in agents}
         team_ids = {team.id for team in self.teams}
+        assignment_by_division = {assignment.division_id: assignment.team_id for assignment in self.division_assignments}
 
         if len(team_ids) != len(self.teams):
             errors.append("duplicate team ids")
@@ -128,10 +129,23 @@ class OrganizationExpansion:
                 errors.append(f"team {team.id} references unknown divisions: {', '.join(missing_team_divisions)}")
             if missing_members:
                 errors.append(f"team {team.id} references unknown agents: {', '.join(missing_members)}")
+            for division_id in team.division_ids:
+                assigned_team = assignment_by_division.get(division_id)
+                if assigned_team is not None and assigned_team != team.id:
+                    errors.append(
+                        f"team {team.id} lists division {division_id}, but it is assigned to {assigned_team}"
+                    )
 
         for assignment in self.division_assignments:
             if assignment.team_id not in team_ids:
                 errors.append(f"division {assignment.division_id} references unknown team {assignment.team_id}")
+            elif assignment.division_id in division_ids:
+                team = next(team for team in self.teams if team.id == assignment.team_id)
+                if assignment.division_id not in team.division_ids:
+                    errors.append(
+                        f"division {assignment.division_id} is assigned to {assignment.team_id}, "
+                        "but that team does not declare the division"
+                    )
 
         for workflow in self.workflows:
             step_ids = {step.id for step in workflow.steps}
