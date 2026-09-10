@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-# ruff: noqa: I001
 import json
 import subprocess
 from dataclasses import asdict, dataclass
