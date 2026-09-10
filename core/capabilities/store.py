@@ -26,11 +26,11 @@ class CapabilityStore:
             return ()
         payload = json.loads(self.path.read_text(encoding="utf-8"))
         if not isinstance(payload, list):
-            raise ValueError("Capability store must contain a JSON list")
+            raise TypeError("Capability store must contain a JSON list")
         loaded: list[Capability] = []
         for raw in payload:
             if not isinstance(raw, dict):
-                raise ValueError("Capability record must be a JSON object")
+                raise TypeError("Capability record must be a JSON object")
             data = dict(raw)
             data["status"] = CapabilityStatus(data["status"])
             data["registered_at"] = datetime.fromisoformat(data["registered_at"])
