@@ -14,8 +14,9 @@ import socket
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
 
 
 class OmniRouteError(RuntimeError):
@@ -133,7 +134,7 @@ class OmniRouteClient:
             raise OmniRouteError(
                 f"OmniRoute HTTP {exc.code}: {detail[:500]}", status=exc.code, retryable=retryable
             ) from exc
-        except (urllib.error.URLError, TimeoutError, socket.timeout) as exc:
+        except (urllib.error.URLError, TimeoutError) as exc:
             raise OmniRouteError(f"OmniRoute unavailable: {exc}", retryable=True) from exc
         except json.JSONDecodeError as exc:
             raise OmniRouteError("OmniRoute returned invalid JSON") from exc
