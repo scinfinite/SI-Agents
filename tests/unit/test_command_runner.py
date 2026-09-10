@@ -1,7 +1,7 @@
+from core.execution.command_runner import CommandRunner
 from core.orchestrator.orchestrator import Orchestrator
 from core.policies.permission_engine import PermissionEngine
 from tools.sandbox.local_sandbox import LocalSandbox
-from core.execution.command_runner import CommandRunner
 
 
 def test_command_execution_is_correlated_to_task_and_evidence(tmp_path) -> None:
