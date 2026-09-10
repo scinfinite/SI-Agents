@@ -37,6 +37,8 @@ def _sanitize_git_url(value: str) -> str:
     if value.startswith(("http://", "https://")):
         parsed = urlsplit(value)
         return urlunsplit((parsed.scheme, parsed.hostname or "", parsed.path, "", ""))
+    if value.startswith("git@") and ":" in value:
+        return value.split("@", 1)[1]
     if "@" in value and ":" in value.split("@", 1)[0]:
         return value.split("@", 1)[1]
     return value
