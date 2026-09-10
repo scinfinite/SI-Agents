@@ -23,6 +23,26 @@ def test_cli_parser_exposes_phase_27_commands() -> None:
         assert args.command == command
 
 
+def test_cli_parser_exposes_phase_28_handoff_commands() -> None:
+    parser = build_parser()
+    create = parser.parse_args(
+        [
+            "handoff", "create", "engineering-repair", "--objective", "x",
+            "--source", "termux", "--target", "codespace", "--output", "handoff.json",
+        ]
+    )
+    assert create.command == "handoff"
+    assert create.handoff_command == "create"
+    inspect = parser.parse_args(["handoff", "inspect", "handoff.json"])
+    assert inspect.handoff_command == "inspect"
+    import_args = parser.parse_args(["handoff", "import", "handoff.json"])
+    assert import_args.handoff_command == "import"
+    resumed = parser.parse_args(
+        ["run", "engineering-repair", "--objective", "x", "--handoff", "handoff.json"]
+    )
+    assert resumed.handoff == "handoff.json"
+
+
 def test_config_round_trip_uses_only_non_secret_fields(tmp_path: Path) -> None:
     path = tmp_path / "config.json"
     config = SIConfig(
