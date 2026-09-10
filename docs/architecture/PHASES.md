@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v1.0 track — Phases 1–10 complete and CI-verified. Phase 11 is next.**
+**Current status: v1.0 track — Phases 1–11 complete and CI-verified. Phase 12 is next.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -12,7 +12,7 @@
 8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards. **Complete.**
 9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies. **Complete.**
 10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health. **Complete.**
-11. Pattern Extraction — generalize and independently validate reusable engineering patterns.
+11. Pattern Extraction — deterministic normalization, conservative extraction, independent validation, counterexamples, provenance, promotion, and matching. **Complete.**
 12. Engineering Memory — task/project/global memory with controlled promotion.
 13. Security + Legal + Cost — governance gates, free-first routing, data rights, security and compliance.
 14. Model/Provider Intelligence — capability, quota, cost, latency, reliability, fallback, circuit breakers.
@@ -25,7 +25,7 @@
 
 - **Alpha:** phases 0–5 — achieved
 - **Beta:** phases 6–9 — **complete**
-- **v1.0:** phases 10–13 — **Phase 10 complete; phases 11–13 remain**
+- **v1.0:** phases 10–13 — **Phases 10–11 complete; phases 12–13 remain**
 - **v1.5:** phases 14–15
 - **v2.0:** phases 16–18
 
@@ -36,3 +36,7 @@ A phase is not considered complete merely because its files exist. Its acceptanc
 ## Phase 10 completion
 
 Phase 10 delivered a provenance-preserving open-source intelligence layer covering repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract. External repository content remains untrusted research input and is never treated as system policy. Unknown license/health signals remain explicitly uncertain. Final CI evidence is recorded in `docs/architecture/PHASE_10_OPEN_SOURCE_INTELLIGENCE.md` after the final workflow completes.
+
+## Phase 11 completion
+
+Phase 11 delivers deterministic normalization of engineering observations, conservative candidate extraction, independent verified-evidence validation, explicit counterexample handling, provenance retention, evidence-gated registry promotion/versioning, and context matching. A pattern match is a ranking signal, not proof. Promotion remains fail-closed until the documented evidence and confidence criteria pass. Final CI evidence is recorded by the repository workflow on the completed Phase 11 head.
