@@ -16,10 +16,12 @@ from core.state.execution_state_store import ExecutionStateStore
 from core.state.filesystem_snapshot import FilesystemSnapshotStore
 from core.verification.evidence import Evidence, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
+from tools.registry.builtins import register_builtin_tools
+from tools.registry.registry import ToolDescriptor, ToolRegistry
 
 
 class Orchestrator:
-    """Control-plane entry point coordinating tasks, capabilities, execution, and evidence."""
+    """Control-plane entry point coordinating tasks, capabilities, tools, and evidence."""
 
     def __init__(
         self,
@@ -34,6 +36,7 @@ class Orchestrator:
         context_manager: ContextManager | None = None,
         agent_coordinator: AgentCoordinator | None = None,
         execution_state_store: ExecutionStateStore | None = None,
+        tool_registry: ToolRegistry | None = None,
     ) -> None:
         self.tasks = task_manager or TaskManager()
         self.checkpoints = checkpoint_store or CheckpointStore()
@@ -47,6 +50,7 @@ class Orchestrator:
         self.contexts = context_manager or ContextManager()
         self.agents = agent_coordinator or AgentCoordinator()
         self.execution_states = execution_state_store or ExecutionStateStore()
+        self.tools = tool_registry or ToolRegistry()
 
     def run(self, description: str, worker: Callable[[str], str]) -> str:
         task = self.tasks.create(description)
@@ -62,6 +66,14 @@ class Orchestrator:
         task.succeed(result)
         self.tasks.persist()
         return result
+
+    def register_builtin_tools(self) -> None:
+        """Register standard tool descriptors; registration grants no permissions."""
+        register_builtin_tools(self.tools)
+
+    def register_tool(self, tool: ToolDescriptor) -> ToolDescriptor:
+        """Register a tool descriptor without executing or authorizing it."""
+        return self.tools.register(tool)
 
     def select_capabilities(
         self,
