@@ -56,6 +56,7 @@ class AgentCatalogTests(unittest.TestCase):
                 "code-reviewer",
                 "reality-checker",
                 "release-engineer",
+                "infrastructure-engineer",
             },
         )
 
