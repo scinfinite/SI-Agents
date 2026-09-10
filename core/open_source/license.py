@@ -1,4 +1,4 @@
-from core.open_source import models
+from . import models
 
 
 # Conservative identifiers only. This is not legal advice and does not replace license review.
