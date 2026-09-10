@@ -12,6 +12,7 @@ from core.policies.approval_engine import ApprovalEngine
 from core.policies.permission_engine import PermissionEngine
 from core.state.checkpoints import Checkpoint, CheckpointStore
 from core.state.execution_state import ExecutionState
+from core.state.execution_state_store import ExecutionStateStore
 from core.state.filesystem_snapshot import FilesystemSnapshotStore
 from core.verification.evidence import Evidence, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
@@ -32,6 +33,7 @@ class Orchestrator:
         capability_registry: CapabilityRegistry | None = None,
         context_manager: ContextManager | None = None,
         agent_coordinator: AgentCoordinator | None = None,
+        execution_state_store: ExecutionStateStore | None = None,
     ) -> None:
         self.tasks = task_manager or TaskManager()
         self.checkpoints = checkpoint_store or CheckpointStore()
@@ -44,7 +46,7 @@ class Orchestrator:
         self.capability_selector = CapabilitySelector(self.capabilities)
         self.contexts = context_manager or ContextManager()
         self.agents = agent_coordinator or AgentCoordinator()
-        self.executions: dict[str, ExecutionState] = {}
+        self.execution_states = execution_state_store or ExecutionStateStore()
 
     def run(self, description: str, worker: Callable[[str], str]) -> str:
         task = self.tasks.create(description)
@@ -125,12 +127,14 @@ class Orchestrator:
             tool=tool,
         )
         state = ExecutionState(task_id=task_id)
-        self.executions[state.id] = state
+        self.execution_states.record(state)
         state.start()
+        self.execution_states.update(state)
         try:
             record = self.commands.run(task_id, command, timeout=timeout)
         except Exception as exc:
             state.fail(str(exc))
+            self.execution_states.update(state)
             raise
         status = VerificationStatus.VERIFIED if record.succeeded else VerificationStatus.FAILED
         details = record.stderr if not record.succeeded else record.stdout
@@ -138,6 +142,7 @@ class Orchestrator:
             state.succeed()
         else:
             state.fail(details or f"Command returned {record.return_code}")
+        self.execution_states.update(state)
         self.evidence.record(
             Evidence(
                 claim=f"Command execution succeeded: {record.succeeded}",
