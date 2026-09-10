@@ -42,11 +42,8 @@ class FakeProvider:
 
 
 def make_snapshot(**kwargs):
-    return OpenSourceSnapshot(
-        RepositorySummary("example/project", open_issues=4),
-        sources=("fixture",),
-        **kwargs,
-    )
+    repository = kwargs.pop("repository", RepositorySummary("example/project", open_issues=4))
+    return OpenSourceSnapshot(repository, sources=("fixture",), **kwargs)
 
 
 def test_models_cover_repository_history_issues_prs_releases_security():
@@ -81,14 +78,18 @@ def test_registry_rejects_duplicate_snapshot():
 def test_archaeology_is_deterministic_and_reports_activity_window():
     first = datetime(2026, 1, 1, tzinfo=UTC)
     second = datetime(2026, 2, 1, tzinfo=UTC)
-    commits = (CommitSummary("a", "feat: x", authored_at=first), CommitSummary("b", "fix: y", authored_at=second))
+    commits = (
+        CommitSummary("a", "feat: x", authored_at=first),
+        CommitSummary("b", "fix: y", authored_at=second),
+    )
     report = summarize_history("example/project", commits)
     assert report.themes == ("feat", "fix")
     assert activity_window(commits) == (first, second)
 
 
 def test_health_does_not_treat_missing_signals_as_negative_quality():
-    snapshot = make_snapshot(open_issues=10, releases=())
+    repository = RepositorySummary("example/project", open_issues=10)
+    snapshot = make_snapshot(repository=repository, releases=())
     health = assess_health(snapshot)
     assert health.score is not None
     assert "no releases observed in supplied snapshot" in health.limitations
