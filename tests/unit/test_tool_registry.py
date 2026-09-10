@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -66,8 +67,9 @@ def test_filesystem_and_code_tools_stay_inside_workspace() -> None:
 def test_git_and_developer_tool_adapters_return_results() -> None:
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
-        assert GitTool(root).run(("init",)).succeeded
+        assert subprocess.run(["git", "init", "-q", str(root)], check=False).returncode == 0
         assert GitTool(root).status().succeeded
+        assert not GitTool(root).run(("commit", "--allow-empty", "-m", "blocked")).succeeded
         assert TestRunnerTool(root).available("python")
         assert CompilerTool(root).python_compile(".").succeeded
         assert LinterTool(root).ruff("check", "tools/registry").succeeded
