@@ -91,7 +91,7 @@ This is an extensible baseline, not an exhaustive ecosystem detector. Later phas
 
 ## CI evidence
 
-Phase 9 was completed only after the final repository head passed the complete CI workflow. The final run and test count are recorded in the synchronized roadmap and release documentation.
+Final CI run **#258** for commit `a20e370f46d8ec0fccb62e820ea461ff9bd09bf9` passed installation, distribution build, Ruff, and the complete pytest suite. Ruff reported `All checks passed!`; pytest reported **150 passed in 1.18s**. Earlier runs exposed four Ruff violations (invalid escape sequence, outdated Callable import, and two intentional broad-exception handlers); each was fixed and the final head was rerun successfully.
 
 ## Next phase
 
