@@ -1,2 +1,1 @@
-./docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md:27:Current ECC and Agency Agents reinforced the engineering lesson of canonical contracts with adapter-specific projections and source-of-truth consistency. SI-Agents independently implemented those principles with typed governance boundaries.
 ./.github/workflows/phase29-hygiene-debug.yml:15:          grep -RniE 'Agency Agents|agency-agents|\bECC\b' --exclude-dir=.git . > phase29-hygiene-debug.txt || true
