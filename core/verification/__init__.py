@@ -3,7 +3,7 @@
 from core.verification.claim_store import ClaimStore
 from core.verification.claims import Claim
 from core.verification.confidence import ConfidenceAssessment, ConfidenceLevel, assess, level_for
-from core.verification.evidence import Evidence, VerificationStatus
+from core.verification.evidence import Evidence, EvidenceKind, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
 from core.verification.production_readiness import (
     ProductionReadiness,
@@ -37,6 +37,7 @@ __all__ = [
     "ConfidenceAssessment",
     "ConfidenceLevel",
     "Evidence",
+    "EvidenceKind",
     "EvidenceStore",
     "ProductionReadiness",
     "ReadinessGate",
