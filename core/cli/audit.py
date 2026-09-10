@@ -11,7 +11,10 @@ from core.personas.registry import PersonaRegistry
 
 
 TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
-HIDDEN_UNICODE = {"\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069"}
+HIDDEN_UNICODE = {
+    "\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069",
+    "\u202a", "\u202b", "\u202c", "\u202d", "\u202e", "\u206a", "\u206b", "\u206c", "\u206d", "\u206e", "\u206f",
+}
 FORBIDDEN_BRANDING = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
 TRANSIENT_NAMES = {
     "persona_parity_build.py",
