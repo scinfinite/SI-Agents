@@ -9,8 +9,17 @@ from core.cli.main import build_parser, cmd_agents, cmd_teams
 
 def test_cli_parser_exposes_phase_27_commands() -> None:
     parser = build_parser()
-    for command in ("doctor", "status", "agents", "teams", "setup", "update", "run"):
-        args = parser.parse_args([command] + (["--objective", "x"] if command == "run" else []))
+    cases = {
+        "doctor": ["doctor"],
+        "status": ["status"],
+        "agents": ["agents"],
+        "teams": ["teams"],
+        "setup": ["setup"],
+        "update": ["update"],
+        "run": ["run", "engineering-repair", "--objective", "x"],
+    }
+    for command, argv in cases.items():
+        args = parser.parse_args(argv)
         assert args.command == command
 
 
@@ -21,6 +30,7 @@ def test_config_round_trip_uses_only_non_secret_fields(tmp_path: Path) -> None:
         workspace="/tmp/project",
         opencode_url="http://127.0.0.1:4096",
         omniroute_url="http://127.0.0.1:20128",
+        omniroute_model="example-model",
     )
     save_config(config, path)
     loaded = load_config(path)
