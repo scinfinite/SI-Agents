@@ -5,11 +5,7 @@ from pathlib import Path
 
 from core.skills.models import Skill, SkillRequirement, SkillStatus
 
-_REQUIRED = (
-    "Purpose", "Inputs", "Outputs", "Prerequisites", "Workflow", "Tools",
-    "Capabilities", "Permissions", "Verification", "Failure Behavior",
-    "Evidence Requirements", "Examples", "Compatibility", "Provenance",
-)
+_REQUIRED = ("Purpose", "Inputs", "Outputs", "Prerequisites", "Workflow", "Tools", "Capabilities", "Permissions", "Verification", "Failure Behavior", "Evidence Requirements", "Examples", "Compatibility", "Provenance")
 _ALLOWED = {"schema", "version", "id", "name", "category", "status", "dependencies"}
 _FORBIDDEN = {"commands", "shell", "exec", "execute", "credentials", "secrets", "network", "install"}
 _KEY = re.compile(r"^[a-z][a-z0-9_-]*$")
@@ -33,16 +29,13 @@ def parse_skill(text: str, *, source_path: str | None = None) -> Skill:
     if missing_sections:
         raise ValueError("Skill sections missing: " + ", ".join(missing_sections))
     return Skill(
-        schema=meta["schema"], version=meta["version"], id=meta["id"], name=meta["name"],
-        category=meta["category"], purpose=_scalar(sections["Purpose"]),
-        inputs=_items(sections["Inputs"]), outputs=_items(sections["Outputs"]),
-        prerequisites=_items(sections["Prerequisites"]), procedure=_items(sections["Workflow"]),
-        required_tools=_items(sections["Tools"]), requested_capabilities=_items(sections["Capabilities"]),
-        requested_permissions=_items(sections["Permissions"]), verification=_items(sections["Verification"]),
-        failure_behavior=_items(sections["Failure Behavior"]), evidence_requirements=_items(sections["Evidence Requirements"]),
-        examples=_items(sections["Examples"]), compatibility=_requirements(sections["Compatibility"]),
-        provenance=_scalar(sections["Provenance"]), status=SkillStatus(meta["status"]),
-        dependencies=_items(sections.get("Dependencies", "- none")),
+        schema=meta["schema"], version=meta["version"], id=meta["id"], name=meta["name"], category=meta["category"],
+        purpose=_scalar(sections["Purpose"]), inputs=_items(sections["Inputs"]), outputs=_items(sections["Outputs"]),
+        prerequisites=_items(sections["Prerequisites"]), procedure=_items(sections["Workflow"]), required_tools=_items(sections["Tools"]),
+        requested_capabilities=_items(sections["Capabilities"]), requested_permissions=_items(sections["Permissions"]), verification=_items(sections["Verification"]),
+        failure_behavior=_items(sections["Failure Behavior"]), evidence_requirements=_items(sections["Evidence Requirements"]), examples=_items(sections["Examples"]),
+        compatibility=_requirements(sections["Compatibility"]), provenance=_scalar(sections["Provenance"]), status=SkillStatus(meta["status"]),
+        dependencies=_metadata_list(meta.get("dependencies")),
     )
 
 
@@ -110,12 +103,23 @@ def _scalar(value: str) -> str:
 
 
 def _items(value: str) -> tuple[str, ...]:
-    items = tuple(line.strip()[1:].strip() for line in value.splitlines() if line.strip())
-    if not items or any(not item for item in items) or any(not line.strip().startswith("-") for line in value.splitlines() if line.strip()):
+    lines = [line.strip() for line in value.splitlines() if line.strip()]
+    if lines == ["- none"]:
+        return ()
+    if not lines or any(not line.startswith("-") or not line[1:].strip() for line in lines):
         raise ValueError("Skill list sections must contain Markdown bullet items")
+    items = tuple(line[1:].strip() for line in lines)
     if len(items) != len(set(items)):
         raise ValueError("Skill list section contains duplicate items")
     return items
+
+
+def _metadata_list(value: str | None) -> tuple[str, ...]:
+    if not value or value in ("[]", "[none]"):
+        return ()
+    if value.startswith("[") and value.endswith("]"):
+        return tuple(item.strip().strip("\"'") for item in value[1:-1].split(",") if item.strip())
+    return (value,)
 
 
 def _requirements(value: str) -> tuple[SkillRequirement, ...]:
