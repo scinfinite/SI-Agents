@@ -82,3 +82,15 @@ Pattern extraction is an evidence transformation layer, not an instruction-autho
 ## Verification
 
 The phase acceptance suite covers deterministic normalization, candidate extraction, fail-closed validation, verified evidence, independent examples/sources, counterexample handling, registry promotion/versioning, validation identity checks, and matcher behavior. The repository CI gate remains build + Ruff + complete pytest suite on the final repository head.
+
+### Final CI evidence
+
+- Workflow: **CI**
+- Run: **#290** (`34441963425`)
+- Final head: `0eade20a9a83e65e88771d069aeb375bc46a733e`
+- Build distributions: **passed**
+- Ruff: **passed**
+- Tests: **169 passed in 1.25s**
+- Job conclusion: **success**
+
+An earlier CI run exposed two test defects in the new implementation; both were fixed immediately and the corrected run was re-executed. The final run above is the evidence used for Phase 11 completion.
