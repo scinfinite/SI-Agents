@@ -2,7 +2,7 @@
 
 ## Current implementation status
 
-SI-Agents is currently on the **v1.0 track** with Phases 1–13 complete and CI-verified. Phase 14 (Model/Provider Intelligence) is the next implementation target. The authoritative roadmap is `docs/architecture/PHASES.md`.
+SI-Agents is currently on the **v2.0 track** with Phases 1–18 complete and CI-verified. The authoritative roadmap is `docs/architecture/PHASES.md`. The next workstream is post-v2.0 validation and evolution planning; no Phase 19 is assumed until an evidence-backed gap is identified.
 
 ## Engineering standard
 
