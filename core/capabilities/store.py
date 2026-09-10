@@ -1,6 +1,6 @@
 import json
 from dataclasses import asdict
-from enum import Enum
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +33,7 @@ class CapabilityStore:
                 raise ValueError("Capability record must be a JSON object")
             data = dict(raw)
             data["status"] = CapabilityStatus(data["status"])
+            data["registered_at"] = datetime.fromisoformat(data["registered_at"])
             for key in ("skills", "tools", "permissions", "inputs", "outputs", "verification", "evidence"):
                 data[key] = tuple(data.get(key, ()))
             item = Capability(**data)
