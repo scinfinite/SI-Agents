@@ -28,8 +28,8 @@ from core.provider_intelligence.router import ModelRouter
 __all__ = [
     "Capability",
     "CircuitBreaker",
-    "ModelRouter",
     "ModelProfile",
+    "ModelRouter",
     "OmniRouteClient",
     "OmniRouteConfig",
     "OmniRouteError",
