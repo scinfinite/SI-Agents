@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>SI-Agents Web</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">SI-AGENTS</p>
+      <h1>Local Web Foundation</h1>
+      <p class="muted">A live, localhost-first operator surface over the Control API.</p>
+    </header>
+    <section aria-labelledby="status-heading">
+      <h2 id="status-heading">Core status</h2>
+      <pre id="status">Loading…</pre>
+    </section>
+    <section aria-labelledby="links-heading">
+      <h2 id="links-heading">Control API</h2>
+      <ul>
+        <li><a href="/api/v1/agents">Agents</a></li>
+        <li><a href="/api/v1/teams">Teams</a></li>
+        <li><a href="/api/v1/workflows">Workflows</a></li>
+        <li><a href="/api/v1/governance">Governance</a></li>
+        <li><a href="/api/v1/runs">Runs</a></li>
+      </ul>
+    </section>
+    <p id="error" class="error" role="alert" hidden></p>
+  </main>
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
