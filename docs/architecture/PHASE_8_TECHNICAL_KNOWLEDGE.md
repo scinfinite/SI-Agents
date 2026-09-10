@@ -74,7 +74,7 @@ Validated runtime knowledge requires authoritative source records and verificati
 
 ## CI evidence
 
-CI is the authoritative completion gate. A Phase 8 completion claim is valid only for a commit whose build, Ruff, and complete pytest workflow all pass. Any failure discovered on the phase's implementation commits must be repaired and the workflow rerun on the repaired head.
+The final pre-evidence CI run was **#240** for commit `2baf0ba59e7cb7babc1be9723d69165982b1beb5`. Build, Ruff, and the complete pytest workflow all passed; the test log reports **139 passed in 1.17s**. CI runs #237–#239 exposed and drove fixes for export ordering and test expectations before this final passing run.
 
 ## Boundaries
 
