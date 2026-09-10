@@ -1,0 +1,5 @@
+# Deterministic development and CI tooling.
+# Keep these versions synchronized with .github/workflows/ci.yml and pre-commit.
+build==1.3.0
+pytest==8.4.2
+ruff==0.13.1
