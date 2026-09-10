@@ -6,12 +6,13 @@ from core.environments.models import (
     EnvironmentStatus,
     RequirementResult,
 )
-from core.environments.termux import TermuxRuntime
+from core.environments.termux import TermuxConfig, TermuxRuntime
 
 __all__ = [
     "EnvironmentKind",
     "EnvironmentReport",
     "EnvironmentStatus",
     "RequirementResult",
+    "TermuxConfig",
     "TermuxRuntime",
 ]
