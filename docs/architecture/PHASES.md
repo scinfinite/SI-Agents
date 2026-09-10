@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–31 complete and CI-verified. Phase 32 is under implementation on its feature branch.**
+**Current status: v2.0 baseline plus Phases 19–32 implemented; Phase 32 feature-branch CI is green and final mainline closure is pending.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -37,6 +37,7 @@
 29. Complete SI Agent Persona System — **Complete and CI-verified.** Exactly 279 SI-native specialist personas across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, provenance, packaging, and CI verification.
 30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation, dependency-aware composition, manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, and safety boundaries.
 31. Rules, Hooks & Event System — **Complete and CI-verified.** Immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation.
+32. Memory & Knowledge — **Implementation complete; feature-branch CI verified.** Immutable scoped Memory, verified source-backed Knowledge, provenance/evidence contracts, fail-closed promotion, explicit supersession/contradiction tracking, deterministic context-aware retrieval, atomic schema-versioned persistence, lifecycle event integration, and targeted regression coverage.
 
 ## Release targets
 
@@ -46,7 +47,7 @@
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
 - **Post-v2 validation through Phase 31:** complete and CI-verified
-- **Phase 32:** under implementation; not yet complete
+- **Phase 32:** feature-branch CI green; final mainline verification pending
 
 ## Phase completion gate
 
@@ -56,9 +57,9 @@ A phase is not complete merely because files exist. Acceptance criteria must be 
 
 Phase 31 was merged to `main` as commit `32db86c560053e831b0740c5614d63bf64d3ce6b` from PR #18. Final CI run **#735** passed on the exact Phase 31 source tree; the full pytest suite reported **381 passed in 6.16s**. The Phase 31 Rules/Hooks/Events architecture remains the policy/event boundary used by Phase 32.
 
-## Phase 32 working record
+## Phase 32 verification record
 
-The Phase 32 working branch uses `core/memory/` and `tests/test_phase32_memory_knowledge.py`. It adds explicit scope identifiers, provenance, verified evidence, confidence, lifecycle, expiry, supersession, contradiction references, separate KnowledgeEntry records, deterministic context-aware retrieval, atomic schema-versioned persistence, lifecycle service/event integration, and fail-closed promotion. This working record does not change the mainline completion status until final CI is green and the branch is merged.
+Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution build, wheel installation verification, and the full pytest suite: **392 passed in 5.95s**. The final release gate is to run CI on the final documentation-synchronized source tree and then verify the resulting merge on `main`.
 
 ## Documentation structure
 
@@ -66,9 +67,9 @@ The Phase 32 working branch uses `core/memory/` and `tests/test_phase32_memory_k
 - `PHASE_29.md` — canonical persona/parity/provenance/security/packaging record.
 - `PHASE_30.md` — canonical portable Skill record.
 - `PHASE_31.md` — canonical Rules/Hooks/Events record.
-- `PHASE_32.md` — Phase 32 working contract and verification plan.
+- `PHASE_32.md` — canonical Memory/Knowledge contract and verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-Phase 33 — Security & Governance Center — begins only after Phase 32 final CI verification and closure.
+Phase 33 — Security & Governance Center — begins only after Phase 32 final mainline verification and closure.
