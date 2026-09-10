@@ -61,6 +61,12 @@ class FilesystemSnapshotStore:
             else:
                 shutil.copy2(child, target, follow_symlinks=False)
 
+    def discard(self, snapshot_id: str) -> None:
+        """Delete snapshot data that is no longer needed."""
+        snapshot = self.get(snapshot_id)
+        shutil.rmtree(snapshot.snapshot_path.parent)
+        del self._snapshots[snapshot.id]
+
     @staticmethod
     def _workspace(workspace: str | Path) -> Path:
         root = Path(workspace).resolve()
