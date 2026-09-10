@@ -1,6 +1,6 @@
 """Stable, transport-neutral Control API contracts."""
 
-import uuid
+import uuid  # noqa: I001
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
