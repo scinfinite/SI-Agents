@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from .models import MemoryEntry, MemoryScope, MemoryStatus, PromotionDecision
+from .models import (
+    MemoryEntry,
+    MemoryScope,
+    MemoryStatus,
+    PromotionDecision,
+)
 
 
 _SCOPE_ORDER = (
