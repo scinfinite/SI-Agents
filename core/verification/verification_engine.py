@@ -1,16 +1,16 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable
 
 from core.verification.claim_store import ClaimStore
 from core.verification.claims import Claim
 from core.verification.confidence import assess
 from core.verification.evidence import Evidence, VerificationStatus
 from core.verification.evidence_store import EvidenceStore
-from core.verification.red_team import RedTeamResult, RedTeamStatus, RedTeamSuite
-from core.verification.regression import RegressionSuite, RegressionSuiteResult, RegressionStatus
+from core.verification.red_team import RedTeamResult, RedTeamSuite
+from core.verification.regression import RegressionStatus, RegressionSuite, RegressionSuiteResult
 
 
 class VerificationOutcome(str, Enum):
@@ -75,7 +75,7 @@ class VerificationEngine:
         for item in checks:
             try:
                 passed = bool(item.check())
-            except Exception as exc:  # noqa: BLE001 - verification must fail closed.
+            except Exception as exc:
                 passed = False
                 detail = f"check raised: {exc}"
             else:
@@ -109,7 +109,11 @@ class VerificationEngine:
         passed = not failed
         outcome = VerificationOutcome.VERIFIED if passed else VerificationOutcome.FAILED
         confidence = 1.0 if passed else max(0.0, 1.0 - len(failed) / (len(checks) + 2))
-        rationale = "all checks, regressions, and attacks passed" if passed else f"failed: {', '.join(failed)}"
+        rationale = (
+            "all checks, regressions, and attacks passed"
+            if passed
+            else f"failed: {', '.join(failed)}"
+        )
         assessment = assess(confidence, rationale)
         self.claims.attach_evidence(claim.id, tuple(evidence_ids), assessment.value)
         return VerificationReport(
