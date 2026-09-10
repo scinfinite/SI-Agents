@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–34 implemented and CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–35 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -38,7 +38,7 @@ Human-authored Markdown Persona
    Control API / Execution
 ```
 
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 adds a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary.
+Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 establishes the stable machine-facing API over those existing authorities so later Web/TUI surfaces remain clients rather than parallel control planes.
 
 ### Web and TUI are views, not authorities
 
@@ -141,17 +141,7 @@ Canonical record: `docs/architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`.
 
 Phase 34 turns the canonical 279-agent catalog into an inspectable operating organization without importing an external persona roster or creating a second permission authority.
 
-Implemented organization contracts define:
-
-- five bounded operating teams;
-- a single organizational home for each of the 18 canonical divisions;
-- immutable workflow steps and ordered dependencies;
-- four reusable evidence-gated workflows;
-- source-of-truth validation against the canonical agent catalog;
-- explicit checks that workflow agents belong to their declared team;
-- division/team consistency validation;
-- authority-boundary checks ensuring organization configuration cannot declare permissions, capabilities, or credentials;
-- packaged declarative organization configuration.
+Implemented organization contracts define five bounded operating teams, a single organizational home for each of the 18 canonical divisions, immutable workflow steps and ordered dependencies, four reusable evidence-gated workflows, source-of-truth validation against the canonical agent catalog, workflow team-membership checks, division/team consistency validation, authority-boundary checks, and packaged declarative organization configuration.
 
 The organization layer coordinates responsibilities only. It does not execute workflows and does not grant authority. Governance remains the authorization boundary.
 
@@ -163,7 +153,17 @@ Canonical record: `docs/architecture/PHASE_34_ORGANIZATION_EXPANSION.md`.
 
 # Phase 35 — Control API
 
-Create the stable machine-facing API before the full Web/TUI surfaces. Planned versioned surface includes agents, teams, workflows, Skills, runs, events, evidence, memory, governance, environments, and harnesses. UI mutations go through the API; API mutations go through SI governance; non-local exposure requires explicit authentication/authorization.
+**State: Complete + CI verified.**
+
+Phase 35 establishes the stable machine-facing `/api/v1` boundary before the full Web/TUI surfaces. It exposes canonical agent/team/organization/workflow/Skill/governance/event/run read models plus a bounded run-creation operation. The API is a transport boundary, not a new authority.
+
+The dependency-free HTTP transport is localhost-only, uses JSON-only mutation input capped at 1 MiB, emits no-store/nosniff response headers, and does not introduce browser CORS or credential handling. `si-api` launches the service locally.
+
+`POST /api/v1/runs` passes through the existing `GovernanceEngine` and creates a queued run record only; it never executes workers, tools, workflows, Skills, shell commands, or network requests. Capability-bearing requests remain subject to existing scoped permissions, and credential-bearing external egress remains fail-closed.
+
+Feature CI **#809** passed all build, wheel, repository-audit, Ruff, and pytest gates with **417 passed** after resolving CI-detected import-order findings. PR #27 merged the implementation to `main` as `8e990f225b69fe1822861e1f21af29094c6b481b`.
+
+Canonical record: `docs/architecture/PHASE_35_CONTROL_API.md`.
 
 ---
 
@@ -226,7 +226,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 32 Memory/Knowledge [complete]
  → 33 Security/Governance [complete]
  → 34 Organization [complete]
- → 35 Control API
+ → 35 Control API [complete]
  → 36 Web Foundation
  → 37 Control Center
  → 38 Visual Graphs
