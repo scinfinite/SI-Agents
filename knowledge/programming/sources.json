@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "policy": "Authoritative sources are preferred; version scope and retrieval date must be recorded before knowledge is promoted to validated status.",
+  "sources": [
+    {"name":"Python Language Reference","url":"https://docs.python.org/3/reference/","scope":"Python language semantics"},
+    {"name":"Java SE Specifications","url":"https://docs.oracle.com/javase/specs/","scope":"Java language and JVM specifications"},
+    {"name":"Rust Reference","url":"https://doc.rust-lang.org/reference/","scope":"Rust language semantics"},
+    {"name":"Go Language Specification","url":"https://go.dev/ref/spec","scope":"Go language semantics"},
+    {"name":"ECMAScript Specification","url":"https://tc39.es/ecma262/","scope":"JavaScript language specification"},
+    {"name":"TypeScript Handbook","url":"https://www.typescriptlang.org/docs/handbook/intro.html","scope":"TypeScript language and type system"},
+    {"name":"C Standard","url":"https://www.iso.org/standard/74528.html","scope":"C language standard reference"},
+    {"name":"C++ Reference","url":"https://en.cppreference.com/w/","scope":"C++ language and library reference"},
+    {"name":"C# Language Reference","url":"https://learn.microsoft.com/dotnet/csharp/language-reference/","scope":"C# language reference"},
+    {"name":"Kotlin Documentation","url":"https://kotlinlang.org/docs/home.html","scope":"Kotlin language and tooling"},
+    {"name":"The Swift Programming Language","url":"https://docs.swift.org/swift-book/documentation/the-swift-programming-language/","scope":"Swift language reference"},
+    {"name":"Dart Language Tour","url":"https://dart.dev/language","scope":"Dart language and concurrency"},
+    {"name":"PostgreSQL Documentation","url":"https://www.postgresql.org/docs/","scope":"SQL implementation, transactions, optimizer, and security"}
+  ]
+}
