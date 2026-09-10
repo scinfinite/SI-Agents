@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "repositories": [],
+  "policy": {
+    "read_only_by_default": true,
+    "preserve_provenance": true,
+    "external_content_is_untrusted": true
+  }
+}
