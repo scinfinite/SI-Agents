@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from core.knowledge.catalog import KnowledgeCatalogError, load_language_catalog
 from core.knowledge.models import KnowledgeEntry, KnowledgeKind, KnowledgeSource, KnowledgeStatus
 from core.knowledge.registry import KnowledgeRegistry
 
@@ -84,17 +85,8 @@ def test_language_catalog_has_required_dimensions_and_java() -> None:
     names = {entry["name"] for entry in data["entries"]}
     assert {"Python", "Java", "Rust", "Go", "JavaScript", "TypeScript"} <= names
     required = {
-        "syntax",
-        "semantics",
-        "type_system",
-        "memory_model",
-        "concurrency",
-        "runtime",
-        "toolchain",
-        "testing",
-        "debugging",
-        "security",
-        "ecosystems",
+        "syntax", "semantics", "type_system", "memory_model", "concurrency", "runtime",
+        "toolchain", "testing", "debugging", "security", "ecosystems",
     }
     for entry in data["entries"]:
         assert required <= set(entry["topics"])
@@ -121,17 +113,33 @@ def test_authoritative_sources_exist_for_validated_language_entries() -> None:
     sources = json.loads(SOURCE_CATALOG.read_text())["sources"]
     source_names = {item["name"] for item in sources}
     required_sources = {
-        "Python Language Reference",
-        "Java SE Specifications",
-        "Rust Reference",
-        "Go Language Specification",
-        "ECMAScript Specification",
-        "TypeScript Handbook",
-        "C# Language Reference",
-        "Kotlin Documentation",
-        "The Swift Programming Language",
+        "Python Language Reference", "Java SE Specifications", "Rust Reference",
+        "Go Language Specification", "ECMAScript Specification", "TypeScript Handbook",
+        "C# Language Reference", "Kotlin Documentation", "The Swift Programming Language",
         "Dart Language Tour",
     }
     assert required_sources <= source_names
     assert len(languages) >= 12
     assert all(item["status"] == "validated" for item in languages)
+
+
+def test_language_catalog_loader_builds_validated_runtime_entries() -> None:
+    registry = load_language_catalog(ROOT)
+    assert len(registry.validated(KnowledgeKind.LANGUAGE)) == 12
+    java = registry.get_by_name("java")
+    assert java.status is KnowledgeStatus.VALIDATED
+    assert java.sources
+    assert java.verification
+    assert "Maven" in java.toolchains
+
+
+def test_language_catalog_loader_rejects_missing_source_mapping(tmp_path: Path) -> None:
+    languages = json.loads(LANGUAGE_CATALOG.read_text())
+    languages["entries"][0]["name"] = "Unknown Language"
+    source_data = SOURCE_CATALOG.read_text()
+    lang_dir = tmp_path / "knowledge" / "programming" / "languages"
+    lang_dir.mkdir(parents=True)
+    (lang_dir / "entries.json").write_text(json.dumps(languages))
+    (tmp_path / "knowledge" / "programming" / "sources.json").write_text(source_data)
+    with pytest.raises(KnowledgeCatalogError, match="source mapping"):
+        load_language_catalog(tmp_path)
