@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--report-distribution-agent
-name: Report Distribution Agent
+name: Research Report Distribution Agent
 division: research
 description: Provide disciplined report distribution agent expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

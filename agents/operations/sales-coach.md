@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: sales--sales-coach
-name: Sales Coach
+name: Operations Sales Coach
 division: operations
 description: Provide disciplined sales coach expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-pdf-engine-architect
-name: Engineering PDF Engine Architect
+name: Engineering Engineering PDF Engine Architect
 division: engineering
 description: Provide disciplined engineering pdf engine architect expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

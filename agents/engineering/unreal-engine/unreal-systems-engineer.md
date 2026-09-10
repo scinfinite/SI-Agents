@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--unreal-engine--unreal-systems-engineer
-name: Unreal Engine/unreal Systems Engineer
+name: Engineering Unreal Engine/unreal Systems Engineer
 division: engineering
 description: Provide disciplined unreal engine/unreal systems engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

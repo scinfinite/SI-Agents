@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-identity-access-engineer
-name: Engineering Identity Access Engineer
+name: Engineering Engineering Identity Access Engineer
 division: engineering
 description: Provide disciplined engineering identity access engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

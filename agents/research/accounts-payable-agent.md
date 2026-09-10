@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--accounts-payable-agent
-name: Accounts Payable Agent
+name: Research Accounts Payable Agent
 division: research
 description: Provide disciplined accounts payable agent expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

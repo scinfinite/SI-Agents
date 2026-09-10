@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: gis--gis-qa-engineer
-name: GIS QA Engineer
+name: Research GIS QA Engineer
 division: research
 description: Provide disciplined gis qa engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

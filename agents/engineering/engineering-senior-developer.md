@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-senior-developer
-name: Engineering Senior Developer
+name: Engineering Engineering Senior Developer
 division: engineering
 description: Provide disciplined engineering senior developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

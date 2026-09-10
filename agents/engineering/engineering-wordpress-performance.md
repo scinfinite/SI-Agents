@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-wordpress-performance
-name: Engineering Wordpress Performance
+name: Engineering Engineering Wordpress Performance
 division: engineering
 description: Provide disciplined engineering wordpress performance expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

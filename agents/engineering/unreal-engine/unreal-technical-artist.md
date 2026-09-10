@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--unreal-engine--unreal-technical-artist
-name: Unreal Engine/unreal Technical Artist
+name: Engineering Unreal Engine/unreal Technical Artist
 division: engineering
 description: Provide disciplined unreal engine/unreal technical artist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

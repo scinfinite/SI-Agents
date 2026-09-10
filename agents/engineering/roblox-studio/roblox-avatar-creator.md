@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--roblox-studio--roblox-avatar-creator
-name: Roblox Studio/roblox Avatar Creator
+name: Engineering Roblox Studio/roblox Avatar Creator
 division: engineering
 description: Provide disciplined roblox studio/roblox avatar creator expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

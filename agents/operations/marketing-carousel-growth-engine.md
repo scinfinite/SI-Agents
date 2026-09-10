@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-carousel-growth-engine
-name: Marketing Carousel Growth Engine
+name: Operations Marketing Carousel Growth Engine
 division: operations
 description: Provide disciplined marketing carousel growth engine expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

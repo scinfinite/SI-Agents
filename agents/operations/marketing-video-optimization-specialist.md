@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-video-optimization-specialist
-name: Marketing Video Optimization Specialist
+name: Operations Marketing Video Optimization Specialist
 division: operations
 description: Provide disciplined marketing video optimization specialist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

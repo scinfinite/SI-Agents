@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-reddit-community-builder
-name: Marketing Reddit Community Builder
+name: Operations Marketing Reddit Community Builder
 division: operations
 description: Provide disciplined marketing reddit community builder expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

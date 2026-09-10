@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-app-store-optimizer
-name: Marketing APP Store Optimizer
+name: Operations Marketing APP Store Optimizer
 division: operations
 description: Provide disciplined marketing app store optimizer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

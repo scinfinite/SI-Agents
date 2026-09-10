@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-email-intelligence-engineer
-name: Engineering Email Intelligence Engineer
+name: Engineering Engineering Email Intelligence Engineer
 division: engineering
 description: Provide disciplined engineering email intelligence engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: testing--testing-workflow-optimizer
-name: Testing Workflow Optimizer
+name: Verification Testing Workflow Optimizer
 division: verification
 description: Provide disciplined testing workflow optimizer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

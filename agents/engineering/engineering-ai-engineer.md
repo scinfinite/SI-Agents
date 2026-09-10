@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-ai-engineer
-name: Engineering AI Engineer
+name: Engineering Engineering AI Engineer
 division: engineering
 description: Provide disciplined engineering ai engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

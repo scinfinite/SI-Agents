@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: project-management--project-management-experiment-tracker
-name: Project Management Experiment Tracker
+name: Operations Project Management Experiment Tracker
 division: operations
 description: Provide disciplined project management experiment tracker expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

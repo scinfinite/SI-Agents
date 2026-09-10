@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-drupal-performance
-name: Engineering Drupal Performance
+name: Engineering Engineering Drupal Performance
 division: engineering
 description: Provide disciplined engineering drupal performance expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

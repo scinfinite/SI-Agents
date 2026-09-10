@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: project-management--project-management-project-shepherd
-name: Project Management Project Shepherd
+name: Operations Project Management Project Shepherd
 division: operations
 description: Provide disciplined project management project shepherd expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

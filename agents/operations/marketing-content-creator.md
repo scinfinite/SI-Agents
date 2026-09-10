@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-content-creator
-name: Marketing Content Creator
+name: Operations Marketing Content Creator
 division: operations
 description: Provide disciplined marketing content creator expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: paid-media--paid-media-creative-strategist
-name: Paid Media Creative Strategist
+name: Operations Paid Media Creative Strategist
 division: operations
 description: Provide disciplined paid media creative strategist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: spatial-computing--visionos-spatial-engineer
-name: Visionos Spatial Engineer
+name: Engineering Visionos Spatial Engineer
 division: engineering
 description: Provide disciplined visionos spatial engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

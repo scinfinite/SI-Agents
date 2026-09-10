@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--specialized-chief-of-staff
-name: Specialized Chief OF Staff
+name: Research Specialized Chief OF Staff
 division: research
 description: Provide disciplined specialized chief of staff expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

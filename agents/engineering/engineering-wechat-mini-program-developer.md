@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-wechat-mini-program-developer
-name: Engineering Wechat Mini Program Developer
+name: Engineering Engineering Wechat Mini Program Developer
 division: engineering
 description: Provide disciplined engineering wechat mini program developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

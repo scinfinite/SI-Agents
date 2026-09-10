@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: paid-media--paid-media-auditor
-name: Paid Media Auditor
+name: Operations Paid Media Auditor
 division: operations
 description: Provide disciplined paid media auditor expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

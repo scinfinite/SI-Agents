@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--specialized-cultural-intelligence-strategist
-name: Specialized Cultural Intelligence Strategist
+name: Research Specialized Cultural Intelligence Strategist
 division: research
 description: Provide disciplined specialized cultural intelligence strategist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

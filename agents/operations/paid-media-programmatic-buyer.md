@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: paid-media--paid-media-programmatic-buyer
-name: Paid Media Programmatic Buyer
+name: Operations Paid Media Programmatic Buyer
 division: operations
 description: Provide disciplined paid media programmatic buyer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

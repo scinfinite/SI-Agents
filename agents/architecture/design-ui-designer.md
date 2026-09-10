@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: design--design-ui-designer
-name: Design UI Designer
+name: Architecture Design UI Designer
 division: architecture
 description: Provide disciplined design ui designer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

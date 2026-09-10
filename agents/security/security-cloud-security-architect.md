@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: security--security-cloud-security-architect
-name: Security Cloud Security Architect
+name: Security Security Cloud Security Architect
 division: security
 description: Provide disciplined security cloud security architect expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

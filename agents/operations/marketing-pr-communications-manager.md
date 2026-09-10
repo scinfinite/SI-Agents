@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-pr-communications-manager
-name: Marketing PR Communications Manager
+name: Operations Marketing PR Communications Manager
 division: operations
 description: Provide disciplined marketing pr communications manager expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: research--research-synthesist
-name: Research Synthesist
+name: Research Research Synthesist
 division: research
 description: Provide disciplined research synthesist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

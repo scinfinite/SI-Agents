@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-desktop-app-engineer
-name: Engineering Desktop APP Engineer
+name: Engineering Engineering Desktop APP Engineer
 division: engineering
 description: Provide disciplined engineering desktop app engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

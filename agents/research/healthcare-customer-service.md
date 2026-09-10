@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--healthcare-customer-service
-name: Healthcare Customer Service
+name: Research Healthcare Customer Service
 division: research
 description: Provide disciplined healthcare customer service expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--resume-tailor
-name: Resume Tailor
+name: Research Resume Tailor
 division: research
 description: Provide disciplined resume tailor expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

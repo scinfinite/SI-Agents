@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-cms-developer
-name: Engineering CMS Developer
+name: Engineering Engineering CMS Developer
 division: engineering
 description: Provide disciplined engineering cms developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

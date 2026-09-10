@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--specialized-civil-engineer
-name: Specialized Civil Engineer
+name: Research Specialized Civil Engineer
 division: research
 description: Provide disciplined specialized civil engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

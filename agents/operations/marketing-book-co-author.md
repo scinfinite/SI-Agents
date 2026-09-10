@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-book-co-author
-name: Marketing Book CO Author
+name: Operations Marketing Book CO Author
 division: operations
 description: Provide disciplined marketing book co author expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

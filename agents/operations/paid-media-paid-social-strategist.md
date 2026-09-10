@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: paid-media--paid-media-paid-social-strategist
-name: Paid Media Paid Social Strategist
+name: Operations Paid Media Paid Social Strategist
 division: operations
 description: Provide disciplined paid media paid social strategist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

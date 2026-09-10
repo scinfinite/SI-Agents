@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--grant-writer
-name: Grant Writer
+name: Research Grant Writer
 division: research
 description: Provide disciplined grant writer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

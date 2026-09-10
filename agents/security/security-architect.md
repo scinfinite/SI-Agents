@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: security--security-architect
-name: Security Architect
+name: Security Security Architect
 division: security
 description: Provide disciplined security architect expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

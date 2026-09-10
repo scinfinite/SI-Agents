@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--study-abroad-advisor
-name: Study Abroad Advisor
+name: Research Study Abroad Advisor
 division: research
 description: Provide disciplined study abroad advisor expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-uswds-developer
-name: Engineering Uswds Developer
+name: Engineering Engineering Uswds Developer
 division: engineering
 description: Provide disciplined engineering uswds developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

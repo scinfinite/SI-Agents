@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: security--security-senior-secops
-name: Security Senior Secops
+name: Security Security Senior Secops
 division: security
 description: Provide disciplined security senior secops expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

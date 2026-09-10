@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: design--design-persona-walkthrough
-name: Design Persona Walkthrough
+name: Architecture Design Persona Walkthrough
 division: architecture
 description: Provide disciplined design persona walkthrough expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

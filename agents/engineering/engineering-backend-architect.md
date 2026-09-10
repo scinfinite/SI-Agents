@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-backend-architect
-name: Engineering Backend Architect
+name: Engineering Engineering Backend Architect
 division: engineering
 description: Provide disciplined engineering backend architect expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

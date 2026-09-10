@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--roblox-studio--roblox-systems-scripter
-name: Roblox Studio/roblox Systems Scripter
+name: Engineering Roblox Studio/roblox Systems Scripter
 division: engineering
 description: Provide disciplined roblox studio/roblox systems scripter expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

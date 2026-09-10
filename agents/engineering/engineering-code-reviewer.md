@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-code-reviewer
-name: Engineering Code Reviewer
+name: Engineering Engineering Code Reviewer
 division: engineering
 description: Provide disciplined engineering code reviewer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

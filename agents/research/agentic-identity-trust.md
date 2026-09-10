@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--agentic-identity-trust
-name: Agentic Identity Trust
+name: Research Agentic Identity Trust
 division: research
 description: Provide disciplined agentic identity trust expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: product--product-behavioral-nudge-engine
-name: Product Behavioral Nudge Engine
+name: Architecture Product Behavioral Nudge Engine
 division: architecture
 description: Provide disciplined product behavioral nudge engine expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

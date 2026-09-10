@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--agents-orchestrator
-name: Agents Orchestrator
+name: Research Agents Orchestrator
 division: research
 description: Provide disciplined agents orchestrator expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

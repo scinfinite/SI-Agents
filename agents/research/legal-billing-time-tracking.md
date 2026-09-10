@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--legal-billing-time-tracking
-name: Legal Billing Time Tracking
+name: Research Legal Billing Time Tracking
 division: research
 description: Provide disciplined legal billing time tracking expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

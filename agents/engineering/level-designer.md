@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--level-designer
-name: Level Designer
+name: Engineering Level Designer
 division: engineering
 description: Provide disciplined level designer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-voice-ai-integration-engineer
-name: Engineering Voice AI Integration Engineer
+name: Engineering Engineering Voice AI Integration Engineer
 division: engineering
 description: Provide disciplined engineering voice ai integration engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

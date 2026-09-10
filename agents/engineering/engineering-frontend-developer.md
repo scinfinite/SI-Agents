@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-frontend-developer
-name: Engineering Frontend Developer
+name: Engineering Engineering Frontend Developer
 division: engineering
 description: Provide disciplined engineering frontend developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

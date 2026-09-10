@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: paid-media--paid-media-tracking-specialist
-name: Paid Media Tracking Specialist
+name: Operations Paid Media Tracking Specialist
 division: operations
 description: Provide disciplined paid media tracking specialist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

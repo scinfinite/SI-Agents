@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: spatial-computing--macos-spatial-metal-engineer
-name: Macos Spatial Metal Engineer
+name: Engineering Macos Spatial Metal Engineer
 division: engineering
 description: Provide disciplined macos spatial metal engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

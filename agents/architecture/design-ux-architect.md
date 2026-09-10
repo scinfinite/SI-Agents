@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: design--design-ux-architect
-name: Design UX Architect
+name: Architecture Design UX Architect
 division: architecture
 description: Provide disciplined design ux architect expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

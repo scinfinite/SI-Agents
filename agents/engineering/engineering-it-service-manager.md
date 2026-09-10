@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-it-service-manager
-name: Engineering IT Service Manager
+name: Engineering Engineering IT Service Manager
 division: engineering
 description: Provide disciplined engineering it service manager expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

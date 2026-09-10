@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-platform-engineer
-name: Engineering Platform Engineer
+name: Engineering Engineering Platform Engineer
 division: engineering
 description: Provide disciplined engineering platform engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

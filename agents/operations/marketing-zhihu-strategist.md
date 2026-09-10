@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-zhihu-strategist
-name: Marketing Zhihu Strategist
+name: Operations Marketing Zhihu Strategist
 division: operations
 description: Provide disciplined marketing zhihu strategist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

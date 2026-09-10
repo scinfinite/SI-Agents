@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: design--design-visual-storyteller
-name: Design Visual Storyteller
+name: Architecture Design Visual Storyteller
 division: architecture
 description: Provide disciplined design visual storyteller expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

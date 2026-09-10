@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-tiktok-strategist
-name: Marketing Tiktok Strategist
+name: Operations Marketing Tiktok Strategist
 division: operations
 description: Provide disciplined marketing tiktok strategist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

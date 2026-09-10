@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: project-management--project-management-studio-operations
-name: Project Management Studio Operations
+name: Operations Project Management Studio Operations
 division: operations
 description: Provide disciplined project management studio operations expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

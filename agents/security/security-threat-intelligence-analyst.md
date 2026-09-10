@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: security--security-threat-intelligence-analyst
-name: Security Threat Intelligence Analyst
+name: Security Security Threat Intelligence Analyst
 division: security
 description: Provide disciplined security threat intelligence analyst expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

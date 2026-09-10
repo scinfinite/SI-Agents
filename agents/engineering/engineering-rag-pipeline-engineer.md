@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-rag-pipeline-engineer
-name: Engineering RAG Pipeline Engineer
+name: Engineering Engineering RAG Pipeline Engineer
 division: engineering
 description: Provide disciplined engineering rag pipeline engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

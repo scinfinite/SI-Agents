@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--operations-manager
-name: Operations Manager
+name: Research Operations Manager
 division: research
 description: Provide disciplined operations manager expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

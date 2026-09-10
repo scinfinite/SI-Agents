@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: testing--testing-test-automation-engineer
-name: Testing Test Automation Engineer
+name: Verification Testing Test Automation Engineer
 division: verification
 description: Provide disciplined testing test automation engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

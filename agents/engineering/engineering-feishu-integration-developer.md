@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-feishu-integration-developer
-name: Engineering Feishu Integration Developer
+name: Engineering Engineering Feishu Integration Developer
 division: engineering
 description: Provide disciplined engineering feishu integration developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

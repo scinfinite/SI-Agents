@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-llm-post-training-engineer
-name: Engineering LLM Post Training Engineer
+name: Engineering Engineering LLM Post Training Engineer
 division: engineering
 description: Provide disciplined engineering llm post training engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

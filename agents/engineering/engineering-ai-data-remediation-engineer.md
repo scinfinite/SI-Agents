@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-ai-data-remediation-engineer
-name: Engineering AI Data Remediation Engineer
+name: Engineering Engineering AI Data Remediation Engineer
 division: engineering
 description: Provide disciplined engineering ai data remediation engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

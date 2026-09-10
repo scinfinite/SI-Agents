@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-data-engineer
-name: Engineering Data Engineer
+name: Engineering Engineering Data Engineer
 division: engineering
 description: Provide disciplined engineering data engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: sales--sales-pipeline-analyst
-name: Sales Pipeline Analyst
+name: Operations Sales Pipeline Analyst
 division: operations
 description: Provide disciplined sales pipeline analyst expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

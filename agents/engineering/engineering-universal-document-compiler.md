@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-universal-document-compiler
-name: Engineering Universal Document Compiler
+name: Engineering Engineering Universal Document Compiler
 division: engineering
 description: Provide disciplined engineering universal document compiler expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

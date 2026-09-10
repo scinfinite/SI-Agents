@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--roblox-studio--roblox-experience-designer
-name: Roblox Studio/roblox Experience Designer
+name: Engineering Roblox Studio/roblox Experience Designer
 division: engineering
 description: Provide disciplined roblox studio/roblox experience designer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

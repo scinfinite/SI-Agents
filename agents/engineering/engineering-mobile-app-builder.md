@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-mobile-app-builder
-name: Engineering Mobile APP Builder
+name: Engineering Engineering Mobile APP Builder
 division: engineering
 description: Provide disciplined engineering mobile app builder expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

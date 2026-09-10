@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-growth-hacker
-name: Marketing Growth Hacker
+name: Operations Marketing Growth Hacker
 division: operations
 description: Provide disciplined marketing growth hacker expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

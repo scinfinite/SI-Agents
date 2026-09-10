@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--customer-service
-name: Customer Service
+name: Research Customer Service
 division: research
 description: Provide disciplined customer service expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

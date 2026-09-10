@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: spatial-computing--terminal-integration-specialist
-name: Terminal Integration Specialist
+name: Engineering Terminal Integration Specialist
 division: engineering
 description: Provide disciplined terminal integration specialist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

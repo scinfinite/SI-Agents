@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--specialized-focus-music-architect
-name: Specialized Focus Music Architect
+name: Research Specialized Focus Music Architect
 division: research
 description: Provide disciplined specialized focus music architect expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-linkedin-content-creator
-name: Marketing Linkedin Content Creator
+name: Operations Marketing Linkedin Content Creator
 division: operations
 description: Provide disciplined marketing linkedin content creator expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

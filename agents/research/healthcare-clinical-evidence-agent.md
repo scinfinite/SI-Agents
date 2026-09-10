@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: healthcare--healthcare-clinical-evidence-agent
-name: Healthcare Clinical Evidence Agent
+name: Research Healthcare Clinical Evidence Agent
 division: research
 description: Provide disciplined healthcare clinical evidence agent expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

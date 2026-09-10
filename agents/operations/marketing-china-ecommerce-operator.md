@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-china-ecommerce-operator
-name: Marketing China Ecommerce Operator
+name: Operations Marketing China Ecommerce Operator
 division: operations
 description: Provide disciplined marketing china ecommerce operator expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

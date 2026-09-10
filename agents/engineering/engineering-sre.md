@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-sre
-name: Engineering SRE
+name: Engineering Engineering SRE
 division: engineering
 description: Provide disciplined engineering sre expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-incident-response-commander
-name: Engineering Incident Response Commander
+name: Engineering Engineering Incident Response Commander
 division: engineering
 description: Provide disciplined engineering incident response commander expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

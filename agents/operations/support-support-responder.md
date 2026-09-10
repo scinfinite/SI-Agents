@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: support--support-support-responder
-name: Support Support Responder
+name: Operations Support Support Responder
 division: operations
 description: Provide disciplined support support responder expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

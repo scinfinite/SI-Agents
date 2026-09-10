@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-payments-billing-engineer
-name: Engineering Payments Billing Engineer
+name: Engineering Engineering Payments Billing Engineer
 division: engineering
 description: Provide disciplined engineering payments billing engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

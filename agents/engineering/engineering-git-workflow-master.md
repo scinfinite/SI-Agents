@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-git-workflow-master
-name: Engineering GIT Workflow Master
+name: Engineering Engineering GIT Workflow Master
 division: engineering
 description: Provide disciplined engineering git workflow master expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

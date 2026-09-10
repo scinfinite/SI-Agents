@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: finance--finance-financial-analyst
-name: Finance Financial Analyst
+name: Operations Finance Financial Analyst
 division: operations
 description: Provide disciplined finance financial analyst expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

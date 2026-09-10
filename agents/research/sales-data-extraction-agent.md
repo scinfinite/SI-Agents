@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--sales-data-extraction-agent
-name: Sales Data Extraction Agent
+name: Research Sales Data Extraction Agent
 division: research
 description: Provide disciplined sales data extraction agent expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

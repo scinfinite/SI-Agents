@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: game-development--unreal-engine--unreal-world-builder
-name: Unreal Engine/unreal World Builder
+name: Engineering Unreal Engine/unreal World Builder
 division: engineering
 description: Provide disciplined unreal engine/unreal world builder expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -41,7 +41,7 @@
   "agents": [
     {
       "id": "academic--academic-anthropologist",
-      "name": "Academic Anthropologist",
+      "name": "Research Academic Anthropologist",
       "division": "research",
       "description": "Provide disciplined academic anthropologist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -89,7 +89,7 @@
     },
     {
       "id": "academic--academic-geographer",
-      "name": "Academic Geographer",
+      "name": "Research Academic Geographer",
       "division": "research",
       "description": "Provide disciplined academic geographer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -137,7 +137,7 @@
     },
     {
       "id": "academic--academic-historian",
-      "name": "Academic Historian",
+      "name": "Research Academic Historian",
       "division": "research",
       "description": "Provide disciplined academic historian expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -185,7 +185,7 @@
     },
     {
       "id": "academic--academic-narratologist",
-      "name": "Academic Narratologist",
+      "name": "Research Academic Narratologist",
       "division": "research",
       "description": "Provide disciplined academic narratologist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -233,7 +233,7 @@
     },
     {
       "id": "academic--academic-psychologist",
-      "name": "Academic Psychologist",
+      "name": "Research Academic Psychologist",
       "division": "research",
       "description": "Provide disciplined academic psychologist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -281,7 +281,7 @@
     },
     {
       "id": "academic--academic-statistician",
-      "name": "Academic Statistician",
+      "name": "Research Academic Statistician",
       "division": "research",
       "description": "Provide disciplined academic statistician expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -329,7 +329,7 @@
     },
     {
       "id": "design--design-brand-guardian",
-      "name": "Design Brand Guardian",
+      "name": "Architecture Design Brand Guardian",
       "division": "architecture",
       "description": "Provide disciplined design brand guardian expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -377,7 +377,7 @@
     },
     {
       "id": "design--design-image-prompt-engineer",
-      "name": "Design Image Prompt Engineer",
+      "name": "Architecture Design Image Prompt Engineer",
       "division": "architecture",
       "description": "Provide disciplined design image prompt engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -425,7 +425,7 @@
     },
     {
       "id": "design--design-inclusive-visuals-specialist",
-      "name": "Design Inclusive Visuals Specialist",
+      "name": "Architecture Design Inclusive Visuals Specialist",
       "division": "architecture",
       "description": "Provide disciplined design inclusive visuals specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -473,7 +473,7 @@
     },
     {
       "id": "design--design-persona-walkthrough",
-      "name": "Design Persona Walkthrough",
+      "name": "Architecture Design Persona Walkthrough",
       "division": "architecture",
       "description": "Provide disciplined design persona walkthrough expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -521,7 +521,7 @@
     },
     {
       "id": "design--design-ui-designer",
-      "name": "Design UI Designer",
+      "name": "Architecture Design UI Designer",
       "division": "architecture",
       "description": "Provide disciplined design ui designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -569,7 +569,7 @@
     },
     {
       "id": "design--design-ui-finish-gate-reviewer",
-      "name": "Design UI Finish Gate Reviewer",
+      "name": "Architecture Design UI Finish Gate Reviewer",
       "division": "architecture",
       "description": "Provide disciplined design ui finish gate reviewer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -617,7 +617,7 @@
     },
     {
       "id": "design--design-ux-architect",
-      "name": "Design UX Architect",
+      "name": "Architecture Design UX Architect",
       "division": "architecture",
       "description": "Provide disciplined design ux architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -665,7 +665,7 @@
     },
     {
       "id": "design--design-ux-researcher",
-      "name": "Design UX Researcher",
+      "name": "Architecture Design UX Researcher",
       "division": "architecture",
       "description": "Provide disciplined design ux researcher expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -713,7 +713,7 @@
     },
     {
       "id": "design--design-visual-storyteller",
-      "name": "Design Visual Storyteller",
+      "name": "Architecture Design Visual Storyteller",
       "division": "architecture",
       "description": "Provide disciplined design visual storyteller expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -761,7 +761,7 @@
     },
     {
       "id": "design--design-whimsy-injector",
-      "name": "Design Whimsy Injector",
+      "name": "Architecture Design Whimsy Injector",
       "division": "architecture",
       "description": "Provide disciplined design whimsy injector expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -809,7 +809,7 @@
     },
     {
       "id": "engineering--engineering-ai-data-remediation-engineer",
-      "name": "Engineering AI Data Remediation Engineer",
+      "name": "Engineering Engineering AI Data Remediation Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering ai data remediation engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -857,7 +857,7 @@
     },
     {
       "id": "engineering--engineering-ai-engineer",
-      "name": "Engineering AI Engineer",
+      "name": "Engineering Engineering AI Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering ai engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -905,7 +905,7 @@
     },
     {
       "id": "engineering--engineering-api-platform-engineer",
-      "name": "Engineering API Platform Engineer",
+      "name": "Engineering Engineering API Platform Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering api platform engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -953,7 +953,7 @@
     },
     {
       "id": "engineering--engineering-ats-validator-architect",
-      "name": "Engineering ATS Validator Architect",
+      "name": "Engineering Engineering ATS Validator Architect",
       "division": "engineering",
       "description": "Provide disciplined engineering ats validator architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1001,7 +1001,7 @@
     },
     {
       "id": "engineering--engineering-autonomous-optimization-architect",
-      "name": "Engineering Autonomous Optimization Architect",
+      "name": "Engineering Engineering Autonomous Optimization Architect",
       "division": "engineering",
       "description": "Provide disciplined engineering autonomous optimization architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1049,7 +1049,7 @@
     },
     {
       "id": "engineering--engineering-backend-architect",
-      "name": "Engineering Backend Architect",
+      "name": "Engineering Engineering Backend Architect",
       "division": "engineering",
       "description": "Provide disciplined engineering backend architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1097,7 +1097,7 @@
     },
     {
       "id": "engineering--engineering-china-network-engineer",
-      "name": "Engineering China Network Engineer",
+      "name": "Engineering Engineering China Network Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering china network engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1145,7 +1145,7 @@
     },
     {
       "id": "engineering--engineering-cms-developer",
-      "name": "Engineering CMS Developer",
+      "name": "Engineering Engineering CMS Developer",
       "division": "engineering",
       "description": "Provide disciplined engineering cms developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1193,7 +1193,7 @@
     },
     {
       "id": "engineering--engineering-code-reviewer",
-      "name": "Engineering Code Reviewer",
+      "name": "Engineering Engineering Code Reviewer",
       "division": "engineering",
       "description": "Provide disciplined engineering code reviewer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1241,7 +1241,7 @@
     },
     {
       "id": "engineering--engineering-codebase-onboarding-engineer",
-      "name": "Engineering Codebase Onboarding Engineer",
+      "name": "Engineering Engineering Codebase Onboarding Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering codebase onboarding engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1289,7 +1289,7 @@
     },
     {
       "id": "engineering--engineering-data-engineer",
-      "name": "Engineering Data Engineer",
+      "name": "Engineering Engineering Data Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering data engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1337,7 +1337,7 @@
     },
     {
       "id": "engineering--engineering-data-visualization-engineer",
-      "name": "Engineering Data Visualization Engineer",
+      "name": "Engineering Engineering Data Visualization Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering data visualization engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1385,7 +1385,7 @@
     },
     {
       "id": "engineering--engineering-database-optimizer",
-      "name": "Engineering Database Optimizer",
+      "name": "Engineering Engineering Database Optimizer",
       "division": "engineering",
       "description": "Provide disciplined engineering database optimizer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1433,7 +1433,7 @@
     },
     {
       "id": "engineering--engineering-database-reliability-engineer",
-      "name": "Engineering Database Reliability Engineer",
+      "name": "Engineering Engineering Database Reliability Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering database reliability engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1481,7 +1481,7 @@
     },
     {
       "id": "engineering--engineering-desktop-app-engineer",
-      "name": "Engineering Desktop APP Engineer",
+      "name": "Engineering Engineering Desktop APP Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering desktop app engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1529,7 +1529,7 @@
     },
     {
       "id": "engineering--engineering-developer-tooling-engineer",
-      "name": "Engineering Developer Tooling Engineer",
+      "name": "Engineering Engineering Developer Tooling Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering developer tooling engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1577,7 +1577,7 @@
     },
     {
       "id": "engineering--engineering-devops-automator",
-      "name": "Engineering Devops Automator",
+      "name": "Engineering Engineering Devops Automator",
       "division": "engineering",
       "description": "Provide disciplined engineering devops automator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1625,7 +1625,7 @@
     },
     {
       "id": "engineering--engineering-drupal-performance",
-      "name": "Engineering Drupal Performance",
+      "name": "Engineering Engineering Drupal Performance",
       "division": "engineering",
       "description": "Provide disciplined engineering drupal performance expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1673,7 +1673,7 @@
     },
     {
       "id": "engineering--engineering-drupal-shopping-cart",
-      "name": "Engineering Drupal Shopping Cart",
+      "name": "Engineering Engineering Drupal Shopping Cart",
       "division": "engineering",
       "description": "Provide disciplined engineering drupal shopping cart expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1721,7 +1721,7 @@
     },
     {
       "id": "engineering--engineering-email-intelligence-engineer",
-      "name": "Engineering Email Intelligence Engineer",
+      "name": "Engineering Engineering Email Intelligence Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering email intelligence engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1769,7 +1769,7 @@
     },
     {
       "id": "engineering--engineering-embedded-firmware-engineer",
-      "name": "Engineering Embedded Firmware Engineer",
+      "name": "Engineering Engineering Embedded Firmware Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering embedded firmware engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1817,7 +1817,7 @@
     },
     {
       "id": "engineering--engineering-feishu-integration-developer",
-      "name": "Engineering Feishu Integration Developer",
+      "name": "Engineering Engineering Feishu Integration Developer",
       "division": "engineering",
       "description": "Provide disciplined engineering feishu integration developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1865,7 +1865,7 @@
     },
     {
       "id": "engineering--engineering-filament-optimization-specialist",
-      "name": "Engineering Filament Optimization Specialist",
+      "name": "Engineering Engineering Filament Optimization Specialist",
       "division": "engineering",
       "description": "Provide disciplined engineering filament optimization specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1913,7 +1913,7 @@
     },
     {
       "id": "engineering--engineering-finops-engineer",
-      "name": "Engineering Finops Engineer",
+      "name": "Engineering Engineering Finops Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering finops engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -1961,7 +1961,7 @@
     },
     {
       "id": "engineering--engineering-frontend-developer",
-      "name": "Engineering Frontend Developer",
+      "name": "Engineering Engineering Frontend Developer",
       "division": "engineering",
       "description": "Provide disciplined engineering frontend developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2009,7 +2009,7 @@
     },
     {
       "id": "engineering--engineering-gaussdb-expert",
-      "name": "Engineering Gaussdb Expert",
+      "name": "Engineering Engineering Gaussdb Expert",
       "division": "engineering",
       "description": "Provide disciplined engineering gaussdb expert expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2057,7 +2057,7 @@
     },
     {
       "id": "engineering--engineering-git-workflow-master",
-      "name": "Engineering GIT Workflow Master",
+      "name": "Engineering Engineering GIT Workflow Master",
       "division": "engineering",
       "description": "Provide disciplined engineering git workflow master expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2105,7 +2105,7 @@
     },
     {
       "id": "engineering--engineering-i18n-engineer",
-      "name": "Engineering I18n Engineer",
+      "name": "Engineering Engineering I18n Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering i18n engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2153,7 +2153,7 @@
     },
     {
       "id": "engineering--engineering-identity-access-engineer",
-      "name": "Engineering Identity Access Engineer",
+      "name": "Engineering Engineering Identity Access Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering identity access engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2201,7 +2201,7 @@
     },
     {
       "id": "engineering--engineering-incident-response-commander",
-      "name": "Engineering Incident Response Commander",
+      "name": "Engineering Engineering Incident Response Commander",
       "division": "engineering",
       "description": "Provide disciplined engineering incident response commander expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2249,7 +2249,7 @@
     },
     {
       "id": "engineering--engineering-iot-fleet-engineer",
-      "name": "Engineering IOT Fleet Engineer",
+      "name": "Engineering Engineering IOT Fleet Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering iot fleet engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2297,7 +2297,7 @@
     },
     {
       "id": "engineering--engineering-it-service-manager",
-      "name": "Engineering IT Service Manager",
+      "name": "Engineering Engineering IT Service Manager",
       "division": "engineering",
       "description": "Provide disciplined engineering it service manager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2345,7 +2345,7 @@
     },
     {
       "id": "engineering--engineering-knowledge-graph-engineer",
-      "name": "Engineering Knowledge Graph Engineer",
+      "name": "Engineering Engineering Knowledge Graph Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering knowledge graph engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2393,7 +2393,7 @@
     },
     {
       "id": "engineering--engineering-llm-post-training-engineer",
-      "name": "Engineering LLM Post Training Engineer",
+      "name": "Engineering Engineering LLM Post Training Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering llm post training engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2441,7 +2441,7 @@
     },
     {
       "id": "engineering--engineering-minimal-change-engineer",
-      "name": "Engineering Minimal Change Engineer",
+      "name": "Engineering Engineering Minimal Change Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering minimal change engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2489,7 +2489,7 @@
     },
     {
       "id": "engineering--engineering-mobile-app-builder",
-      "name": "Engineering Mobile APP Builder",
+      "name": "Engineering Engineering Mobile APP Builder",
       "division": "engineering",
       "description": "Provide disciplined engineering mobile app builder expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2537,7 +2537,7 @@
     },
     {
       "id": "engineering--engineering-mobile-release-engineer",
-      "name": "Engineering Mobile Release Engineer",
+      "name": "Engineering Engineering Mobile Release Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering mobile release engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2585,7 +2585,7 @@
     },
     {
       "id": "engineering--engineering-multi-agent-systems-architect",
-      "name": "Engineering Multi Agent Systems Architect",
+      "name": "Engineering Engineering Multi Agent Systems Architect",
       "division": "engineering",
       "description": "Provide disciplined engineering multi agent systems architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2633,7 +2633,7 @@
     },
     {
       "id": "engineering--engineering-network-engineer",
-      "name": "Engineering Network Engineer",
+      "name": "Engineering Engineering Network Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering network engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2681,7 +2681,7 @@
     },
     {
       "id": "engineering--engineering-orgscript-engineer",
-      "name": "Engineering Orgscript Engineer",
+      "name": "Engineering Engineering Orgscript Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering orgscript engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2729,7 +2729,7 @@
     },
     {
       "id": "engineering--engineering-payments-billing-engineer",
-      "name": "Engineering Payments Billing Engineer",
+      "name": "Engineering Engineering Payments Billing Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering payments billing engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2777,7 +2777,7 @@
     },
     {
       "id": "engineering--engineering-pdf-engine-architect",
-      "name": "Engineering PDF Engine Architect",
+      "name": "Engineering Engineering PDF Engine Architect",
       "division": "engineering",
       "description": "Provide disciplined engineering pdf engine architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2825,7 +2825,7 @@
     },
     {
       "id": "engineering--engineering-platform-engineer",
-      "name": "Engineering Platform Engineer",
+      "name": "Engineering Engineering Platform Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering platform engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2873,7 +2873,7 @@
     },
     {
       "id": "engineering--engineering-privacy-engineer",
-      "name": "Engineering Privacy Engineer",
+      "name": "Engineering Engineering Privacy Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering privacy engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2921,7 +2921,7 @@
     },
     {
       "id": "engineering--engineering-prompt-engineer",
-      "name": "Engineering Prompt Engineer",
+      "name": "Engineering Engineering Prompt Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering prompt engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -2969,7 +2969,7 @@
     },
     {
       "id": "engineering--engineering-rag-pipeline-engineer",
-      "name": "Engineering RAG Pipeline Engineer",
+      "name": "Engineering Engineering RAG Pipeline Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering rag pipeline engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3017,7 +3017,7 @@
     },
     {
       "id": "engineering--engineering-rapid-prototyper",
-      "name": "Engineering Rapid Prototyper",
+      "name": "Engineering Engineering Rapid Prototyper",
       "division": "engineering",
       "description": "Provide disciplined engineering rapid prototyper expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3065,7 +3065,7 @@
     },
     {
       "id": "engineering--engineering-realtime-collaboration-engineer",
-      "name": "Engineering Realtime Collaboration Engineer",
+      "name": "Engineering Engineering Realtime Collaboration Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering realtime collaboration engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3113,7 +3113,7 @@
     },
     {
       "id": "engineering--engineering-rust-refactoring-specialist",
-      "name": "Engineering Rust Refactoring Specialist",
+      "name": "Engineering Engineering Rust Refactoring Specialist",
       "division": "engineering",
       "description": "Provide disciplined engineering rust refactoring specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3161,7 +3161,7 @@
     },
     {
       "id": "engineering--engineering-search-relevance-engineer",
-      "name": "Engineering Search Relevance Engineer",
+      "name": "Engineering Engineering Search Relevance Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering search relevance engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3209,7 +3209,7 @@
     },
     {
       "id": "engineering--engineering-section-508-specialist",
-      "name": "Engineering Section 508 Specialist",
+      "name": "Engineering Engineering Section 508 Specialist",
       "division": "engineering",
       "description": "Provide disciplined engineering section 508 specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3257,7 +3257,7 @@
     },
     {
       "id": "engineering--engineering-senior-developer",
-      "name": "Engineering Senior Developer",
+      "name": "Engineering Engineering Senior Developer",
       "division": "engineering",
       "description": "Provide disciplined engineering senior developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3305,7 +3305,7 @@
     },
     {
       "id": "engineering--engineering-software-architect",
-      "name": "Engineering Software Architect",
+      "name": "Engineering Engineering Software Architect",
       "division": "engineering",
       "description": "Provide disciplined engineering software architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3353,7 +3353,7 @@
     },
     {
       "id": "engineering--engineering-solidity-smart-contract-engineer",
-      "name": "Engineering Solidity Smart Contract Engineer",
+      "name": "Engineering Engineering Solidity Smart Contract Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering solidity smart contract engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3401,7 +3401,7 @@
     },
     {
       "id": "engineering--engineering-sre",
-      "name": "Engineering SRE",
+      "name": "Engineering Engineering SRE",
       "division": "engineering",
       "description": "Provide disciplined engineering sre expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3449,7 +3449,7 @@
     },
     {
       "id": "engineering--engineering-technical-writer",
-      "name": "Engineering Technical Writer",
+      "name": "Engineering Engineering Technical Writer",
       "division": "engineering",
       "description": "Provide disciplined engineering technical writer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3497,7 +3497,7 @@
     },
     {
       "id": "engineering--engineering-universal-document-compiler",
-      "name": "Engineering Universal Document Compiler",
+      "name": "Engineering Engineering Universal Document Compiler",
       "division": "engineering",
       "description": "Provide disciplined engineering universal document compiler expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3545,7 +3545,7 @@
     },
     {
       "id": "engineering--engineering-uswds-developer",
-      "name": "Engineering Uswds Developer",
+      "name": "Engineering Engineering Uswds Developer",
       "division": "engineering",
       "description": "Provide disciplined engineering uswds developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3593,7 +3593,7 @@
     },
     {
       "id": "engineering--engineering-video-streaming-engineer",
-      "name": "Engineering Video Streaming Engineer",
+      "name": "Engineering Engineering Video Streaming Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering video streaming engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3641,7 +3641,7 @@
     },
     {
       "id": "engineering--engineering-voice-ai-integration-engineer",
-      "name": "Engineering Voice AI Integration Engineer",
+      "name": "Engineering Engineering Voice AI Integration Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering voice ai integration engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3689,7 +3689,7 @@
     },
     {
       "id": "engineering--engineering-webassembly-engineer",
-      "name": "Engineering Webassembly Engineer",
+      "name": "Engineering Engineering Webassembly Engineer",
       "division": "engineering",
       "description": "Provide disciplined engineering webassembly engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3737,7 +3737,7 @@
     },
     {
       "id": "engineering--engineering-wechat-mini-program-developer",
-      "name": "Engineering Wechat Mini Program Developer",
+      "name": "Engineering Engineering Wechat Mini Program Developer",
       "division": "engineering",
       "description": "Provide disciplined engineering wechat mini program developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3785,7 +3785,7 @@
     },
     {
       "id": "engineering--engineering-wordpress-performance",
-      "name": "Engineering Wordpress Performance",
+      "name": "Engineering Engineering Wordpress Performance",
       "division": "engineering",
       "description": "Provide disciplined engineering wordpress performance expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3833,7 +3833,7 @@
     },
     {
       "id": "engineering--engineering-wordpress-shopping-cart",
-      "name": "Engineering Wordpress Shopping Cart",
+      "name": "Engineering Engineering Wordpress Shopping Cart",
       "division": "engineering",
       "description": "Provide disciplined engineering wordpress shopping cart expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3881,7 +3881,7 @@
     },
     {
       "id": "finance--finance-bookkeeper-controller",
-      "name": "Finance Bookkeeper Controller",
+      "name": "Operations Finance Bookkeeper Controller",
       "division": "operations",
       "description": "Provide disciplined finance bookkeeper controller expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3929,7 +3929,7 @@
     },
     {
       "id": "finance--finance-financial-analyst",
-      "name": "Finance Financial Analyst",
+      "name": "Operations Finance Financial Analyst",
       "division": "operations",
       "description": "Provide disciplined finance financial analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -3977,7 +3977,7 @@
     },
     {
       "id": "finance--finance-fpa-analyst",
-      "name": "Finance FPA Analyst",
+      "name": "Operations Finance FPA Analyst",
       "division": "operations",
       "description": "Provide disciplined finance fpa analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4025,7 +4025,7 @@
     },
     {
       "id": "finance--finance-investment-researcher",
-      "name": "Finance Investment Researcher",
+      "name": "Operations Finance Investment Researcher",
       "division": "operations",
       "description": "Provide disciplined finance investment researcher expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4073,7 +4073,7 @@
     },
     {
       "id": "finance--finance-tax-strategist",
-      "name": "Finance TAX Strategist",
+      "name": "Operations Finance TAX Strategist",
       "division": "operations",
       "description": "Provide disciplined finance tax strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4121,7 +4121,7 @@
     },
     {
       "id": "game-development--blender--blender-addon-engineer",
-      "name": "Blender/blender Addon Engineer",
+      "name": "Engineering Blender/blender Addon Engineer",
       "division": "engineering",
       "description": "Provide disciplined blender/blender addon engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4169,7 +4169,7 @@
     },
     {
       "id": "game-development--economy-designer",
-      "name": "Economy Designer",
+      "name": "Engineering Economy Designer",
       "division": "engineering",
       "description": "Provide disciplined economy designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4217,7 +4217,7 @@
     },
     {
       "id": "game-development--game-audio-engineer",
-      "name": "Game Audio Engineer",
+      "name": "Engineering Game Audio Engineer",
       "division": "engineering",
       "description": "Provide disciplined game audio engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4265,7 +4265,7 @@
     },
     {
       "id": "game-development--game-designer",
-      "name": "Game Designer",
+      "name": "Engineering Game Designer",
       "division": "engineering",
       "description": "Provide disciplined game designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4313,7 +4313,7 @@
     },
     {
       "id": "game-development--godot--godot-gameplay-scripter",
-      "name": "Godot/godot Gameplay Scripter",
+      "name": "Engineering Godot/godot Gameplay Scripter",
       "division": "engineering",
       "description": "Provide disciplined godot/godot gameplay scripter expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4361,7 +4361,7 @@
     },
     {
       "id": "game-development--godot--godot-multiplayer-engineer",
-      "name": "Godot/godot Multiplayer Engineer",
+      "name": "Engineering Godot/godot Multiplayer Engineer",
       "division": "engineering",
       "description": "Provide disciplined godot/godot multiplayer engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4409,7 +4409,7 @@
     },
     {
       "id": "game-development--godot--godot-shader-developer",
-      "name": "Godot/godot Shader Developer",
+      "name": "Engineering Godot/godot Shader Developer",
       "division": "engineering",
       "description": "Provide disciplined godot/godot shader developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4457,7 +4457,7 @@
     },
     {
       "id": "game-development--level-designer",
-      "name": "Level Designer",
+      "name": "Engineering Level Designer",
       "division": "engineering",
       "description": "Provide disciplined level designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4505,7 +4505,7 @@
     },
     {
       "id": "game-development--narrative-designer",
-      "name": "Narrative Designer",
+      "name": "Engineering Narrative Designer",
       "division": "engineering",
       "description": "Provide disciplined narrative designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4553,7 +4553,7 @@
     },
     {
       "id": "game-development--roblox-studio--roblox-avatar-creator",
-      "name": "Roblox Studio/roblox Avatar Creator",
+      "name": "Engineering Roblox Studio/roblox Avatar Creator",
       "division": "engineering",
       "description": "Provide disciplined roblox studio/roblox avatar creator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4601,7 +4601,7 @@
     },
     {
       "id": "game-development--roblox-studio--roblox-experience-designer",
-      "name": "Roblox Studio/roblox Experience Designer",
+      "name": "Engineering Roblox Studio/roblox Experience Designer",
       "division": "engineering",
       "description": "Provide disciplined roblox studio/roblox experience designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4649,7 +4649,7 @@
     },
     {
       "id": "game-development--roblox-studio--roblox-systems-scripter",
-      "name": "Roblox Studio/roblox Systems Scripter",
+      "name": "Engineering Roblox Studio/roblox Systems Scripter",
       "division": "engineering",
       "description": "Provide disciplined roblox studio/roblox systems scripter expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4697,7 +4697,7 @@
     },
     {
       "id": "game-development--technical-artist",
-      "name": "Technical Artist",
+      "name": "Engineering Technical Artist",
       "division": "engineering",
       "description": "Provide disciplined technical artist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4745,7 +4745,7 @@
     },
     {
       "id": "game-development--unity--unity-architect",
-      "name": "Unity/unity Architect",
+      "name": "Engineering Unity/unity Architect",
       "division": "engineering",
       "description": "Provide disciplined unity/unity architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4793,7 +4793,7 @@
     },
     {
       "id": "game-development--unity--unity-editor-tool-developer",
-      "name": "Unity/unity Editor Tool Developer",
+      "name": "Engineering Unity/unity Editor Tool Developer",
       "division": "engineering",
       "description": "Provide disciplined unity/unity editor tool developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4841,7 +4841,7 @@
     },
     {
       "id": "game-development--unity--unity-multiplayer-engineer",
-      "name": "Unity/unity Multiplayer Engineer",
+      "name": "Engineering Unity/unity Multiplayer Engineer",
       "division": "engineering",
       "description": "Provide disciplined unity/unity multiplayer engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4889,7 +4889,7 @@
     },
     {
       "id": "game-development--unity--unity-shader-graph-artist",
-      "name": "Unity/unity Shader Graph Artist",
+      "name": "Engineering Unity/unity Shader Graph Artist",
       "division": "engineering",
       "description": "Provide disciplined unity/unity shader graph artist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4937,7 +4937,7 @@
     },
     {
       "id": "game-development--unreal-engine--unreal-multiplayer-architect",
-      "name": "Unreal Engine/unreal Multiplayer Architect",
+      "name": "Engineering Unreal Engine/unreal Multiplayer Architect",
       "division": "engineering",
       "description": "Provide disciplined unreal engine/unreal multiplayer architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -4985,7 +4985,7 @@
     },
     {
       "id": "game-development--unreal-engine--unreal-systems-engineer",
-      "name": "Unreal Engine/unreal Systems Engineer",
+      "name": "Engineering Unreal Engine/unreal Systems Engineer",
       "division": "engineering",
       "description": "Provide disciplined unreal engine/unreal systems engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5033,7 +5033,7 @@
     },
     {
       "id": "game-development--unreal-engine--unreal-technical-artist",
-      "name": "Unreal Engine/unreal Technical Artist",
+      "name": "Engineering Unreal Engine/unreal Technical Artist",
       "division": "engineering",
       "description": "Provide disciplined unreal engine/unreal technical artist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5081,7 +5081,7 @@
     },
     {
       "id": "game-development--unreal-engine--unreal-world-builder",
-      "name": "Unreal Engine/unreal World Builder",
+      "name": "Engineering Unreal Engine/unreal World Builder",
       "division": "engineering",
       "description": "Provide disciplined unreal engine/unreal world builder expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5129,7 +5129,7 @@
     },
     {
       "id": "gis--gis-3d-scene-developer",
-      "name": "GIS 3D Scene Developer",
+      "name": "Research GIS 3D Scene Developer",
       "division": "research",
       "description": "Provide disciplined gis 3d scene developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5177,7 +5177,7 @@
     },
     {
       "id": "gis--gis-analyst",
-      "name": "GIS Analyst",
+      "name": "Research GIS Analyst",
       "division": "research",
       "description": "Provide disciplined gis analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5225,7 +5225,7 @@
     },
     {
       "id": "gis--gis-bim-specialist",
-      "name": "GIS BIM Specialist",
+      "name": "Research GIS BIM Specialist",
       "division": "research",
       "description": "Provide disciplined gis bim specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5273,7 +5273,7 @@
     },
     {
       "id": "gis--gis-cartography-designer",
-      "name": "GIS Cartography Designer",
+      "name": "Research GIS Cartography Designer",
       "division": "research",
       "description": "Provide disciplined gis cartography designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5321,7 +5321,7 @@
     },
     {
       "id": "gis--gis-drone-reality-mapping",
-      "name": "GIS Drone Reality Mapping",
+      "name": "Research GIS Drone Reality Mapping",
       "division": "research",
       "description": "Provide disciplined gis drone reality mapping expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5369,7 +5369,7 @@
     },
     {
       "id": "gis--gis-geoai-ml-engineer",
-      "name": "GIS Geoai ML Engineer",
+      "name": "Research GIS Geoai ML Engineer",
       "division": "research",
       "description": "Provide disciplined gis geoai ml engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5417,7 +5417,7 @@
     },
     {
       "id": "gis--gis-geoprocessing-specialist",
-      "name": "GIS Geoprocessing Specialist",
+      "name": "Research GIS Geoprocessing Specialist",
       "division": "research",
       "description": "Provide disciplined gis geoprocessing specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5465,7 +5465,7 @@
     },
     {
       "id": "gis--gis-qa-engineer",
-      "name": "GIS QA Engineer",
+      "name": "Research GIS QA Engineer",
       "division": "research",
       "description": "Provide disciplined gis qa engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5513,7 +5513,7 @@
     },
     {
       "id": "gis--gis-solution-engineer",
-      "name": "GIS Solution Engineer",
+      "name": "Research GIS Solution Engineer",
       "division": "research",
       "description": "Provide disciplined gis solution engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5561,7 +5561,7 @@
     },
     {
       "id": "gis--gis-spatial-data-engineer",
-      "name": "GIS Spatial Data Engineer",
+      "name": "Research GIS Spatial Data Engineer",
       "division": "research",
       "description": "Provide disciplined gis spatial data engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5609,7 +5609,7 @@
     },
     {
       "id": "gis--gis-spatial-data-scientist",
-      "name": "GIS Spatial Data Scientist",
+      "name": "Research GIS Spatial Data Scientist",
       "division": "research",
       "description": "Provide disciplined gis spatial data scientist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5657,7 +5657,7 @@
     },
     {
       "id": "gis--gis-technical-consultant",
-      "name": "GIS Technical Consultant",
+      "name": "Research GIS Technical Consultant",
       "division": "research",
       "description": "Provide disciplined gis technical consultant expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5705,7 +5705,7 @@
     },
     {
       "id": "gis--gis-web-gis-developer",
-      "name": "GIS WEB GIS Developer",
+      "name": "Research GIS WEB GIS Developer",
       "division": "research",
       "description": "Provide disciplined gis web gis developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5753,7 +5753,7 @@
     },
     {
       "id": "healthcare--healthcare-clinical-evidence-agent",
-      "name": "Healthcare Clinical Evidence Agent",
+      "name": "Research Healthcare Clinical Evidence Agent",
       "division": "research",
       "description": "Provide disciplined healthcare clinical evidence agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5801,7 +5801,7 @@
     },
     {
       "id": "healthcare--healthcare-innovation-strategist",
-      "name": "Healthcare Innovation Strategist",
+      "name": "Research Healthcare Innovation Strategist",
       "division": "research",
       "description": "Provide disciplined healthcare innovation strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5849,7 +5849,7 @@
     },
     {
       "id": "healthcare--healthcare-sovereign-health-systems-agent",
-      "name": "Healthcare Sovereign Health Systems Agent",
+      "name": "Research Healthcare Sovereign Health Systems Agent",
       "division": "research",
       "description": "Provide disciplined healthcare sovereign health systems agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5897,7 +5897,7 @@
     },
     {
       "id": "marketing--marketing-aeo-foundations",
-      "name": "Marketing AEO Foundations",
+      "name": "Operations Marketing AEO Foundations",
       "division": "operations",
       "description": "Provide disciplined marketing aeo foundations expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5945,7 +5945,7 @@
     },
     {
       "id": "marketing--marketing-agentic-search-optimizer",
-      "name": "Marketing Agentic Search Optimizer",
+      "name": "Operations Marketing Agentic Search Optimizer",
       "division": "operations",
       "description": "Provide disciplined marketing agentic search optimizer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -5993,7 +5993,7 @@
     },
     {
       "id": "marketing--marketing-ai-citation-strategist",
-      "name": "Marketing AI Citation Strategist",
+      "name": "Operations Marketing AI Citation Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing ai citation strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6041,7 +6041,7 @@
     },
     {
       "id": "marketing--marketing-app-store-optimizer",
-      "name": "Marketing APP Store Optimizer",
+      "name": "Operations Marketing APP Store Optimizer",
       "division": "operations",
       "description": "Provide disciplined marketing app store optimizer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6089,7 +6089,7 @@
     },
     {
       "id": "marketing--marketing-baidu-seo-specialist",
-      "name": "Marketing Baidu SEO Specialist",
+      "name": "Operations Marketing Baidu SEO Specialist",
       "division": "operations",
       "description": "Provide disciplined marketing baidu seo specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6137,7 +6137,7 @@
     },
     {
       "id": "marketing--marketing-bilibili-content-strategist",
-      "name": "Marketing Bilibili Content Strategist",
+      "name": "Operations Marketing Bilibili Content Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing bilibili content strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6185,7 +6185,7 @@
     },
     {
       "id": "marketing--marketing-book-co-author",
-      "name": "Marketing Book CO Author",
+      "name": "Operations Marketing Book CO Author",
       "division": "operations",
       "description": "Provide disciplined marketing book co author expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6233,7 +6233,7 @@
     },
     {
       "id": "marketing--marketing-carousel-growth-engine",
-      "name": "Marketing Carousel Growth Engine",
+      "name": "Operations Marketing Carousel Growth Engine",
       "division": "operations",
       "description": "Provide disciplined marketing carousel growth engine expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6281,7 +6281,7 @@
     },
     {
       "id": "marketing--marketing-china-ecommerce-operator",
-      "name": "Marketing China Ecommerce Operator",
+      "name": "Operations Marketing China Ecommerce Operator",
       "division": "operations",
       "description": "Provide disciplined marketing china ecommerce operator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6329,7 +6329,7 @@
     },
     {
       "id": "marketing--marketing-china-market-localization-strategist",
-      "name": "Marketing China Market Localization Strategist",
+      "name": "Operations Marketing China Market Localization Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing china market localization strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6377,7 +6377,7 @@
     },
     {
       "id": "marketing--marketing-content-creator",
-      "name": "Marketing Content Creator",
+      "name": "Operations Marketing Content Creator",
       "division": "operations",
       "description": "Provide disciplined marketing content creator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6425,7 +6425,7 @@
     },
     {
       "id": "marketing--marketing-cross-border-ecommerce",
-      "name": "Marketing Cross Border Ecommerce",
+      "name": "Operations Marketing Cross Border Ecommerce",
       "division": "operations",
       "description": "Provide disciplined marketing cross border ecommerce expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6473,7 +6473,7 @@
     },
     {
       "id": "marketing--marketing-douyin-strategist",
-      "name": "Marketing Douyin Strategist",
+      "name": "Operations Marketing Douyin Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing douyin strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6521,7 +6521,7 @@
     },
     {
       "id": "marketing--marketing-email-strategist",
-      "name": "Marketing Email Strategist",
+      "name": "Operations Marketing Email Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing email strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6569,7 +6569,7 @@
     },
     {
       "id": "marketing--marketing-global-podcast-strategist",
-      "name": "Marketing Global Podcast Strategist",
+      "name": "Operations Marketing Global Podcast Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing global podcast strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6617,7 +6617,7 @@
     },
     {
       "id": "marketing--marketing-growth-hacker",
-      "name": "Marketing Growth Hacker",
+      "name": "Operations Marketing Growth Hacker",
       "division": "operations",
       "description": "Provide disciplined marketing growth hacker expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6665,7 +6665,7 @@
     },
     {
       "id": "marketing--marketing-instagram-curator",
-      "name": "Marketing Instagram Curator",
+      "name": "Operations Marketing Instagram Curator",
       "division": "operations",
       "description": "Provide disciplined marketing instagram curator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6713,7 +6713,7 @@
     },
     {
       "id": "marketing--marketing-kuaishou-strategist",
-      "name": "Marketing Kuaishou Strategist",
+      "name": "Operations Marketing Kuaishou Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing kuaishou strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6761,7 +6761,7 @@
     },
     {
       "id": "marketing--marketing-linkedin-content-creator",
-      "name": "Marketing Linkedin Content Creator",
+      "name": "Operations Marketing Linkedin Content Creator",
       "division": "operations",
       "description": "Provide disciplined marketing linkedin content creator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6809,7 +6809,7 @@
     },
     {
       "id": "marketing--marketing-livestream-commerce-coach",
-      "name": "Marketing Livestream Commerce Coach",
+      "name": "Operations Marketing Livestream Commerce Coach",
       "division": "operations",
       "description": "Provide disciplined marketing livestream commerce coach expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6857,7 +6857,7 @@
     },
     {
       "id": "marketing--marketing-multi-platform-publisher",
-      "name": "Marketing Multi Platform Publisher",
+      "name": "Operations Marketing Multi Platform Publisher",
       "division": "operations",
       "description": "Provide disciplined marketing multi platform publisher expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6905,7 +6905,7 @@
     },
     {
       "id": "marketing--marketing-podcast-strategist",
-      "name": "Marketing Podcast Strategist",
+      "name": "Operations Marketing Podcast Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing podcast strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -6953,7 +6953,7 @@
     },
     {
       "id": "marketing--marketing-pr-communications-manager",
-      "name": "Marketing PR Communications Manager",
+      "name": "Operations Marketing PR Communications Manager",
       "division": "operations",
       "description": "Provide disciplined marketing pr communications manager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7001,7 +7001,7 @@
     },
     {
       "id": "marketing--marketing-private-domain-operator",
-      "name": "Marketing Private Domain Operator",
+      "name": "Operations Marketing Private Domain Operator",
       "division": "operations",
       "description": "Provide disciplined marketing private domain operator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7049,7 +7049,7 @@
     },
     {
       "id": "marketing--marketing-reddit-community-builder",
-      "name": "Marketing Reddit Community Builder",
+      "name": "Operations Marketing Reddit Community Builder",
       "division": "operations",
       "description": "Provide disciplined marketing reddit community builder expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7097,7 +7097,7 @@
     },
     {
       "id": "marketing--marketing-seo-specialist",
-      "name": "Marketing SEO Specialist",
+      "name": "Operations Marketing SEO Specialist",
       "division": "operations",
       "description": "Provide disciplined marketing seo specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7145,7 +7145,7 @@
     },
     {
       "id": "marketing--marketing-short-video-editing-coach",
-      "name": "Marketing Short Video Editing Coach",
+      "name": "Operations Marketing Short Video Editing Coach",
       "division": "operations",
       "description": "Provide disciplined marketing short video editing coach expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7193,7 +7193,7 @@
     },
     {
       "id": "marketing--marketing-social-media-strategist",
-      "name": "Marketing Social Media Strategist",
+      "name": "Operations Marketing Social Media Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing social media strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7241,7 +7241,7 @@
     },
     {
       "id": "marketing--marketing-tiktok-strategist",
-      "name": "Marketing Tiktok Strategist",
+      "name": "Operations Marketing Tiktok Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing tiktok strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7289,7 +7289,7 @@
     },
     {
       "id": "marketing--marketing-twitter-engager",
-      "name": "Marketing Twitter Engager",
+      "name": "Operations Marketing Twitter Engager",
       "division": "operations",
       "description": "Provide disciplined marketing twitter engager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7337,7 +7337,7 @@
     },
     {
       "id": "marketing--marketing-video-optimization-specialist",
-      "name": "Marketing Video Optimization Specialist",
+      "name": "Operations Marketing Video Optimization Specialist",
       "division": "operations",
       "description": "Provide disciplined marketing video optimization specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7385,7 +7385,7 @@
     },
     {
       "id": "marketing--marketing-wechat-official-account",
-      "name": "Marketing Wechat Official Account",
+      "name": "Operations Marketing Wechat Official Account",
       "division": "operations",
       "description": "Provide disciplined marketing wechat official account expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7433,7 +7433,7 @@
     },
     {
       "id": "marketing--marketing-weibo-strategist",
-      "name": "Marketing Weibo Strategist",
+      "name": "Operations Marketing Weibo Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing weibo strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7481,7 +7481,7 @@
     },
     {
       "id": "marketing--marketing-x-twitter-intelligence-analyst",
-      "name": "Marketing X Twitter Intelligence Analyst",
+      "name": "Operations Marketing X Twitter Intelligence Analyst",
       "division": "operations",
       "description": "Provide disciplined marketing x twitter intelligence analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7529,7 +7529,7 @@
     },
     {
       "id": "marketing--marketing-xiaohongshu-specialist",
-      "name": "Marketing Xiaohongshu Specialist",
+      "name": "Operations Marketing Xiaohongshu Specialist",
       "division": "operations",
       "description": "Provide disciplined marketing xiaohongshu specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7577,7 +7577,7 @@
     },
     {
       "id": "marketing--marketing-zhihu-strategist",
-      "name": "Marketing Zhihu Strategist",
+      "name": "Operations Marketing Zhihu Strategist",
       "division": "operations",
       "description": "Provide disciplined marketing zhihu strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7625,7 +7625,7 @@
     },
     {
       "id": "paid-media--paid-media-auditor",
-      "name": "Paid Media Auditor",
+      "name": "Operations Paid Media Auditor",
       "division": "operations",
       "description": "Provide disciplined paid media auditor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7673,7 +7673,7 @@
     },
     {
       "id": "paid-media--paid-media-creative-strategist",
-      "name": "Paid Media Creative Strategist",
+      "name": "Operations Paid Media Creative Strategist",
       "division": "operations",
       "description": "Provide disciplined paid media creative strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7721,7 +7721,7 @@
     },
     {
       "id": "paid-media--paid-media-paid-social-strategist",
-      "name": "Paid Media Paid Social Strategist",
+      "name": "Operations Paid Media Paid Social Strategist",
       "division": "operations",
       "description": "Provide disciplined paid media paid social strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7769,7 +7769,7 @@
     },
     {
       "id": "paid-media--paid-media-ppc-strategist",
-      "name": "Paid Media PPC Strategist",
+      "name": "Operations Paid Media PPC Strategist",
       "division": "operations",
       "description": "Provide disciplined paid media ppc strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7817,7 +7817,7 @@
     },
     {
       "id": "paid-media--paid-media-programmatic-buyer",
-      "name": "Paid Media Programmatic Buyer",
+      "name": "Operations Paid Media Programmatic Buyer",
       "division": "operations",
       "description": "Provide disciplined paid media programmatic buyer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7865,7 +7865,7 @@
     },
     {
       "id": "paid-media--paid-media-search-query-analyst",
-      "name": "Paid Media Search Query Analyst",
+      "name": "Operations Paid Media Search Query Analyst",
       "division": "operations",
       "description": "Provide disciplined paid media search query analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7913,7 +7913,7 @@
     },
     {
       "id": "paid-media--paid-media-tracking-specialist",
-      "name": "Paid Media Tracking Specialist",
+      "name": "Operations Paid Media Tracking Specialist",
       "division": "operations",
       "description": "Provide disciplined paid media tracking specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -7961,7 +7961,7 @@
     },
     {
       "id": "product--product-behavioral-nudge-engine",
-      "name": "Product Behavioral Nudge Engine",
+      "name": "Architecture Product Behavioral Nudge Engine",
       "division": "architecture",
       "description": "Provide disciplined product behavioral nudge engine expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8009,7 +8009,7 @@
     },
     {
       "id": "product--product-feedback-synthesizer",
-      "name": "Product Feedback Synthesizer",
+      "name": "Architecture Product Feedback Synthesizer",
       "division": "architecture",
       "description": "Provide disciplined product feedback synthesizer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8057,7 +8057,7 @@
     },
     {
       "id": "product--product-manager",
-      "name": "Product Manager",
+      "name": "Architecture Product Manager",
       "division": "architecture",
       "description": "Provide disciplined product manager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8105,7 +8105,7 @@
     },
     {
       "id": "product--product-sprint-prioritizer",
-      "name": "Product Sprint Prioritizer",
+      "name": "Architecture Product Sprint Prioritizer",
       "division": "architecture",
       "description": "Provide disciplined product sprint prioritizer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8153,7 +8153,7 @@
     },
     {
       "id": "product--product-trend-researcher",
-      "name": "Product Trend Researcher",
+      "name": "Architecture Product Trend Researcher",
       "division": "architecture",
       "description": "Provide disciplined product trend researcher expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8201,7 +8201,7 @@
     },
     {
       "id": "project-management--project-management-experiment-tracker",
-      "name": "Project Management Experiment Tracker",
+      "name": "Operations Project Management Experiment Tracker",
       "division": "operations",
       "description": "Provide disciplined project management experiment tracker expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8249,7 +8249,7 @@
     },
     {
       "id": "project-management--project-management-jira-workflow-steward",
-      "name": "Project Management Jira Workflow Steward",
+      "name": "Operations Project Management Jira Workflow Steward",
       "division": "operations",
       "description": "Provide disciplined project management jira workflow steward expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8297,7 +8297,7 @@
     },
     {
       "id": "project-management--project-management-meeting-notes-specialist",
-      "name": "Project Management Meeting Notes Specialist",
+      "name": "Operations Project Management Meeting Notes Specialist",
       "division": "operations",
       "description": "Provide disciplined project management meeting notes specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8345,7 +8345,7 @@
     },
     {
       "id": "project-management--project-management-project-shepherd",
-      "name": "Project Management Project Shepherd",
+      "name": "Operations Project Management Project Shepherd",
       "division": "operations",
       "description": "Provide disciplined project management project shepherd expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8393,7 +8393,7 @@
     },
     {
       "id": "project-management--project-management-studio-operations",
-      "name": "Project Management Studio Operations",
+      "name": "Operations Project Management Studio Operations",
       "division": "operations",
       "description": "Provide disciplined project management studio operations expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8441,7 +8441,7 @@
     },
     {
       "id": "project-management--project-management-studio-producer",
-      "name": "Project Management Studio Producer",
+      "name": "Operations Project Management Studio Producer",
       "division": "operations",
       "description": "Provide disciplined project management studio producer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8489,7 +8489,7 @@
     },
     {
       "id": "project-management--project-manager-senior",
-      "name": "Project Manager Senior",
+      "name": "Operations Project Manager Senior",
       "division": "operations",
       "description": "Provide disciplined project manager senior expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8537,7 +8537,7 @@
     },
     {
       "id": "research--research-synthesist",
-      "name": "Research Synthesist",
+      "name": "Research Research Synthesist",
       "division": "research",
       "description": "Provide disciplined research synthesist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8585,7 +8585,7 @@
     },
     {
       "id": "sales--sales-account-strategist",
-      "name": "Sales Account Strategist",
+      "name": "Operations Sales Account Strategist",
       "division": "operations",
       "description": "Provide disciplined sales account strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8633,7 +8633,7 @@
     },
     {
       "id": "sales--sales-coach",
-      "name": "Sales Coach",
+      "name": "Operations Sales Coach",
       "division": "operations",
       "description": "Provide disciplined sales coach expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8681,7 +8681,7 @@
     },
     {
       "id": "sales--sales-deal-strategist",
-      "name": "Sales Deal Strategist",
+      "name": "Operations Sales Deal Strategist",
       "division": "operations",
       "description": "Provide disciplined sales deal strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8729,7 +8729,7 @@
     },
     {
       "id": "sales--sales-discovery-coach",
-      "name": "Sales Discovery Coach",
+      "name": "Operations Sales Discovery Coach",
       "division": "operations",
       "description": "Provide disciplined sales discovery coach expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8777,7 +8777,7 @@
     },
     {
       "id": "sales--sales-engineer",
-      "name": "Sales Engineer",
+      "name": "Operations Sales Engineer",
       "division": "operations",
       "description": "Provide disciplined sales engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8825,7 +8825,7 @@
     },
     {
       "id": "sales--sales-offer-lead-gen-strategist",
-      "name": "Sales Offer Lead GEN Strategist",
+      "name": "Operations Sales Offer Lead GEN Strategist",
       "division": "operations",
       "description": "Provide disciplined sales offer lead gen strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8873,7 +8873,7 @@
     },
     {
       "id": "sales--sales-outbound-strategist",
-      "name": "Sales Outbound Strategist",
+      "name": "Operations Sales Outbound Strategist",
       "division": "operations",
       "description": "Provide disciplined sales outbound strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8921,7 +8921,7 @@
     },
     {
       "id": "sales--sales-pipeline-analyst",
-      "name": "Sales Pipeline Analyst",
+      "name": "Operations Sales Pipeline Analyst",
       "division": "operations",
       "description": "Provide disciplined sales pipeline analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -8969,7 +8969,7 @@
     },
     {
       "id": "sales--sales-proposal-strategist",
-      "name": "Sales Proposal Strategist",
+      "name": "Operations Sales Proposal Strategist",
       "division": "operations",
       "description": "Provide disciplined sales proposal strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9017,7 +9017,7 @@
     },
     {
       "id": "security--security-ai-generated-code-auditor",
-      "name": "Security AI Generated Code Auditor",
+      "name": "Security Security AI Generated Code Auditor",
       "division": "security",
       "description": "Provide disciplined security ai generated code auditor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9065,7 +9065,7 @@
     },
     {
       "id": "security--security-appsec-engineer",
-      "name": "Security Appsec Engineer",
+      "name": "Security Security Appsec Engineer",
       "division": "security",
       "description": "Provide disciplined security appsec engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9113,7 +9113,7 @@
     },
     {
       "id": "security--security-architect",
-      "name": "Security Architect",
+      "name": "Security Security Architect",
       "division": "security",
       "description": "Provide disciplined security architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9161,7 +9161,7 @@
     },
     {
       "id": "security--security-blockchain-security-auditor",
-      "name": "Security Blockchain Security Auditor",
+      "name": "Security Security Blockchain Security Auditor",
       "division": "security",
       "description": "Provide disciplined security blockchain security auditor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9209,7 +9209,7 @@
     },
     {
       "id": "security--security-cloud-security-architect",
-      "name": "Security Cloud Security Architect",
+      "name": "Security Security Cloud Security Architect",
       "division": "security",
       "description": "Provide disciplined security cloud security architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9257,7 +9257,7 @@
     },
     {
       "id": "security--security-compliance-auditor",
-      "name": "Security Compliance Auditor",
+      "name": "Security Security Compliance Auditor",
       "division": "security",
       "description": "Provide disciplined security compliance auditor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9305,7 +9305,7 @@
     },
     {
       "id": "security--security-incident-responder",
-      "name": "Security Incident Responder",
+      "name": "Security Security Incident Responder",
       "division": "security",
       "description": "Provide disciplined security incident responder expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9353,7 +9353,7 @@
     },
     {
       "id": "security--security-penetration-tester",
-      "name": "Security Penetration Tester",
+      "name": "Security Security Penetration Tester",
       "division": "security",
       "description": "Provide disciplined security penetration tester expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9401,7 +9401,7 @@
     },
     {
       "id": "security--security-secrets-credential-engineer",
-      "name": "Security Secrets Credential Engineer",
+      "name": "Security Security Secrets Credential Engineer",
       "division": "security",
       "description": "Provide disciplined security secrets credential engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9449,7 +9449,7 @@
     },
     {
       "id": "security--security-senior-secops",
-      "name": "Security Senior Secops",
+      "name": "Security Security Senior Secops",
       "division": "security",
       "description": "Provide disciplined security senior secops expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9497,7 +9497,7 @@
     },
     {
       "id": "security--security-threat-detection-engineer",
-      "name": "Security Threat Detection Engineer",
+      "name": "Security Security Threat Detection Engineer",
       "division": "security",
       "description": "Provide disciplined security threat detection engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9545,7 +9545,7 @@
     },
     {
       "id": "security--security-threat-intelligence-analyst",
-      "name": "Security Threat Intelligence Analyst",
+      "name": "Security Security Threat Intelligence Analyst",
       "division": "security",
       "description": "Provide disciplined security threat intelligence analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9593,7 +9593,7 @@
     },
     {
       "id": "spatial-computing--macos-spatial-metal-engineer",
-      "name": "Macos Spatial Metal Engineer",
+      "name": "Engineering Macos Spatial Metal Engineer",
       "division": "engineering",
       "description": "Provide disciplined macos spatial metal engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9641,7 +9641,7 @@
     },
     {
       "id": "spatial-computing--terminal-integration-specialist",
-      "name": "Terminal Integration Specialist",
+      "name": "Engineering Terminal Integration Specialist",
       "division": "engineering",
       "description": "Provide disciplined terminal integration specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9689,7 +9689,7 @@
     },
     {
       "id": "spatial-computing--visionos-spatial-engineer",
-      "name": "Visionos Spatial Engineer",
+      "name": "Engineering Visionos Spatial Engineer",
       "division": "engineering",
       "description": "Provide disciplined visionos spatial engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9737,7 +9737,7 @@
     },
     {
       "id": "spatial-computing--xr-cockpit-interaction-specialist",
-      "name": "XR Cockpit Interaction Specialist",
+      "name": "Engineering XR Cockpit Interaction Specialist",
       "division": "engineering",
       "description": "Provide disciplined xr cockpit interaction specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9785,7 +9785,7 @@
     },
     {
       "id": "spatial-computing--xr-immersive-developer",
-      "name": "XR Immersive Developer",
+      "name": "Engineering XR Immersive Developer",
       "division": "engineering",
       "description": "Provide disciplined xr immersive developer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9833,7 +9833,7 @@
     },
     {
       "id": "spatial-computing--xr-interface-architect",
-      "name": "XR Interface Architect",
+      "name": "Engineering XR Interface Architect",
       "division": "engineering",
       "description": "Provide disciplined xr interface architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9881,7 +9881,7 @@
     },
     {
       "id": "specialized--accounts-payable-agent",
-      "name": "Accounts Payable Agent",
+      "name": "Research Accounts Payable Agent",
       "division": "research",
       "description": "Provide disciplined accounts payable agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9929,7 +9929,7 @@
     },
     {
       "id": "specialized--agentic-identity-trust",
-      "name": "Agentic Identity Trust",
+      "name": "Research Agentic Identity Trust",
       "division": "research",
       "description": "Provide disciplined agentic identity trust expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -9977,7 +9977,7 @@
     },
     {
       "id": "specialized--agents-orchestrator",
-      "name": "Agents Orchestrator",
+      "name": "Research Agents Orchestrator",
       "division": "research",
       "description": "Provide disciplined agents orchestrator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10025,7 +10025,7 @@
     },
     {
       "id": "specialized--automation-governance-architect",
-      "name": "Automation Governance Architect",
+      "name": "Research Automation Governance Architect",
       "division": "research",
       "description": "Provide disciplined automation governance architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10073,7 +10073,7 @@
     },
     {
       "id": "specialized--business-strategist",
-      "name": "Business Strategist",
+      "name": "Research Business Strategist",
       "division": "research",
       "description": "Provide disciplined business strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10121,7 +10121,7 @@
     },
     {
       "id": "specialized--change-management-consultant",
-      "name": "Change Management Consultant",
+      "name": "Research Change Management Consultant",
       "division": "research",
       "description": "Provide disciplined change management consultant expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10169,7 +10169,7 @@
     },
     {
       "id": "specialized--chief-financial-officer",
-      "name": "Chief Financial Officer",
+      "name": "Research Chief Financial Officer",
       "division": "research",
       "description": "Provide disciplined chief financial officer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10217,7 +10217,7 @@
     },
     {
       "id": "specialized--corporate-training-designer",
-      "name": "Corporate Training Designer",
+      "name": "Research Corporate Training Designer",
       "division": "research",
       "description": "Provide disciplined corporate training designer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10265,7 +10265,7 @@
     },
     {
       "id": "specialized--customer-service",
-      "name": "Customer Service",
+      "name": "Research Customer Service",
       "division": "research",
       "description": "Provide disciplined customer service expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10313,7 +10313,7 @@
     },
     {
       "id": "specialized--customer-success-manager",
-      "name": "Customer Success Manager",
+      "name": "Research Customer Success Manager",
       "division": "research",
       "description": "Provide disciplined customer success manager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10361,7 +10361,7 @@
     },
     {
       "id": "specialized--data-consolidation-agent",
-      "name": "Data Consolidation Agent",
+      "name": "Research Data Consolidation Agent",
       "division": "research",
       "description": "Provide disciplined data consolidation agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10409,7 +10409,7 @@
     },
     {
       "id": "specialized--data-privacy-officer",
-      "name": "Data Privacy Officer",
+      "name": "Research Data Privacy Officer",
       "division": "research",
       "description": "Provide disciplined data privacy officer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10457,7 +10457,7 @@
     },
     {
       "id": "specialized--esg-sustainability-officer",
-      "name": "ESG Sustainability Officer",
+      "name": "Research ESG Sustainability Officer",
       "division": "research",
       "description": "Provide disciplined esg sustainability officer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10505,7 +10505,7 @@
     },
     {
       "id": "specialized--government-digital-presales-consultant",
-      "name": "Government Digital Presales Consultant",
+      "name": "Research Government Digital Presales Consultant",
       "division": "research",
       "description": "Provide disciplined government digital presales consultant expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10553,7 +10553,7 @@
     },
     {
       "id": "specialized--grant-writer",
-      "name": "Grant Writer",
+      "name": "Research Grant Writer",
       "division": "research",
       "description": "Provide disciplined grant writer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10601,7 +10601,7 @@
     },
     {
       "id": "specialized--healthcare-aging-parent-care-companion",
-      "name": "Healthcare Aging Parent Care Companion",
+      "name": "Research Healthcare Aging Parent Care Companion",
       "division": "research",
       "description": "Provide disciplined healthcare aging parent care companion expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10649,7 +10649,7 @@
     },
     {
       "id": "specialized--healthcare-customer-service",
-      "name": "Healthcare Customer Service",
+      "name": "Research Healthcare Customer Service",
       "division": "research",
       "description": "Provide disciplined healthcare customer service expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10697,7 +10697,7 @@
     },
     {
       "id": "specialized--healthcare-marketing-compliance",
-      "name": "Healthcare Marketing Compliance",
+      "name": "Research Healthcare Marketing Compliance",
       "division": "research",
       "description": "Provide disciplined healthcare marketing compliance expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10745,7 +10745,7 @@
     },
     {
       "id": "specialized--hospitality-guest-services",
-      "name": "Hospitality Guest Services",
+      "name": "Research Hospitality Guest Services",
       "division": "research",
       "description": "Provide disciplined hospitality guest services expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10793,7 +10793,7 @@
     },
     {
       "id": "specialized--hr-onboarding",
-      "name": "HR Onboarding",
+      "name": "Research HR Onboarding",
       "division": "research",
       "description": "Provide disciplined hr onboarding expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10841,7 +10841,7 @@
     },
     {
       "id": "specialized--identity-graph-operator",
-      "name": "Identity Graph Operator",
+      "name": "Research Identity Graph Operator",
       "division": "research",
       "description": "Provide disciplined identity graph operator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10889,7 +10889,7 @@
     },
     {
       "id": "specialized--language-translator",
-      "name": "Language Translator",
+      "name": "Research Language Translator",
       "division": "research",
       "description": "Provide disciplined language translator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10937,7 +10937,7 @@
     },
     {
       "id": "specialized--legal-billing-time-tracking",
-      "name": "Legal Billing Time Tracking",
+      "name": "Research Legal Billing Time Tracking",
       "division": "research",
       "description": "Provide disciplined legal billing time tracking expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -10985,7 +10985,7 @@
     },
     {
       "id": "specialized--legal-client-intake",
-      "name": "Legal Client Intake",
+      "name": "Research Legal Client Intake",
       "division": "research",
       "description": "Provide disciplined legal client intake expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11033,7 +11033,7 @@
     },
     {
       "id": "specialized--legal-document-review",
-      "name": "Legal Document Review",
+      "name": "Research Legal Document Review",
       "division": "research",
       "description": "Provide disciplined legal document review expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11081,7 +11081,7 @@
     },
     {
       "id": "specialized--loan-officer-assistant",
-      "name": "Loan Officer Assistant",
+      "name": "Research Loan Officer Assistant",
       "division": "research",
       "description": "Provide disciplined loan officer assistant expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11129,7 +11129,7 @@
     },
     {
       "id": "specialized--lsp-index-engineer",
-      "name": "LSP Index Engineer",
+      "name": "Research LSP Index Engineer",
       "division": "research",
       "description": "Provide disciplined lsp index engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11177,7 +11177,7 @@
     },
     {
       "id": "specialized--ma-integration-manager",
-      "name": "MA Integration Manager",
+      "name": "Research MA Integration Manager",
       "division": "research",
       "description": "Provide disciplined ma integration manager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11225,7 +11225,7 @@
     },
     {
       "id": "specialized--medical-billing-coding-specialist",
-      "name": "Medical Billing Coding Specialist",
+      "name": "Research Medical Billing Coding Specialist",
       "division": "research",
       "description": "Provide disciplined medical billing coding specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11273,7 +11273,7 @@
     },
     {
       "id": "specialized--operations-manager",
-      "name": "Operations Manager",
+      "name": "Research Operations Manager",
       "division": "research",
       "description": "Provide disciplined operations manager expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11321,7 +11321,7 @@
     },
     {
       "id": "specialized--organizational-psychologist",
-      "name": "Organizational Psychologist",
+      "name": "Research Organizational Psychologist",
       "division": "research",
       "description": "Provide disciplined organizational psychologist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11369,7 +11369,7 @@
     },
     {
       "id": "specialized--personal-growth-mentor",
-      "name": "Personal Growth Mentor",
+      "name": "Research Personal Growth Mentor",
       "division": "research",
       "description": "Provide disciplined personal growth mentor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11417,7 +11417,7 @@
     },
     {
       "id": "specialized--real-estate-buyer-seller",
-      "name": "Real Estate Buyer Seller",
+      "name": "Research Real Estate Buyer Seller",
       "division": "research",
       "description": "Provide disciplined real estate buyer seller expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11465,7 +11465,7 @@
     },
     {
       "id": "specialized--recruitment-specialist",
-      "name": "Recruitment Specialist",
+      "name": "Research Recruitment Specialist",
       "division": "research",
       "description": "Provide disciplined recruitment specialist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11513,7 +11513,7 @@
     },
     {
       "id": "specialized--report-distribution-agent",
-      "name": "Report Distribution Agent",
+      "name": "Research Report Distribution Agent",
       "division": "research",
       "description": "Provide disciplined report distribution agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11561,7 +11561,7 @@
     },
     {
       "id": "specialized--resume-tailor",
-      "name": "Resume Tailor",
+      "name": "Research Resume Tailor",
       "division": "research",
       "description": "Provide disciplined resume tailor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11609,7 +11609,7 @@
     },
     {
       "id": "specialized--retail-customer-returns",
-      "name": "Retail Customer Returns",
+      "name": "Research Retail Customer Returns",
       "division": "research",
       "description": "Provide disciplined retail customer returns expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11657,7 +11657,7 @@
     },
     {
       "id": "specialized--sales-data-extraction-agent",
-      "name": "Sales Data Extraction Agent",
+      "name": "Research Sales Data Extraction Agent",
       "division": "research",
       "description": "Provide disciplined sales data extraction agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11705,7 +11705,7 @@
     },
     {
       "id": "specialized--sales-outreach",
-      "name": "Sales Outreach",
+      "name": "Research Sales Outreach",
       "division": "research",
       "description": "Provide disciplined sales outreach expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11753,7 +11753,7 @@
     },
     {
       "id": "specialized--specialized-chief-of-staff",
-      "name": "Specialized Chief OF Staff",
+      "name": "Research Specialized Chief OF Staff",
       "division": "research",
       "description": "Provide disciplined specialized chief of staff expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11801,7 +11801,7 @@
     },
     {
       "id": "specialized--specialized-civil-engineer",
-      "name": "Specialized Civil Engineer",
+      "name": "Research Specialized Civil Engineer",
       "division": "research",
       "description": "Provide disciplined specialized civil engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11849,7 +11849,7 @@
     },
     {
       "id": "specialized--specialized-codebase-archaeologist",
-      "name": "Specialized Codebase Archaeologist",
+      "name": "Research Specialized Codebase Archaeologist",
       "division": "research",
       "description": "Provide disciplined specialized codebase archaeologist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11897,7 +11897,7 @@
     },
     {
       "id": "specialized--specialized-cultural-intelligence-strategist",
-      "name": "Specialized Cultural Intelligence Strategist",
+      "name": "Research Specialized Cultural Intelligence Strategist",
       "division": "research",
       "description": "Provide disciplined specialized cultural intelligence strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11945,7 +11945,7 @@
     },
     {
       "id": "specialized--specialized-developer-advocate",
-      "name": "Specialized Developer Advocate",
+      "name": "Research Specialized Developer Advocate",
       "division": "research",
       "description": "Provide disciplined specialized developer advocate expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -11993,7 +11993,7 @@
     },
     {
       "id": "specialized--specialized-document-generator",
-      "name": "Specialized Document Generator",
+      "name": "Research Specialized Document Generator",
       "division": "research",
       "description": "Provide disciplined specialized document generator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12041,7 +12041,7 @@
     },
     {
       "id": "specialized--specialized-fedramp-rmf-compliance",
-      "name": "Specialized Fedramp RMF Compliance",
+      "name": "Research Specialized Fedramp RMF Compliance",
       "division": "research",
       "description": "Provide disciplined specialized fedramp rmf compliance expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12089,7 +12089,7 @@
     },
     {
       "id": "specialized--specialized-focus-music-architect",
-      "name": "Specialized Focus Music Architect",
+      "name": "Research Specialized Focus Music Architect",
       "division": "research",
       "description": "Provide disciplined specialized focus music architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12137,7 +12137,7 @@
     },
     {
       "id": "specialized--specialized-french-consulting-market",
-      "name": "Specialized French Consulting Market",
+      "name": "Research Specialized French Consulting Market",
       "division": "research",
       "description": "Provide disciplined specialized french consulting market expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12185,7 +12185,7 @@
     },
     {
       "id": "specialized--specialized-korean-business-navigator",
-      "name": "Specialized Korean Business Navigator",
+      "name": "Research Specialized Korean Business Navigator",
       "division": "research",
       "description": "Provide disciplined specialized korean business navigator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12233,7 +12233,7 @@
     },
     {
       "id": "specialized--specialized-master-plan-architect",
-      "name": "Specialized Master Plan Architect",
+      "name": "Research Specialized Master Plan Architect",
       "division": "research",
       "description": "Provide disciplined specialized master plan architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12281,7 +12281,7 @@
     },
     {
       "id": "specialized--specialized-mcp-builder",
-      "name": "Specialized MCP Builder",
+      "name": "Research Specialized MCP Builder",
       "division": "research",
       "description": "Provide disciplined specialized mcp builder expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12329,7 +12329,7 @@
     },
     {
       "id": "specialized--specialized-model-qa",
-      "name": "Specialized Model QA",
+      "name": "Research Specialized Model QA",
       "division": "research",
       "description": "Provide disciplined specialized model qa expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12377,7 +12377,7 @@
     },
     {
       "id": "specialized--specialized-pricing-analyst",
-      "name": "Specialized Pricing Analyst",
+      "name": "Research Specialized Pricing Analyst",
       "division": "research",
       "description": "Provide disciplined specialized pricing analyst expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12425,7 +12425,7 @@
     },
     {
       "id": "specialized--specialized-salesforce-architect",
-      "name": "Specialized Salesforce Architect",
+      "name": "Research Specialized Salesforce Architect",
       "division": "research",
       "description": "Provide disciplined specialized salesforce architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12473,7 +12473,7 @@
     },
     {
       "id": "specialized--specialized-strategy-duel-agent",
-      "name": "Specialized Strategy Duel Agent",
+      "name": "Research Specialized Strategy Duel Agent",
       "division": "research",
       "description": "Provide disciplined specialized strategy duel agent expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12521,7 +12521,7 @@
     },
     {
       "id": "specialized--specialized-workflow-architect",
-      "name": "Specialized Workflow Architect",
+      "name": "Research Specialized Workflow Architect",
       "division": "research",
       "description": "Provide disciplined specialized workflow architect expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12569,7 +12569,7 @@
     },
     {
       "id": "specialized--study-abroad-advisor",
-      "name": "Study Abroad Advisor",
+      "name": "Research Study Abroad Advisor",
       "division": "research",
       "description": "Provide disciplined study abroad advisor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12617,7 +12617,7 @@
     },
     {
       "id": "specialized--supply-chain-strategist",
-      "name": "Supply Chain Strategist",
+      "name": "Research Supply Chain Strategist",
       "division": "research",
       "description": "Provide disciplined supply chain strategist expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12665,7 +12665,7 @@
     },
     {
       "id": "specialized--zk-steward",
-      "name": "ZK Steward",
+      "name": "Research ZK Steward",
       "division": "research",
       "description": "Provide disciplined zk steward expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12713,7 +12713,7 @@
     },
     {
       "id": "support--support-analytics-reporter",
-      "name": "Support Analytics Reporter",
+      "name": "Operations Support Analytics Reporter",
       "division": "operations",
       "description": "Provide disciplined support analytics reporter expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12761,7 +12761,7 @@
     },
     {
       "id": "support--support-executive-summary-generator",
-      "name": "Support Executive Summary Generator",
+      "name": "Operations Support Executive Summary Generator",
       "division": "operations",
       "description": "Provide disciplined support executive summary generator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12809,7 +12809,7 @@
     },
     {
       "id": "support--support-finance-tracker",
-      "name": "Support Finance Tracker",
+      "name": "Operations Support Finance Tracker",
       "division": "operations",
       "description": "Provide disciplined support finance tracker expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12857,7 +12857,7 @@
     },
     {
       "id": "support--support-infrastructure-maintainer",
-      "name": "Support Infrastructure Maintainer",
+      "name": "Operations Support Infrastructure Maintainer",
       "division": "operations",
       "description": "Provide disciplined support infrastructure maintainer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12905,7 +12905,7 @@
     },
     {
       "id": "support--support-legal-compliance-checker",
-      "name": "Support Legal Compliance Checker",
+      "name": "Operations Support Legal Compliance Checker",
       "division": "operations",
       "description": "Provide disciplined support legal compliance checker expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -12953,7 +12953,7 @@
     },
     {
       "id": "support--support-support-responder",
-      "name": "Support Support Responder",
+      "name": "Operations Support Support Responder",
       "division": "operations",
       "description": "Provide disciplined support support responder expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13001,7 +13001,7 @@
     },
     {
       "id": "testing--testing-accessibility-auditor",
-      "name": "Testing Accessibility Auditor",
+      "name": "Verification Testing Accessibility Auditor",
       "division": "verification",
       "description": "Provide disciplined testing accessibility auditor expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13049,7 +13049,7 @@
     },
     {
       "id": "testing--testing-api-tester",
-      "name": "Testing API Tester",
+      "name": "Verification Testing API Tester",
       "division": "verification",
       "description": "Provide disciplined testing api tester expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13097,7 +13097,7 @@
     },
     {
       "id": "testing--testing-evidence-collector",
-      "name": "Testing Evidence Collector",
+      "name": "Verification Testing Evidence Collector",
       "division": "verification",
       "description": "Provide disciplined testing evidence collector expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13145,7 +13145,7 @@
     },
     {
       "id": "testing--testing-performance-benchmarker",
-      "name": "Testing Performance Benchmarker",
+      "name": "Verification Testing Performance Benchmarker",
       "division": "verification",
       "description": "Provide disciplined testing performance benchmarker expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13193,7 +13193,7 @@
     },
     {
       "id": "testing--testing-reality-checker",
-      "name": "Testing Reality Checker",
+      "name": "Verification Testing Reality Checker",
       "division": "verification",
       "description": "Provide disciplined testing reality checker expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13241,7 +13241,7 @@
     },
     {
       "id": "testing--testing-test-automation-engineer",
-      "name": "Testing Test Automation Engineer",
+      "name": "Verification Testing Test Automation Engineer",
       "division": "verification",
       "description": "Provide disciplined testing test automation engineer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13289,7 +13289,7 @@
     },
     {
       "id": "testing--testing-test-results-analyzer",
-      "name": "Testing Test Results Analyzer",
+      "name": "Verification Testing Test Results Analyzer",
       "division": "verification",
       "description": "Provide disciplined testing test results analyzer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13337,7 +13337,7 @@
     },
     {
       "id": "testing--testing-tool-evaluator",
-      "name": "Testing Tool Evaluator",
+      "name": "Verification Testing Tool Evaluator",
       "division": "verification",
       "description": "Provide disciplined testing tool evaluator expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [
@@ -13385,7 +13385,7 @@
     },
     {
       "id": "testing--testing-workflow-optimizer",
-      "name": "Testing Workflow Optimizer",
+      "name": "Verification Testing Workflow Optimizer",
       "division": "verification",
       "description": "Provide disciplined testing workflow optimizer expertise for SI-Agents work while preserving evidence, scope, and governance.",
       "responsibilities": [

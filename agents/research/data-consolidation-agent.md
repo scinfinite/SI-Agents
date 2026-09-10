@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--data-consolidation-agent
-name: Data Consolidation Agent
+name: Research Data Consolidation Agent
 division: research
 description: Provide disciplined data consolidation agent expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

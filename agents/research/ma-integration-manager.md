@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--ma-integration-manager
-name: MA Integration Manager
+name: Research MA Integration Manager
 division: research
 description: Provide disciplined ma integration manager expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

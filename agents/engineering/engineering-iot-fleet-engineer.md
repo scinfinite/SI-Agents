@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-iot-fleet-engineer
-name: Engineering IOT Fleet Engineer
+name: Engineering Engineering IOT Fleet Engineer
 division: engineering
 description: Provide disciplined engineering iot fleet engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

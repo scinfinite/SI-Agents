@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-realtime-collaboration-engineer
-name: Engineering Realtime Collaboration Engineer
+name: Engineering Engineering Realtime Collaboration Engineer
 division: engineering
 description: Provide disciplined engineering realtime collaboration engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

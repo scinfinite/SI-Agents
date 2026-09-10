@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: product--product-manager
-name: Product Manager
+name: Architecture Product Manager
 division: architecture
 description: Provide disciplined product manager expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

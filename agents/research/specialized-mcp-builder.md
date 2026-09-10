@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--specialized-mcp-builder
-name: Specialized MCP Builder
+name: Research Specialized MCP Builder
 division: research
 description: Provide disciplined specialized mcp builder expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

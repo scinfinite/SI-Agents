@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-wordpress-shopping-cart
-name: Engineering Wordpress Shopping Cart
+name: Engineering Engineering Wordpress Shopping Cart
 division: engineering
 description: Provide disciplined engineering wordpress shopping cart expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

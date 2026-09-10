@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: spatial-computing--xr-immersive-developer
-name: XR Immersive Developer
+name: Engineering XR Immersive Developer
 division: engineering
 description: Provide disciplined xr immersive developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

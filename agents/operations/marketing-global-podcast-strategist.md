@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: marketing--marketing-global-podcast-strategist
-name: Marketing Global Podcast Strategist
+name: Operations Marketing Global Podcast Strategist
 division: operations
 description: Provide disciplined marketing global podcast strategist expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-network-engineer
-name: Engineering Network Engineer
+name: Engineering Engineering Network Engineer
 division: engineering
 description: Provide disciplined engineering network engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

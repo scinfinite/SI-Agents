@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: support--support-legal-compliance-checker
-name: Support Legal Compliance Checker
+name: Operations Support Legal Compliance Checker
 division: operations
 description: Provide disciplined support legal compliance checker expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

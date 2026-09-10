@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: testing--testing-accessibility-auditor
-name: Testing Accessibility Auditor
+name: Verification Testing Accessibility Auditor
 division: verification
 description: Provide disciplined testing accessibility auditor expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: gis--gis-3d-scene-developer
-name: GIS 3D Scene Developer
+name: Research GIS 3D Scene Developer
 division: research
 description: Provide disciplined gis 3d scene developer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

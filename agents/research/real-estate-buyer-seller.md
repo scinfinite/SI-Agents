@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: specialized--real-estate-buyer-seller
-name: Real Estate Buyer Seller
+name: Research Real Estate Buyer Seller
 division: research
 description: Provide disciplined real estate buyer seller expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

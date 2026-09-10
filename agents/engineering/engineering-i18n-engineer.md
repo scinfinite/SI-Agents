@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-i18n-engineer
-name: Engineering I18n Engineer
+name: Engineering Engineering I18n Engineer
 division: engineering
 description: Provide disciplined engineering i18n engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

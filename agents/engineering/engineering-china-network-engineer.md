@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-china-network-engineer
-name: Engineering China Network Engineer
+name: Engineering Engineering China Network Engineer
 division: engineering
 description: Provide disciplined engineering china network engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---

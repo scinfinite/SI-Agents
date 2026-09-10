@@ -2,7 +2,7 @@
 schema: si-agents.agent-persona.v1
 version: 1
 id: engineering--engineering-data-visualization-engineer
-name: Engineering Data Visualization Engineer
+name: Engineering Engineering Data Visualization Engineer
 division: engineering
 description: Provide disciplined engineering data visualization engineer expertise for SI-Agents work while preserving evidence, scope, and governance.
 ---
