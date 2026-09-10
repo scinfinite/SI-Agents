@@ -7,10 +7,12 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 1. **Project overview:** `../README.md`
 2. **Current phase/status:** `architecture/PHASES.md`
 3. **Phase 29 canonical record:** `architecture/PHASE_29.md`
-4. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
-5. **Architecture index:** `architecture/README.md`
-6. **Engineering rules:** `../AGENTS.md`
-7. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
+4. **Phase 30 canonical record:** `architecture/PHASE_30.md`
+5. **Phase 31 canonical record:** `architecture/PHASE_31.md`
+6. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
+7. **Architecture index:** `architecture/README.md`
+8. **Engineering rules:** `../AGENTS.md`
+9. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
 
 ## Documentation map
 
@@ -21,6 +23,8 @@ docs/
     ├── README.md
     ├── PHASES.md
     ├── PHASE_29.md                            # Canonical Phase 29 record
+    ├── PHASE_30.md                            # Canonical Phase 30 record
+    ├── PHASE_31.md                            # Canonical Phase 31 record
     ├── SI_AGENTS_V3.md
     ├── PHASE_1_FOUNDATION.md
     ├── EXECUTION_BACKENDS.md
@@ -32,7 +36,9 @@ The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been reti
 ## Source-of-truth rules
 
 - `PHASES.md` is authoritative for current implementation status and verification.
-- `PHASE_29.md` is the single canonical Phase 29 architecture/parity/provenance/verification record.
+- `PHASE_29.md` is the canonical Phase 29 architecture/parity/provenance/verification record.
+- `PHASE_30.md` is the canonical portable Skill contract and verification record.
+- `PHASE_31.md` is the canonical Rules/Hooks/Events contract and verification record.
 - `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
 - Earlier `PHASE_<n>_*.md` files are historical implementation records and preserve phase-time evidence.
 - Runtime, governance, executable contracts, and CI results remain authoritative over prose.
@@ -55,6 +61,6 @@ Markdown is documentation/configuration, not an authority boundary. Imported or 
 
 ## Current baseline
 
-As of the latest verified branch state, SI-Agents has completed **Phases 1–29**. Phase 29 is CI-verified with **358 tests passed**, successful distribution build, isolated wheel installation/import, CLI smoke checks, Ruff, and the complete SI-native persona corpus verification.
+As of the latest branch state, SI-Agents has completed **Phases 1–30** with mainline CI verification. Phase 31 implementation is complete and its final mainline CI run is the remaining closure gate.
 
-**Next implementation: Phase 30 — First-Class Portable Skills.**
+**Next implementation after Phase 31 closure: Phase 32 — Memory & Knowledge.**
