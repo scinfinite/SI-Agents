@@ -140,4 +140,6 @@ Required final CI gates:
 - diagnostic artifact generation;
 - final documentation/source-of-truth audit.
 
+The final CI run must execute against the complete Phase 32 source tree after the latest lifecycle-service and event-integration fixes.
+
 Phase 32 must not be declared complete until the final mainline CI run is green.
