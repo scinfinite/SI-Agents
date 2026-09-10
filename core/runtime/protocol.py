@@ -3,7 +3,12 @@
 from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
 
-from core.runtime.models import InvocationRequest, InvocationResponse, RuntimeCapabilities, RuntimeKind
+from core.runtime.models import (
+    InvocationRequest,
+    InvocationResponse,
+    RuntimeCapabilities,
+    RuntimeKind,
+)
 
 
 @dataclass(frozen=True)
