@@ -116,13 +116,13 @@ def test_paid_automation_requires_approval() -> None:
     assert calls == [1]
 
 
-def test_sensitive_egress_is_not_implicitly_automated() -> None:
+def test_sensitive_egress_requires_governance_approval() -> None:
     runner = AutomationRunner({"work": lambda _: pytest.fail("must not execute")})
     request = GovernanceRequest(
         action="work", risk=RiskLevel.MEDIUM, data_class=DataClass.SENSITIVE, external_egress=True,
     )
     record = runner.execute(job(), governance_request=request)
-    assert record.status == RunStatus.SKIPPED
+    assert record.status == RunStatus.APPROVAL_REQUIRED
 
 
 def test_json_store_round_trip_preserves_jobs_and_runs(tmp_path: object) -> None:
