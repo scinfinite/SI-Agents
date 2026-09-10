@@ -1,14 +1,14 @@
 # SI-Agents Implementation Phases
 
-**Current status: Alpha — Phases 1–5 complete and CI-verified.**
+**Current status: Beta — Phases 1–6 complete and CI-verified. Phase 7 is next.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
 3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox. **Complete.**
 4. Engineering Brain — decomposition, planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty. **Complete.**
 5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test. **Complete.**
-6. Skills Engine — reusable, verifiable engineering procedures. **Next.**
-7. Verification + Evidence — claims, evidence, confidence, regression, red-team checks, benchmarks.
+6. Skills Engine — reusable, verifiable engineering procedures, lifecycle, selection, permissioned execution, and evidence. **Complete.**
+7. Verification + Evidence — claims, evidence, confidence, regression, red-team checks, benchmarks. **Next.**
 8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards.
 9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies.
 10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health.
@@ -21,8 +21,8 @@
 
 ## Release targets
 
-- **Alpha:** phases 0–5 — **current target achieved**
-- **Beta:** phases 6–9
+- **Alpha:** phases 0–5 — achieved
+- **Beta:** phases 6–9 — **in progress; Phase 6 achieved**
 - **v1.0:** phases 10–13
 - **v1.5:** phases 14–15
 - **v2.0:** phase 16
