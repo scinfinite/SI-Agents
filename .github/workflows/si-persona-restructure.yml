@@ -20,6 +20,8 @@ jobs:
         with:
           ref: ${{ env.BRANCH }}
           fetch-depth: 0
+      - name: Install verification tooling
+        run: python -m pip install pytest ruff
       - name: Rebuild SI-native persona organization
         run: |
           python - <<'PY'
