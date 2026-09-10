@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–27 implemented in code; Phase 27 CI verification is in progress on PR #14.**
+**Current status: v2.0 baseline plus Phases 19–27 implemented and CI-verified.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -28,7 +28,7 @@
 24. OmniRoute Integration — OpenAI-compatible gateway transport, deterministic model discovery, secure credential handling, fail-closed health/failure classification, correlation/session forwarding, and a governed delegation boundary that keeps provider/model routing authoritative in OmniRoute. **Complete.**
 25. Termux Runtime — environment detection, readiness checks, OpenCode/OmniRoute health integration, read-only doctor, sanitized reports, conservative package planning, and workspace validation. **Complete.**
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
-27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode OmniRoute configuration, and governed team execution. **Implementation complete; CI verification pending.**
+27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete.**
 
 ## Release targets
 
@@ -45,7 +45,7 @@
 - **Post-v2 model gateway:** Phase 24 — **complete**
 - **Post-v2 Termux runtime:** Phase 25 — **complete**
 - **Post-v2 Codespaces runtime:** Phase 26 — **complete**
-- **Post-v2 CLI/setup:** Phase 27 — **implementation complete; CI verification pending**
+- **Post-v2 CLI/setup:** Phase 27 — **complete**
 
 ## Verification rule
 
@@ -57,11 +57,11 @@ Phase 27 adds the `si` console entry point and a single user-facing control surf
 
 The CLI stores only non-secret configuration at `~/.config/si-agents/config.json` by default, with atomic replacement and restrictive permissions. No API key, OpenCode password, provider credential, or auth token is stored. OpenCode configuration is updated only when explicitly requested and only for a JSON configuration that can be parsed safely; JSONC is refused rather than destructively rewritten. OmniRoute remains the model/provider routing authority and an explicit model ID is required before adding a model to the OpenCode OmniRoute provider configuration.
 
-Setup execution is limited to commands supplied by the existing environment runtime plan and checked against an allowlist. The CLI never accepts arbitrary shell strings. Read-only operations do not mutate the host. Team execution uses existing worker, runtime, and governance boundaries; catalog-only agents are not made executable by the CLI.
+Setup execution is limited to commands supplied by the existing environment runtime plan and checked against an allowlist. The CLI never accepts arbitrary shell strings. Read-only operations do not mutate the host. Team execution uses existing worker, runtime, and governance boundaries; catalog-only agents are not made executable by the CLI. Canonical agent/team catalogs are packaged with the wheel so the installed `si` executable does not depend on a source checkout.
+
+Verification evidence: PR #14 CI run **#499** passed distribution build, isolated wheel installation/import plus installed `si agents`/`si teams` catalog checks, Ruff, and the complete pytest suite with **330 tests passing**. Earlier CI run #495 found a real Ruff exception-type defect; #497 then exposed a test-parser coverage defect; both were fixed and the corrected run passed. The PR was merged as commit **7308549553e9cc15f3d393b283974a26c9425a73**. Mainline verification is tracked by the post-merge CI run.
 
 Detailed architecture: `docs/architecture/PHASE_27_SI_CLI.md`.
-
-Verification evidence is pending until PR #14 CI completes. The acceptance target is distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite, followed by documentation synchronization after any discovered defects are fixed.
 
 ## Phase 26 completion
 
