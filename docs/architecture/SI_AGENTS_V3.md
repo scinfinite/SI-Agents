@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–33 implemented and CI-verified  
+**Baseline:** SI-Agents v2.0 + Phases 19–34 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -137,7 +137,7 @@ Canonical record: `docs/architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`.
 
 # Phase 34 — Organization Expansion
 
-**State: Implementation complete; final verification pending.**
+**State: Complete + CI verified.**
 
 Phase 34 turns the canonical 279-agent catalog into an inspectable operating organization without importing an external persona roster or creating a second permission authority.
 
@@ -154,6 +154,8 @@ Implemented organization contracts define:
 - packaged declarative organization configuration.
 
 The organization layer coordinates responsibilities only. It does not execute workflows and does not grant authority. Governance remains the authorization boundary.
+
+Feature CI **#798** passed all build, packaging, audit, Ruff, and pytest gates. PR #25 merged the implementation to `main` as `a100282375f4fdb8108f62faf16151e1a8abd8e9`. Mainline CI **#799** passed all gates on that exact merge commit, with **409 passed**.
 
 Canonical record: `docs/architecture/PHASE_34_ORGANIZATION_EXPANSION.md`.
 
@@ -223,7 +225,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 31 Rules/Hooks/Events [complete]
  → 32 Memory/Knowledge [complete]
  → 33 Security/Governance [complete]
- → 34 Organization [implementation complete]
+ → 34 Organization [complete]
  → 35 Control API
  → 36 Web Foundation
  → 37 Control Center
