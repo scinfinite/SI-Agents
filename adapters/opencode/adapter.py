@@ -1,9 +1,4 @@
-"""OpenCode headless-server adapter.
-
-The adapter talks to OpenCode's documented HTTP server API. Provider/model
-credentials remain owned by OpenCode (or its configured gateway), not by
-SI-Agents.
-"""
+"""OpenCode headless-server adapter."""
 
 import base64
 import json
@@ -65,7 +60,8 @@ class OpenCodeAdapter:
             with self._lock:
                 self._sessions[request.request_id] = session_id
             result = self._post(f"/session/{session_id}/message", self._message_payload(request))
-            output = self._extract_text(result)
+            if not isinstance(result, dict):
+                raise TypeError("OpenCode message response must be a JSON object")
             event = RuntimeEvent(
                 type=RuntimeEventType.COMPLETED,
                 request_id=request.request_id,
@@ -75,7 +71,7 @@ class OpenCodeAdapter:
             return InvocationResponse(
                 request_id=request.request_id,
                 status=InvocationStatus.COMPLETED,
-                output=output,
+                output=self._extract_text(result),
                 events=(event,),
             )
         except _OpenCodeHTTPError as exc:
@@ -98,7 +94,7 @@ class OpenCodeAdapter:
                     retryable=True,
                 ),
             )
-        except (json.JSONDecodeError, UnicodeDecodeError, OSError, ValueError) as exc:
+        except (json.JSONDecodeError, UnicodeDecodeError, OSError, TypeError, ValueError) as exc:
             return InvocationResponse(
                 request_id=request.request_id,
                 status=InvocationStatus.FAILED,
@@ -111,18 +107,18 @@ class OpenCodeAdapter:
 
     def cancel(self, request_id: str) -> bool:
         with self._lock:
-            session_id = self._sessions.get(request_id)
-        if session_id is None:
-            session_id = request_id
+            session_id = self._sessions.get(request_id, request_id)
         try:
-            self._post(f"/session/{session_id}/abort", {})
-            return True
+            result = self._post(f"/session/{session_id}/abort", {})
+            return bool(result) if isinstance(result, bool) else True
         except (_OpenCodeHTTPError, urllib.error.URLError, TimeoutError, OSError):
             return False
 
     def _create_session(self, project_id: str) -> str:
         result = self._post("/session", {"title": f"SI-Agent:{project_id}"})
-        session_id = result.get("id") if isinstance(result, dict) else None
+        if not isinstance(result, dict):
+            raise TypeError("OpenCode session response must be a JSON object")
+        session_id = result.get("id")
         if not isinstance(session_id, str) or not session_id:
             raise ValueError("OpenCode did not return a session id")
         return session_id
@@ -141,14 +137,10 @@ class OpenCodeAdapter:
     @staticmethod
     def _extract_text(payload: dict[str, Any]) -> str:
         parts = payload.get("parts", [])
-        texts = [
-            part.get("text", "")
-            for part in parts
-            if isinstance(part, dict) and part.get("type") == "text"
-        ]
+        texts = [part.get("text", "") for part in parts if isinstance(part, dict) and part.get("type") == "text"]
         return "".join(texts)
 
-    def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    def _post(self, path: str, payload: dict[str, Any]) -> object:
         body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
         if self.config.password:
@@ -165,12 +157,7 @@ class OpenCodeAdapter:
                 raw = response.read().decode("utf-8")
         except urllib.error.HTTPError as exc:
             raise _OpenCodeHTTPError(exc.code) from exc
-        if not raw:
-            return {}
-        parsed = json.loads(raw)
-        if not isinstance(parsed, dict):
-            raise TypeError("OpenCode response must be a JSON object")
-        return parsed
+        return json.loads(raw) if raw else {}
 
 
 class _OpenCodeHTTPError(Exception):
