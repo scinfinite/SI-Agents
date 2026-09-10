@@ -9,6 +9,7 @@ from core.discovery.knowledge_generation import propose_from_findings
 from core.discovery.models import DiscoveryFinding, DiscoveryReport, DiscoveryStatus
 from core.discovery.registry import DetectorRegistry
 from core.discovery.repository_scanner import RepositoryDiscovery
+from core.discovery.scanner import DiscoveryScanner
 
 
 def test_repository_detector_discovers_java_maven_and_typescript(tmp_path: Path) -> None:
@@ -42,9 +43,7 @@ def test_scanner_keeps_unknowns_when_detector_fails(tmp_path: Path) -> None:
         def detect(self, root: Path):
             raise RuntimeError("boom")
 
-    report = __import__("core.discovery.scanner", fromlist=["DiscoveryScanner"]).DiscoveryScanner(
-        (Broken(),)
-    ).scan(tmp_path)
+    report = DiscoveryScanner((Broken(),)).scan(tmp_path)
     assert report.status is DiscoveryStatus.DISCOVERED
     assert report.unknowns == ("detector:broken: RuntimeError",)
 
