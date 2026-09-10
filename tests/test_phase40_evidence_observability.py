@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from urllib.request import Request, urlopen
@@ -58,11 +59,6 @@ def test_control_api_exposes_evidence_records_and_timeline() -> None:
     with TemporaryDirectory() as directory:
         root = Path(directory)
         server = create_server(ControlApiService(root), host="127.0.0.1", port=0)
-        server.server_activate()
-        server.server_bind()
-        # The test server is intentionally driven through the public HTTP boundary.
-        import threading
-
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
