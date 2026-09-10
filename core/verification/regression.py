@@ -60,7 +60,7 @@ class RegressionSuite:
         for case in self._cases:
             try:
                 passed = bool(case.check())
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - regression exceptions must fail closed.
                 results.append(
                     RegressionResult(case.id, case.name, RegressionStatus.FAILED, f"check raised: {exc}")
                 )
