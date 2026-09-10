@@ -56,9 +56,9 @@ pkg install -y git python curl openssh
 
 No automatic package installation is performed by the Python runtime. This prevents a library import or health check from unexpectedly mutating an Android environment. The later `si` setup phase may consume this plan through an explicit, reviewable setup workflow.
 
-OpenCode's current official installation documentation provides the install script and package-manager alternatives. Phase 25 does not hard-code a particular OpenCode binary version; the doctor only validates that an `opencode` executable is available. This avoids coupling the runtime to a fast-moving harness release. urlOpenCode installation documentationhttps://opencode.ai/docs
+[OpenCode's official installation documentation](https://opencode.ai/docs) provides the current install script and package-manager alternatives. Phase 25 does not hard-code a particular OpenCode binary version; the doctor only validates that an `opencode` executable is available. This avoids coupling the runtime to a fast-moving harness release.
 
-OmniRoute remains independently deployable. Current OmniRoute documentation exposes the OpenAI-compatible local gateway at `http://localhost:20128/v1` and provides `setup-*` helpers for clients such as OpenCode. Phase 25 deliberately does not invoke those helpers or mutate OpenCode configuration; that belongs to explicit setup/configuration work. urlOmniRoute CLI integration documentationturn0search5
+[OmniRoute's CLI integration documentation](https://github.com/diegosouzapw/OmniRoute/blob/release/v3.8.51/docs/reference/CLI-TOOLS.md) documents the OpenAI-compatible local gateway and `setup-*` helpers for clients such as OpenCode. Phase 25 deliberately does not invoke those helpers or mutate OpenCode configuration; that belongs to explicit setup/configuration work.
 
 ## Security and governance
 
