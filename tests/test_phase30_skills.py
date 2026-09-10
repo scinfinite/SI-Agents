@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
+from pathlib import Path
 
 from core.skills.artifacts import build_manifest, load_artifact
 from core.skills.composer import compose
@@ -43,7 +42,7 @@ def test_skill_selection_is_deterministic() -> None:
 
 def test_composition_resolves_dependencies() -> None:
     registry = SkillRegistry()
-    skills = registry.load_directory(ROOT / "skills")
+    registry.load_directory(ROOT / "skills")
     selected = [registry.get("compose-workflow"), registry.get("inspect-repository"), registry.get("verify-change")]
     composition = compose(selected)
     assert composition.skills[-1] == "compose-workflow"
@@ -53,7 +52,7 @@ def test_composition_resolves_dependencies() -> None:
 
 def test_composition_rejects_missing_dependency() -> None:
     registry = SkillRegistry()
-    skills = registry.load_directory(ROOT / "skills")
+    registry.load_directory(ROOT / "skills")
     with pytest.raises(ValueError, match="missing dependencies"):
         compose([registry.get("compose-workflow")])
 
@@ -72,7 +71,7 @@ def test_composition_rejects_cycles() -> None:
 
 
 def test_artifact_digest_is_stable() -> None:
-    path = ROOT / "skills" / "inspect" / "SKILL.md"
+    path = ROOT / "skills" / "engineering" / "inspect-repository" / "SKILL.md"
     first = load_artifact(path)
     second = load_artifact(path)
     assert first.sha256 == second.sha256
