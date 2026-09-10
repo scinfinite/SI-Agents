@@ -57,8 +57,6 @@ class GovernanceRequest:
             raise ValueError("action must not be empty")
         if self.estimated_cost < 0:
             raise ValueError("estimated_cost must be non-negative")
-        if self.external_egress and self.data_class == DataClass.SENSITIVE and self.approval is None:
-            raise ValueError("sensitive external egress requires explicit approval")
 
 
 @dataclass(frozen=True)
@@ -66,6 +64,7 @@ class Decision:
     status: DecisionStatus
     reasons: tuple[str, ...]
     request: GovernanceRequest
+    effective_risk: RiskLevel
     evaluated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     @property
