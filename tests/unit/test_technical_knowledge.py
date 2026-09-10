@@ -125,7 +125,7 @@ def test_authoritative_sources_exist_for_validated_language_entries() -> None:
 
 def test_language_catalog_loader_builds_validated_runtime_entries() -> None:
     registry = load_language_catalog(ROOT)
-    assert len(registry.validated(kind=KnowledgeKind.LANGUAGE)) == 12
+    assert len(registry.validated(kind=KnowledgeKind.LANGUAGE)) == 13
     java = registry.get_by_name("java")
     assert java.status is KnowledgeStatus.VALIDATED
     assert java.sources
