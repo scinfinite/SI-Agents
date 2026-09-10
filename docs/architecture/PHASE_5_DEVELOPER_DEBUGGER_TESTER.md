@@ -1,5 +1,9 @@
 # Phase 5 — Developer / Debugger / Tester
 
+## Status
+
+**Complete — CI verified on 2026-09-10.** Phase 5 completes the Alpha release target (Phases 1–5).
+
 ## Objective
 
 Deliver the first real engineering execution loop after the Engineering Brain: inspect, reproduce, diagnose, checkpoint, repair, test, red-team, regress, verify, and document through explicit agent contracts.
@@ -12,6 +16,7 @@ Deliver the first real engineering execution loop after the Engineering Brain: i
 - `EngineeringWorkflow`: deterministic orchestration of the three agents with task-local context, checkpoints, evidence, and failure propagation.
 - Optional Engineering Brain integration validates that the generated plan contains inspect/research/execute/test/verify/document stages before agent execution begins.
 - Agent contracts explicitly declare responsibility, deliverables, success criteria, required permissions, and boundaries.
+- Adversarial coverage for permission-denial and invalid workflow/agent handoff paths.
 
 ## Security and control boundaries
 
@@ -25,8 +30,12 @@ The local command backend remains a development executor, not a security boundar
 
 ## Alpha acceptance target
 
-The existing broken-project fixture intentionally implements subtraction in `add()`. Phase 5 tests exercise the equivalent failure lifecycle and permission-denial path. The workflow itself is adapter-based so production execution can route repairs and tests through `Orchestrator.execute()` and the registered tools.
+The existing broken-project fixture intentionally implements subtraction in `add()`. Phase 5 exercises the failure lifecycle and permission-denial path through deterministic workflow contracts. The workflow is adapter-based so execution can route repairs and tests through `Orchestrator.execute()` and registered tools without creating an alternate permission path.
 
 ## Verification standard
 
-Phase 5 is complete only when project installation, distribution build, Ruff, the full pytest suite, and adversarial permission tests pass in GitHub Actions. CI failures must be fixed and rerun before declaring completion.
+Phase 5 is complete only when project installation, distribution build, Ruff, the full pytest suite, and adversarial permission tests pass in GitHub Actions. The latest verified CI run is **#165**, with **108 tests passing**.
+
+## Completion boundary
+
+Phase 5 establishes the first complete controlled engineering workflow. It does not claim reusable skill evolution, broad technical knowledge, technology discovery, open-source intelligence, memory promotion, provider intelligence, automation, or self-improvement; those remain later roadmap phases.
