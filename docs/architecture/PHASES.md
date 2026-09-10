@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v1.0 track — Phases 1–12 complete and CI-verified. Phase 13 is next.**
+**Current status: v1.0 track — Phases 1–13 complete and CI-verified. Phase 14 is next.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -14,7 +14,7 @@
 10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health. **Complete.**
 11. Pattern Extraction — deterministic normalization, conservative extraction, independent validation, counterexamples, provenance, promotion, and matching. **Complete.**
 12. Engineering Memory — task/project/global memory, evidence-gated promotion, scoped retrieval, lifecycle, supersession, and auditable persistence. **Complete.**
-13. Security + Legal + Cost — governance gates, free-first routing, data rights, security and compliance.
+13. Security + Legal + Cost — executable governance gates, free-first cost controls, data classification/egress, provenance/legal review, risk classification, approvals, and audit evidence. **Complete.**
 14. Model/Provider Intelligence — capability, quota, cost, latency, reliability, fallback, circuit breakers.
 15. Automation — scheduled research, monitoring, maintenance, testing, and reporting.
 16. Controlled Self-Improvement + Capability Intelligence — evidence-backed learning, benchmarks, regression, and validated/experimental/unknown capability states.
@@ -25,7 +25,7 @@
 
 - **Alpha:** phases 0–5 — achieved
 - **Beta:** phases 6–9 — **complete**
-- **v1.0:** phases 10–13 — **Phases 10–12 complete; phase 13 remains**
+- **v1.0:** phases 10–13 — **complete**
 - **v1.5:** phases 14–15
 - **v2.0:** phases 16–18
 
@@ -44,3 +44,7 @@ Phase 11 delivers deterministic normalization of engineering observations, conse
 ## Phase 12 completion
 
 Phase 12 delivers task/project/global engineering memory with mandatory provenance, verified-evidence and confidence gates, fail-closed one-step promotion, deterministic scope-aware retrieval, expiration, explicit supersession/versioning, and dependency-free JSON persistence. Memory is data rather than policy and cannot override security, legal, cost, permission, or verification controls. Final CI evidence is recorded after the completed Phase 12 head passes the repository workflow.
+
+## Phase 13 completion
+
+Phase 13 delivers executable governance for security, legal/provenance, cost, data egress, permissions, and risk. Governance requests receive deterministic allow/deny/approval-required decisions; credential-bearing external egress is denied, sensitive/confidential egress and paid resources are approval-gated, publication requires provenance, high-risk destructive operations require approval, and effective risk is derived conservatively. Audit records retain decision evidence without request payloads. Final CI evidence is required on the completed Phase 13 head.
