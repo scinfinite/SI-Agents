@@ -5,7 +5,7 @@
 Use these documents in this order when determining project state:
 
 1. **`PHASES.md`** — current implementation status and verification evidence.
-2. **`SI_AGENTS_V3.md`** — future architecture and Phase 29–43 roadmap.
+2. **`SI_AGENTS_V3.md`** — future architecture and Phase 30–43 roadmap after Phase 29 completion.
 3. **Detailed phase documents** — historical contracts, boundaries, and completion evidence.
 4. **`FOUNDATION.md` / `CONTROL_PLANE.md` / `EXECUTION_BACKENDS.md`** — cross-cutting architectural boundaries.
 
@@ -42,6 +42,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 26 | `PHASE_26_CODESPACE_RUNTIME.md` | Complete |
 | 27 | `PHASE_27_SI_CLI.md` | Complete |
 | 28 | `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` | Complete + CI verified |
+| 29 | `PHASE_29_AGENT_PERSONAS.md` | Complete + CI verified |
 
 Phase 1 is represented by `FOUNDATION.md` and the repository-level engineering/governance documents rather than a `PHASE_1_*.md` file.
 
@@ -54,13 +55,15 @@ Phase 1 is represented by `FOUNDATION.md` and the repository-level engineering/g
 - `PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` — language-neutral harness contract.
 - `PHASE_24_OMNIROUTE_INTEGRATION.md` — model/provider delegation boundary.
 - `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` — portable state-transfer boundary.
+- `PHASE_29_AGENT_PERSONAS.md` — human-authored persona to typed-contract boundary.
+- `PHASE_29_PROVENANCE.md` — external-reference provenance and independent design record.
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines Phases 29–43. The implementation order is intentionally layered:
+`SI_AGENTS_V3.md` defines the remaining Phases 30–43. The implementation order is intentionally layered:
 
 ```text
-29 Personas
+29 Personas                 [complete]
    ↓
 30 Skills
    ↓
