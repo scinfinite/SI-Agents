@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
 from threading import Event
-from typing import Callable
 
 from agents.base import AgentContext, AgentResult, AgentWorker
 from core.teams.models import (
