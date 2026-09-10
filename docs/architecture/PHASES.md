@@ -2,7 +2,7 @@
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete for the core control-plane scope.**
-3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox.
+3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox. **Complete for the defined Phase 2 scope.**
 4. Engineering Brain — decomposition, planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty.
 5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test.
 6. Skills Engine — reusable, verifiable engineering procedures.
