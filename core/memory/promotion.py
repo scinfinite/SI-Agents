@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from uuid import uuid4
 
 from .models import (
     MemoryEntry,
@@ -71,4 +72,11 @@ class MemoryPromoter:
         decision = self.evaluate(entry, target_scope)
         if not decision.allowed:
             raise ValueError("Memory promotion denied: " + "; ".join(decision.reasons))
-        return replace(entry, scope=decision.target_scope, status=MemoryStatus.PROMOTED, version=entry.version + 1)
+        return replace(
+            entry,
+            scope=decision.target_scope,
+            status=MemoryStatus.PROMOTED,
+            supersedes=entry.id,
+            id=str(uuid4()),
+            version=entry.version + 1,
+        )
