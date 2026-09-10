@@ -15,23 +15,24 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 
 ```text
 docs/
-├── README.md                         # This index
+├── README.md                                  # This index
 └── architecture/
-    ├── README.md                     # Architecture navigation
-    ├── PHASES.md                     # Authoritative status + verification history
-    ├── SI_AGENTS_V3.md               # Forward roadmap: Phases 29–43
-    ├── FOUNDATION.md                 # Foundational architecture
-    ├── CONTROL_PLANE.md              # Control-plane architecture
-    ├── EXECUTION_BACKENDS.md         # Execution backend boundary
-    └── PHASE_<n>_*.md                 # Historical phase contracts/evidence
+    ├── README.md                              # Architecture navigation + historical index
+    ├── PHASES.md                              # Authoritative current status + verification history
+    ├── SI_AGENTS_V3.md                        # Forward roadmap: Phases 30–43
+    ├── PHASE_1_FOUNDATION.md                  # Historical Phase 1 foundation
+    ├── EXECUTION_BACKENDS.md                  # Cross-cutting execution backend boundary
+    └── PHASE_<n>_*.md                         # Historical phase contracts/evidence
 ```
+
+The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been retired. Phase 1 is now explicitly indexed as `PHASE_1_FOUNDATION.md`, and the important control-plane execution contract is consolidated into `PHASE_2_CONTROL_PLANE.md`.
 
 ## Source-of-truth rules
 
 - `PHASES.md` is authoritative for what is implemented and verified.
 - `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
-- Individual `PHASE_<n>_*.md` files are historical implementation records; they must not be edited to claim capabilities that were added later.
-- Runtime, governance, and code contracts remain authoritative over prose.
+- `PHASE_1_FOUNDATION.md` and individual `PHASE_<n>_*.md` files are historical implementation records; they preserve phase-time scope while carrying only concise current-state boundary notes where needed.
+- Runtime, governance, executable contracts, and CI results remain authoritative over prose.
 - README/documentation status must never outrun implementation or CI evidence.
 
 ## Documentation lifecycle
@@ -44,6 +45,7 @@ When a phase changes state:
 4. Update the relevant detailed phase document if its completion evidence or boundaries changed.
 5. Update root README and indexes when the public project state changes.
 6. Keep future roadmap text clearly separated from completed functionality.
+7. Preserve historical phase evidence instead of rewriting it to claim that the phase originally contained later features.
 
 ## Security and provenance
 
@@ -51,4 +53,6 @@ Markdown is documentation/configuration, not an authority boundary. Imported or 
 
 ## Current baseline
 
-As of the latest verified mainline state, SI-Agents has completed **Phases 1–28**. Phase 28's mainline CI verification is run **#526** on commit `4ccfcfe29693d2a0f76810c000607822938253f4`, with **341 tests passing**. The next planned implementation is Phase 29.
+As of the latest verified mainline state, SI-Agents has completed **Phases 1–29**. Phase 29 is CI-verified with the final mainline suite at **352 tests passed**; the authoritative verification details are recorded in `docs/architecture/PHASES.md`.
+
+**Next implementation: Phase 30 — First-Class Portable Skills.**
