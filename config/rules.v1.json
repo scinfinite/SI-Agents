@@ -1,0 +1,37 @@
+{
+  "schema": "si-agents.rules.v1",
+  "rules": [
+    {
+      "id": "dangerous-tool-requires-approval",
+      "description": "Dangerous tool operations require explicit approval.",
+      "events": ["tool.before"],
+      "payload_equals": {"dangerous": true},
+      "effect": "require_approval",
+      "priority": 10
+    },
+    {
+      "id": "credential-tool-requires-approval",
+      "description": "Credential-related tool operations require explicit approval.",
+      "events": ["tool.before"],
+      "payload_equals": {"credential": true},
+      "effect": "require_approval",
+      "priority": 20
+    },
+    {
+      "id": "publication-requires-approval",
+      "description": "Publication operations require explicit approval.",
+      "events": ["tool.before"],
+      "payload_equals": {"publication": true},
+      "effect": "require_approval",
+      "priority": 30
+    },
+    {
+      "id": "destructive-handoff-requires-approval",
+      "description": "Destructive handoff operations require explicit approval.",
+      "events": ["handoff.created"],
+      "payload_equals": {"destructive": true},
+      "effect": "require_approval",
+      "priority": 40
+    }
+  ]
+}
