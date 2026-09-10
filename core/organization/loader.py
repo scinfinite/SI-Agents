@@ -28,7 +28,7 @@ def load_catalog(path: str | Path) -> AgentCatalog:
 
 def _required(raw: Any, *keys: str) -> dict[str, Any]:
     if not isinstance(raw, dict):
-        raise ValueError("Catalog entries must be objects")
+        raise TypeError("Catalog entries must be objects")
     missing = [key for key in keys if key not in raw]
     if missing:
         raise ValueError(f"Catalog entry missing required fields: {', '.join(missing)}")
