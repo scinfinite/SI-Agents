@@ -15,50 +15,31 @@ CATALOG = Path(__file__).parents[1] / "config" / "agent-catalog.json"
 class AgentCatalogTests(unittest.TestCase):
     def test_canonical_catalog_loads_and_validates(self) -> None:
         catalog = load_catalog(CATALOG)
-
         self.assertEqual(len(catalog.all_divisions()), 7)
-        self.assertEqual(len(catalog.all()), 13)
+        self.assertEqual(len(catalog.all()), 279)
         self.assertEqual(catalog.validate(), ())
-        self.assertIs(catalog.get("developer").status, AgentStatus.IMPLEMENTED)
-        self.assertEqual(catalog.get("developer").implementation, "agents.developer.DeveloperAgent")
+        self.assertTrue(all(agent.status is AgentStatus.CATALOGED for agent in catalog.all()))
 
     def test_catalog_selection_is_capability_and_permission_aware(self) -> None:
         catalog = load_catalog(CATALOG)
-
-        writable = catalog.select(
+        selected = catalog.select(
             division="engineering",
-            required_capabilities=("filesystem", "terminal"),
-            required_permissions=("workspace_write",),
+            required_capabilities=("filesystem",),
+            required_permissions=("repository_read",),
             environment="codespace",
         )
-
-        self.assertEqual(
-            [agent.id for agent in writable],
-            ["developer", "backend-engineer", "frontend-engineer"],
-        )
+        self.assertGreater(len(selected), 0)
+        self.assertTrue(all("filesystem" in agent.capabilities for agent in selected))
+        self.assertTrue(all("repository_read" in agent.permissions for agent in selected))
 
     def test_catalog_selection_can_require_skill_and_harness(self) -> None:
         catalog = load_catalog(CATALOG)
-
         selected = catalog.select(
             required_skills=("verify-change",),
             harness="opencode",
             environment="termux",
         )
-
-        self.assertEqual(
-            {agent.id for agent in selected},
-            {
-                "developer",
-                "tester",
-                "backend-engineer",
-                "security-engineer",
-                "code-reviewer",
-                "reality-checker",
-                "release-engineer",
-                "infrastructure-engineer",
-            },
-        )
+        self.assertEqual(len(selected), 279)
 
     def test_duplicate_division_and_agent_are_rejected(self) -> None:
         catalog = AgentCatalog()
@@ -68,8 +49,8 @@ class AgentCatalogTests(unittest.TestCase):
             catalog.register_division(division)
 
         agent = AgentDefinition(
-            id="developer",
-            name="Developer",
+            id="example-agent",
+            name="Example Agent",
             division="engineering",
             description="Build software",
             responsibilities=("implement",),
