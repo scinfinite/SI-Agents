@@ -69,7 +69,7 @@ Tests cover:
 
 ## External pattern review
 
-Current ECC guidance was reviewed for matcher-specific hooks, explicit runtime profiles, actionable hook failures, and rules that remain separate from executable authority. Current Agency Agents guidance was reviewed for explicit lifecycle state, continuous QA loops, evidence-based phase gates, reuse-before-creation, and fail-path handling. SI-Agents independently implements these ideas under its existing typed governance and local-first architecture rather than copying external code or prompts.
+Current external engineering pattern research was reviewed for matcher-specific hooks, explicit runtime profiles, actionable hook failures, lifecycle state, continuous QA loops, evidence-based phase gates, reuse-before-creation, and fail-path handling. SI-Agents independently implements these ideas under its existing typed governance and local-first architecture rather than copying external code, prompts, branding, or architecture.
 
 ## Verification requirements
 
