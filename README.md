@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v1.0 track — Phases 1–11 complete and CI-verified. Phase 12 is next.**
+**v1.0 track — Phases 1–12 complete and CI-verified. Phase 13 is next.**
 
-Completed foundation through Pattern Extraction:
+Completed foundation through Engineering Memory:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -19,8 +19,7 @@ Completed foundation through Pattern Extraction:
 - **Phase 9 — Technology Discovery:** repository technology/build detection, explicit uncertainty, safe experimentation contracts, declaration-based compatibility checks, and provenance-preserving knowledge proposals.
 - **Phase 10 — Open-Source Intelligence:** repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract.
 - **Phase 11 — Pattern Extraction:** deterministic observation normalization, conservative candidate extraction, independent evidence validation, counterexample handling, evidence-gated promotion, versioning, provenance, and context matching.
-
-The Phase 10 and Phase 11 architecture documentation records implementation boundaries and CI verification requirements.
+- **Phase 12 — Engineering Memory:** task/project/global scopes, provenance and verified evidence, fail-closed one-step promotion, deterministic scoped retrieval, expiration, supersession/versioning, and auditable JSON persistence.
 
 ## Engineering loop
 
@@ -45,8 +44,10 @@ Open-source intelligence is read-oriented by design. Repository metadata, histor
 
 Pattern extraction is evidence-driven. Repetition alone is insufficient for validation: candidates require independent verified evidence, explicit counterexample handling, and a promotion threshold. A matcher produces ranking signals only; it never asserts that a matched pattern is universally correct.
 
+Engineering Memory is also evidence-driven. Task-scoped observations can be promoted to project memory and then global memory only one scope at a time, subject to confidence and verified-evidence gates. Expired memory is excluded from normal retrieval, and supersession is explicit and versioned. Memory never overrides security, legal, cost, permission, or verification policy.
+
 ## Development principle
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–11 architecture documents for the completed verification, knowledge, discovery, open-source intelligence, and pattern extraction architectures.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, and the Phase 7–12 architecture documents for the completed verification, knowledge, discovery, open-source intelligence, pattern extraction, and engineering memory architectures.
