@@ -97,6 +97,7 @@ class TeamDefinition:
             raise ValueError("team must declare at least one task")
         if self.max_parallelism < 1:
             raise ValueError("max_parallelism must be at least 1")
+        member_ids = set(self.members)
         task_ids = {task.id for task in self.tasks}
         if len(task_ids) != len(self.tasks):
             raise ValueError("team task ids must be unique")
@@ -108,9 +109,16 @@ class TeamDefinition:
         }
         if missing_dependencies:
             raise ValueError(f"unknown task dependencies: {sorted(missing_dependencies)}")
-        non_members = {task.agent_id for task in self.tasks if task.agent_id not in set(self.members)}
+        non_members = {task.agent_id for task in self.tasks if task.agent_id not in member_ids}
         if non_members:
             raise ValueError(f"tasks reference agents outside team: {sorted(non_members)}")
+        non_member_escalations = {
+            task.escalate_to
+            for task in self.tasks
+            if task.escalate_to is not None and task.escalate_to not in member_ids
+        }
+        if non_member_escalations:
+            raise ValueError(f"tasks escalate to agents outside team: {sorted(non_member_escalations)}")
 
 
 @dataclass(frozen=True)
