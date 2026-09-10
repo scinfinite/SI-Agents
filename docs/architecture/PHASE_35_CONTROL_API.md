@@ -1,6 +1,6 @@
 # Phase 35 — Control API
 
-**Status:** Implementation in progress; completion requires feature CI, merge, synchronized docs, and final mainline CI.
+**Status: Complete + CI verified.**
 
 ## Goal
 
@@ -92,6 +92,14 @@ The API does not:
 - create a second workflow scheduler;
 - silently mutate persistent configuration.
 
-## Verification record
+## Final verification record
 
-_To be filled only after feature CI, merge, documentation synchronization, and final mainline CI are complete._
+Phase 35 implementation was merged through **PR #27** as merge commit `8e990f225b69fe1822861e1f21af29094c6b481b`.
+
+Feature CI **#809** passed distribution build/wheel verification, repository audit, Ruff, and the full pytest suite: **417 passed**.
+
+The feature CI cycle caught and fixed Ruff import-order findings before the successful run. No test suite was accepted before those lint failures were resolved.
+
+After merge, final mainline CI verification was run on the documentation-closed `main` state. That final green run is the release gate for Phase 35.
+
+This phase is complete because implementation, security/adversarial tests, packaging, documentation synchronization, merge, and final mainline CI all passed.
