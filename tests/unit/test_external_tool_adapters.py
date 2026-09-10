@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from typing import ClassVar
 
 from tools.registry.container import ContainerTool
 from tools.registry.github import GitHubTool
@@ -8,7 +9,7 @@ from tools.registry.web import WebToolImpl
 
 
 class FakeResponse:
-    headers = {"Content-Type": "application/json"}
+    headers: ClassVar[dict[str, str]] = {"Content-Type": "application/json"}
 
     def __enter__(self):
         return self
