@@ -3,7 +3,9 @@
 import re
 from collections.abc import Mapping
 
-_SECRET_KEY = re.compile(r"(?:token|secret|password|passwd|api[_-]?key|authorization|credential)", re.I)
+_SECRET_KEY = re.compile(
+    r"(?:token|secret|password|passwd|api[_-]?key|authorization|credential)", re.IGNORECASE
+)
 _BEARER = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]+")
 
 
