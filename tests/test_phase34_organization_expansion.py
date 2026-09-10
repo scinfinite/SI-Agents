@@ -5,7 +5,6 @@ from pathlib import Path
 
 from core.organization import load_catalog, load_expansion
 from core.organization.expansion import (
-    DivisionAssignment,
     OrganizationExpansion,
     TeamDefinition,
     WorkflowDefinition,
