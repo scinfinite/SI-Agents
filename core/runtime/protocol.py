@@ -1,13 +1,9 @@
 """Harness adapter protocol and normalization helpers."""
 
+from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
 
-from core.runtime.models import (
-    InvocationRequest,
-    InvocationResponse,
-    RuntimeCapabilities,
-    RuntimeKind,
-)
+from core.runtime.models import InvocationRequest, InvocationResponse, RuntimeCapabilities, RuntimeKind
 
 
 @dataclass(frozen=True)
@@ -34,6 +30,6 @@ class HarnessAdapter(Protocol):
     def cancel(self, request_id: str) -> bool: ...
 
 
-# Kept local to avoid coupling callers to transport-specific event formats.
 def normalize_metadata(metadata: dict[str, object]) -> tuple[tuple[str, str], ...]:
+    """Normalize transport-specific metadata into a deterministic envelope."""
     return tuple(sorted((str(key), str(value)) for key, value in metadata.items()))
