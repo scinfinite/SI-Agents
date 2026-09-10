@@ -87,13 +87,13 @@ class MemoryEntry:
             MemoryScope.ORGANIZATION: self.organization_id,
         }
         if self.scope in required and not required[self.scope]:
-            raise ValueError(f"{self.scope.value} memory requires its scope id")
+            raise ValueError(f"{self.scope.value}_id is required for {self.scope.value} memory")
         if self.version < 1:
             raise ValueError("Memory version must be positive")
         if self.created_at.tzinfo is None:
             raise ValueError("Memory timestamp must be timezone-aware")
-        if self.expires_at is not None and self.expires_at <= self.created_at:
-            raise ValueError("Memory expiry must be after creation")
+        if self.expires_at is not None and self.expires_at.tzinfo is None:
+            raise ValueError("Memory expiry timestamp must be timezone-aware")
 
     def is_expired(self, now: datetime | None = None) -> bool:
         return self.expires_at is not None and self.expires_at <= (now or datetime.now(UTC))
