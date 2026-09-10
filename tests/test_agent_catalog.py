@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -78,8 +79,6 @@ class AgentCatalogTests(unittest.TestCase):
             catalog.register(agent)
 
     def test_invalid_catalog_status_is_rejected(self) -> None:
-        import tempfile
-
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "catalog.json"
             path.write_text(
