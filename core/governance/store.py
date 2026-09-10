@@ -2,7 +2,14 @@
 
 from dataclasses import dataclass
 
-from core.governance.models import Capability, CostConstraint, DataClassification, Permission, Policy, TrustBoundary
+from core.governance.models import (
+    Capability,
+    CostConstraint,
+    DataClassification,
+    Permission,
+    Policy,
+    TrustBoundary,
+)
 
 
 @dataclass(frozen=True)
