@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>SI-Agents Agent Builder</title>
+  <link rel="stylesheet" href="/assets/app.css">
+  <link rel="stylesheet" href="/assets/builder.css">
+</head>
+<body>
+  <main class="builder-shell">
+    <header class="topbar"><div><p class="eyebrow">AUTHORING CONSOLE</p><h1>Agent Builder</h1><p class="muted">Create and customize non-executing agent drafts without changing the canonical catalog.</p></div><a class="button" href="/">Control Center</a></header>
+    <section class="builder-grid">
+      <form id="builder-form" class="card" novalidate>
+        <h2>Agent definition</h2>
+        <label>ID <input id="id" name="id" required maxlength="96" pattern="[a-z0-9_-]+"></label>
+        <label>Name <input id="name" name="name" required maxlength="4000"></label>
+        <label>Division <input id="division" name="division" required maxlength="4000"></label>
+        <label>Base agent ID (optional) <input id="base_agent_id" name="base_agent_id" maxlength="96"></label>
+        <label>Description <textarea id="description" name="description" required maxlength="4000"></textarea></label>
+        <label>Responsibilities <textarea id="responsibilities" name="responsibilities" required placeholder="One item per line"></textarea></label>
+        <label>Deliverables <textarea id="deliverables" name="deliverables" required placeholder="One item per line"></textarea></label>
+        <label>Success criteria <textarea id="success_criteria" name="success_criteria" required placeholder="One item per line"></textarea></label>
+        <label>Boundaries <textarea id="boundaries" name="boundaries" required placeholder="One item per line"></textarea></label>
+        <label>Skills <textarea id="skills" name="skills" placeholder="One item per line"></textarea></label>
+        <label>Capabilities <textarea id="capabilities" name="capabilities" placeholder="New agents cannot self-grant these"></textarea></label>
+        <label>Permissions <textarea id="permissions" name="permissions" placeholder="New agents cannot self-grant these"></textarea></label>
+        <label>Harnesses <textarea id="harnesses" name="harnesses" placeholder="New agents cannot self-grant these"></textarea></label>
+        <label>Environments <textarea id="environments" name="environments" placeholder="New agents cannot self-grant these"></textarea></label>
+        <div class="builder-actions"><button class="button" type="button" id="load-base">Load base</button><button class="button" type="button" id="validate">Validate</button><button class="button primary" type="submit">Save valid draft</button></div>
+      </form>
+      <section class="card" aria-live="polite"><h2>Validation & preview</h2><div id="result" class="builder-result">Enter a definition and validate it before saving.</div><h3>Markdown preview</h3><pre id="markdown" class="markdown-preview"></pre><h2>Saved drafts</h2><div id="drafts" class="draft-list"></div></section>
+    </section>
+  </main>
+  <script src="/assets/builder.js" defer></script>
+</body>
+</html>
