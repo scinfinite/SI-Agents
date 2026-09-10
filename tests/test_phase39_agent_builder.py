@@ -1,11 +1,20 @@
 from __future__ import annotations
 
 import json
+import threading
+from pathlib import Path
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 
 import pytest
 
 from core.agent_builder.models import DraftStatus
 from core.agent_builder.service import AgentBuilderService
+from core.control_api.service import ControlApiService
+from core.web.models import WebConfig
+from core.web.server import create_server
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def valid_payload() -> dict[str, object]:
@@ -76,3 +85,45 @@ def test_test_requires_existing_draft(tmp_path):
     service = AgentBuilderService(tmp_path)
     with pytest.raises(KeyError):
         service.test("missing")
+
+
+def test_web_builder_validate_and_save(tmp_path):
+    config = WebConfig(port=0, audit_log=tmp_path / "audit.jsonl")
+    server = create_server(config, ControlApiService(ROOT))
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        body = json.dumps(valid_payload()).encode()
+        response = urlopen(Request(f"http://127.0.0.1:{server.server_port}/api/v1/agent-builder/validate", method="POST", data=body, headers={"Content-Type": "application/json"}), timeout=3)
+        result = json.loads(response.read())
+        assert result["valid"] is True
+        assert "# Custom Review Agent" in result["markdown"]
+        response = urlopen(Request(f"http://127.0.0.1:{server.server_port}/api/v1/agent-builder/drafts", method="POST", data=body, headers={"Content-Type": "application/json"}), timeout=3)
+        saved = json.loads(response.read())
+        assert saved["status"] == "valid"
+        response = urlopen(f"http://127.0.0.1:{server.server_port}/api/v1/agent-builder")
+        assert json.loads(response.read())[0]["id"] == "custom-review-agent"
+        response = urlopen(f"http://127.0.0.1:{server.server_port}/agent-builder")
+        assert "Agent Builder" in response.read().decode()
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_web_builder_rejects_authority_grant(tmp_path):
+    config = WebConfig(port=0, audit_log=tmp_path / "audit.jsonl")
+    server = create_server(config, ControlApiService(ROOT))
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        payload = valid_payload()
+        payload["permissions"] = ["shell.execute"]
+        request = Request(f"http://127.0.0.1:{server.server_port}/api/v1/agent-builder/drafts", method="POST", data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+        with pytest.raises(HTTPError) as exc:
+            urlopen(request, timeout=3)
+        assert exc.value.code == 400
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
