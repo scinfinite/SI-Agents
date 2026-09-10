@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–22 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–23 complete and CI-verified.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -24,6 +24,7 @@
 20. Agent Organization & Catalog — canonical divisions, typed agent definitions, declarative selection, lifecycle status, implementation references, and organization validation. **Complete.**
 21. Agent Teams & Workflows — canonical teams, dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Complete.**
 22. Universal Harness Integration — versioned language-neutral wire contract, structural callback bridge, adapter discovery, organization deployment manifests, and conformance coverage. **Complete.**
+23. OpenCode Integration — headless-server adapter, session continuity, normalized messages/events, cancellation, safe authentication handling, and distribution/CI verification. **Complete.**
 
 ## Release targets
 
@@ -36,10 +37,21 @@
 - **Post-v2 organization:** Phase 20 — **complete**
 - **Post-v2 orchestration:** Phase 21 — **complete**
 - **Post-v2 interoperability:** Phase 22 — **complete**
+- **Post-v2 OpenCode:** Phase 23 — **complete**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 23 completion
+
+Phase 23 adds the first vendor-specific harness adapter on top of the Phase 22 universal boundary. `adapters/opencode` uses the OpenCode headless server HTTP API without adding an OpenCode SDK or provider/router dependency. The adapter creates sessions when needed, reuses caller-supplied sessions, sends normalized synchronous messages, emits a normalized completion event containing the OpenCode session identity, and maps universal cancellation to OpenCode's session abort endpoint.
+
+The adapter advertises only capabilities it currently implements: session continuity, tool calls, structured output, and cancellation. Streaming is deliberately fail-closed until OpenCode's SSE event stream can be normalized into the universal event contract. Optional HTTP Basic authentication is accepted in memory only; SI-Agents does not persist OpenCode credentials or provider secrets. Existing runtime registration and Phase 13 governance remain authoritative.
+
+Phase 23 deliberately stops before OmniRoute/model routing, Termux/Codespace installers, the `si` CLI, cross-environment handoff, or additional vendor adapters. The detailed contract is documented in `docs/architecture/PHASE_23_OPENCODE_INTEGRATION.md`.
+
+Verification evidence: PR #11 CI run **#470** passed distribution build, isolated wheel installation/import including `adapters.opencode`, Ruff, and the complete pytest suite with **299 tests passing**. The PR was merged as commit **bf955386a4b6dff39161af77ef01cb76c1db1246**. Mainline CI run **#471** subsequently passed build, wheel verification, Ruff, and the full pytest suite with **299 tests passing**.
 
 ## Phase 22 completion
 
@@ -49,7 +61,7 @@ Deployment manifests are descriptive only. They do not enable harnesses, grant p
 
 Phase 22 deliberately stops before vendor-specific integration. OpenCode, Codex, Claude Code, Cline, Antigravity, OmniRoute, Termux, Codespaces, and installation/configuration workflows remain subsequent phases or deployment responsibilities.
 
-Verification evidence: PR #7 CI run **#465** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite with **293 tests passing**. The PR was merged as commit **4daa68732ddd515b5033ec1a1516be418c0bf4fb**. Mainline CI run **#466** subsequently passed the same build, wheel verification, Ruff, and full test suite on `main`.
+Verification evidence: PR #7 CI run **#465** passed distribution build, isolated wheel installation/import, Ruff, and the complete pytest suite with **293 tests passing**. The PR was merged as commit **4daa68732ddd515b5033ec3a1516be418c0bf4fb**. Mainline CI run **#466** subsequently passed the same build, wheel verification, Ruff, and full test suite on `main`.
 
 ## Phase 21 completion
 
