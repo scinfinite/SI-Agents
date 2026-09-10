@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from core.environments import EnvironmentKind, EnvironmentStatus, TermuxRuntime
-from core.environments.termux import TermuxConfig
+from core.environments.termux import TermuxConfig, main
 from core.provider_intelligence.omniroute import OmniRouteConfig
 
 
@@ -79,6 +79,13 @@ def test_doctor_can_require_healthy_omniroute(monkeypatch):
     assert report.status is EnvironmentStatus.READY
 
 
+def test_report_is_json_safe():
+    report = TermuxRuntime().doctor({"PREFIX": "/usr"})
+    payload = report.as_dict()
+    assert payload["status"] == "unsupported"
+    assert "api_key" not in str(payload).lower()
+
+
 def test_package_plan_is_non_executing():
     plan = TermuxRuntime().package_commands()
     assert plan[0] == ("pkg", "update")
@@ -90,3 +97,10 @@ def test_workspace_validation_is_read_only(tmp_path):
     workspace = tmp_path / "project"
     workspace.mkdir()
     assert runtime.validate_workspace(workspace) == Path(workspace).resolve()
+
+
+def test_doctor_json_main_returns_unsupported_exit_code(monkeypatch, capsys):
+    monkeypatch.setenv("PREFIX", "/usr")
+    monkeypatch.delenv("TERMUX_VERSION", raising=False)
+    assert main(["--json"]) == 3
+    assert '"status": "unsupported"' in capsys.readouterr().out
