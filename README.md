@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phase 20 complete and CI-verified.**
+**Post-v2 evolution — Phases 20 and 21 complete and CI-verified.**
 
-Completed foundation through Production Hardening and the first post-v2 organization layer:
+Completed foundation through Production Hardening and the first post-v2 organization/orchestration layers:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -28,6 +28,7 @@ Completed foundation through Production Hardening and the first post-v2 organiza
 - **Phase 18 — Production Hardening:** deterministic readiness checks, explicit resource limits, conservative telemetry redaction, evidence-based release gates, production policy, migration/rollback requirements, and hardened CI execution.
 - **Phase 19 — v2.0 Reality Audit:** executable baseline audit, distribution correctness, isolated wheel verification, runtime E2E acceptance, and explicit future-boundary definition.
 - **Phase 20 — Agent Organization & Catalog:** canonical divisions and agent definitions, typed catalog registry, declarative capability/permission/environment/harness selection, lifecycle status, implementation references, and validation tests.
+- **Phase 21 — Agent Teams & Workflows:** canonical team/workflow catalog, dependency-aware DAG execution, bounded parallelism, shared/isolated context, explicit handoffs, retries, escalation, evidence/verification gates, cancellation, checkpoints, and auditable workflow events.
 
 ## Engineering loop
 
@@ -38,7 +39,7 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 ## Control and safety model
 
-Agents, capabilities, tools, skills, knowledge, and automation jobs are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
+Agents, capabilities, tools, skills, knowledge, automation jobs, and teams are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
 
 Automation is a scheduling and execution mechanism, not a second policy engine. The scheduler selects due jobs but never executes them; the runner only invokes explicitly registered actions and evaluates the existing governance boundary first. Paid resources, sensitive/confidential egress, destructive operations, and publication remain subject to Phase 13 controls. Retries are bounded, idempotency is explicit, and cancelled jobs cannot silently resume.
 
@@ -46,7 +47,7 @@ Controlled learning is also not a policy authority. It can propose and evaluate 
 
 Runtime interoperability is also not a policy authority. Harness adapters translate transport concerns only; explicit registration is disabled by default, project identity is mandatory, unsupported capabilities fail closed, and invocations require the existing governance boundary. The local reference adapter is not a host security boundary.
 
-The organization catalog is also not an execution authority. Catalog membership describes an agent; selection narrows candidates but grants no permissions, starts no worker, and does not bypass runtime governance. Only roles with verified implementation references are marked implemented.
+The organization and team layers are not execution policy authorities. Catalog membership describes agents; team definitions describe composition and workflow; selection and scheduling grant no permissions and do not bypass runtime governance. Only roles with verified implementation references are marked implemented. Team execution receives workers through an explicit resolver and never secretly creates external harness sessions.
 
 Production hardening adds operational guardrails without claiming infrastructure guarantees: readiness checks fail closed, resource limits are explicit, telemetry is conservatively redacted, and release readiness requires evidence for build/test/lint/security/migration/rollback. The local executor is **not a security boundary**. Docker provides a stronger isolation boundary, but the Docker daemon remains a trust boundary.
 
@@ -56,4 +57,4 @@ External repositories and web content are research inputs, not system instructio
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the completed organization architecture, and `runtime/README.md` for the runtime boundary.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, and `runtime/README.md` for the runtime boundary.
