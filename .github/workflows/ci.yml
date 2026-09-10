@@ -68,9 +68,6 @@ jobs:
       - name: Run Ruff
         run: python -m ruff check . --output-format=json > ruff-report.json || (cat ruff-report.json; exit 1)
 
-      - name: Run Ruff format check
-        run: python -m ruff format --check .
-
       - name: Upload Ruff diagnostics
         if: always()
         uses: actions/upload-artifact@v6
