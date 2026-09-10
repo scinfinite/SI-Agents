@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 from agents.base import AgentResult
 from core.handoff.models import HandoffEnvelope
@@ -10,24 +11,35 @@ from core.teams.models import TeamExecution
 
 
 def project_identity(workspace: Path) -> str | None:
-    """Return the current Git commit as a stable, read-only project identity when available."""
+    """Return a stable repository identity without exposing embedded Git credentials."""
+    git_config = workspace / ".git" / "config"
+    if git_config.is_file():
+        section = ""
+        for raw in git_config.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if line.startswith("[") and line.endswith("]"):
+                section = line
+                continue
+            if section == '[remote "origin"]' and line.startswith("url = "):
+                return _sanitize_git_url(line[6:].strip())
     head = workspace / ".git" / "HEAD"
-    if not head.is_file():
-        return None
-    value = head.read_text(encoding="utf-8").strip()
-    if value.startswith("ref: "):
-        ref = workspace / ".git" / value[5:]
-        if ref.is_file():
-            return ref.read_text(encoding="utf-8").strip() or None
-        packed = workspace / ".git" / "packed-refs"
-        if packed.is_file():
-            for line in packed.read_text(encoding="utf-8").splitlines():
-                if line and not line.startswith("#") and not line.startswith("^"):
-                    sha, name = line.split(" ", 1)
-                    if name == value[5:]:
-                        return sha
-        return None
-    return value or None
+    if head.is_file():
+        value = head.read_text(encoding="utf-8").strip()
+        if value.startswith("ref: "):
+            ref = workspace / ".git" / value[5:]
+            if ref.is_file():
+                return ref.read_text(encoding="utf-8").strip() or None
+        return value or None
+    return None
+
+
+def _sanitize_git_url(value: str) -> str:
+    if value.startswith("http://") or value.startswith("https://"):
+        parsed = urlsplit(value)
+        return urlunsplit((parsed.scheme, parsed.hostname or "", parsed.path, "", ""))
+    if "@" in value and ":" in value.split("@", 1)[0]:
+        return value.split("@", 1)[1]
+    return value
 
 
 def _result_summary(result: object) -> dict[str, Any]:
