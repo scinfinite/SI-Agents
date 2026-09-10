@@ -1,8 +1,8 @@
+import json
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
-import json
 
 
 class CheckpointError(RuntimeError):
