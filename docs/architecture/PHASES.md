@@ -1,8 +1,8 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–28 complete; Phase 29 reopened for full Agency Agents parity.**
+**Current status: v2.0 baseline plus Phases 19–28 complete; Phase 29 complete.**
 
-> This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap, but Phase 30 is blocked until the reopened Phase 29 gate passes. `docs/README.md` and `docs/architecture/README.md` are the documentation navigation indexes.
+> This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are the documentation navigation indexes.
 
 ## Completed phases
 
@@ -34,7 +34,7 @@
 26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
 27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, OpenCode/OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete.**
 28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, sanitized/canonical repository identity, explicit Termux↔Codespaces validation, resumable workflow context, atomic storage, and CLI handoff commands. **Complete and CI-verified.**
-29. Complete Agent Persona Corpus & Definition System — reopened. Persona parser/compiler/registry machinery exists, but the canonical corpus is being expanded from seven personas to parity with the pinned Agency Agents source-agent snapshot. **Audit in progress; not complete.**
+29. Complete Agent Persona Corpus & Definition System — **Complete.** The corpus contains exactly 279 verified personas, with deterministic parsing, typed catalog parity, repository-neutral provenance, hidden-Unicode checks, packaging coverage, and CI verification.
 
 ## Release targets
 
@@ -53,25 +53,23 @@
 - **Post-v2 Codespaces runtime:** Phase 26 — complete
 - **Post-v2 CLI/setup:** Phase 27 — complete
 - **Post-v2 cross-environment handoff:** Phase 28 — complete
-- **Post-v2 agent personas:** Phase 29 — reopened
+- **Post-v2 agent personas:** Phase 29 — complete
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete. Documentation must never claim a stronger state than the implementation and verification evidence support.
 
-## Phase 29 current verification record
+## Phase 29 verification record
 
-The original Phase 29 implementation introduced `AgentPersona`, a deterministic Markdown parser, semantic validator, governed compiler, and duplicate-safe persona registry. Seven canonical personas are present and remain regression coverage for that machinery.
+Phase 29 now contains exactly **279** persona Markdown files and a typed catalog containing exactly **279** matching identities. The persona registry loads the complete corpus, the security regression rejects hidden Unicode control characters, and the repository-neutral provenance manifest records the immutable snapshot identifier and 279-definition count.
 
-The original seven-persona completion claim is superseded by the reopened parity requirement. The pinned Agency Agents snapshot is commit `6d29a9b08785a0e49ffc9818bbdd381164c2df5f`, whose upstream commit message reports **279 agents** and verification of converted outputs across 14 tools. The upstream `divisions.json` defines 18 divisions.
+The final audit is recorded in `PHASE_29_PERSONA_PARITY_AUDIT.md`. Non-persona Markdown such as documentation, examples, integrations, strategy/playbooks, and runbooks is excluded from the persona count.
 
-The reopened Phase 29 audit is documented in `PHASE_29_AGENCY_AGENTS_AUDIT.md`. Non-agent Markdown such as documentation, integrations, examples, strategy/playbooks, and runbooks is explicitly excluded from the persona count.
-
-The last pre-reopen mainline documentation CI verification remains valid as regression evidence for the existing implementation: commit `578547786b7cfab96973c5423bef93b970bde6f1`, with the recorded CI suite at 352 passed. It does **not** constitute completion evidence for the reopened 279-persona corpus.
+The completed phase preserves the original seven-persona tests as regression coverage for the persona machinery while superseding their former role as the completion gate.
 
 ## Phase 28 verification record
 
-Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f4`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**. The same verification covered handoff serialization/atomic storage, SHA-256 tamper detection, recursive secret-like field rejection, Termux/Codespaces target validation, repository identity sanitization/canonicalization, resumable context metadata, and Phase 28 CLI parser coverage.
+Phase 28 is complete on mainline commit `4ccfcfe29693d2a0f76810c000607822938253f4`. GitHub Actions CI run **#526** completed successfully and verified distribution build, isolated wheel installation, installed `si` catalog smoke tests, Ruff, and the full pytest suite with **341 tests passing**.
 
 ## Documentation structure
 
@@ -80,11 +78,11 @@ The historical architecture record is explicitly indexed from Phase 1 onward:
 - `PHASE_1_FOUNDATION.md` — renamed Phase 1 foundation record.
 - `PHASE_2_CONTROL_PLANE.md` — consolidated Phase 2 control-plane and execution-boundary record; the duplicate `CONTROL_PLANE.md` has been removed.
 - `PHASE_3_*` through `PHASE_29_*` — detailed historical/current phase records.
-- `PHASE_29_AGENCY_AGENTS_AUDIT.md` — current reopened Phase 29 audit and parity contract.
+- `PHASE_29_PERSONA_PARITY_AUDIT.md` — final Phase 29 audit and parity contract.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 Historical phase documents preserve phase-time evidence. Current cross-phase state belongs here, and future planning belongs in `SI_AGENTS_V3.md`.
 
 ## Next phase
 
-**Phase 30 — First-Class Portable Skills** remains the planned next implementation phase, but it is **blocked** until the reopened Phase 29 parity and verification gate passes.
+**Phase 30 — First-Class Portable Skills** is now the planned next implementation phase.
