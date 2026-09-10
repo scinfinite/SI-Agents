@@ -23,7 +23,14 @@ class HarnessDeploymentManifest:
     capabilities: tuple[str, ...]
 
     def __post_init__(self) -> None:
-        for name, values in (("agents", self.agents), ("teams", self.teams), ("skills", self.skills)):
+        collections = (
+            ("agents", self.agents),
+            ("teams", self.teams),
+            ("skills", self.skills),
+            ("required_permissions", self.required_permissions),
+            ("capabilities", self.capabilities),
+        )
+        for name, values in collections:
             if any(not value.strip() for value in values):
                 raise ValueError(f"{name} cannot contain empty identifiers")
             if len(set(values)) != len(values):
@@ -55,9 +62,7 @@ def build_manifest(
     """Build a deterministic exposure manifest without changing authority."""
     agent_ids = tuple(sorted(agent.id for agent in agents))
     team_ids = tuple(sorted(team.id for team in teams))
-    permissions = tuple(
-        sorted({permission for agent in agents for permission in agent.permissions})
-    )
+    permissions = tuple(sorted({permission for agent in agents for permission in agent.permissions}))
     return HarnessDeploymentManifest(
         protocol=protocol,
         harness_id=harness_id,
