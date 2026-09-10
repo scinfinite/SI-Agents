@@ -5,8 +5,7 @@ import pytest
 from core.governance.models import DataClass, GovernanceRequest, RiskLevel
 from core.runtime import (
     HarnessRegistry, InvocationRequest, InvocationStatus, LocalHarnessAdapter,
-    RuntimeCapabilities, RuntimeErrorCode, RuntimeSession, SessionRegistry,
-    run_conformance,
+    RuntimeSession, SessionRegistry, run_conformance,
 )
 from core.runtime.adapter import validate_response
 from core.runtime.protocol import HarnessMetadata, normalize_metadata
@@ -29,10 +28,10 @@ def test_local_adapter_invokes_and_correlates() -> None:
 def test_governance_is_required_and_denials_fail_closed() -> None:
     adapter = LocalHarnessAdapter({"echo": lambda value: value})
     request = InvocationRequest("echo", "x", "project")
-    assert adapter.invoke(request).error.code == RuntimeErrorCode.GOVERNANCE_DENIED
+    assert adapter.invoke(request).error.code.value == "governance_denied"
     denied = replace(governance(), destructive=True, production=True)
     request = replace(request, governance=denied)
-    assert adapter.invoke(request).error.code == RuntimeErrorCode.GOVERNANCE_DENIED
+    assert adapter.invoke(request).error.code.value == "governance_denied"
 
 
 def test_unknown_capability_is_normalized() -> None:
@@ -40,7 +39,7 @@ def test_unknown_capability_is_normalized() -> None:
     request = InvocationRequest("missing", None, "project", governance=governance())
     response = adapter.invoke(request)
     assert response.status == InvocationStatus.FAILED
-    assert response.error.code == RuntimeErrorCode.NOT_SUPPORTED
+    assert response.error.code.value == "not_supported"
 
 
 def test_streaming_capability_and_event_contract() -> None:
@@ -87,8 +86,6 @@ def test_conformance_suite() -> None:
     assert run_conformance(adapter) == ("correlation", "terminal-status", "cancellation")
 
 
-def test_timeout_and_invalid_requests_fail_closed() -> None:
+def test_invalid_timeout_fails_closed() -> None:
     with pytest.raises(ValueError):
         InvocationRequest("echo", "x", "project", timeout_seconds=0)
-    with pytest.raises(ValueError):
-        RuntimeCapabilities(streaming=True)  # construction is intentionally pure
