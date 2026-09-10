@@ -12,8 +12,10 @@ import os
 import shutil
 import subprocess
 import sys
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
+from core.cli.audit import audit_summary
 from core.cli.config import SIConfig, config_path, load_config, save_config
 from core.environments.codespace import CodespaceRuntime
 from core.environments.models import EnvironmentReport, EnvironmentStatus
@@ -21,10 +23,18 @@ from core.environments.termux import TermuxRuntime
 from core.handoff.service import create_handoff, resume_context
 from core.handoff.store import HandoffStore
 from core.organization.loader import load_catalog
+from core.personas.registry import PersonaRegistry
 from core.teams.engine import TeamEngine
 from core.teams.loader import load_team_catalog
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def _package_version() -> str:
+    try:
+        return version("si-agents")
+    except PackageNotFoundError:
+        return "0.1.0"
 
 
 def _catalog_path(filename: str) -> Path:
@@ -74,22 +84,71 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 def cmd_status(args: argparse.Namespace) -> int:
     config = load_config()
     report = _report()
-    print("SI-Agents")
-    print("version: 0.1.0")
-    print(f"environment: {report.kind.value} ({report.status.value})")
-    print(f"workspace: {config.workspace or os.getcwd()}")
-    print(f"OpenCode: {config.opencode_url}")
-    print(f"OmniRoute: {config.omniroute_url}")
-    print(f"OmniRoute model: {config.omniroute_model or 'not selected'}")
-    print(f"config: {config_path()}")
+    payload = {
+        "version": _package_version(),
+        "environment": report.kind.value,
+        "environment_status": report.status.value,
+        "workspace": config.workspace or os.getcwd(),
+        "opencode_url": config.opencode_url,
+        "omniroute_url": config.omniroute_url,
+        "omniroute_model": config.omniroute_model,
+        "config": str(config_path()),
+    }
+    if args.json:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        print("SI-Agents")
+        print(f"version: {payload['version']}")
+        print(f"environment: {payload['environment']} ({payload['environment_status']})")
+        print(f"workspace: {payload['workspace']}")
+        print(f"OpenCode: {payload['opencode_url']}")
+        print(f"OmniRoute: {payload['omniroute_url']}")
+        print(f"OmniRoute model: {payload['omniroute_model'] or 'not selected'}")
+        print(f"config: {payload['config']}")
     return _exit_code(report.status)
+
+
+def _agent_payload(agent) -> dict[str, object]:
+    return {
+        "id": agent.id,
+        "name": agent.name,
+        "division": agent.division,
+        "description": agent.description,
+        "status": agent.status.value,
+        "implementation": agent.implementation,
+        "skills": list(agent.skills),
+        "capabilities": list(agent.capabilities),
+        "permissions": list(agent.permissions),
+        "harnesses": list(agent.harnesses),
+        "environments": list(agent.environments),
+    }
 
 
 def cmd_agents(args: argparse.Namespace) -> int:
     catalog = load_catalog(_catalog_path("agent-catalog.json"))
+    agents = list(catalog.all())
+    if args.division:
+        agents = list(catalog.by_division(args.division))
+    if args.status:
+        agents = [agent for agent in agents if agent.status.value == args.status]
+    if args.search:
+        needle = args.search.casefold()
+        agents = [
+            agent for agent in agents
+            if needle in agent.id.casefold()
+            or needle in agent.name.casefold()
+            or needle in agent.description.casefold()
+        ]
+    agents.sort(key=lambda agent: (agent.division, agent.name, agent.id))
+    if args.json:
+        print(json.dumps([_agent_payload(agent) for agent in agents], indent=2, sort_keys=True))
+        return 0
     for division in catalog.all_divisions():
-        print(f"[{division.id}] {division.name}")
-        for agent in catalog.by_division(division.id):
+        division_agents = [agent for agent in agents if agent.division == division.id]
+        if not division_agents:
+            continue
+        print(f"[{division.id}] {division.name} ({len(division_agents)})")
+        for agent in division_agents:
             implementation = "executable" if agent.implementation else "catalog-only"
             print(f"  {agent.id}: {agent.name} ({agent.status.value}, {implementation})")
     return 0
@@ -97,11 +156,65 @@ def cmd_agents(args: argparse.Namespace) -> int:
 
 def cmd_teams(args: argparse.Namespace) -> int:
     registry = load_team_catalog(_catalog_path("team-catalog.json"))
-    for team in registry.all():
+    teams = list(registry.all())
+    if args.search:
+        needle = args.search.casefold()
+        teams = [
+            team for team in teams
+            if needle in team.id.casefold()
+            or needle in team.name.casefold()
+            or needle in team.description.casefold()
+        ]
+    teams.sort(key=lambda team: team.id)
+    if args.json:
+        payload = [
+            {
+                "id": team.id,
+                "name": team.name,
+                "description": team.description,
+                "tasks": [task.id for task in team.tasks],
+            }
+            for team in teams
+        ]
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0
+    for team in teams:
         print(f"{team.id}: {team.name}")
         print(f"  {team.description}")
         print(f"  tasks: {', '.join(task.id for task in team.tasks)}")
     return 0
+
+
+def cmd_personas(args: argparse.Namespace) -> int:
+    registry = PersonaRegistry()
+    personas = registry.load_directory(ROOT / "agents")
+    if args.division:
+        personas = tuple(persona for persona in personas if persona.division == args.division)
+    if args.search:
+        needle = args.search.casefold()
+        personas = tuple(
+            persona for persona in personas
+            if needle in persona.id.casefold() or needle in persona.name.casefold()
+        )
+    personas = tuple(sorted(personas, key=lambda persona: (persona.division, persona.name, persona.id)))
+    if args.json:
+        print(json.dumps([persona.as_dict() for persona in personas], indent=2, sort_keys=True))
+    else:
+        for persona in personas:
+            print(f"{persona.id}: {persona.name} [{persona.division}]")
+    return 0
+
+
+def cmd_audit(args: argparse.Namespace) -> int:
+    payload = audit_summary(ROOT)
+    if args.json:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        print(f"repository audit: {'PASS' if payload['ok'] else 'FAIL'}")
+        for check in payload["checks"]:
+            state = "ok" if check["ok"] else "FAIL"
+            print(f"{state}: {check['name']} — {check['detail']}")
+    return 0 if payload["ok"] else 2
 
 
 def _setup_plan(report: EnvironmentReport) -> list[tuple[str, ...]]:
@@ -143,7 +256,6 @@ def _configure_opencode(config: SIConfig, *, apply: bool) -> tuple[bool, str]:
             return False, f"OpenCode config is not plain JSON/contains comments: {target} ({exc})"
         if not isinstance(payload, dict):
             return False, f"OpenCode config must be a JSON object: {target}"
-
     providers = payload.setdefault("providers", {})
     if not isinstance(providers, dict):
         return False, "OpenCode 'providers' must be an object"
@@ -195,11 +307,9 @@ def cmd_setup(args: argparse.Namespace) -> int:
     print(f"  persist non-secret SI config: {config_path()}")
     if args.configure_opencode:
         print(f"  configure OpenCode provider: {_opencode_config_path()}")
-
     if not args.apply:
         print("dry-run only; use --apply to perform allowlisted setup and configuration")
         return 0 if report.status is not EnvironmentStatus.UNSUPPORTED else 3
-
     if report.status is EnvironmentStatus.UNSUPPORTED:
         print("refusing setup in an unsupported environment", file=sys.stderr)
         return 3
@@ -291,7 +401,17 @@ def cmd_handoff_create(args: argparse.Namespace) -> int:
 
 def cmd_handoff_inspect(args: argparse.Namespace) -> int:
     envelope = HandoffStore().load(Path(args.path))
-    print(json.dumps(envelope.as_dict(), indent=2, sort_keys=True))
+    if args.json:
+        print(json.dumps(envelope.as_dict(), indent=2, sort_keys=True))
+    else:
+        print(f"handoff: {envelope.handoff_id}")
+        print(f"status: {envelope.status.value}")
+        print(f"source: {envelope.source_environment}")
+        print(f"target: {envelope.target_environment or 'unspecified'}")
+        print(f"team: {envelope.team_id or 'not specified'}")
+        print(f"execution: {envelope.execution_id or 'not specified'}")
+        print(f"integrity: {envelope.digest()}")
+        print(f"evidence: {len(envelope.evidence_ids)}")
     return 0
 
 
@@ -312,7 +432,7 @@ def _exit_code(status: EnvironmentStatus) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="si", description="SI-Agents control and setup CLI")
+    parser = argparse.ArgumentParser(prog="si", description="SI-Agents control, audit, and setup CLI")
     sub = parser.add_subparsers(dest="command", required=True)
 
     doctor = sub.add_parser("doctor", help="check environment readiness")
@@ -320,12 +440,29 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.set_defaults(handler=cmd_doctor)
 
     status = sub.add_parser("status", help="show runtime and configuration status")
+    status.add_argument("--json", action="store_true")
     status.set_defaults(handler=cmd_status)
 
-    agents = sub.add_parser("agents", help="list the canonical agent catalog")
+    audit = sub.add_parser("audit", help="run read-only repository integrity checks")
+    audit.add_argument("--json", action="store_true")
+    audit.set_defaults(handler=cmd_audit)
+
+    agents = sub.add_parser("agents", help="list and filter the canonical agent catalog")
+    agents.add_argument("--division")
+    agents.add_argument("--status", choices=("active", "cataloged", "deprecated"))
+    agents.add_argument("--search")
+    agents.add_argument("--json", action="store_true")
     agents.set_defaults(handler=cmd_agents)
 
-    teams = sub.add_parser("teams", help="list canonical teams and workflows")
+    personas = sub.add_parser("personas", help="list discovered Markdown personas")
+    personas.add_argument("--division")
+    personas.add_argument("--search")
+    personas.add_argument("--json", action="store_true")
+    personas.set_defaults(handler=cmd_personas)
+
+    teams = sub.add_parser("teams", help="list and filter canonical teams and workflows")
+    teams.add_argument("--search")
+    teams.add_argument("--json", action="store_true")
     teams.set_defaults(handler=cmd_teams)
 
     setup = sub.add_parser("setup", help="plan or apply safe local setup")
@@ -358,6 +495,7 @@ def build_parser() -> argparse.ArgumentParser:
     create.set_defaults(handler=cmd_handoff_create)
     inspect = handoff_sub.add_parser("inspect", help="verify and inspect a handoff")
     inspect.add_argument("path")
+    inspect.add_argument("--json", action="store_true")
     inspect.set_defaults(handler=cmd_handoff_inspect)
     import_cmd = handoff_sub.add_parser("import", help="validate a handoff for this environment")
     import_cmd.add_argument("path")

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 
@@ -44,6 +44,10 @@ class AgentPersona:
                 raise ValueError(f"Persona {self.id} requires non-empty {name}")
         if self.source_path is not None:
             Path(self.source_path)
+
+    def as_dict(self) -> dict[str, object]:
+        """Return a JSON-safe representation without granting any authority."""
+        return asdict(self)
 
 
 _LIST_FIELDS = (

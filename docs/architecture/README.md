@@ -55,6 +55,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_24_OMNIROUTE_INTEGRATION.md` — model/provider delegation boundary.
 - `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` — portable state-transfer boundary.
 - `PHASE_29.md` — canonical SI persona, parity, provenance, security, packaging, and verification record.
+- `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
 
