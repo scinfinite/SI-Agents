@@ -1,9 +1,10 @@
+import importlib
 import json
 import tempfile
 import unittest
 from pathlib import Path
 
-from core import organization
+organization = importlib.import_module("core.organization")
 
 
 ROOT = Path(__file__).parents[1]
