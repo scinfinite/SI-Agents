@@ -1,7 +1,7 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–32 implemented; Phase 32 feature CI green and mainline closure pending  
+**Baseline:** SI-Agents v2.0 + Phases 19–32 implemented and CI-verified  
 **Scope:** Phases 30–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
@@ -98,11 +98,7 @@ The Web Control Center is localhost-first and requires no cloud control plane or
 
 # Phase 30 — First-Class Portable Skills
 
-**State: Complete.**
-
-Portable `SKILL.md` artifacts provide deterministic discovery, metadata, validation, versioning, compatibility, composition, provenance, regression coverage, evidence requirements, and safe installation/deployment boundaries.
-
-A Skill defines identity/version, purpose, inputs/outputs, prerequisites, workflow, tools, capabilities, permissions, verification, failure behavior, evidence, examples, compatibility, and provenance.
+**State: Complete.** Portable `SKILL.md` artifacts provide deterministic discovery, metadata, validation, versioning, compatibility, composition, provenance, regression coverage, evidence requirements, and safe installation/deployment boundaries.
 
 **Invariant:** Skill selection never grants permissions. Skills request capabilities; governance independently authorizes operations.
 
@@ -110,36 +106,13 @@ A Skill defines identity/version, purpose, inputs/outputs, prerequisites, workfl
 
 # Phase 31 — Rules, Hooks & Event System
 
-**State: Complete + CI verified.**
-
-Phase 31 adds an explicit policy/event layer spanning agents, Skills, tools, workflows, runtime, handoffs, and verification.
-
-Implemented properties:
-
-- explicit Rule and Hook registration;
-- immutable bounded Event envelopes;
-- canonical lifecycle event vocabulary;
-- deterministic exact-match Rule evaluation;
-- declarative Rule catalog loading with no code execution;
-- bounded in-process Hooks with observer/gate separation;
-- per-event hook limits and runtime budgets;
-- fail-closed handling for dangerous events and gate-hook failures;
-- secret-like event payload redaction;
-- Skill lifecycle/verification event integration;
-- separation from existing PermissionEngine/GovernanceEngine authority;
-- regression/adversarial coverage and package inclusion.
-
-Rules and Hooks never grant permissions, credentials, tools, network access, or execution authority. No arbitrary shell/command hook registration is supported.
-
-The canonical implementation record is `docs/architecture/PHASE_31.md` and the canonical declarative Rule catalog is `config/rules.v1.json`.
-
-Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and the full pytest suite (**381 passed**) on the exact Phase 31 source tree before merge.
+**State: Complete + CI verified.** Explicit Rules, bounded in-process Hooks, immutable Events, fail-closed dangerous-event handling, Skill lifecycle integration, declarative Rule catalog loading, and adversarial regression coverage are implemented. Final CI run **#735** passed the repository audit, Ruff, distribution/wheel verification, and full pytest (**381 passed**) before merge.
 
 ---
 
 # Phase 32 — Memory & Knowledge
 
-**State: Implementation complete + feature CI verified; final mainline closure pending.**
+**State: Complete + CI verified.**
 
 Phase 32 delivers durable, provenance-aware memory and source-backed knowledge across:
 
@@ -167,7 +140,7 @@ Implemented properties:
 - security boundary preserving Rules, Hooks, PermissionEngine, and GovernanceEngine authority;
 - targeted regression/adversarial coverage.
 
-Feature-branch CI run **#762** passed repository audit, Ruff, distribution/wheel verification, and the complete pytest suite (**392 passed in 5.95s**). The final mainline verification remains the release gate.
+Feature-branch CI run **#762** passed repository audit, Ruff, distribution/wheel verification, and complete pytest (**392 passed in 5.95s**). Final mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`, with **392 passed in 5.47s**.
 
 The canonical implementation record is `docs/architecture/PHASE_32.md`.
 
@@ -194,8 +167,6 @@ Add a scanner for agent definitions, Skills, Rules, Hooks, permissions, capabili
 
 Expand the SI organization according to actual responsibilities and verified workflows rather than importing hundreds of external personas.
 
-Potential SI-native divisions include Engineering, Architecture, Debugging, Testing, Security, Research, Product, Design, Data, DevOps, Infrastructure, Operations, Documentation, Quality, Project Management, Finance, Legal/Compliance, Support, AI/ML, Mobile, Web, Cloud, Database, and Performance.
-
 A mature agent combines:
 
 ```text
@@ -209,125 +180,67 @@ Catalog consistency and source-of-truth validation remain mandatory.
 
 # Phase 35 — Control API
 
-Create the stable machine-facing API before the full Web/TUI surfaces.
-
-Planned versioned surface includes agents, teams, workflows, Skills, runs, events, evidence, memory, governance, environments, and harnesses. Exact endpoints may evolve during implementation but must remain typed and versioned.
-
-Rules:
-
-- UI mutations go through the API.
-- API mutations go through SI governance.
-- Web/TUI never treat internal Python classes as authority.
-- Responses are typed and deterministic.
-- Non-local exposure requires explicit authentication/authorization.
+Create the stable machine-facing API before the full Web/TUI surfaces. Planned versioned surface includes agents, teams, workflows, Skills, runs, events, evidence, memory, governance, environments, and harnesses. UI mutations go through the API; API mutations go through SI governance; non-local exposure requires explicit authentication/authorization.
 
 ---
 
 # Phase 36 — Local Web Foundation
 
-Build a localhost-first Web application launched conceptually by `si web`.
-
-Requirements: no telemetry by default, no mandatory cloud service, strict CORS/CSP, safe static assets, graceful shutdown, safe errors, mutation audit logging, optional authentication for deliberate remote exposure, and no credential leakage into browser payloads.
-
-The Web application is an operator surface, not a second runtime.
+Build a localhost-first Web application launched conceptually by `si web`, with no telemetry by default, strict CORS/CSP, safe static assets, graceful shutdown, safe errors, mutation audit logging, optional authentication for deliberate remote exposure, and no credential leakage into browser payloads.
 
 ---
 
 # Phase 37 — SI Control Center
 
-Create the main Web Control Center with Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings.
-
-The dashboard should surface live state such as active runs, available agents, Skills, events, verification state, governance findings, environment readiness, recent evidence, and failed/degraded executions.
+Create the main Web Control Center with Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings. It must surface actual live state rather than simulated execution.
 
 ---
 
 # Phase 38 — Visual Organization & Workflow
 
-Provide interactive organization and workflow visualization showing divisions, agents, roles, teams, Skills, relationships, capabilities/permissions, and execution state.
-
-Workflow visualization must reflect actual runtime events, for example:
-
-```text
-queued → running → waiting → verified → completed
-                         ↘ failed / escalated
-```
-
-Support search, filtering, zooming, panning, and drill-down without inventing simulated execution state.
+Provide interactive organization and workflow visualization showing divisions, agents, roles, teams, Skills, relationships, capabilities/permissions, and actual execution state.
 
 ---
 
 # Phase 39 — Agent Builder & Customization
 
-Allow operators to inspect, customize, create, validate, test, and manage agents through the local Web UI while preserving canonical Markdown and typed contracts.
-
-The builder covers identity, mission, personality, expertise, Skills, tools, capabilities, permissions, workflow, Rules, memory, verification, security, testing, and publication.
-
-A controlled dry-run/test path must evaluate persona validity, Skill compatibility, governance compatibility, expected behavior, verification, and security findings. Customization must not become a hidden privilege-escalation path.
+Allow operators to inspect, customize, create, validate, test, and manage agents through the local Web UI while preserving canonical Markdown and typed contracts. Customization must not become a hidden privilege-escalation path.
 
 ---
 
 # Phase 40 — Evidence & Observability
 
-Make the evidence-first architecture visible through inspectable run timelines and evidence detail.
-
-A run should expose major events from task start through agent/Skill selection, inspection, diagnosis, actions, governance, tests, verification, and completion/failure/escalation.
-
-Evidence views should distinguish facts, observations, inferences, and unresolved uncertainty and expose evidence ID, source, timestamp, provenance, supported claim, confidence, verification state, related run/task/agent, and supersession/contradiction where applicable.
+Make the evidence-first architecture visible through inspectable run timelines and evidence detail. Evidence views distinguish facts, observations, inferences, and unresolved uncertainty and expose provenance, confidence, verification state, and supersession/contradiction where applicable.
 
 ---
 
 # Phase 41 — SI TUI
 
-Provide a first-class terminal operator interface for Termux, Codespaces, SSH, and other terminal environments.
-
-The SI TUI is **not an OpenCode clone**. OpenCode remains a coding/agent harness; the TUI is the SI organization and operations console.
-
-Requirements: keyboard-first operation, low resource usage, accessible textual state, live execution events, agent/team/run inspection, governance/evidence inspection, and the same Control API as Web.
+Provide a first-class terminal operator interface for Termux, Codespaces, SSH, and other terminal environments. The TUI is an SI organization and operations console, not a replacement for a coding harness.
 
 ---
 
 # Phase 42 — Harness Deployment Center
 
-Make SI organization deployment into supported harnesses understandable, inspectable, and governed.
-
-Initial targets include OpenCode, Codex, Claude Code, Cline, Antigravity, and a Universal SI protocol.
-
-Deployment remains descriptive until explicit runtime registration/governance enables a harness. Deployment manifests cannot grant permissions, execute workers, migrate credentials, or bypass governance.
+Make SI organization deployment into supported harnesses understandable, inspectable, and governed. Deployment manifests cannot grant permissions, execute workers, migrate credentials, or bypass governance.
 
 ---
 
 # Phase 43 — Final v3 Integration & Hardening
 
-Integrate the complete v3 stack and close remaining architecture/security/verification gaps.
+Integrate the complete v3 stack and close remaining architecture/security/verification gaps. Final gates cover tests, distribution, Ruff, Control API contracts, Web/TUI checks, organization/catalog consistency, governance/security scanning, evidence integrity, harness conformance, migration/rollback, documentation audit, and adversarial fail-closed checks.
 
-Final gates should cover:
-
-- complete unit/integration/system/regression tests;
-- distribution and installation verification;
-- Ruff/lint and static validation;
-- Control API contract checks;
-- Web/TUI surface checks;
-- organization/catalog/persona/Skill consistency;
-- governance and security scanning;
-- evidence/observability integrity;
-- harness deployment conformance;
-- migration/rollback review;
-- documentation/source-of-truth audit;
-- adversarial and fail-closed regression checks.
-
-Phase 43 must not be declared complete until the final mainline CI evidence is green and the repository's current-state documentation matches implementation reality.
+Phase 43 must not be declared complete until final mainline CI evidence is green and current-state documentation matches implementation reality.
 
 ---
 
 ## v3 completion principle
 
-The v3 program is layered and must be completed in order:
-
 ```text
 29 Personas [complete]
  → 30 Skills [complete]
  → 31 Rules/Hooks/Events [complete]
- → 32 Memory/Knowledge [implementation complete]
+ → 32 Memory/Knowledge [complete]
  → 33 Security/Governance
  → 34 Organization
  → 35 Control API

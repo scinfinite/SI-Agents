@@ -1,7 +1,8 @@
 # Phase 32 — Memory & Knowledge
 
-**Status:** In progress — final CI verification pending.  
+**Status:** Complete + CI verified.  
 **Baseline:** Phase 31 merged and CI-verified on `main`.  
+**Final mainline CI:** run **#769** on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac` passed repository audit, Ruff, distribution/wheel verification, and the full pytest suite (**392 passed in 5.47s**).  
 **Design principle:** memory is scoped context; knowledge is verified, source-backed information. Retrieval never constitutes proof or authorization.
 
 ## Objectives
@@ -80,6 +81,8 @@ This deliberately keeps **memory** and **knowledge** distinct: memory may begin 
 
 Contradictions are represented as explicit IDs instead of silently resolving conflicting claims.
 
+`MemoryService` coordinates recording, promotion, knowledge registration, expiry/rejection, persistence, and lifecycle EventBus signals without becoming a permission authority.
+
 ## Retrieval
 
 `MemoryRetriever` provides deterministic lexical retrieval with scope/context filters and bounded result counts.
@@ -127,19 +130,19 @@ A separate knowledge-oriented reference was reviewed for explicit entities, rela
 
 No external code, prompts, branding, or architecture was copied.
 
-## Verification plan
+## Final verification
 
-Required final CI gates:
+Mainline CI run **#769** completed successfully on the exact merge commit:
 
-- repository audit;
-- Ruff;
-- distribution build;
-- wheel installation verification;
-- complete pytest suite;
-- Phase 32 targeted tests;
-- diagnostic artifact generation;
-- final documentation/source-of-truth audit.
+- distribution build: passed;
+- wheel installation verification: passed;
+- SI repository audit: passed;
+- Ruff: passed;
+- complete pytest suite: **392 passed in 5.47s**;
+- diagnostic artifact generation: passed.
 
-The final CI run must execute against the complete Phase 32 source tree after the latest lifecycle-service and event-integration fixes.
+The final verification was performed after Phase 32 was merged into `main`, so the closure record and implementation are now synchronized.
 
-Phase 32 must not be declared complete until the final mainline CI run is green.
+## Exit gate
+
+Phase 32 is closed. **Phase 33 — Security & Governance Center** is next.
