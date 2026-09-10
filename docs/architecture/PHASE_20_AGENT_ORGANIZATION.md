@@ -1,6 +1,6 @@
 # Phase 20 — Agent Organization & Catalog
 
-**Status: Complete — canonical catalog, typed registry, selection, and CI tests implemented.**
+**Status: Complete — canonical catalog, typed registry, selection, and CI-verified tests implemented.**
 
 ## Purpose
 
@@ -74,3 +74,7 @@ ECC's current source separates agents, skills, rules, and harness surfaces, whil
 8. Tests cover loading, validation, duplicate rejection, selection, and invalid status handling.
 9. CI runs the new tests together with the existing full suite.
 10. Documentation records the actual implemented boundary and future exclusions.
+
+## Final verification evidence
+
+Final main CI run **#440** completed successfully on commit `8a53078f8a1f745ab49813d3c27d71cefd271b25`. The workflow verified distribution building, isolated wheel installation/import, Ruff, and the full pytest suite. The preceding PR verification run **#439** also completed successfully on the final Phase 20 test-fix commit.
