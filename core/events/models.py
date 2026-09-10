@@ -25,6 +25,11 @@ class EventName(str, Enum):
     HANDOFF_CREATED = "handoff.created"
     VERIFICATION_STARTED = "verification.started"
     VERIFICATION_FAILED = "verification.failed"
+    MEMORY_CREATED = "memory.created"
+    MEMORY_PROMOTED = "memory.promoted"
+    MEMORY_EXPIRED = "memory.expired"
+    MEMORY_REJECTED = "memory.rejected"
+    KNOWLEDGE_CREATED = "knowledge.created"
 
 
 class EventSource(str, Enum):
