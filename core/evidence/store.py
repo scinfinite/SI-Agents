@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import datetime
 from pathlib import Path
 from threading import RLock
 
@@ -37,6 +38,7 @@ class EvidenceStore:
                 verification=VerificationState(item.get("verification", "unverified")),
                 run_id=item.get("run_id"), provenance=tuple(item.get("provenance", [])),
                 related_ids=tuple(item.get("related_ids", [])), supersedes=item.get("supersedes"),
+                created_at=datetime.fromisoformat(str(item["created_at"])),
             )
             self._records[record.id] = record
 
