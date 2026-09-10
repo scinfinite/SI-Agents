@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from typing import ClassVar
 
 import pytest
 
@@ -17,16 +18,16 @@ from core.provider_intelligence.omniroute_router import (
 
 
 class Handler(BaseHTTPRequestHandler):
-    models = [
+    models: ClassVar[list[dict[str, str]]] = [
         {"id": "if/kimi-k2-thinking", "owned_by": "if"},
         {"id": "cc/claude-sonnet", "owned_by": "cc"},
     ]
-    response = {
+    response: ClassVar[dict[str, object]] = {
         "choices": [{"message": {"role": "assistant", "content": "OK"}}],
         "usage": {"prompt_tokens": 2, "completion_tokens": 1},
     }
-    status = 200
-    last_request = None
+    status: ClassVar[int] = 200
+    last_request: ClassVar[dict[str, object] | None] = None
 
     def log_message(self, *_args):
         pass
