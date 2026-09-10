@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: Beta — Phases 1–7 complete and CI-verified. Phase 8 is next.**
+**Current status: Beta — Phases 1–8 complete and CI-verified. Phase 9 is next.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -9,7 +9,7 @@
 5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test. **Complete.**
 6. Skills Engine — reusable, verifiable engineering procedures, lifecycle, selection, permissioned execution, and evidence. **Complete.**
 7. Verification + Evidence — claims, evidence provenance, confidence, regression, red-team checks, production-readiness gates. **Complete.**
-8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards.
+8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards. **Complete.**
 9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies.
 10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health.
 11. Pattern Extraction — generalize and independently validate reusable engineering patterns.
@@ -24,7 +24,7 @@
 ## Release targets
 
 - **Alpha:** phases 0–5 — achieved
-- **Beta:** phases 6–9 — **in progress; Phases 6–7 achieved**
+- **Beta:** phases 6–9 — **in progress; Phases 6–8 achieved**
 - **v1.0:** phases 10–13
 - **v1.5:** phases 14–15
 - **v2.0:** phases 16–18
