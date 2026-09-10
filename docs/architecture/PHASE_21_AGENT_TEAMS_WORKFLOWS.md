@@ -64,7 +64,7 @@ Cancellation is cooperative. A cancellation event prevents new work from being d
 
 ## External reference patterns
 
-The design generalizes useful patterns from current ECC and Agency Agents without copying their implementation. ECC's current team-builder emphasizes dynamic discovery, bounded parallel dispatch, explicit failure reporting, and synthesis; its dynamic workflow guidance emphasizes observable checkpoints, eval gates, handoffs, and stopping on unsafe or unclear states. Agency Agents' NEXUS workflow emphasizes explicit role sequencing, quality gates, evidence, Dev↔QA loops, retries, and handoffs. citeturn1view0turn2view0turn1view1
+The design generalizes useful patterns from current ECC and Agency Agents without copying their implementation. ECC's current team-builder emphasizes dynamic discovery, bounded parallel dispatch, explicit failure reporting, and synthesis; its dynamic workflow guidance emphasizes observable checkpoints, eval gates, handoffs, and stopping on unsafe or unclear states. Agency Agents' NEXUS workflow emphasizes explicit role sequencing, quality gates, evidence, Dev↔QA loops, retries, and handoffs.
 
 SI-Agents intentionally adds typed contracts, explicit permissions/governance boundaries, evidence identifiers, deterministic DAG scheduling, isolated context, and a harness-neutral execution boundary rather than adopting a prompt-only orchestration model.
 
