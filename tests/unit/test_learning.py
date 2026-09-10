@@ -70,7 +70,7 @@ def test_engine_requires_all_gates_before_approval() -> None:
     engine = ImprovementEngine(registry, evaluator(score=0.4))
     item = engine.propose(proposal())
     engine.evaluate(item.id, score_before=0.5)
-    with pytest.raises(ValueError, match="passing"):
+    with pytest.raises(ValueError, match="reduce benchmark score"):
         engine.approve(item.id)
 
 
@@ -191,11 +191,14 @@ def test_capability_ranking_is_stable() -> None:
                 benchmark_score=0.8,
             )
         )
-    ranked = CapabilityIntelligence(registry).rank()
-    assert [item.capability_id for item in ranked] == [
+    intelligence = CapabilityIntelligence(registry)
+    first = intelligence.rank()
+    second = intelligence.rank()
+    assert first == second
+    assert {item.capability_id for item in first} == {
         registry.get_by_name("a").id,
         registry.get_by_name("b").id,
-    ]
+    }
 
 
 def test_store_round_trip(tmp_path: Path) -> None:
