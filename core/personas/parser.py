@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
+# isort: skip_file
+
 import re
+from pathlib import Path
 
 from core.personas.models import AgentPersona
 
@@ -22,18 +24,8 @@ _REQUIRED_SECTIONS = (
     "Evidence Requirements",
 )
 _FORBIDDEN_FRONTMATTER = {
-    "capabilities",
-    "permissions",
-    "harnesses",
-    "environments",
-    "tools",
-    "commands",
-    "exec",
-    "execute",
-    "shell",
-    "network",
-    "credentials",
-    "secrets",
+    "capabilities", "permissions", "harnesses", "environments", "tools", "commands",
+    "exec", "execute", "shell", "network", "credentials", "secrets",
 }
 _KEY_RE = re.compile(r"^[a-z][a-z0-9_-]*$")
 
@@ -52,26 +44,17 @@ def parse_persona(text: str, *, source_path: str | None = None) -> AgentPersona:
     if missing_sections:
         raise ValueError("Persona sections missing: " + ", ".join(missing_sections))
     return AgentPersona(
-        schema=frontmatter["schema"],
-        version=_parse_int(frontmatter["version"], "version"),
-        id=frontmatter["id"],
-        name=frontmatter["name"],
-        division=frontmatter["division"],
-        description=frontmatter["description"],
-        identity=_scalar(sections["Identity"]),
-        personality=_scalar(sections["Personality"]),
-        mission=_scalar(sections["Core Mission"]),
-        expertise=_items(sections["Expertise"]),
-        responsibilities=_items(sections["Responsibilities"]),
-        workflow=_items(sections["Workflow"]),
-        critical_rules=_items(sections["Critical Rules"]),
-        boundaries=_items(sections["Boundaries"]),
-        deliverables=_items(sections["Deliverables"]),
+        schema=frontmatter["schema"], version=_parse_int(frontmatter["version"], "version"),
+        id=frontmatter["id"], name=frontmatter["name"], division=frontmatter["division"],
+        description=frontmatter["description"], identity=_scalar(sections["Identity"]),
+        personality=_scalar(sections["Personality"]), mission=_scalar(sections["Core Mission"]),
+        expertise=_items(sections["Expertise"]), responsibilities=_items(sections["Responsibilities"]),
+        workflow=_items(sections["Workflow"]), critical_rules=_items(sections["Critical Rules"]),
+        boundaries=_items(sections["Boundaries"]), deliverables=_items(sections["Deliverables"]),
         failure_behavior=_items(sections["Failure Behavior"]),
         escalation_behavior=_items(sections["Escalation Behavior"]),
         verification_expectations=_items(sections["Verification Expectations"]),
-        evidence_requirements=_items(sections["Evidence Requirements"]),
-        source_path=source_path,
+        evidence_requirements=_items(sections["Evidence Requirements"]), source_path=source_path,
     )
 
 
