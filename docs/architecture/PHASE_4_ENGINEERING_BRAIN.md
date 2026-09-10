@@ -1,5 +1,9 @@
 # Phase 4 — Engineering Brain
 
+## Status
+
+**Complete — CI verified.** Phase 4 is part of the completed Alpha baseline (Phases 1–5).
+
 Phase 4 adds a deterministic reasoning and planning substrate to SI-Agents. It is deliberately separated from model/provider routing: these components represent explicit engineering state and validation, not simulated intelligence.
 
 ## Scope
@@ -16,6 +20,7 @@ Phase 4 adds a deterministic reasoning and planning substrate to SI-Agents. It i
 - Risk/impact assessment with mitigations.
 - Capability-aware planning through the existing capability registry and selector.
 - Orchestrator integration through a non-executing `build_plan()` boundary.
+- Downstream consumption by the Phase 5 Developer/Debugger/Tester workflow without bypassing execution policy.
 
 ## Safety boundaries
 
@@ -23,6 +28,8 @@ The Engineering Brain does not silently execute a plan, grant permissions, bypas
 
 ## Verification
 
-The Phase 4 tests cover decomposition, complete planning, dependency ordering, cycle rejection, hypothesis updates, reasoning confidence, RCA confidence classification, trade-off selection, uncertainty classification, risk classification, and validated capability selection.
+The Phase 4 tests cover decomposition, complete planning, dependency ordering, cycle rejection, hypothesis updates, reasoning confidence, RCA confidence classification, trade-off selection, uncertainty classification, risk classification, and validated capability selection. CI verifies installation, distribution build, Ruff, and the complete pytest suite.
 
-CI must pass installation, distribution build, Ruff, and the complete pytest suite before Phase 4 is considered complete.
+## Current role in the architecture
+
+Phase 4 is the planning/intelligence boundary immediately before controlled engineering execution. Phase 5 consumes its validated plan structure and applies the Developer/Debugger/Tester workflow while preserving task state, permissions, checkpoints, execution records, and evidence.
