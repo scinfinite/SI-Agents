@@ -24,7 +24,7 @@ class CommandRunner:
         return ExecutionRecord(
             task_id=task_id,
             command=result.command,
-            workspace=self.backend.workspace,
+            workspace=str(self.backend.workspace),
             return_code=result.return_code,
             stdout=result.stdout,
             stderr=result.stderr,
