@@ -22,6 +22,7 @@ def document() -> dict[str, object]:
             "/api/v1/environments": {"get": {"responses": {"200": {"description": "Sanitized runtime context"}}}},
             "/api/v1/harnesses": {"get": {"responses": {"200": {"description": "Registered adapter families"}}}},
             "/api/v1/settings": {"get": {"responses": {"200": {"description": "Effective control-center settings"}}}},
+            "/api/v1/visualization": {"get": {"responses": {"200": {"description": "Deterministic organization/workflow graph read model"}}}},
             "/api/v1/control-center": {"get": {"responses": {"200": {"description": "Control Center aggregate read model"}}}},
             "/api/v1/events": {"get": {"responses": {"200": {"description": "API events"}}}},
             "/api/v1/runs": {
