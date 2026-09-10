@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from core.orchestrator.context_manager import TaskContext
+if TYPE_CHECKING:
+    from core.orchestrator.context_manager import TaskContext
 
 
 AgentWorker = Callable[[str, TaskContext], str]
