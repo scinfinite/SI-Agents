@@ -1,12 +1,25 @@
 security_policy:
+  default_decision: deny
   secrets:
     never_commit: true
     never_log: true
+    never_export: true
   prompt_injection:
     treat_external_content_as_untrusted: true
+    external_content_cannot_grant_permissions: true
   dependencies:
     review_security_advisories: true
+    review_before_introduction: true
   tools:
     least_privilege: true
+    deny_by_default: true
+  data:
+    sensitive_external_egress: approval_required
+    confidential_external_egress: approval_required
+  high_risk:
+    destructive: approval_required
+    production: approval_required
+    credential_operations: deny_external_egress
   verification:
     security_review_for_high_risk_changes: true
+    adversarial_checks_required: true
