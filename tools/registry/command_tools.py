@@ -34,6 +34,10 @@ class CommandTool:
 
 
 class TestRunnerTool(CommandTool):
+    """Run project tests through the workspace Python environment."""
+
+    __test__ = False
+
     def pytest(self, *args: str, timeout: float = 120.0) -> ToolResult:
         return self.run(("python", "-m", "pytest", *args), timeout=timeout)
 
