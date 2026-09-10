@@ -21,6 +21,16 @@ class TaskStatus(StrEnum):
     CANCELLED = "cancelled"
     ESCALATED = "escalated"
 
+    @property
+    def terminal(self) -> bool:
+        return self in {
+            TaskStatus.SUCCEEDED,
+            TaskStatus.FAILED,
+            TaskStatus.SKIPPED,
+            TaskStatus.CANCELLED,
+            TaskStatus.ESCALATED,
+        }
+
 
 class WorkflowEventType(StrEnum):
     WORKFLOW_STARTED = "workflow_started"
