@@ -4,9 +4,9 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–25 implemented and CI-verified.**
+**Post-v2 evolution — Phases 19–26 implemented and CI-verified.**
 
-Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, and Termux runtime layers:
+Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, Termux, and GitHub Codespaces runtime layers:
 
 - **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
 - **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
@@ -33,6 +33,7 @@ Completed foundation through Production Hardening and the post-v2 organization, 
 - **Phase 23 — OpenCode Integration:** stdlib-only OpenCode headless-server adapter, session creation/continuity, normalized synchronous messages, request-to-session cancellation, optional in-memory HTTP basic authentication, and fail-closed streaming capability declaration. **Complete and CI-verified.**
 - **Phase 24 — OmniRoute Integration:** stdlib-only OpenAI-compatible gateway client, deterministic model discovery, fail-closed health checks, secure credential handling, retryable transport classification, session/idempotency/request correlation forwarding, and a governed invocation layer that delegates provider/model routing to OmniRoute. **Complete and CI-verified.**
 - **Phase 25 — Termux Runtime:** vendor-neutral environment readiness contracts, Termux detection, Python/Git/curl/OpenSSH/pkg checks, OpenCode readiness, optional fail-closed OmniRoute health, read-only Termux doctor, secret-free JSON reporting, conservative package planning, and workspace validation. **Complete and CI-verified.**
+- **Phase 26 — GitHub Codespaces Runtime:** Codespaces detection, Python/Git/curl/OpenSSH/workspace checks, OpenCode readiness, optional GitHub CLI and OmniRoute requirements, read-only toolchain planning, workspace validation, and secret-free doctor reporting. **Complete and CI-verified.**
 
 ## Engineering loop
 
@@ -45,12 +46,14 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 Agents, capabilities, tools, skills, knowledge, automation jobs, teams, harness adapters, and environment runtimes are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
 
-OpenCode integration is a transport boundary, not a model/provider router. OpenCode owns its server, provider credentials, and harness lifecycle. SI-Agents sends normalized runtime requests and consumes normalized results. OmniRoute is the external model/provider routing authority for Phase 24 and remains so inside the Termux runtime.
+OpenCode integration is a transport boundary, not a model/provider router. OpenCode owns its server, provider credentials, and harness lifecycle. SI-Agents sends normalized runtime requests and consumes normalized results. OmniRoute is the external model/provider routing authority for Phase 24 and remains so inside the Termux and Codespaces runtimes.
 
 Phase 24 deliberately does not create a second provider-fallback or circuit-breaker system around OmniRoute. OmniRoute owns provider selection, upstream credentials, provider fallback, gateway-side quotas, routing policies, and provider circuit state. SI-Agents owns its invocation contract and fail-closed local governance boundaries.
 
 Phase 25 adds environment readiness without making the environment layer an execution or credential authority. The Termux doctor is read-only, never installs packages, never mutates OpenCode configuration, never persists OmniRoute credentials, and never provides an arbitrary command-execution escape hatch. Explicit setup/installation remains a later `si` CLI concern.
 
+Phase 26 adds the equivalent read-only readiness boundary for GitHub Codespaces. The Codespaces runtime validates the expected development toolchain and workspace, can optionally require GitHub CLI and OmniRoute, and never creates/configures a Codespace, installs packages, mutates OpenCode configuration, persists credentials, or executes arbitrary commands.
+
 Universal harness deployment is descriptive, not authoritative. A deployment manifest can describe agents, teams, skills, required permissions, and capabilities for a harness, but it cannot enable the harness, grant permissions, execute workers, or bypass governance. Vendor-specific adapters remain separate from the core.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, `docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` for the universal harness architecture, `docs/architecture/PHASE_23_OPENCODE_INTEGRATION.md` for the OpenCode adapter, `docs/architecture/PHASE_24_OMNIROUTE_INTEGRATION.md` for the OmniRoute gateway, `docs/architecture/PHASE_25_TERMUX_RUNTIME.md` for the Termux runtime, and `runtime/README.md` for the runtime boundary.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, `docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` for the universal harness architecture, `docs/architecture/PHASE_23_OPENCODE_INTEGRATION.md` for the OpenCode adapter, `docs/architecture/PHASE_24_OMNIROUTE_INTEGRATION.md` for the OmniRoute gateway, `docs/architecture/PHASE_25_TERMUX_RUNTIME.md` for the Termux runtime, `docs/architecture/PHASE_26_CODESPACE_RUNTIME.md` for the Codespaces runtime, and `runtime/README.md` for the runtime boundary.
