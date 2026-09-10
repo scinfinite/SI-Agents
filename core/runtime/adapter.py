@@ -1,6 +1,11 @@
 """Adapter validation and transport-neutral invocation helpers."""
 
-from core.runtime.models import InvocationRequest, InvocationResponse, RuntimeError, RuntimeErrorCode
+from core.runtime.models import (
+    InvocationRequest,
+    InvocationResponse,
+    RuntimeError,
+    RuntimeErrorCode,
+)
 from core.runtime.protocol import HarnessAdapter
 
 
