@@ -1,0 +1,35 @@
+name: SI Cleanup
+on:
+  push:
+    branches: [phase-29-agency-parity]
+permissions:
+  contents: write
+env:
+  BRANCH: phase-29-agency-parity
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-29-agency-parity
+          fetch-depth: 0
+      - name: Remove generated runtime artifacts
+        run: |
+          git rm -r --ignore-unmatch -- '**/__pycache__' || true
+          rm -f phase29-test-debug.txt
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('.gitignore')
+          text = p.read_text(encoding='utf-8')
+          if '__pycache__/' not in text:
+              text += '\n# Python runtime artifacts\n__pycache__/\n*.py[cod]\n'
+          p.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/si-cleanup.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'chore: remove generated runtime artifacts'
+          git push origin "HEAD:$BRANCH"
