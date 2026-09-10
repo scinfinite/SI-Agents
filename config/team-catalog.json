@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "teams": [
+    {
+      "id": "engineering-repair",
+      "name": "Engineering Repair Team",
+      "description": "A governed debugger-to-developer-to-tester workflow for evidence-backed repairs.",
+      "members": [
+        "debugger",
+        "developer",
+        "tester"
+      ],
+      "max_parallelism": 1,
+      "required_evidence": true,
+      "tasks": [
+        {
+          "id": "diagnose",
+          "agent_id": "debugger",
+          "context_mode": "shared",
+          "max_attempts": 2,
+          "requires_evidence": true
+        },
+        {
+          "id": "repair",
+          "agent_id": "developer",
+          "depends_on": ["diagnose"],
+          "context_mode": "shared",
+          "max_attempts": 2,
+          "requires_evidence": true
+        },
+        {
+          "id": "verify",
+          "agent_id": "tester",
+          "depends_on": ["repair"],
+          "context_mode": "isolated",
+          "max_attempts": 2,
+          "requires_evidence": true,
+          "verification_gate": true
+        }
+      ]
+    }
+  ]
+}
