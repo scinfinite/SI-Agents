@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "standards": [
+    {"name":"Java Language Specification","domain":"Java","source":"https://docs.oracle.com/javase/specs/"},
+    {"name":"Java Virtual Machine Specification","domain":"JVM","source":"https://docs.oracle.com/javase/specs/"},
+    {"name":"ECMAScript","domain":"JavaScript","source":"https://tc39.es/ecma262/"},
+    {"name":"POSIX","domain":"operating systems","source":"https://pubs.opengroup.org/onlinepubs/9699919799/"},
+    {"name":"HTTP Semantics","domain":"networking","source":"https://www.rfc-editor.org/rfc/rfc9110"},
+    {"name":"URI Generic Syntax","domain":"networking","source":"https://www.rfc-editor.org/rfc/rfc3986"},
+    {"name":"TLS 1.3","domain":"security/networking","source":"https://www.rfc-editor.org/rfc/rfc8446"},
+    {"name":"Unicode Standard","domain":"text","source":"https://www.unicode.org/standard/standard.html"},
+    {"name":"JSON","domain":"data interchange","source":"https://www.rfc-editor.org/rfc/rfc8259"},
+    {"name":"OAuth 2.0","domain":"authorization","source":"https://www.rfc-editor.org/rfc/rfc6749"},
+    {"name":"OpenAPI Specification","domain":"APIs","source":"https://spec.openapis.org/oas/latest.html"}
+  ]
+}
