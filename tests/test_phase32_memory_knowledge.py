@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
+from core.events.bus import EventBus
 from core.events.models import EventName
 from core.memory import (
     KnowledgeEntry,
@@ -128,8 +129,6 @@ def test_store_rejects_unknown_schema(tmp_path) -> None:
 
 
 def test_memory_service_publishes_lifecycle_events() -> None:
-    from core.events.bus import EventBus
-
     registry = MemoryRegistry()
     bus = EventBus()
     service = MemoryService(registry, events=bus)
@@ -137,5 +136,8 @@ def test_memory_service_publishes_lifecycle_events() -> None:
     service.record(entry)
     promoted = service.promote(entry.id, MemoryScope.PROJECT)
     assert promoted.status is MemoryStatus.PROMOTED
-    journal = bus.store.list()
-    assert [event.name for event in journal] == [EventName.MEMORY_CREATED.value, EventName.MEMORY_PROMOTED.value]
+    journal = bus.store.all()
+    assert [event.name for event in journal] == [
+        EventName.MEMORY_CREATED.value,
+        EventName.MEMORY_PROMOTED.value,
+    ]
