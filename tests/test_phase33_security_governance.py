@@ -1,3 +1,4 @@
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -5,7 +6,6 @@ import pytest
 from core.governance import (
     Approval,
     Capability,
-    DataClass,
     GovernanceEngine,
     GovernanceRequest,
     GovernanceScanner,
@@ -44,15 +44,13 @@ def test_scoped_permission_is_required_for_declared_capability() -> None:
 
 
 def test_expired_approval_cannot_authorize() -> None:
-    from datetime import UTC, datetime, timedelta
-
     request = GovernanceRequest(
         action="delete", risk=RiskLevel.HIGH, destructive=True,
         approval=Approval("operator", "approved", expires_at=datetime.now(UTC) - timedelta(seconds=1)),
     )
     decision = GovernanceEngine().decide(request)
     assert decision.allowed is False
-    assert "expired" in decision.reasons[0] or any("expired" in r for r in decision.reasons)
+    assert any("expired" in reason for reason in decision.reasons)
 
 
 def test_credential_external_egress_is_unconditionally_denied() -> None:
