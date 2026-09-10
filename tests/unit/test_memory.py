@@ -20,17 +20,17 @@ def evidence(verified=True, suffix="a"):
 
 
 def make_memory(**kwargs):
-    defaults = dict(
-        content="Use contract tests before integration tests for service boundaries",
-        memory_type=MemoryType.LESSON,
-        scope=MemoryScope.TASK,
-        task_id="task-1",
-        project_id="project-1",
-        provenance=("task-result",),
-        evidence=(evidence(True), evidence(True, "b")),
-        confidence=0.9,
-        tags=("testing", "contracts"),
-    )
+    defaults = {
+        "content": "Use contract tests before integration tests for service boundaries",
+        "memory_type": MemoryType.LESSON,
+        "scope": MemoryScope.TASK,
+        "task_id": "task-1",
+        "project_id": "project-1",
+        "provenance": ("task-result",),
+        "evidence": (evidence(True), evidence(True, "b")),
+        "confidence": 0.9,
+        "tags": ("testing", "contracts"),
+    }
     defaults.update(kwargs)
     return MemoryEntry(**defaults)
 
@@ -104,5 +104,5 @@ def test_json_store_round_trip(tmp_path):
 def test_store_rejects_non_list(tmp_path):
     path = tmp_path / "memory.json"
     path.write_text("{}", encoding="utf-8")
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         MemoryStore(path).load()
