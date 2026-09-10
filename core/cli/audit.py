@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+# ruff: noqa: I001
 import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
