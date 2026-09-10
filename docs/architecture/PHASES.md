@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–21 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–21 complete; Phase 22 implementation in progress pending CI verification.**
 
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
 2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
@@ -23,6 +23,7 @@
 19. v2.0 Reality Audit — executable baseline audit, runtime E2E acceptance, distribution correctness, isolated wheel verification, documentation/roadmap consistency, and evidence-backed future-boundary definition. **Complete.**
 20. Agent Organization & Catalog — canonical divisions, typed agent definitions, declarative selection, lifecycle status, implementation references, and organization validation. **Complete.**
 21. Agent Teams & Workflows — canonical teams, dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Complete.**
+22. Universal Harness Integration — versioned language-neutral wire contract, structural callback bridge, adapter discovery, organization deployment manifests, and conformance coverage. **In progress — implementation complete, CI pending.**
 
 ## Release targets
 
@@ -34,10 +35,19 @@
 - **Post-v2 validation:** Phase 19 — **complete**
 - **Post-v2 organization:** Phase 20 — **complete**
 - **Post-v2 orchestration:** Phase 21 — **complete**
+- **Post-v2 interoperability:** Phase 22 — **in progress**
 
 ## Verification rule
 
 A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
+
+## Phase 22 implementation
+
+Phase 22 extends the Phase 17 runtime boundary without coupling the core to a vendor harness. `core/runtime/wire.py` defines the versioned `si.runtime.v1` JSON-compatible envelope; `core/runtime/bridge.py` provides a callback-based adapter bridge and normalized metadata discovery; and `core/runtime/deployment.py` provides a deterministic organization exposure manifest for Phase 20/21 agents, teams, skills, permissions, and capabilities.
+
+Deployment manifests are descriptive only. They do not enable harnesses, grant permissions, invoke workers, bypass governance, or install configuration. The existing deny-by-default harness registry, session isolation, capability checks, and governance decision remain authoritative.
+
+Phase 22 deliberately stops before vendor-specific integration. OpenCode, Codex, Claude Code, Cline, Antigravity, OmniRoute, Termux, Codespaces, and installation/configuration workflows remain subsequent phases or deployment responsibilities.
 
 ## Phase 21 completion
 

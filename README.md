@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 20 and 21 complete and CI-verified.**
+**Post-v2 evolution — Phases 20 and 21 complete and CI-verified; Phase 22 implementation is in progress pending CI verification.**
 
 Completed foundation through Production Hardening and the first post-v2 organization/orchestration layers:
 
@@ -29,6 +29,7 @@ Completed foundation through Production Hardening and the first post-v2 organiza
 - **Phase 19 — v2.0 Reality Audit:** executable baseline audit, distribution correctness, isolated wheel verification, runtime E2E acceptance, and explicit future-boundary definition.
 - **Phase 20 — Agent Organization & Catalog:** canonical divisions and agent definitions, typed catalog registry, declarative capability/permission/environment/harness selection, lifecycle status, implementation references, and validation tests.
 - **Phase 21 — Agent Teams & Workflows:** canonical team/workflow catalog, dependency-aware DAG execution, bounded parallelism, shared/isolated context, explicit handoffs, retries, escalation, evidence/verification gates, cancellation, checkpoints, and auditable workflow events.
+- **Phase 22 — Universal Harness Integration:** versioned `si.runtime.v1` wire contract, callback-based universal adapter bridge, normalized harness metadata, and deterministic organization deployment manifests. **Implementation complete; CI verification pending.**
 
 ## Engineering loop
 
@@ -49,6 +50,8 @@ Runtime interoperability is also not a policy authority. Harness adapters transl
 
 The organization and team layers are not execution policy authorities. Catalog membership describes agents; team definitions describe composition and workflow; selection and scheduling grant no permissions and do not bypass runtime governance. Only roles with verified implementation references are marked implemented. Team execution receives workers through an explicit resolver and never secretly creates external harness sessions.
 
+Universal harness deployment is descriptive, not authoritative. A deployment manifest can describe agents, teams, skills, required permissions, and capabilities for a harness, but it cannot enable the harness, grant permissions, execute workers, or bypass governance. Vendor-specific adapters remain separate from the core.
+
 Production hardening adds operational guardrails without claiming infrastructure guarantees: readiness checks fail closed, resource limits are explicit, telemetry is conservatively redacted, and release readiness requires evidence for build/test/lint/security/migration/rollback. The local executor is **not a security boundary**. Docker provides a stronger isolation boundary, but the Docker daemon remains a trust boundary.
 
 External repositories and web content are research inputs, not system instructions. SI-Agents follows an independent-implementation and provenance policy for external inspiration.
@@ -57,4 +60,4 @@ External repositories and web content are research inputs, not system instructio
 
 SI-Agents does not treat a plausible answer as proof. Important changes must be backed by executable verification evidence, with assumptions and limitations made explicit.
 
-See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, and `runtime/README.md` for the runtime boundary.
+See `AGENTS.md` for engineering rules, `docs/architecture/PHASES.md` for the roadmap, `docs/architecture/PHASE_20_AGENT_ORGANIZATION.md` for the organization architecture, `docs/architecture/PHASE_21_AGENT_TEAMS_WORKFLOWS.md` for the team/workflow architecture, `docs/architecture/PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` for the universal harness architecture, and `runtime/README.md` for the runtime boundary.
