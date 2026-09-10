@@ -4,28 +4,28 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–28 implemented and CI-verified.**
+**Post-v2 evolution — Phases 19–29 implemented and CI-verified.**
 
-Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, CLI/setup, and cross-environment handoff layers.
+Completed foundation through Production Hardening and the post-v2 organization, orchestration, interoperability, OpenCode, OmniRoute, Termux, GitHub Codespaces, CLI/setup, cross-environment handoff, and human-authored agent persona layers.
 
-- **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards.
-- **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration.
-- **Phase 3 — Tool System:** controlled filesystem, terminal, Git, GitHub, web, code analysis, build/test, container, sandbox, and artifact tooling with registry and permission enforcement.
-- **Phase 4 — Engineering Brain:** problem normalization, decomposition, dependency-aware planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty, risk, and capability-aware planning.
-- **Phase 5 — Developer/Debugger/Tester:** explicit agent contracts and the inspect → reproduce → diagnose → checkpoint → repair → test → red-team → regression → verify → document workflow.
-- **Phase 6 — Skills Engine:** reusable skill contracts, lifecycle states, validated selection, permissioned execution, explicit verification, evidence recording, and an initial engineering skill catalog.
-- **Phase 7 — Verification + Evidence:** bounded claims, provenance-aware evidence, confidence assessment, fail-closed verification, regression suites, red-team falsification, before/after benchmarks, and production-readiness gates.
-- **Phase 8 — Technical Knowledge:** universal language schema, provenance-aware knowledge contracts, runtime catalog loading, multi-language coverage, framework/ecosystem catalog, and engineering standards catalog.
-- **Phase 9 — Technology Discovery:** repository technology/build detection, explicit uncertainty, safe experimentation contracts, declaration-based compatibility checks, and provenance-preserving knowledge proposals.
-- **Phase 10 — Open-Source Intelligence:** repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract.
-- **Phase 11 — Pattern Extraction:** deterministic observation normalization, conservative candidate extraction, independent evidence validation, counterexample handling, evidence-gated promotion, versioning, provenance, and context matching.
-- **Phase 12 — Engineering Memory:** task/project/global scopes, provenance and verified evidence, fail-closed one-step promotion, deterministic scoped retrieval, expiration, supersession/versioning, and auditable JSON persistence.
-- **Phase 13 — Security + Legal + Cost:** executable governance decisions, conservative risk classification, data-egress controls, provenance/legal review, free-first paid-resource controls, explicit approvals, and audit evidence.
-- **Phase 14 — Model/Provider Intelligence:** typed model/provider capabilities, explicit registration, quota observations, deterministic capability/cost/latency routing, reliability/health tracking, fallback constraints, and provider circuit breakers.
-- **Phase 15 — Automation:** one-shot/recurring schedules, deterministic due selection, lifecycle controls, registered actions, conditional triggers, bounded retries/backoff, idempotency, governance-gated execution, run history, and dependency-free JSON persistence.
-- **Phase 16 — Controlled Self-Improvement + Capability Intelligence:** evidence-backed improvement proposals, benchmark/regression/safety gates, explicit approval, rollback, deterministic capability readiness scoring, conservative unknown handling, and auditable JSON persistence.
-- **Phase 17 — Harness & Runtime Interoperability:** transport-neutral invocation envelopes, runtime capability negotiation, normalized events/errors, project-scoped sessions, explicit harness registry, governed local adapter, and adapter conformance testing.
-- **Phase 18 — Production Hardening:** deterministic readiness checks, explicit resource limits, conservative telemetry redaction, evidence-based release gates, production policy, migration/rollback requirements, and hardened CI execution.
+- **Phase 1 — Foundation:** architecture, engineering rules, governance, project isolation, security/cost/learning/compliance policies, provenance controls, and verification standards. **Complete.**
+- **Phase 2 — Control Plane:** task lifecycle, persistence, dependencies, retries, context isolation, agents, workflows, permissions, approvals, checkpoints, execution state, and evidence integration. **Complete.**
+- **Phase 3 — Tool System:** controlled filesystem, terminal, Git, GitHub, web, code analysis, build/test, container, sandbox, and artifact tooling with registry and permission enforcement. **Complete.**
+- **Phase 4 — Engineering Brain:** problem normalization, decomposition, dependency-aware planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty, risk, and capability-aware planning. **Complete.**
+- **Phase 5 — Developer/Debugger/Tester:** explicit agent contracts and the inspect → reproduce → diagnose → checkpoint → repair → test → red-team → regression → verify → document workflow. **Complete.**
+- **Phase 6 — Skills Engine:** reusable skill contracts, lifecycle states, validated selection, permissioned execution, explicit verification, evidence recording, and an initial engineering skill catalog. **Complete.**
+- **Phase 7 — Verification + Evidence:** bounded claims, provenance-aware evidence, confidence assessment, fail-closed verification, regression suites, red-team falsification, before/after benchmarks, and production-readiness gates. **Complete.**
+- **Phase 8 — Technical Knowledge:** universal language schema, provenance-aware knowledge contracts, runtime catalog loading, multi-language coverage, framework/ecosystem catalog, and engineering standards catalog. **Complete.**
+- **Phase 9 — Technology Discovery:** repository technology/build detection, explicit uncertainty, safe experimentation contracts, declaration-based compatibility checks, and provenance-preserving knowledge proposals. **Complete.**
+- **Phase 10 — Open-Source Intelligence:** repository metadata, archaeology/history, issues, pull requests, releases, security advisories, conservative license assessment, project health, freshness, and a read-only provider contract. **Complete.**
+- **Phase 11 — Pattern Extraction:** deterministic observation normalization, conservative candidate extraction, independent evidence validation, counterexample handling, evidence-gated promotion, versioning, provenance, and context matching. **Complete.**
+- **Phase 12 — Engineering Memory:** task/project/global memory, provenance and verified evidence, fail-closed one-step promotion, deterministic scoped retrieval, expiration, supersession/versioning, and auditable JSON persistence. **Complete.**
+- **Phase 13 — Security + Legal + Cost:** executable governance decisions, conservative risk classification, data-egress controls, provenance/legal review, free-first paid-resource controls, explicit approvals, and audit evidence. **Complete.**
+- **Phase 14 — Model/Provider Intelligence:** typed model/provider capabilities, explicit registration, quota observations, deterministic capability/cost/latency routing, reliability/health tracking, fallback constraints, and provider circuit breakers. **Complete.**
+- **Phase 15 — Automation:** one-shot/recurring schedules, deterministic due selection, lifecycle controls, registered actions, conditional triggers, bounded retries/backoff, idempotency, governance-gated execution, run history, and dependency-free JSON persistence. **Complete.**
+- **Phase 16 — Controlled Self-Improvement + Capability Intelligence:** evidence-backed improvement proposals, benchmark/regression/safety gates, explicit approval, rollback, deterministic capability readiness scoring, conservative unknown handling, and auditable JSON persistence. **Complete.**
+- **Phase 17 — Harness & Runtime Interoperability:** transport-neutral invocation envelopes, runtime capability negotiation, normalized events/errors, project-scoped sessions, explicit harness registry, governed local adapter, and adapter conformance testing. **Complete.**
+- **Phase 18 — Production Hardening:** deterministic readiness checks, explicit resource limits, conservative telemetry redaction, evidence-based release gates, production policy, migration/rollback requirements, and hardened CI execution. **Complete.**
 - **Phase 19 — v2.0 Reality Audit:** executable baseline audit, distribution correctness, isolated wheel verification, runtime E2E acceptance, and explicit future-boundary definition. **Complete and CI-verified.**
 - **Phase 20 — Agent Organization & Catalog:** canonical divisions and agent definitions, typed catalog registry, declarative capability/permission/environment/harness selection, lifecycle status, implementation references, and validation tests. **Complete and CI-verified.**
 - **Phase 21 — Agent Teams & Workflows:** canonical team/workflow catalog, dependency-aware DAG execution, bounded parallelism, shared/isolated context, explicit handoffs, retries, escalation, evidence/verification gates, cancellation, checkpoints, and auditable workflow events. **Complete and CI-verified.**
@@ -36,6 +36,7 @@ Completed foundation through Production Hardening and the post-v2 organization, 
 - **Phase 26 — GitHub Codespaces Runtime:** Codespaces detection, Python/Git/curl/OpenSSH/workspace checks, OpenCode readiness, optional GitHub CLI and OmniRoute requirements, read-only toolchain planning, workspace validation, and secret-free doctor reporting. **Complete and CI-verified.**
 - **Phase 27 — `si` CLI + Easy Setup:** user-facing doctor/status/agents/teams/setup/update/run commands, non-secret configuration, explicit mutation gates, safe OpenCode OmniRoute configuration, governed team execution, packaged canonical catalogs, and wheel-level CLI verification. **Complete and CI-verified.**
 - **Phase 28 — Cross-environment & Handoff:** portable `si.handoff.v1` workflow envelopes, SHA-256 integrity verification, secret rejection, sanitized project identity, explicit Termux↔Codespaces import/export validation, resumable workflow context, atomic handoff storage, and CLI handoff commands. **Complete and CI-verified.**
+- **Phase 29 — Agent Persona & Definition System:** deterministic Markdown personas, typed behavioral contracts, validation, governed compilation, duplicate/conflict detection, canonical persona set, provenance, inert/untrusted persona handling, and packaged persona artifacts. **Complete and CI-verified.**
 
 ## `si` CLI
 
@@ -73,7 +74,15 @@ si run engineering-repair --objective "continue the repair" --handoff repair-han
 
 Handoffs preserve task state, workflow context, result summaries, checkpoints, and evidence references. They never contain credentials. Imports verify the SHA-256 integrity digest, target environment, and repository identity when available. No automatic file transfer, Git synchronization, credential migration, Codespace creation, or remote state service is introduced.
 
-See `docs/architecture/PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` for the detailed Phase 28 contract and `docs/architecture/PHASES.md` for the roadmap.
+## Documentation
+
+The maintained documentation entry points are:
+
+- `docs/README.md` — documentation navigation and current baseline.
+- `docs/architecture/README.md` — architecture navigation and historical phase index.
+- `docs/architecture/PHASES.md` — authoritative current implementation/status and verification record.
+- `docs/architecture/SI_AGENTS_V3.md` — forward roadmap for Phases 30–43.
+- `docs/architecture/PHASE_1_FOUNDATION.md` — historical Phase 1 foundation record.
 
 ## Engineering loop
 
@@ -84,7 +93,9 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 ## Control and safety model
 
-Agents, capabilities, tools, skills, knowledge, automation jobs, teams, harness adapters, environment runtimes, and handoff artifacts are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
+Agents, capabilities, tools, skills, knowledge, automation jobs, teams, harness adapters, environment runtimes, and handoff/persona artifacts are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk actions remain approval-gated, repository mutation remains protected, and important claims require evidence.
+
+Markdown personas are human-authored behavioral data. They are parsed and validated deterministically, compiled only against an existing typed `AgentDefinition`, and cannot add capabilities, permissions, tools, environments, harness access, commands, network access, credentials, or secrets.
 
 OpenCode integration is a transport boundary, not a model/provider router. OpenCode owns its server, provider credentials, and harness lifecycle. SI-Agents sends normalized runtime requests and consumes normalized results. OmniRoute is the external model/provider routing authority for Phase 24 and remains so inside the Termux and Codespaces runtimes and Phase 27 CLI setup.
 
@@ -95,3 +106,7 @@ Phase 25 and Phase 26 provide read-only environment readiness. Phase 27 is the f
 Phase 28 adds explicit state transfer but not state authority. Handoff import is validation plus context restoration; the target environment, target workspace, target harness, and existing governance remain authoritative. A handoff cannot enable a harness, grant a permission, execute an imported command, or migrate credentials.
 
 Universal harness deployment is descriptive, not authoritative. A deployment manifest can describe agents, teams, skills, required permissions, and capabilities for a harness, but it cannot enable the harness, grant permissions, execute workers, or bypass governance. Vendor-specific adapters remain separate from the core.
+
+## Next phase
+
+**Phase 30 — First-Class Portable Skills** is the next implementation phase. It begins only from the verified Phase 29 baseline and synchronized documentation set.
