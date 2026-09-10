@@ -96,34 +96,24 @@ class WebRequestHandler(BaseHTTPRequestHandler):
     def _api_get(self, path: str) -> object:
         service = self.web_server.service
         routes: dict[str, object] = {
-            "/api/v1": service.snapshot().as_dict(),
-            "/api/v1/health": {"status": "ok", "api_version": "v1"},
-            "/api/v1/openapi.json": document(),
-            "/api/v1/agents": service.agents(),
-            "/api/v1/teams": service.teams(),
-            "/api/v1/workflows": service.workflows(),
-            "/api/v1/organization": service.organization(),
-            "/api/v1/skills": service.skills(),
-            "/api/v1/memory": service.memory(),
-            "/api/v1/governance": service.governance_state(),
-            "/api/v1/evidence": service.evidence(),
-            "/api/v1/environments": service.environments(),
-            "/api/v1/harnesses": service.harnesses(),
-            "/api/v1/settings": service.settings(),
-            "/api/v1/visualization": service.visualization(),
-            "/api/v1/events": service.events(),
-            "/api/v1/runs": service.runs(),
+            "/api/v1": service.snapshot().as_dict(), "/api/v1/health": {"status": "ok", "api_version": "v1"},
+            "/api/v1/openapi.json": document(), "/api/v1/agents": service.agents(), "/api/v1/teams": service.teams(),
+            "/api/v1/workflows": service.workflows(), "/api/v1/organization": service.organization(),
+            "/api/v1/skills": service.skills(), "/api/v1/memory": service.memory(),
+            "/api/v1/governance": service.governance_state(), "/api/v1/evidence": service.evidence(),
+            "/api/v1/environments": service.environments(), "/api/v1/harnesses": service.harnesses(),
+            "/api/v1/settings": service.settings(), "/api/v1/visualization": service.visualization(),
+            "/api/v1/events": service.events(), "/api/v1/runs": service.runs(),
             "/api/v1/agent-builder": self.web_server.builder.list(),
         }
         if path == "/api/v1/control-center":
-            return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(),
-                    "environments": service.environments(), "harnesses": service.harnesses(),
-                    "evidence": service.evidence(), "visualization": service.visualization(),
+            return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(), "environments": service.environments(),
+                    "harnesses": service.harnesses(), "evidence": service.evidence(), "visualization": service.visualization(),
                     "agent_builder": self.web_server.builder.list()}
         if path.startswith("/api/v1/agent-builder/drafts/"):
             draft_id = path.removeprefix("/api/v1/agent-builder/drafts/")
             if draft_id.endswith("/test"):
-                return self.web_server.builder.test(draft_id.removesuffix("/test")).__dict__
+                return self.web_server.builder.test(draft_id.removesuffix("/test")).as_dict()
             return self.web_server.builder.get(draft_id)
         if path.startswith("/api/v1/agent-builder/from/"):
             return self.web_server.builder.from_agent(path.removeprefix("/api/v1/agent-builder/from/"))
@@ -153,19 +143,21 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             self._audit(401)
             return
         path = urlparse(self.path).path.rstrip("/") or "/"
-        if path == "/":
-            body = (Path(__file__).parent / "assets" / "index.html").read_bytes()
-            self._send(200, body, content_type="text/html; charset=utf-8")
-            self._audit(200)
-            return
-        if path in {"/app.js", "/assets/app.js"}:
-            body = (Path(__file__).parent / "assets" / "app.js").read_bytes()
-            self._send(200, body, content_type="text/javascript; charset=utf-8")
-            self._audit(200)
-            return
-        if path in {"/app.css", "/assets/app.css"}:
-            body = (Path(__file__).parent / "assets" / "app.css").read_bytes()
-            self._send(200, body, content_type="text/css; charset=utf-8")
+        static = {
+            "/": ("index.html", "text/html; charset=utf-8"),
+            "/agent-builder": ("agent-builder.html", "text/html; charset=utf-8"),
+            "/assets/app.js": ("app.js", "text/javascript; charset=utf-8"),
+            "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+            "/assets/app.css": ("app.css", "text/css; charset=utf-8"),
+            "/app.css": ("app.css", "text/css; charset=utf-8"),
+            "/assets/agent-builder.html": ("agent-builder.html", "text/html; charset=utf-8"),
+            "/assets/builder.js": ("builder.js", "text/javascript; charset=utf-8"),
+            "/assets/builder.css": ("builder.css", "text/css; charset=utf-8"),
+        }
+        if path in static:
+            filename, content_type = static[path]
+            body = (Path(__file__).parent / "assets" / filename).read_bytes()
+            self._send(200, body, content_type=content_type)
             self._audit(200)
             return
         try:
@@ -196,7 +188,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/v1/agent-builder/validate":
                 result = self.web_server.builder.validate_payload(payload)
-                self._send(200, {"valid": result.valid, "errors": list(result.errors), "warnings": list(result.warnings), "agent": result.agent, "markdown": result.markdown})
+                self._send(200, result.as_dict())
                 self._audit(200, {"mutation": "agent_builder_validate", "valid": result.valid})
                 return
             if path == "/api/v1/agent-builder/drafts":
@@ -213,7 +205,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             if path.startswith("/api/v1/agent-builder/drafts/") and path.endswith("/test"):
                 draft_id = path.removeprefix("/api/v1/agent-builder/drafts/").removesuffix("/test")
                 result = self.web_server.builder.test(draft_id)
-                self._send(200, {"valid": result.valid, "errors": list(result.errors), "warnings": list(result.warnings), "agent": result.agent, "markdown": result.markdown})
+                self._send(200, result.as_dict())
                 self._audit(200, {"mutation": "agent_builder_test", "draft_id": draft_id, "valid": result.valid})
                 return
             self._error(404, "not_found")
