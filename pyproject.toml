@@ -20,7 +20,7 @@ agents = ["**/*.md"]
 skills = ["**/*.md", "*.json", "*.yaml"]
 
 [tool.setuptools.data-files]
-"share/si-agents/config" = ["config/agent-catalog.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json"]
+"share/si-agents/config" = ["config/agent-catalog.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
