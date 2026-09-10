@@ -1,24 +1,20 @@
-from collections.abc import Callable
-
-
-AgentWorker = Callable[[str, object], str]
-
-
 class AgentCoordinator:
     """Coordinate named agent workers without granting them implicit permissions."""
 
     def __init__(self) -> None:
-        self._agents: dict[str, AgentWorker] = {}
+        self._agents: dict[str, object] = {}
 
-    def register(self, name: str, worker: AgentWorker) -> None:
+    def register(self, name: str, worker: object) -> None:
         normalized = name.strip()
         if not normalized:
             raise ValueError("Agent name must not be empty")
+        if not callable(worker):
+            raise TypeError("Agent worker must be callable")
         if normalized in self._agents:
             raise ValueError(f"Agent already registered: {normalized}")
         self._agents[normalized] = worker
 
-    def get(self, name: str) -> AgentWorker:
+    def get(self, name: str) -> object:
         try:
             return self._agents[name]
         except KeyError as exc:
@@ -30,4 +26,10 @@ class AgentCoordinator:
     def delegate(self, name: str, task_description: str, context: object) -> str:
         if not task_description.strip():
             raise ValueError("Task description must not be empty")
-        return self.get(name)(task_description, context)
+        worker = self.get(name)
+        if not callable(worker):
+            raise TypeError(f"Registered agent is not callable: {name}")
+        result = worker(task_description, context)
+        if not isinstance(result, str):
+            raise TypeError("Agent worker must return a string")
+        return result
