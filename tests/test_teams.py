@@ -5,16 +5,23 @@ from __future__ import annotations
 import threading
 import time
 import unittest
+from pathlib import Path
 
 from agents.base import AgentResult
 from core.teams.engine import TeamEngine
+from core.teams.loader import load_team_catalog
 from core.teams.models import ContextMode, TaskDefinition, TaskStatus, TeamDefinition, WorkflowEventType
 from core.teams.registry import TeamRegistry
 
 
 class TeamEngineTests(unittest.TestCase):
     def make_team(self, *tasks: TaskDefinition, parallelism: int = 1, evidence: bool = True) -> TeamDefinition:
-        members = tuple(dict.fromkeys([task.agent_id for task in tasks] + [task.escalate_to for task in tasks if task.escalate_to]))
+        members = tuple(
+            dict.fromkeys(
+                [task.agent_id for task in tasks]
+                + [task.escalate_to for task in tasks if task.escalate_to]
+            )
+        )
         return TeamDefinition(
             id="test-team",
             name="Test Team",
@@ -53,6 +60,28 @@ class TeamEngineTests(unittest.TestCase):
         self.assertIn("final-gate", execution.checkpoints)
         self.assertEqual(execution.context["plan"], "approved")
         self.assertIn(WorkflowEventType.WORKFLOW_COMPLETED, [event.type for event in execution.events])
+
+    def test_isolated_context_requires_explicit_handoff(self) -> None:
+        def first(context):
+            return AgentResult("first", "succeeded", "done", evidence_ids=("first",), handoff={"secret": "handoff"})
+
+        def second(context):
+            with self.assertRaises(KeyError):
+                context.require("secret")
+            return AgentResult("second", "succeeded", "isolated", evidence_ids=("second",))
+
+        registry = TeamRegistry()
+        registry.register(
+            self.make_team(
+                TaskDefinition("first", "first"),
+                TaskDefinition("second", "second", depends_on=("first",), context_mode=ContextMode.ISOLATED),
+            )
+        )
+        execution = TeamEngine(registry).run(
+            "test-team", resolve_worker=self.resolver({"first": first, "second": second})
+        )
+        self.assertEqual(execution.status, TaskStatus.SUCCEEDED)
+        self.assertNotIn("secret", execution.context)
 
     def test_parallelism_is_bounded(self) -> None:
         active = 0
@@ -189,6 +218,14 @@ class TeamEngineTests(unittest.TestCase):
                     tasks=team.tasks,
                 )
             )
+
+    def test_canonical_team_catalog_loads(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        registry = load_team_catalog(root / "config" / "team-catalog.json")
+        team = registry.get("engineering-repair")
+        self.assertEqual(team.members, ("debugger", "developer", "tester"))
+        self.assertEqual(tuple(task.id for task in team.tasks), ("diagnose", "repair", "verify"))
+        self.assertEqual(registry.validate(), ())
 
 
 if __name__ == "__main__":
