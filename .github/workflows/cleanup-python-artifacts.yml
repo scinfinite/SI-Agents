@@ -1,0 +1,31 @@
+name: Cleanup tracked Python artifacts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Remove tracked Python build artifacts
+        run: |
+          set -euo pipefail
+          files="$(git ls-files -z | tr '\0' '\n' | grep -E '(^|/)__pycache__/|\.py[co]$' || true)"
+          if [ -z "$files" ]; then
+            echo "No tracked Python build artifacts found."
+            exit 0
+          fi
+          printf '%s\n' "$files"
+          printf '%s\n' "$files" | xargs -r git rm -f --
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .gitignore
+          git commit -m "chore: remove tracked Python build artifacts"
+          git push origin HEAD:${GITHUB_REF_NAME}
