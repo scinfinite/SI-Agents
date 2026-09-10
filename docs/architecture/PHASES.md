@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–32 complete and CI-verified; Phase 33 implementation complete pending final mainline verification.**
+**Current status: v2.0 baseline plus Phases 19–33 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -38,7 +38,7 @@
 30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation, dependency-aware composition, manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, and safety boundaries.
 31. Rules, Hooks & Event System — **Complete and CI-verified.** Immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation.
 32. Memory & Knowledge — **Complete and CI-verified.** Immutable scoped Memory, verified source-backed Knowledge, provenance/evidence contracts, fail-closed promotion, explicit supersession/contradiction tracking, deterministic context-aware retrieval, atomic schema-versioned persistence, lifecycle event integration, and targeted regression coverage.
-33. Security & Governance Center — **Implementation complete; final mainline CI verification pending.** Typed governance objects, fail-closed capability/permission decisions, approval expiry handling, declarative governance catalog, packaged governance configuration, deterministic read-only security scanner, audit-safe decision records, and adversarial regression coverage.
+33. Security & Governance Center — **Complete and CI-verified.** Typed governance objects, fail-closed capability/permission decisions, approval expiry handling, credential + external-egress denial, declarative governance catalog, packaged governance configuration, deterministic read-only security scanner, audit-safe decision records, and adversarial regression coverage.
 
 ## Release targets
 
@@ -47,7 +47,7 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 32:** complete and CI-verified
+- **Post-v2 validation through Phase 33:** complete and CI-verified
 
 ## Phase completion gate
 
@@ -55,15 +55,17 @@ A phase is not complete merely because files exist. Acceptance criteria must be 
 
 ## Phase 31 verification record
 
-Phase 31 was merged to `main` as commit `32db86c560053e831b0740c5614d63bf64d3ce6b` from PR #18. Final CI run **#735** passed on the exact Phase 31 source tree; the full pytest suite reported **381 passed in 6.16s**. The Phase 31 Rules/Hooks/Events architecture remains the policy/event boundary used by Phase 32.
+Phase 31 was merged to `main` as commit `32db86c560053e831b0740c5614d63bf64d3ce6b` from PR #18. Final CI run **#735** passed on the exact Phase 31 source tree; the full pytest suite reported **381 passed in 6.16s**.
 
 ## Phase 32 verification record
 
-Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution build, wheel installation verification, and the full pytest suite (**392 passed in 5.95s**). After merge, mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`; mainline pytest reported **392 passed in 5.47s**. The subsequent documentation/naming merge is at `c1937c70348e7b308c8274d2e3ce71cb9a07f0d8`, and mainline CI run **#777** passed all build, audit, Ruff, and test steps on that exact merge commit.
+Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distribution build, wheel installation verification, and the full pytest suite (**392 passed in 5.95s**). After merge, mainline CI run **#769** passed the same complete gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`; mainline pytest reported **392 passed in 5.47s**. Documentation/naming merge `c1937c70348e7b308c8274d2e3ce71cb9a07f0d8` was also verified by mainline CI **#777**.
 
 ## Phase 33 verification record
 
-Phase 33 implementation is on branch `phase-33-security-governance`. Final feature-branch and mainline CI results will be recorded here only after the implementation PR is merged and the exact resulting `main` commit receives a green CI run.
+Phase 33 feature CI run **#785** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite (**402 passed**). The implementation was merged to `main` as commit `765782377def8173ea235f1bbb3f8c3f9c194767`.
+
+Mainline CI run **#786** passed all build, wheel, repository-audit, Ruff, and pytest steps on that exact merge commit.
 
 ## Documentation structure
 
@@ -77,4 +79,4 @@ Phase 33 implementation is on branch `phase-33-security-governance`. Final featu
 
 ## Next phase
 
-**Phase 33 — Security & Governance Center.**
+**Phase 34 — Organization Expansion.**

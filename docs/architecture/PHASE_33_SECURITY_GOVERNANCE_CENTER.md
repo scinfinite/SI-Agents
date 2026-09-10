@@ -1,6 +1,6 @@
 # Phase 33 — Security & Governance Center
 
-**Status:** Implementation complete; awaiting final mainline CI verification.
+**Status:** Complete + CI verified.
 
 ## Scope
 
@@ -8,24 +8,9 @@ Phase 33 makes security and governance a first-class, inspectable SI Core bounda
 
 ## Governance objects
 
-`core/governance/models.py` defines typed contracts for:
-
-- Permission
-- Capability
-- Policy
-- Approval
-- Risk
-- Trust Boundary
-- Credential Reference
-- Data Classification
-- Cost Constraint
-- Governance Request / Decision
-
-All security-sensitive objects validate required scope, identity, risk, and lifecycle information at construction time.
+`core/governance/models.py` defines typed contracts for Permission, Capability, Policy, Approval, Risk, Trust Boundary, Credential Reference, Data Classification, Cost Constraint, and Governance Request/Decision.
 
 ## Authorization boundary
-
-The decision flow is:
 
 ```text
 Request → Agent/Subject → Skill/Capability → Tool → Environment
@@ -48,30 +33,15 @@ The existing `AuditLog` remains intentionally summary-only: it records action, d
 
 ## Security scanner
 
-`GovernanceScanner` performs a read-only deterministic repository scan. It reports:
-
-- secret-like literals;
-- broad/wildcard permissions;
-- unsafe hook/command patterns;
-- prompt-injection-like authority instructions;
-- unpinned package execution in configuration.
+`GovernanceScanner` performs a read-only deterministic repository scan. It reports secret-like literals, broad/wildcard permissions, unsafe hook/command patterns, prompt-injection-like authority instructions, and unpinned package execution in configuration.
 
 Each finding contains a stable rule ID, severity, path, evidence, remediation guidance, and auto-fixability flag. The scanner never modifies the repository and does not silently fix findings.
 
-The scanner intentionally avoids treating ordinary documentation URLs as security findings; security checks are grounded in executable/configuration patterns rather than generic prose.
+## Verification evidence
 
-## Adversarial guarantees
+Phase 33 feature CI run **#785** passed build/distribution verification, wheel installation, repository audit, Ruff, and the full pytest suite (**402 passed**). The implementation was merged to `main` as commit `765782377def8173ea235f1bbb3f8c3f9c194767`.
 
-Coverage includes:
-
-- missing scoped permissions;
-- invalid permission and trust-boundary definitions;
-- expired approvals;
-- credential + external-egress denial even with approval;
-- policy denial that cannot be overridden by approval;
-- malformed governance catalogs;
-- secret, wildcard permission, unsafe hook, injection, and unpinned-tool scanner findings;
-- scanner determinism and read-only behavior.
+Mainline CI run **#786** passed all build, wheel, repository-audit, Ruff, and pytest steps on that exact merge commit.
 
 ## External pattern review
 
@@ -79,12 +49,4 @@ Current public engineering references were reviewed for least privilege, configu
 
 ## Exit gate
 
-Phase 33 is complete only after:
-
-1. feature tests pass;
-2. repository audit passes;
-3. Ruff passes;
-4. distribution and wheel installation checks pass;
-5. full pytest passes;
-6. documentation is synchronized;
-7. the merged `main` commit receives a final green CI run.
+All Phase 33 exit gates are satisfied: implementation, adversarial regression coverage, repository audit, Ruff, distribution/wheel verification, full pytest, synchronized documentation, merge to `main`, and final green mainline CI.

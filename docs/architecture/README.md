@@ -47,7 +47,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 30 | `PHASE_30_PORTABLE_SKILLS.md` | Complete + CI verified |
 | 31 | `PHASE_31_RULES_HOOKS_EVENTS.md` | Complete + CI verified |
 | 32 | `PHASE_32_MEMORY_KNOWLEDGE.md` | Complete + CI verified |
-| 33 | `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` | Implementation complete; CI pending |
+| 33 | `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -62,12 +62,12 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 - `PHASE_30_PORTABLE_SKILLS.md` — canonical portable Skill contract and verification record.
 - `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events contract and verification record.
 - `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
-- `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract, scanner, and verification record.
+- `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract, scanner, and final verification record.
 - `CLI.md` — current SI CLI command surface, diagnostics, filtering, setup controls, and safety invariants.
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29–32 are complete and CI-verified; Phase 33 is implementation-complete pending final CI closure.
+`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phases 29–33 are complete and CI-verified.
 
 ```text
 29 SI Agent Personas       [complete]
@@ -78,7 +78,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
    ↓
 32 Memory / Knowledge      [complete]
    ↓
-33 Governance Center       [implementation complete]
+33 Governance Center       [complete]
    ↓
 34 Organization Expansion
    ↓
