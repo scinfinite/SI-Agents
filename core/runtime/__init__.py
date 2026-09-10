@@ -22,6 +22,7 @@ from core.runtime.session import RuntimeSession, SessionRegistry, SessionStatus
 from core.runtime.wire import WIRE_PROTOCOL, capabilities_to_dict, request_to_dict, response_to_dict
 
 __all__ = [
+    "WIRE_PROTOCOL",
     "CallbackHarnessAdapter",
     "ConformanceFailure",
     "HarnessAdapter",
@@ -42,7 +43,6 @@ __all__ = [
     "RuntimeSession",
     "SessionRegistry",
     "SessionStatus",
-    "WIRE_PROTOCOL",
     "adapter_metadata",
     "build_manifest",
     "capabilities_to_dict",
