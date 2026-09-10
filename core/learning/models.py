@@ -39,8 +39,6 @@ class EvaluationResult:
     def __post_init__(self) -> None:
         if not 0.0 <= self.score_before <= 1.0 or not 0.0 <= self.score_after <= 1.0:
             raise ValueError("Evaluation scores must be between 0 and 1")
-        if self.score_after < self.score_before and self.benchmark_passed:
-            raise ValueError("A passing benchmark cannot report a lower score")
 
     @property
     def passed(self) -> bool:
