@@ -14,14 +14,12 @@ def test_phase29_has_exactly_279_personas() -> None:
     assert all(p.read_text(encoding="utf-8").startswith("---\n") for p in paths)
 
 
-def test_phase29_source_index_is_one_to_one() -> None:
+def test_phase29_provenance_manifest_is_complete() -> None:
     data = json.loads((ROOT / "config/persona-source-index.json").read_text(encoding="utf-8"))
     assert data["agent_count"] == 279
-    entries = data["agents"]
-    assert len(entries) == 279
-    assert len({entry["id"] for entry in entries}) == 279
-    assert len({entry["source_path"] for entry in entries}) == 279
-    assert all(len(entry["source_sha"]) == 40 for entry in entries)
+    assert data["source_division_count"] == 18
+    assert len(data["snapshot"]) == 40
+    assert "repository" not in data
 
 
 def test_phase29_registry_and_catalog_match() -> None:
