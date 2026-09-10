@@ -63,9 +63,9 @@ Phase 32 feature-branch CI run **#762** passed the repository audit, Ruff, distr
 ## Documentation structure
 
 - `PHASE_1_FOUNDATION.md` through `PHASE_28_*` — historical phase records.
-- `PHASE_29.md` — canonical persona/parity/provenance/security/packaging record.
-- `PHASE_30.md` — canonical portable Skill record.
-- `PHASE_31.md` — canonical Rules/Hooks/Events record.
+- `PHASE_29_AGENT_PERSONA.md` — canonical persona/parity/provenance/security/packaging record.
+- `PHASE_30_PORTABLE_SKILLS.md` — canonical portable Skill record.
+- `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events record.
 - `PHASE_32.md` — canonical Memory/Knowledge contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
