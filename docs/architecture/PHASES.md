@@ -1,11 +1,13 @@
 # SI-Agents Implementation Phases
 
+**Current status: Alpha — Phases 1–5 complete and CI-verified.**
+
 1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
-2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete for the core control-plane scope.**
-3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox. **Complete for the defined Phase 2 scope.**
+2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
+3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox. **Complete.**
 4. Engineering Brain — decomposition, planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty. **Complete.**
 5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test. **Complete.**
-6. Skills Engine — reusable, verifiable engineering procedures.
+6. Skills Engine — reusable, verifiable engineering procedures. **Next.**
 7. Verification + Evidence — claims, evidence, confidence, regression, red-team checks, benchmarks.
 8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards.
 9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies.
@@ -19,8 +21,12 @@
 
 ## Release targets
 
-- Alpha: phases 0–5
-- Beta: phases 6–9
-- v1.0: phases 10–13
-- v1.5: phases 14–15
-- v2.0: phase 16
+- **Alpha:** phases 0–5 — **current target achieved**
+- **Beta:** phases 6–9
+- **v1.0:** phases 10–13
+- **v1.5:** phases 14–15
+- **v2.0:** phase 16
+
+## Verification rule
+
+A phase is not considered complete merely because its files exist. Its acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, and any CI failure discovered during completion must be fixed and rerun before the phase is declared complete.
