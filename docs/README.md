@@ -6,14 +6,19 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 
 1. **Project overview:** `../README.md`
 2. **Current phase/status:** `architecture/PHASES.md`
-3. **Phase 29 canonical record:** `architecture/PHASE_29_AGENT_PERSONA.md`
-4. **Phase 30 canonical record:** `architecture/PHASE_30_PORTABLE_SKILLS.md`
-5. **Phase 31 canonical record:** `architecture/PHASE_31_RULES_HOOKS_EVENTS.md`
-6. **Phase 32 canonical record:** `architecture/PHASE_32.md`
-7. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
-8. **Architecture index:** `architecture/README.md`
-9. **Engineering rules:** `../AGENTS.md`
-10. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
+3. **Architecture index:** `architecture/README.md`
+4. **Phase 29 canonical record:** `architecture/PHASE_29_AGENT_PERSONA.md`
+5. **Phase 30 canonical record:** `architecture/PHASE_30_PORTABLE_SKILLS.md`
+6. **Phase 31 canonical record:** `architecture/PHASE_31_RULES_HOOKS_EVENTS.md`
+7. **Phase 32 canonical record:** `architecture/PHASE_32_MEMORY_KNOWLEDGE.md`
+8. **Phase 33 canonical record:** `architecture/PHASE_33_SECURITY_GOVERNANCE_CENTER.md`
+9. **Phase 34 canonical record:** `architecture/PHASE_34_ORGANIZATION_EXPANSION.md`
+10. **Phase 35 canonical record:** `architecture/PHASE_35_CONTROL_API.md`
+11. **Phase 36 canonical record:** `architecture/PHASE_36_LOCAL_WEB_FOUNDATION.md`
+12. **Phase 37 canonical record:** `architecture/PHASE_37_CONTROL_CENTER.md`
+13. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
+14. **Engineering rules:** `../AGENTS.md`
+15. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
 
 ## Documentation map
 
@@ -26,7 +31,12 @@ docs/
     ├── PHASE_29_AGENT_PERSONA.md
     ├── PHASE_30_PORTABLE_SKILLS.md
     ├── PHASE_31_RULES_HOOKS_EVENTS.md
-    ├── PHASE_32.md                            # Canonical Phase 32 Memory/Knowledge record
+    ├── PHASE_32_MEMORY_KNOWLEDGE.md
+    ├── PHASE_33_SECURITY_GOVERNANCE_CENTER.md
+    ├── PHASE_34_ORGANIZATION_EXPANSION.md
+    ├── PHASE_35_CONTROL_API.md
+    ├── PHASE_36_LOCAL_WEB_FOUNDATION.md
+    ├── PHASE_37_CONTROL_CENTER.md
     ├── SI_AGENTS_V3.md
     ├── PHASE_1_FOUNDATION.md
     ├── EXECUTION_BACKENDS.md
@@ -38,10 +48,8 @@ The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been reti
 ## Source-of-truth rules
 
 - `PHASES.md` is authoritative for current implementation status and verification.
-- `PHASE_29_AGENT_PERSONA.md` is the canonical Phase 29 architecture/parity/provenance/verification record.
-- `PHASE_30_PORTABLE_SKILLS.md` is the canonical portable Skill contract and verification record.
-- `PHASE_31_RULES_HOOKS_EVENTS.md` is the canonical Rules/Hooks/Events contract and verification record.
-- `PHASE_32.md` is the canonical Memory/Knowledge contract and verification record.
+- `architecture/README.md` is the maintained architecture navigation/index.
+- `PHASE_29_AGENT_PERSONA.md` through `PHASE_37_CONTROL_CENTER.md` are canonical records for their respective post-v2 phases.
 - `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
 - Earlier `PHASE_<n>_*.md` files are historical implementation records and preserve phase-time evidence.
 - Runtime, governance, executable contracts, and CI results remain authoritative over prose.
@@ -64,6 +72,6 @@ Markdown is documentation/configuration, not an authority boundary. Imported or 
 
 ## Current baseline
 
-SI-Agents has completed **Phases 1–32 with CI verification**. Phase 32 feature CI run #762 passed repository audit, Ruff, distribution/wheel checks, and full pytest (**392 passed in 5.95s**). Final mainline CI run #769 then passed the same gates on merge commit `4662363dbc8e8a401734986d2c92a4be264042ac`, with **392 passed in 5.47s**.
+**Phases 1–37 are complete and CI-verified.** Phase 36 feature CI **#830** (`34505281056`) passed with **434 tests**, and final mainline CI **#833** (`34505742175`) passed all gates on main commit `f76717fa11f1ce275e0459724f6e6e871b4d1922`. Phase 37 feature verification passed the complete repository gates, and final mainline CI **#840** (`34507154878`) passed all gates on main commit `d54ab5a0e9a0dc5daed72e89bdaf842b8da59078`, with **441 tests passed**.
 
-**Next implementation: Phase 33 — Security & Governance Center.**
+**Next implementation: Phase 38 — Visual Organization & Workflow.**
