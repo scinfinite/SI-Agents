@@ -13,25 +13,33 @@ class Checkpoint:
     description: str
     id: str = field(default_factory=lambda: str(uuid4()))
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    snapshot_id: str | None = None
 
 
 class CheckpointStore:
-    """Store immutable task checkpoints for control-plane state.
-
-    This records a checkpoint marker; it does not snapshot or restore files. A
-    filesystem or Git-backed rollback mechanism must be implemented separately
-    before SI-Agents treats a checkpoint as protection against workspace changes.
-    """
+    """Store immutable task checkpoints and optional workspace snapshot IDs."""
 
     def __init__(self) -> None:
         self._checkpoints: dict[str, Checkpoint] = {}
 
-    def create(self, task_id: str, description: str) -> Checkpoint:
+    def create(
+        self,
+        task_id: str,
+        description: str,
+        *,
+        snapshot_id: str | None = None,
+    ) -> Checkpoint:
         if not task_id.strip():
             raise ValueError("Task ID must not be empty")
         if not description.strip():
             raise ValueError("Checkpoint description must not be empty")
-        checkpoint = Checkpoint(task_id=task_id.strip(), description=description.strip())
+        if snapshot_id is not None and not snapshot_id.strip():
+            raise ValueError("Snapshot ID must not be empty")
+        checkpoint = Checkpoint(
+            task_id=task_id.strip(),
+            description=description.strip(),
+            snapshot_id=snapshot_id.strip() if snapshot_id else None,
+        )
         self._checkpoints[checkpoint.id] = checkpoint
         return checkpoint
 
