@@ -1,0 +1,39 @@
+schema_version: "1.0"
+description: Language-neutral contract for programming-language knowledge.
+required:
+  - name
+  - family
+  - execution
+  - syntax
+  - semantics
+  - type_system
+  - memory_model
+  - concurrency
+  - runtime
+  - toolchain
+  - testing
+  - debugging
+fields:
+  name: canonical language name
+  family: language family or paradigm
+  versions: supported language versions
+  execution: compilation, interpretation, JIT, VM, or hybrid model
+  syntax: grammar and source-level constructs
+  semantics: evaluation and behavioral rules
+  type_system: typing model and conversions
+  memory_model: allocation, ownership, lifetime, and memory visibility
+  concurrency: processes, threads, async, actors, or language-specific model
+  runtime: runtime/VM characteristics and lifecycle
+  toolchain: compiler, formatter, linter, debugger, package/build tools
+  testing: unit, integration, property, benchmark, and standard test tooling
+  debugging: debugger, tracing, profiling, diagnostics, and failure analysis
+  security: language-specific security properties and hazards
+  ecosystems: major frameworks and package ecosystems
+  standards: language specifications and relevant standards
+validation:
+  validated_entry_requires:
+    - authoritative_source
+    - version_scope
+    - verification_method
+  unknowns_must_be_explicit: true
+  stale_versions_must_not_be_presented_as_current: true
