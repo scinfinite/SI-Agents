@@ -1,13 +1,24 @@
+from typing import ClassVar
+
 from core.learning.models import ImprovementProposal, ImprovementStatus
 
 
 class ImprovementRegistry:
     """In-memory proposal registry with explicit lifecycle transitions."""
 
-    _ALLOWED = {
-        ImprovementStatus.CANDIDATE: {ImprovementStatus.EVALUATED, ImprovementStatus.REJECTED},
-        ImprovementStatus.EVALUATED: {ImprovementStatus.APPROVED, ImprovementStatus.REJECTED},
-        ImprovementStatus.APPROVED: {ImprovementStatus.APPLIED, ImprovementStatus.REJECTED},
+    _ALLOWED: ClassVar[dict[ImprovementStatus, set[ImprovementStatus]]] = {
+        ImprovementStatus.CANDIDATE: {
+            ImprovementStatus.EVALUATED,
+            ImprovementStatus.REJECTED,
+        },
+        ImprovementStatus.EVALUATED: {
+            ImprovementStatus.APPROVED,
+            ImprovementStatus.REJECTED,
+        },
+        ImprovementStatus.APPROVED: {
+            ImprovementStatus.APPLIED,
+            ImprovementStatus.REJECTED,
+        },
         ImprovementStatus.APPLIED: {ImprovementStatus.ROLLED_BACK},
         ImprovementStatus.REJECTED: set(),
         ImprovementStatus.ROLLED_BACK: set(),
@@ -31,10 +42,19 @@ class ImprovementRegistry:
     def all(self) -> tuple[ImprovementProposal, ...]:
         return tuple(self._items.values())
 
-    def transition(self, proposal_id: str, status: ImprovementStatus, **changes: object) -> ImprovementProposal:
+    def transition(
+        self,
+        proposal_id: str,
+        status: ImprovementStatus,
+        **changes: object,
+    ) -> ImprovementProposal:
         current = self.get(proposal_id)
         if status not in self._ALLOWED[current.status]:
-            raise ValueError(f"Invalid improvement transition: {current.status.value} -> {status.value}")
-        updated = ImprovementProposal(**{**current.__dict__, **changes, "status": status})
+            raise ValueError(
+                f"Invalid improvement transition: {current.status.value} -> {status.value}"
+            )
+        updated = ImprovementProposal(
+            **{**current.__dict__, **changes, "status": status}
+        )
         self._items[proposal_id] = updated
         return updated
