@@ -21,6 +21,4 @@ class QuotaTracker:
         snapshot = self.get(provider_id)
         if snapshot is None:
             return True
-        if snapshot.remaining_requests == 0 or snapshot.remaining_tokens == 0:
-            return False
-        return True
+        return snapshot.remaining_requests != 0 and snapshot.remaining_tokens != 0
