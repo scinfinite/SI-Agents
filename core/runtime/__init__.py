@@ -3,8 +3,15 @@
 from core.runtime.conformance import ConformanceFailure, run_conformance
 from core.runtime.local import LocalHarnessAdapter
 from core.runtime.models import (
-    InvocationRequest, InvocationResponse, InvocationStatus, RuntimeCapabilities,
-    RuntimeError, RuntimeErrorCode, RuntimeEvent, RuntimeEventType, RuntimeKind,
+    InvocationRequest,
+    InvocationResponse,
+    InvocationStatus,
+    RuntimeCapabilities,
+    RuntimeError,
+    RuntimeErrorCode,
+    RuntimeEvent,
+    RuntimeEventType,
+    RuntimeKind,
 )
 from core.runtime.protocol import HarnessAdapter, HarnessMetadata, normalize_metadata
 from core.runtime.registry import HarnessRegistry
