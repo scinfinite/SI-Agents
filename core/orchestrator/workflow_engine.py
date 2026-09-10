@@ -38,7 +38,7 @@ class WorkflowEngine:
                 task.start()
                 try:
                     task.succeed(worker(task))
-                except Exception as exc:
+                except Exception as exc:  # noqa: BLE001 - worker failures belong to task state.
                     task.fail(str(exc))
                 self.tasks.persist()
                 completed.append(task)
@@ -53,7 +53,10 @@ class WorkflowEngine:
             task
             for task in self.tasks.all()
             if task.status is TaskStatus.PENDING
-            and any(self.tasks.get(dep).status in {TaskStatus.FAILED, TaskStatus.CANCELLED} for dep in task.dependencies)
+            and any(
+                self.tasks.get(dep).status in {TaskStatus.FAILED, TaskStatus.CANCELLED}
+                for dep in task.dependencies
+            )
         )
 
     def _visit(self, task_id: str, *, visiting: set[str], visited: set[str]) -> None:
