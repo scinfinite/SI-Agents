@@ -44,7 +44,8 @@ class GovernanceEngine:
         if request.subject and request.capabilities:
             for capability in request.capabilities:
                 matches = [
-                    item for item in snapshot.permissions
+                    item
+                    for item in snapshot.permissions
                     if item.subject == request.subject and item.capability == capability
                 ]
                 if not matches:
@@ -52,7 +53,15 @@ class GovernanceEngine:
                 elif not any(item.effect.value == "allow" for item in matches):
                     reasons.append(f"permission denies {request.subject}:{capability}")
 
-        hard_denials = [reason for reason in reasons if "denied" in reason or "no scoped permission" in reason or "permission denies" in reason or "credential-bearing external egress" in reason]
+        hard_denials = [
+            reason
+            for reason in reasons
+            if "denied" in reason
+            or "denies" in reason
+            or "no scoped permission" in reason
+            or "permission denies" in reason
+            or "credential-bearing external egress" in reason
+        ]
         if hard_denials:
             status = DecisionStatus.DENY
         elif reasons:
