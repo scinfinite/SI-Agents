@@ -120,7 +120,6 @@ class CodespaceRuntime:
         else:
             status = EnvironmentStatus.READY
 
-        workspace = env.get("GITHUB_WORKSPACE") or env.get("WORKSPACE_FOLDER") or "/workspaces"
         return EnvironmentReport(
             kind=self.kind if codespace else EnvironmentKind.UNKNOWN,
             status=status,
