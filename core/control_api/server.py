@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import urlparse
+
+from core.evidence.service import EvidenceService
 
 from .openapi import document
 from .service import ControlApiService
@@ -17,6 +20,10 @@ class ControlApiHandler(BaseHTTPRequestHandler):
     @property
     def service(self) -> ControlApiService:
         return self.server.control_service  # type: ignore[attr-defined]
+
+    @property
+    def evidence(self) -> EvidenceService:
+        return self.server.evidence_service  # type: ignore[attr-defined]
 
     def _request_id(self) -> str:
         value = self.headers.get("X-Request-ID", "").strip()
@@ -64,35 +71,59 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             "/api/v1/teams": self.service.teams(), "/api/v1/workflows": self.service.workflows(),
             "/api/v1/organization": self.service.organization(), "/api/v1/skills": self.service.skills(),
             "/api/v1/memory": self.service.memory(), "/api/v1/governance": self.service.governance_state(),
+            "/api/v1/evidence": self.service.evidence(), "/api/v1/evidence/records": self.evidence.list(),
+            "/api/v1/environments": self.service.environments(), "/api/v1/harnesses": self.service.harnesses(),
+            "/api/v1/settings": self.service.settings(), "/api/v1/visualization": self.service.visualization(),
             "/api/v1/events": self.service.events(), "/api/v1/runs": self.service.runs(),
         }
-        if path in routes:
-            self._send(200, routes[path])
-            return
+        if path.startswith("/api/v1/evidence/"):
+            evidence_id = path.removeprefix("/api/v1/evidence/")
+            if evidence_id.endswith("/verify"):
+                raise KeyError(path)
+            return self._send(200, self.evidence.get(evidence_id))
         if path.startswith("/api/v1/runs/"):
-            run_id = path.removeprefix("/api/v1/runs/")
+            suffix = path.removeprefix("/api/v1/runs/")
+            if suffix.endswith("/timeline"):
+                return self._send(200, self.evidence.timeline(suffix.removesuffix("/timeline")))
             try:
-                self._send(200, self.service.get_run(run_id))
+                self._send(200, self.service.get_run(suffix))
             except KeyError:
                 self._send(404, {"error": "not_found", "message": "run not found", "request_id": self._request_id()})
+            return
+        if path in routes:
+            self._send(200, routes[path])
             return
         self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
 
     def do_POST(self):
         path = urlparse(self.path).path.rstrip("/")
-        if path != "/api/v1/runs":
-            self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
-            return
         try:
             payload = self._read_json()
-            result = self.service.create_run(payload)
+            if path == "/api/v1/runs":
+                result = self.service.create_run(payload)
+                self._send(202, result)
+                return
+            if path == "/api/v1/evidence":
+                result = self.evidence.record(payload)
+                self._send(201, result)
+                return
+            if path.startswith("/api/v1/evidence/") and path.endswith("/verify"):
+                evidence_id = path.removeprefix("/api/v1/evidence/").removesuffix("/verify")
+                state = payload.get("verification")
+                if not isinstance(state, str):
+                    raise ValueError("verification is required")
+                self._send(200, self.evidence.verify(evidence_id, state))
+                return
         except PermissionError as exc:
             self._send(403, {"error": "governance_denied", "message": str(exc), "request_id": self._request_id()})
             return
-        except (TypeError, ValueError) as exc:
+        except KeyError:
+            self._send(404, {"error": "not_found", "message": "resource not found", "request_id": self._request_id()})
+            return
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
             self._send(400, {"error": "invalid_request", "message": str(exc), "request_id": self._request_id()})
             return
-        self._send(202, result)
+        self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
 
     def log_message(self, format, *args):
         return
@@ -104,4 +135,5 @@ def create_server(service: ControlApiService, host: str = "127.0.0.1", port: int
         raise ValueError("Control API is localhost-only; explicit remote exposure is not supported by this transport")
     server = ThreadingHTTPServer((host, port), ControlApiHandler)
     server.control_service = service  # type: ignore[attr-defined]
+    server.evidence_service = EvidenceService(str(Path(service.root) / ".si" / "evidence.v1.json"))  # type: ignore[attr-defined]
     return server

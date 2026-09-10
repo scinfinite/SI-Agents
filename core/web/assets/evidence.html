@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>SI-Agents Evidence Explorer</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <main class="content evidence-page">
+    <header class="topbar">
+      <div><p class="eyebrow">EVIDENCE & OBSERVABILITY</p><h1>Evidence Explorer</h1><p class="muted">Inspect recorded claims, provenance, confidence, verification state, and run timelines.</p></div>
+      <div class="top-actions"><a class="button" href="/">Control Center</a><button id="refresh" class="button" type="button">Refresh</button></div>
+    </header>
+    <section class="card">
+      <label for="run-id">Filter by run ID</label>
+      <input id="run-id" type="text" placeholder="Optional run_…">
+    </section>
+    <section id="summary" class="metric-grid" aria-live="polite"></section>
+    <section id="error" class="error" role="alert" hidden></section>
+    <section id="records" aria-live="polite"></section>
+  </main>
+  <script src="/assets/evidence.js" defer></script>
+</body>
+</html>
