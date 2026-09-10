@@ -35,3 +35,12 @@ def test_checkpoint_rejects_empty_values() -> None:
 def test_unknown_checkpoint_is_an_error() -> None:
     with pytest.raises(CheckpointError, match="Unknown checkpoint"):
         CheckpointStore().get("missing")
+
+
+def test_checkpoint_store_round_trips_metadata(tmp_path) -> None:
+    path = tmp_path / "checkpoints.json"
+    store = CheckpointStore(path)
+    checkpoint = store.create("task-1", "before change", snapshot_id="snapshot-1")
+
+    restored = CheckpointStore(path)
+    assert restored.get(checkpoint.id) == checkpoint
