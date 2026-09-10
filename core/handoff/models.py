@@ -87,9 +87,9 @@ class HandoffEnvelope:
         return data
 
     @classmethod
-    def from_dict(cls, payload: dict[str, Any]) -> "HandoffEnvelope":
+    def from_dict(cls, payload: dict[str, Any]) -> HandoffEnvelope:
         if not isinstance(payload, dict):
-            raise ValueError("handoff must be a JSON object")
+            raise TypeError("handoff must be a JSON object")
         if payload.get("schema") != "si.handoff.v1":
             raise ValueError("unsupported handoff schema")
         supplied_digest = payload.get("sha256")
