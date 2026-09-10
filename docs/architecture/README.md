@@ -7,7 +7,7 @@ Use these documents in this order when determining project state:
 1. **`PHASES.md`** — current implementation status and verification evidence.
 2. **`SI_AGENTS_V3.md`** — future architecture and Phase 30–43 roadmap after Phase 29 completion.
 3. **Detailed phase documents** — historical contracts, boundaries, and completion evidence.
-4. **`FOUNDATION.md` / `CONTROL_PLANE.md` / `EXECUTION_BACKENDS.md`** — cross-cutting architectural boundaries.
+4. **`PHASE_1_FOUNDATION.md` / `EXECUTION_BACKENDS.md`** — cross-cutting architectural boundaries; the Phase 2 control-plane contract is consolidated into `PHASE_2_CONTROL_PLANE.md`.
 
 Code, executable contracts, governance decisions, and CI results outrank documentation when they conflict; the conflict must then be documented and corrected.
 
@@ -15,6 +15,7 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 
 | Phase | Document | State |
 |---:|---|---|
+| 1 | `PHASE_1_FOUNDATION.md` | Complete |
 | 2 | `PHASE_2_CONTROL_PLANE.md` | Complete |
 | 3 | `PHASE_3_TOOL_SYSTEM.md` | Complete |
 | 4 | `PHASE_4_ENGINEERING_BRAIN.md` | Complete |
@@ -44,13 +45,11 @@ Code, executable contracts, governance decisions, and CI results outrank documen
 | 28 | `PHASE_28_CROSS_ENVIRONMENT_HANDOFF.md` | Complete + CI verified |
 | 29 | `PHASE_29_AGENT_PERSONAS.md` | Complete + CI verified |
 
-Phase 1 is represented by `FOUNDATION.md` and the repository-level engineering/governance documents rather than a `PHASE_1_*.md` file.
-
 ## Cross-cutting architecture
 
-- `FOUNDATION.md` — project principles and foundational boundaries.
-- `CONTROL_PLANE.md` — orchestration/control-plane contracts.
-- `EXECUTION_BACKENDS.md` — execution backend separation.
+- `PHASE_1_FOUNDATION.md` — project principles and foundational boundaries.
+- `PHASE_2_CONTROL_PLANE.md` — consolidated orchestration, authorization, execution-record, checkpoint, evidence, and execution-backend control-plane contract.
+- `EXECUTION_BACKENDS.md` — execution backend separation and trust-boundary limitations.
 - `PHASE_17_HARNESS_RUNTIME_INTEROPERABILITY.md` — vendor-neutral runtime boundary.
 - `PHASE_22_UNIVERSAL_HARNESS_INTEGRATION.md` — language-neutral harness contract.
 - `PHASE_24_OMNIROUTE_INTEGRATION.md` — model/provider delegation boundary.
@@ -60,7 +59,7 @@ Phase 1 is represented by `FOUNDATION.md` and the repository-level engineering/g
 
 ## v3 roadmap
 
-`SI_AGENTS_V3.md` defines the remaining Phases 30–43. The implementation order is intentionally layered:
+`SI_AGENTS_V3.md` defines the remaining **Phases 30–43**. Phase 29 is complete.
 
 ```text
 29 Personas                 [complete]
@@ -98,4 +97,4 @@ The Web and TUI are operator surfaces over one SI Core and one Control API; they
 
 ## Documentation maintenance
 
-Do not rewrite completed phase documents merely to reflect later phases. Put current status and cross-phase changes in `PHASES.md`, and put future work in `SI_AGENTS_V3.md`. Any material implementation or verification change must update the appropriate status/evidence record.
+Historical phase documents preserve the phase-time implementation record. Current status and cross-phase changes belong in `PHASES.md`; future work belongs in `SI_AGENTS_V3.md`. When later phases materially affect a boundary, record the current implication in the authoritative status/index documents without rewriting history to claim that later functionality existed in the earlier phase.
