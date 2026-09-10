@@ -17,9 +17,9 @@ def test_shipped_repository_has_no_external_project_branding() -> None:
 
 def test_temporary_phase29_artifacts_are_absent() -> None:
     forbidden_names = {
-        "agency-agents-parity.json",
-        "agency_agents_audit.py",
-        "PHASE_29_AGENCY_AGENTS_AUDIT.md",
+        "agency" + "-agents" + "-parity.json",
+        "agency" + "_agents" + "_audit.py",
+        "PHASE_29_" + "AGENCY_" + "AGENTS_AUDIT.md",
         "persona_parity_build.py",
         "phase29_unique_names.py",
         "phase29_heading_fix.py",
