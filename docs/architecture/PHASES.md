@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–39 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–40 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -45,6 +45,7 @@
 37. Control Center — **Complete and CI-verified.** Live dependency-free operator UI over the Control API with Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings views; sanitized read-model extensions; strict no-execution browser boundary; OpenAPI synchronization; and browser/read-model regression coverage.
 38. Visual Organization & Workflow — **Complete and CI-verified.** Deterministic graph read model for divisions, teams, agents, Skills, capabilities, permissions, workflows, steps, dependencies, and relationships; interactive dependency-free SVG organization/workflow/security views with filtering, selection, pan/zoom/reset, keyboard access, current control-plane run state, OpenAPI synchronization, and execution-boundary regression coverage.
 39. Agent Builder & Customization — **Complete and CI-verified.** Immutable bounded agent drafts, canonical-agent projections, deterministic non-escalation validation, durable atomic local draft storage, revision/archive/test lifecycle, deterministic Markdown authoring preview, dependency-free Web authoring surface, versioned API/OpenAPI routes, audited mutations, and regression coverage for authority boundaries and Web behavior.
+40. Evidence & Observability — **Complete and CI-verified.** Immutable typed evidence records for facts, observations, inferences, and uncertainties; bounded confidence and explicit verification states; provenance, run relationships, contradiction/supersession tracking; atomic restrictive local persistence; Control API evidence detail/record/verification and run timelines; OpenAPI synchronization; dependency-free Evidence Explorer; and regression coverage for persistence, API routing, security boundaries, and epistemic state handling.
 
 ## Release targets
 
@@ -53,11 +54,15 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 39:** complete and CI-verified
+- **Post-v2 validation through Phase 40:** complete and CI-verified
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, every CI failure must be fixed and rerun, and documentation must never claim a stronger state than implementation and verification evidence support.
+
+## Phase 40 verification record
+
+Phase 40 implementation merged from PR #40 as squash commit `2e363034f8140ea8ecc90cf7c0f2fe73`. Mainline CI **#860** (`34512774276`) deliberately caught one HTTP routing regression: `/api/v1/evidence/records` was shadowed by the evidence detail route; the run reported **457 passed, 1 failed**. The issue was isolated, fixed in PR #41, and merged as `4900401c48af52a6e8d901b622575bc49bdab563`. Final mainline CI **#862** (`34513000130`) on that fix commit passed all setup, checkout, Python/tooling, distribution build, wheel installation, repository audit, Ruff, full pytest, diagnostics, and cleanup gates with **458 passed**. This final green mainline run is the Phase 40 implementation verification gate.
 
 ## Phase 36 verification record
 
@@ -73,7 +78,7 @@ Phase 38 implementation merged from PR #35 as squash commit `657530eefa41794fb42
 
 ## Phase 39 verification record
 
-Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`. Feature CI **#853** (`34511009965`) passed build, wheel-install, repository-audit, Ruff, pytest, diagnostics, and cleanup gates. The documentation-closed mainline CI is recorded in the final closure update after the docs merge.
+Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`. Feature CI **#853** (`34511009965`) passed build, wheel-install, repository-audit, Ruff, pytest, diagnostics, and cleanup gates. Documentation closure and final mainline verification were recorded in the Phase 39 closure commits; final mainline CI **#857** (`34511559646`) was green on main commit `f02768edba12cdf013fe9a88f34429e56192ffb1`.
 
 ## Documentation structure
 
@@ -88,8 +93,9 @@ Phase 39 implementation merged from PR #38 as squash commit `22c381e23c6efb2e2ea
 - `PHASE_37_CONTROL_CENTER.md` — canonical Control Center contract and final verification record.
 - `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` — canonical Visual Organization & Workflow contract and final verification record.
 - `PHASE_39_AGENT_BUILDER.md` — canonical Agent Builder & Customization contract and final verification record.
+- `PHASE_40_EVIDENCE_OBSERVABILITY.md` — canonical Evidence & Observability contract and final verification record.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 40 — Evidence & Observability.**
+**Phase 41 — TUI.**

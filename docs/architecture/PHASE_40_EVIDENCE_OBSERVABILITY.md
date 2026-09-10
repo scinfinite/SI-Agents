@@ -50,7 +50,9 @@ The browser remains a view over the Control API and does not gain execution auth
 
 ## Verification
 
-Phase 40 must be considered closed only after feature CI and the final documentation-closed mainline CI both pass build, wheel installation, repository audit, Ruff, full pytest, diagnostics, and cleanup gates.
+Phase 40 implementation merged from PR #40 as `2e363034f8140ea8ecc90cf7c0f2fe73`. Mainline CI **#860** (`34512774276`) deliberately exposed one route-shadowing regression: `/api/v1/evidence/records` was matched as an evidence ID, producing **457 passed, 1 failed**. The defect was fixed in PR #41 and merged as `4900401c48af52a6e8d901b622575bc49bdab563`.
+
+Final mainline CI **#862** (`34513000130`) on `4900401c48af52a6e8d901b622575bc49bdab563` passed every repository gate: setup, checkout, Python/tooling, distribution build, wheel installation, repository audit, Ruff, full pytest, diagnostics, and cleanup. The final pytest result was **458 passed**. This green mainline run is the final Phase 40 closure gate.
 
 ## Next phase
 
