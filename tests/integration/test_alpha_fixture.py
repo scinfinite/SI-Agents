@@ -2,7 +2,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 FIXTURE = Path(__file__).parents[1] / "fixtures" / "broken_project"
 CASE = FIXTURE / "acceptance_case.py"
 
