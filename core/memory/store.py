@@ -41,12 +41,25 @@ class MemoryStore:
             temp.flush()
             os.fsync(temp.fileno())
             temporary_path = Path(temp.name)
-        os.replace(temporary_path, self.path)
+        try:
+            os.replace(temporary_path, self.path)
+        finally:
+            temporary_path.unlink(missing_ok=True)
 
     @staticmethod
-    def _memory(raw: dict) -> MemoryEntry:
+    def _evidence(items: list[dict]) -> tuple[MemoryEvidence, ...]:
+        normalized = []
+        for item in items:
+            item = dict(item)
+            if item.get("captured_at"):
+                item["captured_at"] = datetime.fromisoformat(item["captured_at"])
+            normalized.append(MemoryEvidence(**item))
+        return tuple(normalized)
+
+    @classmethod
+    def _memory(cls, raw: dict) -> MemoryEntry:
         raw = dict(raw)
-        raw["evidence"] = tuple(MemoryEvidence(**item) for item in raw.get("evidence", ()))
+        raw["evidence"] = cls._evidence(raw.get("evidence", ()))
         for key in ("created_at", "expires_at"):
             if raw.get(key):
                 raw[key] = datetime.fromisoformat(raw[key])
@@ -57,10 +70,10 @@ class MemoryStore:
             raw[key] = tuple(raw.get(key, ()))
         return MemoryEntry(**raw)
 
-    @staticmethod
-    def _knowledge(raw: dict) -> KnowledgeEntry:
+    @classmethod
+    def _knowledge(cls, raw: dict) -> KnowledgeEntry:
         raw = dict(raw)
-        raw["evidence"] = tuple(MemoryEvidence(**item) for item in raw.get("evidence", ()))
+        raw["evidence"] = cls._evidence(raw.get("evidence", ()))
         if raw.get("created_at"):
             raw["created_at"] = datetime.fromisoformat(raw["created_at"])
         raw["tags"] = tuple(raw.get("tags", ()))
