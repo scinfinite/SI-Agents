@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–30 implemented and CI-verified; Phase 31 implementation complete pending final mainline CI.**
+**Post-v2 evolution — Phases 19–31 implemented and CI-verified.**
 
 Phase 29 provides the complete SI-native specialist persona layer: **279 Markdown personas across 18 SI-owned domain divisions**, with typed catalog parity, deterministic parsing/validation, security boundaries, provenance separation, package coverage, and CI verification.
 
@@ -14,7 +14,7 @@ Phase 31 adds explicit Rules, Hooks, and Events: immutable bounded lifecycle eve
 
 ## Completed phases
 
-Phases 1–30 are complete as documented in `docs/architecture/PHASES.md`. Phase 31 is implementation-complete and remains gated only on final mainline CI evidence.
+Phases 1–31 are complete as documented in `docs/architecture/PHASES.md`.
 
 ## SI Agent Persona System
 
@@ -110,8 +110,8 @@ Cross-environment handoffs transfer validated state as data only. They cannot gr
 
 ## Verification baseline
 
-Phase 30 was merged to `main` as `62972acf20a0da53bf81161c2108a506dbdad907`, and mainline CI run **#727** passed successfully. Phase 31's final mainline CI is the remaining exit gate.
+Phase 30 was merged to `main` as `62972acf20a0da53bf81161c2108a506dbdad907`, and mainline CI run **#727** passed successfully. Phase 31 was merged as `32db86c560053e831b0740c5614d63bf64d3ce6b` after final CI run **#735** passed on the exact Phase 31 source tree. That run completed the repository audit, Ruff, distribution/wheel checks, and the full test suite (**381 passed**).
 
 ## Next phase
 
-**Phase 32 — Memory & Knowledge** begins only after Phase 31's final mainline CI verification is green.
+**Phase 32 — Memory & Knowledge.**
