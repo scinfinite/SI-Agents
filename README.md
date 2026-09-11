@@ -4,45 +4,69 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v3 is complete and closed. v4 planning is established; Phase 44 has not started.**
+**v3 is complete and closed. v4 planning is established through Phase 71; Phase 44 implementation has not started on `main`.**
 
 The verified v3 foundation includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, localhost-first Web, Control Center, visual organization/workflow inspection, Agent Builder, evidence-first observability, TUI, the governed Harness Deployment Center, and final cross-cutting integration hardening.
 
-The v4 goal is to evolve this foundation into a real agent operating system with persistent execution state, parallel task orchestration, live events/control, first-class OpenCode + OmniRoute integration, substantially improved Web/TUI/CLI surfaces, workflow automation, and a simple npm-based installation experience.
+The v4 goal is to evolve this foundation into a real agent operating system with persistent execution state, parallel task orchestration, live events/control, first-class OpenCode + OmniRoute integration, richer agent/team/workflow capabilities, security and economics controls, advanced Web/TUI/CLI surfaces, and a simple npm-based installation experience.
 
-## v4 planning
+## V4 roadmap
 
-The complete v4 plan is `docs/architecture/SI_AGENTS_V4_PLAN.md` and covers Phases 44–55.
+The complete v4 plan is `docs/architecture/SI_AGENTS_V4_PLAN.md` and covers Phases 44–71.
 
 ```text
-44 Runtime
+44 Runtime Foundation
  → 45 Event + State
  → 46 Scheduler / Executor
  → 47 OpenCode Bridge
  → 48 OmniRoute
- → 49 Web 2.0
- → 50 TUI 2.0
- → 51 CLI 2.0
- → 52 Agent / Team Builder
- → 53 Workflow / Automation
- → 54 npm Distribution / Setup
- → 55 End-to-End Validation
+ → 49 Agent + Team Builder
+ → 50 Capability Authorization
+ → 51 Checkpoints + Resume
+ → 52 Context / Memory Economics
+ → 53 Persistent Sessions
+ → 54 Human-in-the-Loop
+ → 55 Durable Waiting + Scheduling
+ → 56 Intelligent Routing + Economics
+ → 57 Security Platform
+ → 58 Workspace / Worktree Lifecycle
+ → 59 Observability
+ → 60 Evaluation + Benchmarking
+ → 61 Continuous Improvement
+ → 62 Cross-Runtime / Cross-Harness
+ → 63 Ecosystem / Marketplace
+ → 64 SDK / Developer Platform
+ → 65 Workflow + Automation
+ → 66 Advanced Web Control Plane
+ → 67 Advanced TUI Control Center
+ → 68 Advanced CLI Platform
+ → 69 npm Distribution + Setup
+ → 70 End-to-End Production Validation
+ → 71 Final Production Hardening
 ```
 
-The target public installation experience is:
+The roadmap deliberately builds the runtime, state, scheduling, governance, security and developer foundations before the final workflow, Web, TUI, CLI and distribution layers. Web is the richest localhost-first interface; TUI is the fastest terminal operator interface; CLI is the strongest automation/scripting interface. All three share the same SI Core, Control API and authoritative state.
+
+## Target installation
 
 ```bash
 npm install -g @scinfinite/si
 si setup
 ```
 
-This is a v4 target, not a currently released npm contract.
+This remains a V4 target and is not a claim of a currently released npm contract.
 
-## Current architecture principle
+## Architecture principles
 
-There is one SI Core and one Control API. Web, TUI and CLI are control surfaces, not competing authorities. OpenCode remains the interactive coding harness, and OmniRoute remains the model/provider routing layer.
-
-The v4 implementation order deliberately starts with the execution runtime and state/event contracts before rebuilding presentation surfaces. This prevents Web/TUI/CLI from becoming sophisticated dashboards over incomplete execution semantics.
+- One SI Core and one authoritative Control API.
+- Web, TUI and CLI are control surfaces, not competing authorities.
+- OpenCode remains the interactive coding harness.
+- OmniRoute remains the model/provider routing layer.
+- Runtime execution mechanics cannot grant authority or bypass governance.
+- Evidence is required before completion claims.
+- Secrets remain isolated from execution state wherever possible.
+- Surface parity means operationally important capabilities remain available consistently across Web/TUI/CLI where appropriate.
+- ECC, Agency Agents, OpenCode, OmniRoute and n8n are external reference systems for engineering patterns, not copied dependencies or authorities over SI governance.
 
 ## Current verification baseline
 
@@ -53,9 +77,9 @@ Phase 43 final correction merged as `52588921c0956f091fb569c4b51e9fd741790744`. 
 - `docs/README.md` — documentation navigation and current baseline.
 - `docs/architecture/PHASES.md` — authoritative current status.
 - `docs/architecture/README.md` — architecture index.
-- `docs/architecture/SI_AGENTS_V4_PLAN.md` — v4 planning baseline.
-- `docs/architecture/SI_AGENTS_V3.md` — completed v3 architecture record.
-- `docs/architecture/PHASE_43_INTEGRATION_HARDENING.md` — final v3 phase evidence.
+- `docs/architecture/SI_AGENTS_V4_PLAN.md` — V4 roadmap and acceptance gates through Phase 71.
+- `docs/architecture/SI_AGENTS_V3.md` — completed V3 architecture record.
+- `docs/architecture/PHASE_43_INTEGRATION_HARDENING.md` — final V3 phase evidence.
 
 ## Engineering loop
 
