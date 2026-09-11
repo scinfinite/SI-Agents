@@ -5,14 +5,7 @@ import time
 
 import pytest
 
-from core.runtime.execution import (
-    AuthorizedTask,
-    ExecutionRuntime,
-    ExecutionStore,
-    RuntimeErrorCode,
-    RuntimeFailure,
-    State,
-)
+from core.runtime.execution import AuthorizedTask, ExecutionRuntime, ExecutionStore, RuntimeErrorCode, RuntimeFailure, State
 
 
 class Adapter:
@@ -20,7 +13,6 @@ class Adapter:
         self.value = value or {"ok": True}
         self.fail = fail
         self.cancelled = False
-        self.paused = False
         self.resumed = False
 
     def invoke(self, task, cancel_event):
@@ -32,7 +24,7 @@ class Adapter:
         self.cancelled = True
 
     def pause(self, execution_id):
-        self.paused = True
+        pass
 
     def resume(self, execution_id):
         self.resumed = True
@@ -145,6 +137,39 @@ def test_invalid_transition_is_rejected():
     with pytest.raises(RuntimeFailure) as exc:
         store.transition("exec-1", State.SUCCEEDED)
     assert exc.value.code == RuntimeErrorCode.INVALID_TRANSITION
+
+
+def test_terminal_state_is_immutable_under_cancel():
+    store = ExecutionStore()
+    runtime = ExecutionRuntime(store)
+    runtime.accept(AuthorizedTask("task-1", {}, execution_id="exec-1"))
+    runtime.run("exec-1", Adapter())
+    result = runtime.cancel("exec-1")
+    assert result.state == State.SUCCEEDED
+    assert result.cancel_requested is False
+
+
+def test_concurrent_terminal_writers_produce_one_terminal_result():
+    store = ExecutionStore()
+    runtime = ExecutionRuntime(store)
+    runtime.accept(AuthorizedTask("task-1", {}, execution_id="exec-1"))
+    barrier = threading.Barrier(3)
+
+    def finish(target):
+        barrier.wait()
+        try:
+            store.transition("exec-1", State.RUNNING)
+            store.transition("exec-1", target)
+        except RuntimeFailure:
+            pass
+
+    threads = [threading.Thread(target=finish, args=(State.SUCCEEDED,)), threading.Thread(target=finish, args=(State.FAILED,))]
+    for thread in threads:
+        thread.start()
+    barrier.wait()
+    for thread in threads:
+        thread.join()
+    assert store.get("exec-1").state in {State.SUCCEEDED, State.FAILED}
 
 
 def test_inline_secret_like_fields_are_rejected():
