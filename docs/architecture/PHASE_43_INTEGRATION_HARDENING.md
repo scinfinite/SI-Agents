@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation complete; closure pending final mainline CI.**
+**Complete + CI-verified.**
 
 ## Purpose
 
@@ -25,15 +25,13 @@ The final release gate continues to require independent evidence for tests, lint
 
 The integration audit is deliberately complementary to CI: it checks architectural consistency while CI verifies installation, packaging, lint, repository audit, and the complete automated test suite.
 
-## Verification plan
+## Verification evidence
 
-1. Run the integration audit against the repository.
-2. Build distributions and verify wheel installation.
-3. Run the repository audit.
-4. Run pinned Ruff.
-5. Run the complete pytest suite, including adversarial integration tests.
-6. Merge only after the feature branch gates are green.
-7. Synchronize documentation and require a final mainline CI run on the documentation-closed commit.
+- Phase 42 closure was verified before Phase 43 started: main `ea901db9ed45a13c78c6a980aa3e53b0175049f9`, final CI **#881** (`34555338259`) green.
+- Phase 43 implementation merged as main commit `d4aaddc0008d6af05161d8b79dfc1f9507e0c61e`.
+- Mainline CI **#884** (`34557632059`) caught a schema-version compatibility regression in the new integration audit; all other repository gates were green and pytest was the failing gate.
+- The regression was corrected in follow-up PR **#50**, merged as `52588921c0956f091fb569c4b51e9fd741790744`.
+- Final mainline CI **#886** (`34558002476`) passed every gate, including distribution build, wheel installation, repository audit, Ruff, and the complete pytest suite.
 
 ## Security/adversarial coverage
 
@@ -41,13 +39,14 @@ The integration audit is deliberately complementary to CI: it checks architectur
 - Invalid canonical catalog shape fails closed.
 - Deployment `APPLIED` state or apply/deploy method is rejected.
 - Required operator entry points are checked in packaging metadata.
+- Schema-versioned governance and organization configurations are accepted only when their version marker is present and valid.
 - The verification CLI returns non-zero when any integration check fails.
 - No check has authority to execute downstream work.
 
 ## Completion gate
 
-This phase is not considered complete until the implementation merge, documentation synchronization, and final mainline CI verification are all green.
+The implementation, regression fix, documentation synchronization, and final mainline CI verification are all green. Phase 43 is therefore closed.
 
 ## Next state
 
-Phase 43 is the final v3 implementation phase. After closure, subsequent work should be treated as maintenance, defect fixes, security updates, or explicitly versioned post-v3 features rather than an unfinished v3 phase.
+Phase 43 is the final v3 implementation phase. Subsequent work is maintenance, defect/security fixes, or explicitly versioned post-v3 evolution rather than unfinished v3 implementation.

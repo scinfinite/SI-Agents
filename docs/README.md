@@ -1,6 +1,6 @@
 # SI-Agents Documentation
 
-This directory is the maintained documentation surface for SI-Agents. Documentation is organized so operators can distinguish **current truth**, **historical implementation records**, **future roadmap**, and **governance/policy**.
+This directory is the maintained documentation surface for SI-Agents. Documentation is organized so operators can distinguish **current truth**, **historical implementation records**, **post-v3 maintenance direction**, and **governance/policy**.
 
 ## Start here
 
@@ -21,22 +21,31 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 15. **Phase 40 canonical record:** `architecture/PHASE_40_EVIDENCE_OBSERVABILITY.md`
 16. **Phase 41 canonical record:** `architecture/PHASE_41_TUI.md`
 17. **Phase 42 canonical record:** `architecture/PHASE_42_HARNESS_DEPLOYMENT_CENTER.md`
-18. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
-19. **Engineering rules:** `../AGENTS.md`
-20. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
+18. **Phase 43 canonical record:** `architecture/PHASE_43_INTEGRATION_HARDENING.md`
+19. **v3 architecture:** `architecture/SI_AGENTS_V3.md`
+20. **Engineering rules:** `../AGENTS.md`
+21. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
 
 ## Source-of-truth rules
 
 - `architecture/PHASES.md` is authoritative for current implementation status and verification.
 - `architecture/README.md` is the maintained architecture navigation/index.
-- `PHASE_29_AGENT_PERSONA.md` through `PHASE_42_HARNESS_DEPLOYMENT_CENTER.md` are canonical records for their respective post-v2 phases.
-- `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
+- `PHASE_29_AGENT_PERSONA.md` through `PHASE_43_INTEGRATION_HARDENING.md` are canonical records for their respective post-v2 phases.
+- `SI_AGENTS_V3.md` records the completed v3 architecture and post-v3 direction.
 - Earlier `PHASE_<n>_*.md` files are historical implementation records and preserve phase-time evidence.
 - Runtime, governance, executable contracts, and CI results remain authoritative over prose.
 - Documentation status must never outrun implementation or CI evidence.
 
+## Documentation lifecycle
+
+When a maintenance change changes an implementation contract: implement and test; run CI; record verified results in the current status/phase record when relevant; update navigation/root documentation; preserve historical evidence.
+
+## Security and provenance
+
+Markdown is documentation/configuration, not an authority boundary. Imported or externally inspired content must not silently grant permissions or execute code. Material design influence must follow the project's provenance policy and be independently implemented.
+
 ## Current baseline
 
-**Phases 1–42 are complete and CI-verified.** Phase 42 implementation merged through PR #46 as `70d5f96c15bfbf200804a50f43dc6e12f5dde903`. The phase's final corrected validation passed distribution, wheel, audit, Ruff, and full pytest gates; the documentation-closed mainline verification remains the final closure gate.
+**Phases 1–43 are complete and CI-verified.** Phase 43 implementation merged through the final correction as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI **#886** (`34558002476`) passed distribution, wheel installation, repository audit, Ruff, and the complete pytest suite.
 
-**Next implementation: Phase 43 — Final v3 Integration & Hardening.**
+**v3 implementation is closed.** Subsequent work is maintenance or explicitly versioned post-v3 evolution.
