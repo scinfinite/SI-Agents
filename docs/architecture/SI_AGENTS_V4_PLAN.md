@@ -2,8 +2,8 @@
 
 **Status:** Active implementation
 **Baseline:** V3 Phases 1–43 complete and CI-verified
-**Implemented:** V4 Phases 44–48 complete and final-CI verified
-**Current phase:** Phase 49 — Agent + Team Builder
+**Implemented:** V4 Phases 44–49 complete and final-CI verified
+**Current phase:** Phase 50 — Capability Authorization
 **Planned sequence:** Phases 44–71
 
 > A phase is complete only after implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification. Current/index documentation must be synchronized before the final exact-tree gate.
@@ -36,7 +36,7 @@ User / External System
             Models / Tools
 ```
 
-Control API owns identity, authorization, admission, policy, authority scope, provenance, approvals, audit and externally visible intent. Runtime owns execution mechanics. OpenCode is a harness/protocol adapter. OmniRoute is downstream model/provider routing infrastructure. Neither downstream layer can grant SI authority.
+Control API owns identity, authorization, admission, policy, authority scope, provenance, approvals, audit and externally visible intent. Runtime owns execution mechanics. OpenCode is a harness/protocol adapter. OmniRoute is downstream model/provider routing infrastructure. Agent/team composition is declarative. None of these downstream layers can grant SI authority.
 
 ## Product principles
 
@@ -46,15 +46,16 @@ Control API owns identity, authorization, admission, policy, authority scope, pr
 4. CLI is the stable automation surface.
 5. OpenCode remains the interactive coding harness.
 6. OmniRoute remains downstream routing infrastructure.
-7. Parallel execution is dependency/resource/governance bounded.
-8. State and events are durable, correlated and replayable.
-9. Control operations are typed transitions.
-10. Evidence is required before completion.
-11. Secrets stay out of runtime state.
-12. V3 contracts remain intact.
-13. Surface parity uses shared authoritative state.
-14. Animation communicates state rather than hiding it.
-15. External projects are research references, not copied authorities or dependencies.
+7. Agent/team builders declare capabilities; authorization decides whether they may use them.
+8. Parallel execution is dependency/resource/governance bounded.
+9. State and events are durable, correlated and replayable.
+10. Control operations are typed transitions.
+11. Evidence is required before completion.
+12. Secrets stay out of runtime state.
+13. V3 contracts remain intact.
+14. Surface parity uses shared authoritative state.
+15. Animation communicates state rather than hiding it.
+16. External projects are research references, not copied authorities or dependencies.
 
 ## Phase status and roadmap
 
@@ -65,8 +66,8 @@ Control API owns identity, authorization, admission, policy, authority scope, pr
 | 46 | Parallel Scheduler + Executor | **Complete + final-CI verified** |
 | 47 | OpenCode Bridge | **Complete + final-CI verified** |
 | 48 | OmniRoute Integration | **Complete + final-CI verified** |
-| 49 | Agent + Team Builder | Planned / next |
-| 50 | Capability Authorization | Planned |
+| 49 | Agent + Team Builder | **Complete + final-CI verified** |
+| 50 | Capability Authorization | Planned / next |
 | 51 | Checkpoints + Resume | Planned |
 | 52 | Context / Memory Economics | Planned |
 | 53 | Persistent Sessions | Planned |
@@ -111,12 +112,16 @@ Health/session discovery, blocking and streaming invocation, cancellation, SSE f
 
 Health/model discovery, typed capability metadata, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage normalization, rate-limit/upstream/transient transport classification, credential references, endpoint security, deterministic transport tests and authority-boundary enforcement. Final CI run 949 (`34623762921`) passed; merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
 
-## Phase 49 — Agent + Team Builder
+### Phase 49 — Agent + Team Builder
 
-Next objective: typed, composable SI-native agents and teams with capabilities, skills, model policy, resource limits, governance, evidence and deterministic/auditable builder output.
+Typed immutable agent definitions, deterministic registry/catalog digests, explicit team membership and handoffs, bounded parallelism, aggregate capability declarations, model/resource policy metadata, deterministic manifests, conflict-safe registration, and governance-boundary tests. CI run 954 (`34625018676`) passed; merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
 
-## Phases 50–71
+## Phase 50 — Capability Authorization
 
-50 Capability Authorization; 51 Checkpoints + Resume; 52 Context/Memory Economics; 53 Persistent Sessions; 54 Human-in-the-Loop; 55 Durable Waiting + Scheduling; 56 Intelligent Routing + Economics; 57 Security Platform; 58 Workspace/Worktree Lifecycle; 59 Observability; 60 Evaluation + Benchmarking; 61 Continuous Improvement; 62 Cross-Runtime/Cross-Harness; 63 Ecosystem/Marketplace; 64 SDK/Developer Platform; 65 Workflow + Automation; 66 Advanced Web Control Plane; 67 Advanced TUI Control Center; 68 Advanced CLI Platform; 69 npm Distribution + Setup; 70 End-to-End Production Validation; 71 Final Production Hardening.
+Next objective: turn declared agent/team capabilities into explicit, auditable authorization decisions bound to caller identity, resource scope, policy, deny precedence, provenance, and runtime admission without allowing agents, teams, models, or providers to self-grant authority.
+
+## Phases 51–71
+
+51 Checkpoints + Resume; 52 Context/Memory Economics; 53 Persistent Sessions; 54 Human-in-the-Loop; 55 Durable Waiting + Scheduling; 56 Intelligent Routing + Economics; 57 Security Platform; 58 Workspace/Worktree Lifecycle; 59 Observability; 60 Evaluation + Benchmarking; 61 Continuous Improvement; 62 Cross-Runtime/Cross-Harness; 63 Ecosystem/Marketplace; 64 SDK/Developer Platform; 65 Workflow + Automation; 66 Advanced Web Control Plane; 67 Advanced TUI Control Center; 68 Advanced CLI Platform; 69 npm Distribution + Setup; 70 End-to-End Production Validation; 71 Final Production Hardening.
 
 Phase 71 is the final V4 production-hardening gate. No later phase may be marked complete without evidence from implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI.
