@@ -1,7 +1,7 @@
-"""Durable Phase 44 execution runtime.
+"""Durable Phase 44 execution runtime with Phase 45 event integration.
 
 Authorization, admission, governance and provenance remain upstream in the
-Control API. This module owns execution mechanics only.
+Control API. This module owns execution mechanics and emits execution facts.
 """
 from __future__ import annotations
 
@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Mapping, Protocol
+
+from core.runtime.events import EventBus
 
 
 class State(StrEnum):
@@ -128,9 +130,10 @@ def _json(value: Any) -> str:
 
 
 class ExecutionStore:
-    """SQLite-backed durable execution state with atomic terminal transitions."""
-    def __init__(self, path: str | Path = ":memory:") -> None:
+    """SQLite-backed durable execution state with atomic lifecycle transitions."""
+    def __init__(self, path: str | Path = ":memory:", event_bus: EventBus | None = None) -> None:
         self.path = str(path)
+        self.event_bus = event_bus
         self._db = sqlite3.connect(self.path, check_same_thread=False, isolation_level=None)
         self._db.row_factory = sqlite3.Row
         self._lock = threading.RLock()
@@ -144,8 +147,7 @@ class ExecutionStore:
                 pause_requested INTEGER NOT NULL DEFAULT 0, result TEXT, error_code TEXT,
                 created_at REAL NOT NULL, updated_at REAL NOT NULL
             );
-            CREATE UNIQUE INDEX IF NOT EXISTS ux_execution_idempotency
-                ON executions(task_id, idempotency_key) WHERE idempotency_key IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS ux_execution_idempotency ON executions(task_id, idempotency_key) WHERE idempotency_key IS NOT NULL;
             CREATE INDEX IF NOT EXISTS ix_execution_state ON executions(state);
             CREATE TABLE IF NOT EXISTS attempts (
                 attempt_id TEXT PRIMARY KEY, execution_id TEXT NOT NULL REFERENCES executions(execution_id),
@@ -157,6 +159,10 @@ class ExecutionStore:
     def close(self) -> None:
         with self._lock:
             self._db.close()
+
+    def _emit(self, execution_id: str, event_type: str, payload: Mapping[str, Any], *, causation_id: str | None = None) -> None:
+        if self.event_bus is not None:
+            self.event_bus.append(event_type, "execution", execution_id, payload, correlation_id=execution_id, causation_id=causation_id)
 
     def create(self, task: AuthorizedTask) -> Execution:
         task.validate()
@@ -181,7 +187,9 @@ class ExecutionStore:
                     if row and row["payload"] == _json(task.payload):
                         return self._execution(row)
                 raise RuntimeFailure(RuntimeErrorCode.IDEMPOTENCY_CONFLICT, str(exc)) from exc
-            return self.get(execution_id)
+            execution = self.get(execution_id)
+        self._emit(execution_id, "execution.accepted", {"task_id": task.task_id, "attempt_id": attempt_id, "attempt_number": 1})
+        return execution
 
     def get(self, execution_id: str) -> Execution:
         with self._lock:
@@ -196,7 +204,7 @@ class ExecutionStore:
 
     def transition(self, execution_id: str, target: State, *, error_code: str | None = None, result: Mapping[str, Any] | None = None) -> Execution:
         with self._lock:
-            row = self._db.execute("SELECT state, attempt_id FROM executions WHERE execution_id=?", (execution_id,)).fetchone()
+            row = self._db.execute("SELECT state, attempt_id, attempt_number FROM executions WHERE execution_id=?", (execution_id,)).fetchone()
             if row is None:
                 raise RuntimeFailure(RuntimeErrorCode.NOT_FOUND, f"execution {execution_id} not found")
             current = State(row["state"])
@@ -210,7 +218,9 @@ class ExecutionStore:
             if changed != 1:
                 return self.get(execution_id)
             self._db.execute("UPDATE attempts SET state=?, started_at=COALESCE(started_at, ?), finished_at=?, error_code=?, result=? WHERE attempt_id=?", (target.value, now if target == State.RUNNING else None, now if target in TERMINAL else None, error_code, encoded, row["attempt_id"]))
-            return self.get(execution_id)
+            execution = self.get(execution_id)
+        self._emit(execution_id, f"execution.{target.value}", {"from": current.value, "to": target.value, "attempt_id": row["attempt_id"], "attempt_number": row["attempt_number"], "error_code": error_code, "has_result": result is not None})
+        return execution
 
     def request_cancel(self, execution_id: str) -> Execution:
         with self._lock:
@@ -220,6 +230,7 @@ class ExecutionStore:
             if State(row["state"]) in TERMINAL:
                 return self.get(execution_id)
             self._db.execute("UPDATE executions SET cancel_requested=1, updated_at=? WHERE execution_id=?", (time.time(), execution_id))
+        self._emit(execution_id, "execution.cancel_requested", {})
         return self.get(execution_id)
 
     def request_pause(self, execution_id: str) -> Execution:
@@ -230,11 +241,13 @@ class ExecutionStore:
             if State(row["state"]) in TERMINAL:
                 return self.get(execution_id)
             self._db.execute("UPDATE executions SET pause_requested=1, updated_at=? WHERE execution_id=?", (time.time(), execution_id))
+        self._emit(execution_id, "execution.pause_requested", {})
         return self.get(execution_id)
 
     def clear_pause(self, execution_id: str) -> Execution:
         with self._lock:
             self._db.execute("UPDATE executions SET pause_requested=0, updated_at=? WHERE execution_id=?", (time.time(), execution_id))
+        self._emit(execution_id, "execution.pause_cleared", {})
         return self.get(execution_id)
 
     def new_attempt(self, execution_id: str) -> Attempt:
@@ -246,17 +259,24 @@ class ExecutionStore:
                 raise RuntimeFailure(RuntimeErrorCode.INVALID_TRANSITION, "retry requires a terminal execution")
             number, attempt_id, now = row["attempt_number"] + 1, str(uuid.uuid4()), time.time()
             self._db.execute("BEGIN IMMEDIATE")
-            self._db.execute("UPDATE executions SET attempt_id=?, attempt_number=?, state=?, result=NULL, error_code=NULL, cancel_requested=0, pause_requested=0, updated_at=? WHERE execution_id=?", (attempt_id, number, State.QUEUED.value, now, execution_id))
-            self._db.execute("INSERT INTO attempts VALUES (?, ?, ?, ?, NULL, NULL, NULL, NULL)", (attempt_id, execution_id, number, State.QUEUED.value))
-            self._db.execute("COMMIT")
-            return Attempt(attempt_id, execution_id, number, State.QUEUED)
+            try:
+                self._db.execute("UPDATE executions SET attempt_id=?, attempt_number=?, state=?, result=NULL, error_code=NULL, cancel_requested=0, pause_requested=0, updated_at=? WHERE execution_id=?", (attempt_id, number, State.QUEUED.value, now, execution_id))
+                self._db.execute("INSERT INTO attempts VALUES (?, ?, ?, ?, NULL, NULL, NULL, NULL)", (attempt_id, execution_id, number, State.QUEUED.value))
+                self._db.execute("COMMIT")
+            except Exception:
+                self._db.execute("ROLLBACK")
+                raise
+        self._emit(execution_id, "execution.retry_queued", {"attempt_id": attempt_id, "attempt_number": number})
+        return Attempt(attempt_id, execution_id, number, State.QUEUED)
 
     def recover(self) -> tuple[Execution, ...]:
         with self._lock:
-            rows = self._db.execute("SELECT execution_id FROM executions WHERE state=?", (State.RUNNING.value,)).fetchall()
+            rows = self._db.execute("SELECT execution_id, attempt_id FROM executions WHERE state=?", (State.RUNNING.value,)).fetchall()
             for row in rows:
                 self._db.execute("UPDATE executions SET state=?, updated_at=? WHERE execution_id=? AND state=?", (State.QUEUED.value, time.time(), row["execution_id"], State.RUNNING.value))
                 self._db.execute("UPDATE attempts SET state=? WHERE execution_id=? AND state=?", (State.QUEUED.value, row["execution_id"], State.RUNNING.value))
+        for row in rows:
+            self._emit(row["execution_id"], "execution.recovered", {"attempt_id": row["attempt_id"], "state": State.QUEUED.value})
         return tuple(self.get(row["execution_id"]) for row in rows)
 
     def list_non_terminal(self) -> tuple[Execution, ...]:
@@ -303,8 +323,9 @@ class ExecutionRuntime:
         resume = getattr(adapter, "resume", None)
         if execution.pause_requested and resume is None:
             raise RuntimeFailure(RuntimeErrorCode.PAUSE_UNSUPPORTED, "adapter does not support resume")
+        was_paused = execution.pause_requested
         self.store.clear_pause(execution_id)
-        if resume is not None and execution.pause_requested:
+        if was_paused and resume is not None:
             resume(execution_id)
         return self.store.get(execution_id)
 
