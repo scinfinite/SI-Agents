@@ -5,7 +5,6 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Mapping
 
 from core.runtime.omniroute import OmniRoutePolicy
 
