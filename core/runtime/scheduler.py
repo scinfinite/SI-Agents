@@ -98,6 +98,7 @@ class ParallelScheduler:
         execution = self.runtime.accept(task)
         if execution.execution_id in depends_on:
             self.runtime.cancel(execution.execution_id)
+            self.runtime.run(execution.execution_id, self.adapter)
             raise ValueError("an execution cannot depend on itself")
         schedule_id, now = str(uuid.uuid4()), time.time()
         with self._lock:
@@ -109,6 +110,7 @@ class ParallelScheduler:
             except Exception:
                 self._db.execute("ROLLBACK")
                 self.runtime.cancel(execution.execution_id)
+                self.runtime.run(execution.execution_id, self.adapter)
                 raise
         self._emit(execution.execution_id, "scheduler.queued", {"schedule_id": schedule_id, "priority": priority, "dependencies": list(depends_on)})
         self._wake.set()
@@ -134,6 +136,8 @@ class ParallelScheduler:
         self.runtime.cancel(item.execution_id)
         with self._lock:
             self._db.execute("UPDATE schedules SET state=?, finished_at=? WHERE schedule_id=? AND state NOT IN (?, ?, ?, ?)", (ScheduleState.CANCELLED.value, time.time(), schedule_id, *(s.value for s in TERMINAL_SCHEDULE)))
+        if item.state == ScheduleState.WAITING:
+            self.runtime.run(item.execution_id, self.adapter)
         self._emit(item.execution_id, "scheduler.cancelled", {"schedule_id": schedule_id})
         self._wake.set()
         return self.get(schedule_id)
@@ -204,6 +208,7 @@ class ParallelScheduler:
                 if blocked:
                     self._db.execute("UPDATE schedules SET state=?, finished_at=?, error=? WHERE schedule_id=? AND state=?", (ScheduleState.BLOCKED.value, now, "dependency_failed", row["schedule_id"], ScheduleState.WAITING.value))
                     self.runtime.cancel(row["execution_id"])
+                    self.runtime.run(row["execution_id"], self.adapter)
                     self._emit(row["execution_id"], "scheduler.blocked", {"schedule_id": row["schedule_id"], "reason": "dependency_failed"})
                     continue
                 changed = self._db.execute("UPDATE schedules SET state=?, started_at=? WHERE schedule_id=? AND state=?", (ScheduleState.RUNNING.value, now, row["schedule_id"], ScheduleState.WAITING.value)).rowcount

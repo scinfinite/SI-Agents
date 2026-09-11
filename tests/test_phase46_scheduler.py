@@ -38,6 +38,9 @@ class TrackingAdapter:
             with self.lock:
                 self.active -= 1
 
+    def cancel(self, execution_id: str) -> None:
+        return None
+
 
 def make_runtime(tmp_path: Path, bus: EventBus | None = None):
     store = ExecutionStore(tmp_path / "runtime.db", event_bus=bus)
@@ -73,6 +76,8 @@ def test_dependencies_gate_execution_and_failure_blocks_descendants(tmp_path: Pa
     assert by_id[root.execution_id].state == ScheduleState.FAILED
     assert by_id[child.execution_id].state == ScheduleState.BLOCKED
     assert by_id[grandchild.execution_id].state == ScheduleState.BLOCKED
+    assert runtime.store.get(child.execution_id).state == State.CANCELLED
+    assert runtime.store.get(grandchild.execution_id).state == State.CANCELLED
     assert adapter.started == ["root"]
     scheduler.close()
     store.close()
