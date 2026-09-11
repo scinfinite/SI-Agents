@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–42 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–42 complete and CI-verified; Phase 43 implementation complete pending closure verification.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
@@ -22,6 +22,7 @@
 40. Evidence & Observability — **Complete and CI-verified.** Immutable typed evidence records for facts, observations, inferences, and uncertainties; bounded confidence and explicit verification states; provenance, run relationships, contradiction/supersession tracking; atomic restrictive local persistence; Control API evidence detail/record/verification and run timelines; OpenAPI synchronization; dependency-free Evidence Explorer; and regression coverage for persistence, API routing, security boundaries, and epistemic state handling.
 41. TUI — **Complete and CI-verified.** Dependency-free keyboard-first terminal operator surface over the existing Control API service, covering all Control Center views with deterministic rendering, local filtering/selection/navigation, non-interactive `--once` rendering, `NO_COLOR` support, stable `si tui` and `si-tui` launchers, no mutation/execution authority, and regression coverage for navigation and fail-closed boundaries.
 42. Harness Deployment Center — **Complete and CI-verified.** Immutable harness targets and deployment plans, deterministic validation, fail-closed unknown-target and authority-bearing requests, planning-only manifest preparation, dependency-free Web Deployment Center, `/api/v1/deployments`, `si deploy`/`si-deploy`, packaging, audit-safe mutations, and adversarial regression coverage. No apply/deploy or credential migration authority was introduced.
+43. Final v3 Integration & Hardening — **Implementation complete; final CI closure pending.** Deterministic cross-cutting integration audit, packaged `si verify`/`si-verify` entry points, deployment planning-only hardening, canonical catalog/config checks, release-gate regression coverage, and fail-closed adversarial integration tests.
 
 ## Release targets
 
@@ -31,23 +32,24 @@
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
 - **Post-v2 validation through Phase 42:** complete and CI-verified
+- **Final v3 integration through Phase 43:** implementation complete; closure pending final CI
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, every CI failure must be fixed and rerun, and documentation must never claim a stronger state than implementation and verification evidence support.
 
-## Phase 42 verification record
+## Phase 43 verification record
 
-Phase 41 was verified fully closed before Phase 42 started: final documentation-closed mainline CI **#868** (`34553771653`) passed on main commit `d10f509a3201ef9899c08d4a9a9bda820e5861c4`.
+Phase 42 was verified fully closed before Phase 43 started: documentation-closed main commit `ea901db9ed45a13c78c6a980aa3e53b0175049f9`; final mainline CI **#881** (`34555338259`) was green.
 
-Phase 42 implementation was merged through PR #46 as squash commit `70d5f96c15bfbf200804a50f43dc6e12f5dde903`. CI exposed an OpenAPI syntax regression, then Ruff exposed compact-handler violations, and pytest exposed duplicate normalization and an assertion mismatch. Each issue was isolated and fixed; the final validation run on the corrected head passed wheel installation, repository audit, Ruff, and the full test suite. Final mainline CI is the required closure gate after documentation synchronization.
+Phase 43 implementation adds the deterministic integration audit and final release-boundary hardening described in `PHASE_43_INTEGRATION_HARDENING.md`. Closure remains gated on a green implementation/mainline validation and documentation-closed final mainline CI.
 
 ## Documentation structure
 
-- `PHASE_29_AGENT_PERSONA.md` through `PHASE_42_HARNESS_DEPLOYMENT_CENTER.md` — canonical post-v2 phase records.
+- `PHASE_29_AGENT_PERSONA.md` through `PHASE_43_INTEGRATION_HARDENING.md` — canonical post-v2 phase records.
 - `SI_AGENTS_V3.md` — forward roadmap.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 43 — Final v3 Integration & Hardening.**
+**Phase 43 is the final v3 implementation phase; after closure, work becomes maintenance or explicitly versioned post-v3 evolution.**

@@ -12,7 +12,6 @@ class DeploymentState(StrEnum):
     DRAFT = "draft"
     VALID = "valid"
     BLOCKED = "blocked"
-    APPLIED = "applied"
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,7 +26,12 @@ class HarnessTarget:
             raise ValueError("harness target requires id, version, and adapter_path")
 
     def as_dict(self) -> dict[str, object]:
-        return {"id": self.id, "version": self.version, "adapter_path": self.adapter_path, "enabled": self.enabled}
+        return {
+            "id": self.id,
+            "version": self.version,
+            "adapter_path": self.adapter_path,
+            "enabled": self.enabled,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -45,9 +49,13 @@ class DeploymentPlan:
     def __post_init__(self) -> None:
         if not self.id.strip() or not self.harness_id.strip():
             raise ValueError("deployment id and harness_id are required")
-        for name, values in (("agents", self.agents), ("teams", self.teams), ("skills", self.skills),
-                             ("requested_capabilities", self.requested_capabilities),
-                             ("requested_permissions", self.requested_permissions)):
+        for name, values in (
+            ("agents", self.agents),
+            ("teams", self.teams),
+            ("skills", self.skills),
+            ("requested_capabilities", self.requested_capabilities),
+            ("requested_permissions", self.requested_permissions),
+        ):
             if any(not value.strip() for value in values):
                 raise ValueError(f"{name} cannot contain empty identifiers")
             if len(set(values)) != len(values):
@@ -55,9 +63,13 @@ class DeploymentPlan:
 
     def as_dict(self) -> dict[str, object]:
         return {
-            "id": self.id, "harness_id": self.harness_id, "agents": list(self.agents),
-            "teams": list(self.teams), "skills": list(self.skills),
+            "id": self.id,
+            "harness_id": self.harness_id,
+            "agents": list(self.agents),
+            "teams": list(self.teams),
+            "skills": list(self.skills),
             "requested_capabilities": list(self.requested_capabilities),
             "requested_permissions": list(self.requested_permissions),
-            "state": self.state.value, "reasons": list(self.reasons),
+            "state": self.state.value,
+            "reasons": list(self.reasons),
         }
