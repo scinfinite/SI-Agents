@@ -78,19 +78,16 @@ class IntegrationAuditor:
         try:
             catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
             divisions = catalog.get("divisions", [])
-            agents = [
-                agent
-                for division in divisions
-                if isinstance(division, dict)
-                for agent in division.get("agents", [])
-                if isinstance(agent, dict)
-            ]
+            agents = catalog.get("agents", [])
+            valid_divisions = all(isinstance(item, dict) and isinstance(item.get("id"), str) for item in divisions)
+            valid_agents = all(isinstance(item, dict) and isinstance(item.get("id"), str) for item in agents)
             division_count = len(divisions)
             agent_count = len(agents)
+            valid = valid_divisions and valid_agents and division_count == 18 and agent_count == 279
             checks.append(
                 IntegrationCheck(
                     "agent_catalog",
-                    division_count == 18 and agent_count == 279,
+                    valid,
                     f"{agent_count} agents across {division_count} divisions",
                 )
             )
