@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v3 closed; v4 Phase 44 complete and CI-verified; v4 Phase 45 implementation in progress.**
+**Current status: v3 closed; v4 Phase 44 complete and CI-verified; v4 Phase 45 complete pending final CI verification.**
 
 > This file is the authoritative current implementation/status record. `SI_AGENTS_V3.md` records the completed v3 architecture. `SI_AGENTS_V4_PLAN.md` records the approved v4 planning direction. Historical phase records preserve phase-time evidence.
 
@@ -24,21 +24,22 @@
 42. Harness Deployment Center — **Complete and CI-verified.** Planning-only; no downstream deployment authority was introduced.
 43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the repository release gates after the Phase 43 schema-version compatibility regression was corrected.
 44. Execution Runtime Foundation — **Complete and CI-verified.** Durable execution/attempt identity, lifecycle transitions, SQLite persistence, idempotency, cancellation, pause/resume capability boundaries, deadlines, retries, restart recovery, adapter isolation, terminality protection, and secret-isolation checks are implemented and covered by the final CI suite.
+45. Event Bus + State Architecture — **Complete pending final CI verification.** Durable append-only event log, ordered aggregate streams, correlation/causation, replay, live subscriptions, projections/checkpoints, concurrent append safety, and canonical Phase 44 lifecycle-event integration are implemented and tested.
 
 ## Release status
 
 - **v2.0:** complete.
 - **v3:** complete and CI-verified through Phase 43.
-- **v4:** implementation active; Phase 44 complete and Phase 45 in progress.
+- **v4:** implementation active; Phases 44 and 45 complete pending the Phase 45 final documentation CI gate.
 - **Phase 44:** complete and CI-verified.
-- **Phase 45:** implementation in progress; not yet closed.
+- **Phase 45:** implementation complete; final CI pending.
 
 ## V4 planned sequence
 
 | Phase | Planned scope | State |
 |---:|---|---|
 | 44 | Execution Runtime Foundation | **Complete + CI verified** |
-| 45 | Event Bus + State Architecture | **In progress** |
+| 45 | Event Bus + State Architecture | **Complete + final CI pending** |
 | 46 | Parallel Scheduler + Executor | Planned |
 | 47 | OpenCode Bridge | Planned |
 | 48 | OmniRoute Integration | Planned |
@@ -86,9 +87,9 @@ CI-discovered regressions were fixed before closure: the repository audit/hygien
 
 ## Phase 45 verification record
 
-Phase 45 started only after the green Phase 44 baseline was verified on `main`. The implementation adds `core/runtime/events.py`, exports the durable event contracts through `core.runtime`, and connects canonical execution lifecycle transitions to the event bus. Dedicated tests cover ordering, replay, idempotent event IDs, persistence/reopen, projections/checkpoints, concurrency, invalid input, and runtime lifecycle emission.
+Phase 45 started only after the green Phase 44 baseline was verified on `main`. The implementation adds `core/runtime/events.py`, exports the durable event contracts through `core.runtime`, connects canonical execution lifecycle transitions to the event bus, and adds dedicated tests for ordering, replay, idempotent event IDs, persistence/reopen, projections/checkpoints, concurrency, invalid input, subscriptions, and runtime lifecycle emission.
 
-**Closure is intentionally deferred until final Phase 45 CI is green.**
+The final implementation CI before the documentation-only closure commits was **#930 (`34612083838`)**, on commit `7e4be5c2ab9b0073fd9868dedc311e59037befb8`. All CI gates passed, including distribution, wheel installation, repository audit, integration verification, Ruff, and the complete pytest suite. The documentation closure commits are required to receive one final CI run on the exact final `main` tree before Phase 45 can be declared closed.
 
 ## V4 contract status
 
@@ -104,4 +105,4 @@ The Phase 44 execution-runtime contract has been implemented and verified on `ma
 
 ## Next state
 
-**Phase 45 is in progress. It must not be marked complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification all pass.**
+**Phase 45 implementation is complete; final CI verification on the final documentation tree is the only remaining closure gate.**
