@@ -57,6 +57,10 @@ Phase 51 integrates with the Phase 44 authoritative execution runtime and Phase 
 - [x] Reopen/persistence and tamper tests.
 - [ ] Final exact-tree CI after this documentation synchronization.
 
+## V4 integration marker
+
+Phase 71 is the final production-hardening gate for the V4 roadmap; Phase 51 remains subject to that roadmap's same evidence and authority rules.
+
 ## Closure rule
 
 Do not mark a phase complete until the implementation and tests pass repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and the final exact-tree CI. Update README, docs index, architecture index, V4 plan, this phase index, the phase record, and affected cross-cutting documents after every phase.

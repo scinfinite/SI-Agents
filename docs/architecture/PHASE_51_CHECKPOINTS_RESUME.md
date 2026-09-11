@@ -31,6 +31,10 @@ Phase 51 makes long-running executions restartable without treating snapshots as
 - Checkpoint metadata never grants capabilities, credentials, provider authority, or identity.
 - Checkpoint resume is an explicit retry boundary; exactly-once execution is not claimed.
 
+## V4 integration
+
+Phase 51 is built on the Phase 44 authoritative runtime and must remain compatible with the Phase 71 final production-hardening gate.
+
 ## Verification
 
 Phase 50 prerequisite was closed on `main` at `9222379cfcb091858f0c5dcc1ec1616f933fca38`; final Phase 50 docs CI was run `34625819419`.
