@@ -11,7 +11,7 @@ Code, executable contracts, governance decisions, and CI results outrank prose w
 
 ## Phase index
 
-Phases **1–41 are complete and CI-verified**.
+Phases **1–42 are complete and CI-verified**.
 
 | Phase | Canonical/current record | State |
 |---:|---|---|
@@ -29,6 +29,7 @@ Phases **1–41 are complete and CI-verified**.
 | 39 | `PHASE_39_AGENT_BUILDER.md` | Complete + CI verified |
 | 40 | `PHASE_40_EVIDENCE_OBSERVABILITY.md` | Complete + CI verified |
 | 41 | `PHASE_41_TUI.md` | Complete + CI verified |
+| 42 | `PHASE_42_HARNESS_DEPLOYMENT_CENTER.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -37,6 +38,7 @@ Phases **1–41 are complete and CI-verified**.
 - Evidence is explicit and provenance-bearing; recording evidence does not make it automatically verified.
 - Agent Builder is a governed authoring boundary, not an execution engine.
 - The TUI is a terminal view over the same Control API service used by Web.
+- Harness Deployment Center is a planning/deployment-description boundary; it does not grant permissions, migrate credentials, or execute harnesses.
 - Harnesses remain downstream execution boundaries.
 
 ## v3 sequence
@@ -55,7 +57,7 @@ Phases **1–41 are complete and CI-verified**.
  → 39 Agent Builder [complete]
  → 40 Evidence/Observability [complete]
  → 41 TUI [complete]
- → 42 Harness Deployment Center
+ → 42 Harness Deployment Center [complete]
  → 43 Integration/Hardening
 ```
 

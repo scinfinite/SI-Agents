@@ -1,5 +1,9 @@
 # Phase 42 — Harness Deployment Center
 
+## Status
+
+**Complete and CI-verified.**
+
 ## Purpose
 
 Phase 42 adds a governed, inspectable deployment-planning boundary between the SI organization and registered harness adapters. It describes deployment targets and prepares deterministic manifests without making deployment itself an authority.
@@ -32,7 +36,9 @@ Deployment planning cannot grant permissions, capabilities, environments, creden
 
 ## Verification
 
-The phase includes deterministic model/service tests, duplicate/blank identifier rejection, unknown-target fail-closed behavior, authority-request blocking, blocked-manifest rejection, non-enable/non-execution checks, Web API integration coverage, packaged-asset checks, and Ruff/pytest/distribution CI gates.
+The Phase 42 implementation was merged through PR #46 as squash commit `70d5f96c15bfbf200804a50f43dc6e12f5dde903`. The first validation attempt exposed an OpenAPI syntax error during wheel installation; that defect was corrected, then Ruff exposed compact-handler style violations and tests exposed duplicate normalization plus an assertion mismatch. Those issues were fixed rather than suppressed in the test suite. Final feature/mainline validation on head `1043a7f53e358baa5a0672f7ff430d4737a80b28` passed distribution build, wheel installation, repository audit, Ruff, and the full pytest suite.
+
+The final mainline verification after merge is required before documentation closure; this record is complete only when that run is green.
 
 ## Next phase
 
