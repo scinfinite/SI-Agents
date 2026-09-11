@@ -1,44 +1,26 @@
-# Architecture Index
+# Architecture
 
-## Authority order
+SI-Agents V4 uses a single authoritative SI Core. Web, TUI, CLI, runtime adapters, schedulers, agents, and integrations are clients of that authority rather than independent state owners.
 
-1. `PHASES.md` — current implementation status and verification evidence.
-2. `SI_AGENTS_V4_PLAN.md` — current V4 roadmap and planning direction.
-3. `SI_AGENTS_V3.md` — completed V3 architecture and historical contracts.
-4. Detailed phase documents — phase-specific contracts and evidence.
-5. Cross-cutting contracts — CLI, execution backends, model routing and verification.
+## Verified V4 phases
 
-Code, executable contracts, governance decisions, and CI results outrank prose when they conflict.
-
-## Current phase index
-
-V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–50 are complete and final-CI verified**. Phase **51 — Checkpoints + Resume** is next.
-
-| Phase | Canonical record | State |
+| Phase | Capability | Status |
 |---:|---|---|
-| 43 | `PHASE_43_INTEGRATION_HARDENING.md` | Complete + CI verified |
-| 44 | `PHASE_44_EXECUTION_RUNTIME.md` | Complete + CI verified |
-| 45 | `PHASE_45_EVENT_BUS_STATE.md` | Complete + CI verified |
-| 46 | `PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md` | Complete + CI verified |
-| 47 | `PHASE_47_OPENCODE_BRIDGE.md` | Complete + CI verified |
-| 48 | `PHASE_48_OMNIROUTE_INTEGRATION.md` | Complete + final-CI verified |
-| 49 | `PHASE_49_AGENT_TEAM_BUILDER.md` | Complete + final-CI verified |
-| 50 | `PHASE_50_CAPABILITY_AUTHORIZATION.md` | Complete + final-CI verified |
-| 51–71 | `SI_AGENTS_V4_PLAN.md` | Planned |
+| 44 | Execution Runtime Foundation | Complete |
+| 45 | Event Bus + State Architecture | Complete |
+| 46 | Parallel Scheduler + Executor | Complete |
+| 47 | OpenCode Bridge | Complete |
+| 48 | OmniRoute Integration | Complete |
+| 49 | Agent + Team Builder | Complete |
+| 50 | Capability Authorization | Complete |
+| 51 | Checkpoints + Resume | Complete pending final docs-tree CI |
 
-## Cross-cutting architecture
+## Phase 51 authority rules
 
-- One SI Core and one Control API remain the authority boundaries.
-- CLI, Web and TUI are control surfaces, not independent authorities.
-- Evidence is explicit and provenance-bearing.
-- V4 now has a durable runtime, event/state model, dependency-aware scheduler, OpenCode bridge, OmniRoute model/provider adapter, deterministic agent/team composition, and fail-closed capability authorization.
-- OpenCode remains the interactive coding harness; OmniRoute remains downstream model/provider routing infrastructure.
-- Model selection and agent/team composition cannot grant authority or capabilities; authorization is the explicit admission boundary.
-- Credentials are references and must not become runtime state.
-- Web is the richest planned V4 control plane; TUI is the fastest operator surface; CLI is the strongest automation surface.
+Checkpoints are progress evidence, not authority. Their snapshots cannot restore credentials, capabilities, grants, provider authorization, or identity. Resume is performed through `ExecutionStore.new_attempt()` after checkpoint integrity, lineage, execution identity, and terminal-state checks.
 
-## Documentation maintenance
+## Next
 
-`PHASES.md` is authoritative for current status. Historical phase records preserve phase-time evidence and are not rewritten merely to reflect later work. Current/index Markdown must be updated whenever implementation status or architecture direction changes.
+Phase 52 — Context / Memory Economics.
 
-**Required after every completed phase:** update the phase record, `PHASES.md`, this architecture index, project/documentation navigation, roadmap status, verification references, and affected cross-cutting contracts before the final exact-tree CI gate.
+See `SI_AGENTS_V4_PLAN.md` and `PHASES.md` for the complete roadmap and closure evidence.

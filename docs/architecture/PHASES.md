@@ -1,78 +1,24 @@
-# SI-Agents Implementation Phases
+# V4 Phases
 
-**Current status: V3 closed; V4 Phases 44–50 complete and final-CI verified; Phase 51 — Checkpoints + Resume — is next.**
+## Status legend
 
-This file is the authoritative current implementation/status record. Historical phase records preserve phase-time evidence.
+- **Complete** — implementation, tests, documentation, and final CI evidence verified.
+- **Next** — planned next phase.
+- **Planned** — not started.
 
-## Completed phases
+## V4 sequence
 
-1–28. Foundation through Cross-environment & Handoff — **Complete.**
-
-29. Complete SI Agent Persona System — **Complete and CI-verified.**
-30. First-Class Portable Skills — **Complete and CI-verified.**
-31. Rules, Hooks & Event System — **Complete and CI-verified.**
-32. Memory & Knowledge — **Complete and CI-verified.**
-33. Security & Governance Center — **Complete and CI-verified.**
-34. Organization Expansion — **Complete and CI-verified.**
-35. Control API — **Complete and CI-verified.**
-36. Local Web Foundation — **Complete and CI-verified.**
-37. Control Center — **Complete and CI-verified.**
-38. Visual Organization & Workflow — **Complete and CI-verified.**
-39. Agent Builder & Customization — **Complete and CI-verified.**
-40. Evidence & Observability — **Complete and CI-verified.**
-41. TUI — **Complete and CI-verified.**
-42. Harness Deployment Center — **Complete and CI-verified.** Planning-only; no downstream deployment authority was introduced.
-43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the V3 release gates.
-
-## V4 current milestones
-
-Phase 44 — Execution Runtime Foundation: **complete and CI-verified** (`34610448789`).
-
-Phase 45 — Event Bus + State Architecture: **complete and CI-verified** (`34612616978`).
-
-Phase 46 — Parallel Scheduler + Executor: **complete and CI-verified** (`34615157829`).
-
-Phase 47 — OpenCode Bridge: **complete and CI-verified** (`34615709124`, followed by documentation exact-tree CI `34615862860`).
-
-Phase 48 — OmniRoute Integration: **complete and final-CI verified** (CI run 949, `34623762921`), merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
-
-Phase 49 — Agent + Team Builder: **complete and final-CI verified** (CI run 954, `34625018676`), merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
-
-Phase 50 — Capability Authorization: **complete and final-CI verified** (CI run 962, `34625560602`), merged to `main` as `03029d301f77ff6931bfa68415893686a849201b`.
-
-## Integration markers
-
-43. Final v3 Integration & Hardening
-Phase 44
-Phase 71
-
-## Release status
-
-- **V2:** complete.
-- **V3:** complete and CI-verified through Phase 43.
-- **V4:** active implementation.
-- **Phase 44:** complete and CI-verified.
-- **Phase 45:** complete and CI-verified.
-- **Phase 46:** complete and CI-verified.
-- **Phase 47:** complete and CI-verified.
-- **Phase 48:** complete and final-CI verified.
-- **Phase 49:** complete and final-CI verified.
-- **Phase 50:** complete and final-CI verified.
-- **Phase 51:** next.
-
-## V4 planned sequence
-
-| Phase | Planned scope | State |
-|---:|---|---|
-| 44 | Execution Runtime Foundation | **Complete + CI verified** |
-| 45 | Event Bus + State Architecture | **Complete + CI verified** |
-| 46 | Parallel Scheduler + Executor | **Complete + CI verified** |
-| 47 | OpenCode Bridge | **Complete + CI verified** |
-| 48 | OmniRoute Integration | **Complete + final-CI verified** |
-| 49 | Agent + Team Builder | **Complete + final-CI verified** |
-| 50 | Capability Authorization | **Complete + final-CI verified** |
-| 51 | Checkpoints + Resume | Planned / next |
-| 52 | Context / Memory Economics | Planned |
+| Phase | Name | Status | Evidence |
+|---:|---|---|---|
+| 44 | Execution Runtime Foundation | Complete | CI #919 / `34610448789` |
+| 45 | Event Bus + State Architecture | Complete | CI #935 / `34612616978` |
+| 46 | Parallel Scheduler + Executor | Complete | CI #938 / `34615157829` |
+| 47 | OpenCode Bridge | Complete | CI #942 / `34615862860` |
+| 48 | OmniRoute Integration | Complete | CI #949 / `34623762921` |
+| 49 | Agent + Team Builder | Complete | CI #954 / `34625018676` |
+| 50 | Capability Authorization | Complete | CI #970 / `34625819419` |
+| 51 | Checkpoints + Resume | Complete after final exact-tree CI |
+| 52 | Context / Memory Economics | Next |
 | 53 | Persistent Sessions | Planned |
 | 54 | Human-in-the-Loop | Planned |
 | 55 | Durable Waiting + Scheduling | Planned |
@@ -91,25 +37,26 @@ Phase 71
 | 68 | Advanced CLI Platform | Planned |
 | 69 | npm Distribution + Setup | Planned |
 | 70 | End-to-End Production Validation | Planned |
-| 71 | Final Production Hardening | Planned / final gate |
+| 71 | Final Production Hardening | Planned |
 
-**No phase is complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.**
+## Phase 51 integration markers
 
-## Verification references
+Phase 51 integrates with the Phase 44 authoritative execution runtime and Phase 45 EventBus. It does not bypass authorization, scheduler ownership, or adapter boundaries. Resume creates a new authoritative runtime attempt rather than restoring state directly.
 
-- Phase 43 final mainline CI: `34558002476`.
-- Phase 44 final CI: `34610448789`.
-- Phase 45 final exact-tree CI: `34612616978`.
-- Phase 46 final CI: `34615157829`.
-- Phase 47 implementation CI: `34615709124`.
-- Phase 47 final documentation exact-tree CI: `34615862860`.
-- Phase 48 final CI: run 949 (`34623762921`).
-- Phase 48 merge commit: `f670563c7df06c05d269fe714e63abfe518036e0`.
-- Phase 49 final CI: run 954 (`34625018676`).
-- Phase 49 merge commit: `de06398f2abefe24b58e52a7629dc5af3c191428`.
-- Phase 50 final CI: run 962 (`34625560602`).
-- Phase 50 merge commit: `03029d301f77ff6931bfa68415893686a849201b`.
+## Phase 51 acceptance checklist
 
-## Documentation lifecycle
+- [x] Durable SQLite checkpoint persistence.
+- [x] Ordered per-execution sequence and parent lineage.
+- [x] Canonical SHA-256 integrity verification.
+- [x] Secret-like field rejection.
+- [x] Bounded serialized checkpoint size.
+- [x] Cross-execution lineage rejection.
+- [x] Terminal-only resume.
+- [x] Fresh authoritative attempt creation.
+- [x] Authority is not restored from checkpoint metadata.
+- [x] Reopen/persistence and tamper tests.
+- [ ] Final exact-tree CI after this documentation synchronization.
 
-After every completed phase, update the phase record, this status file, architecture index, project/documentation navigation, roadmap status, verification references, and affected cross-cutting contracts before the final exact-tree CI gate. Historical phase records remain phase-time evidence and are not rewritten merely to reflect later work.
+## Closure rule
+
+Do not mark a phase complete until the implementation and tests pass repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and the final exact-tree CI. Update README, docs index, architecture index, V4 plan, this phase index, the phase record, and affected cross-cutting documents after every phase.

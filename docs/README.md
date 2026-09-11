@@ -1,55 +1,17 @@
-# SI-Agents Documentation
-
-This directory is the maintained documentation surface for SI-Agents.
-
-## Primary navigation
-
-1. `../README.md` — project overview and current status.
-2. `architecture/README.md` — architecture index.
-3. `architecture/PHASES.md` — authoritative current implementation status.
-4. `architecture/SI_AGENTS_V4_PLAN.md` — V4 roadmap and acceptance gates.
-5. `architecture/SI_AGENTS_V3.md` — completed V3 architecture.
-6. `architecture/MODEL_ROUTING.md` — model/provider routing contract.
-7. `architecture/PHASE_44_EXECUTION_RUNTIME.md` — Phase 44 evidence.
-8. `architecture/PHASE_45_EVENT_BUS_STATE.md` — Phase 45 evidence.
-9. `architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md` — Phase 46 evidence.
-10. `architecture/PHASE_47_OPENCODE_BRIDGE.md` — Phase 47 evidence.
-11. `architecture/PHASE_48_OMNIROUTE_INTEGRATION.md` — Phase 48 evidence.
-12. `architecture/PHASE_49_AGENT_TEAM_BUILDER.md` — Phase 49 evidence.
-13. `architecture/PHASE_50_CAPABILITY_AUTHORIZATION.md` — Phase 50 evidence.
-14. `architecture/CLI.md` — CLI contract.
-15. `architecture/EXECUTION_BACKENDS.md` — execution backend contract.
-16. `architecture/DEVELOPMENT_VERIFICATION.md` — verification workflow.
-17. `../AGENTS.md` — engineering rules.
-18. `../governance/legal/IP_PROVENANCE.md` — IP/provenance policy.
-
-## Source-of-truth rules
-
-- `architecture/PHASES.md` is authoritative for current implementation status and verification.
-- `architecture/README.md` is maintained architecture navigation.
-- `architecture/SI_AGENTS_V4_PLAN.md` is the current V4 roadmap and planning baseline.
-- Phase records preserve phase-time evidence.
-- Runtime code, executable contracts, governance decisions, and CI results outrank prose when they conflict.
-- Documentation must never claim a stronger implementation state than available evidence supports.
-
-## Documentation lifecycle
-
-After every completed phase: implement and test; run relevant verification; update the phase record; update `PHASES.md`; update architecture/project navigation; update the V4 roadmap status; refresh verification references and affected cross-cutting contracts; preserve historical evidence; then run the final exact-tree CI gate.
+# Documentation
 
 ## Current baseline
 
-**V3 Phases 1–43 are complete and CI-verified. V4 Phases 44–50 are complete and final-CI verified. Phase 51 — Checkpoints + Resume — is next.**
+SI-Agents V4 has completed Phases **44–51**. Phase 51 adds durable checkpoints and verified resume boundaries; Phase 52 is next.
 
-Phase 50 CI run 962 (`34625560602`) passed distribution, wheel import, repository audit, integration verification, Ruff and the complete pytest suite; it is merged to `main` as `03029d301f77ff6931bfa68415893686a849201b`.
+## Architecture
 
-## V4 sequence
+- `architecture/SI_AGENTS_V4_PLAN.md` — authoritative V4 roadmap and design gates
+- `architecture/PHASES.md` — phase status and integration evidence
+- `architecture/PHASE_51_CHECKPOINTS_RESUME.md` — Phase 51 design and acceptance evidence
+- Runtime implementation: `core/runtime/checkpoints.py`
+- Runtime tests: `tests/test_phase51_checkpoints.py`
 
-```text
-44 Runtime → 45 Events/State → 46 Scheduler → 47 OpenCode →
-48 OmniRoute → 49 Agents/Teams → 50 Authorization → 51 Resume →
-52 Context Economics → 53 Sessions → 54 HITL → 55 Durable Waiting →
-56 Routing Economics → 57 Security → 58 Worktrees → 59 Observability →
-60 Evaluation → 61 Continuous Improvement → 62 Cross-Runtime →
-63 Ecosystem → 64 SDK → 65 Workflow Automation → 66 Web →
-67 TUI → 68 CLI → 69 npm → 70 Production Validation → 71 Hardening
-```
+## Phase closure rule
+
+After every phase, implementation evidence, security/adversarial coverage, documentation, current/index documents, and CI verification are synchronized. A phase is only declared complete after the final exact-tree CI run is green.
