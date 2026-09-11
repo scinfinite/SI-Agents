@@ -1,5 +1,7 @@
 # V4 Phases
 
+43. Final v3 Integration & Hardening — historical V3 close
+
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
