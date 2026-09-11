@@ -36,9 +36,9 @@ The existing `RuntimeEngine` remains the cross-harness governance coordinator. `
 
 ## Verification evidence
 
-The final mainline CI run was **#916 (`34609972530`)**, on commit `e48fd1d0722c4aa7b70879961294f296e5aff662`.
+The final green Phase 44 implementation CI was **#919 (`34610448789`)**, on commit `1ac21225fb6d723c010b164da7b597e1bfced5a6`. That final run completed successfully across every job step.
 
-All CI gates passed:
+All final CI gates passed:
 
 - distribution build;
 - wheel installation/import smoke tests;
@@ -48,8 +48,8 @@ All CI gates passed:
 - Python compileall;
 - complete pytest suite.
 
-The final suite included **484 passing tests** after a CI-discovered hygiene regression was corrected. The regression was caused by V4 planning documentation explicitly naming external engineering references; both the repository audit and hygiene test were aligned so reference-only documentation is permitted while executable/package surfaces remain protected.
+CI-discovered regressions were corrected before closure: repository audit/hygiene alignment for reference-only documentation, runtime terminality/concurrency coverage, and the phase-index integration marker.
 
 ## Phase 44 gate result
 
-Phase 44 is closed. The runtime foundation is implemented on `main`, tested, documented, security/adversarial checked, packaging-verified, and final-CI verified. Phase 45 is the next implementation phase.
+**Phase 44 is closed.** The runtime foundation is implemented on `main`, tested, security/adversarial checked, packaging-verified, documented, and final-CI verified. Phase 45 — Event Bus + State Architecture — is the next implementation phase.
