@@ -97,12 +97,13 @@ class IntegrationAuditor:
         for relative in ("config/governance.v1.json", "config/organization-expansion.v1.json"):
             try:
                 payload = json.loads((self.root / relative).read_text(encoding="utf-8"))
-                valid = isinstance(payload, dict) and isinstance(payload.get("version"), (int, str))
+                marker = payload.get("version", payload.get("schema_version")) if isinstance(payload, dict) else None
+                valid = isinstance(payload, dict) and isinstance(marker, (int, str))
                 checks.append(
                     IntegrationCheck(
                         relative,
                         valid,
-                        "valid JSON configuration" if valid else "root/version is invalid",
+                        "valid schema-versioned JSON configuration" if valid else "root/schema version is invalid",
                     )
                 )
             except (OSError, TypeError, ValueError) as exc:
