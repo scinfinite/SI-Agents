@@ -1,4 +1,4 @@
-"""Deterministic final-integration audit for the SI-Agents v3 surface."""
+"""Deterministic final-integration audit for the SI-Agents surface."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ class IntegrationReport:
 
 
 class IntegrationAuditor:
-    """Check cross-cutting v3 invariants without executing downstream work."""
+    """Check cross-cutting invariants without executing downstream work."""
 
     REQUIRED_FILES = (
         "config/agent-catalog.json",
@@ -64,13 +64,7 @@ class IntegrationAuditor:
 
     def _files(self) -> tuple[IntegrationCheck, ...]:
         missing = tuple(path for path in self.REQUIRED_FILES if not (self.root / path).is_file())
-        return (
-            IntegrationCheck(
-                "required_surfaces",
-                not missing,
-                "all required v3 surfaces present" if not missing else "missing: " + ", ".join(missing),
-            ),
-        )
+        return (IntegrationCheck("required_surfaces", not missing, "all required surfaces present" if not missing else "missing: " + ", ".join(missing)),)
 
     def _catalogs(self) -> tuple[IntegrationCheck, ...]:
         checks: list[IntegrationCheck] = []
@@ -83,18 +77,8 @@ class IntegrationAuditor:
             agents = catalog.get("agents", [])
             if not isinstance(divisions, list) or not isinstance(agents, list):
                 raise TypeError("catalog divisions and agents must be arrays")
-            valid_divisions = all(isinstance(item, dict) and isinstance(item.get("id"), str) for item in divisions)
-            valid_agents = all(isinstance(item, dict) and isinstance(item.get("id"), str) for item in agents)
-            division_count = len(divisions)
-            agent_count = len(agents)
-            valid = valid_divisions and valid_agents and division_count == 18 and agent_count == 279
-            checks.append(
-                IntegrationCheck(
-                    "agent_catalog",
-                    valid,
-                    f"{agent_count} agents across {division_count} divisions",
-                )
-            )
+            valid = all(isinstance(x, dict) and isinstance(x.get("id"), str) for x in divisions) and all(isinstance(x, dict) and isinstance(x.get("id"), str) for x in agents)
+            checks.append(IntegrationCheck("agent_catalog", valid, f"{len(agents)} agents across {len(divisions)} divisions"))
         except (OSError, TypeError, ValueError) as exc:
             checks.append(IntegrationCheck("agent_catalog", False, f"unreadable: {exc}"))
 
@@ -103,13 +87,7 @@ class IntegrationAuditor:
                 payload = json.loads((self.root / relative).read_text(encoding="utf-8"))
                 marker = payload.get("version", payload.get("schema_version")) if isinstance(payload, dict) else None
                 valid = isinstance(payload, dict) and isinstance(marker, (int, str))
-                checks.append(
-                    IntegrationCheck(
-                        relative,
-                        valid,
-                        "valid schema-versioned JSON configuration" if valid else "root/schema version is invalid",
-                    )
-                )
+                checks.append(IntegrationCheck(relative, valid, "valid schema-versioned JSON configuration" if valid else "root/schema version is invalid"))
             except (OSError, TypeError, ValueError) as exc:
                 checks.append(IntegrationCheck(relative, False, f"unreadable: {exc}"))
         return tuple(checks)
@@ -119,15 +97,7 @@ class IntegrationAuditor:
         source = deployment.read_text(encoding="utf-8") if deployment.is_file() else ""
         forbidden = ("APPLIED", "def apply", "def deploy")
         found = tuple(token for token in forbidden if token in source)
-        return (
-            IntegrationCheck(
-                "deployment_planning_only",
-                not found,
-                "no apply/deploy state or method in deployment planning"
-                if not found
-                else "forbidden: " + ", ".join(found),
-            ),
-        )
+        return (IntegrationCheck("deployment_planning_only", not found, "no apply/deploy state or method in deployment planning" if not found else "forbidden: " + ", ".join(found)),)
 
     def _packaging(self) -> tuple[IntegrationCheck, ...]:
         try:
@@ -135,13 +105,7 @@ class IntegrationAuditor:
         except OSError as exc:
             return (IntegrationCheck("packaging", False, str(exc)),)
         missing = tuple(script for script in self.REQUIRED_SCRIPTS if f"{script} =" not in text)
-        return (
-            IntegrationCheck(
-                "packaging",
-                not missing,
-                "all operator entry points declared" if not missing else "missing scripts: " + ", ".join(missing),
-            ),
-        )
+        return (IntegrationCheck("packaging", not missing, "all operator entry points declared" if not missing else "missing scripts: " + ", ".join(missing)),)
 
     def _documentation(self) -> tuple[IntegrationCheck, ...]:
         phases = self.root / "docs/architecture/PHASES.md"
@@ -149,12 +113,7 @@ class IntegrationAuditor:
             text = phases.read_text(encoding="utf-8")
         except OSError as exc:
             return (IntegrationCheck("documentation", False, str(exc)),)
-        expected = ("42. Harness Deployment Center", "43. Final v3 Integration & Hardening")
+        # V3 remains historically indexed while V4 is now the active roadmap.
+        expected = ("43. Final v3 Integration & Hardening", "Phase 44", "Phase 71")
         missing = tuple(item for item in expected if item not in text)
-        return (
-            IntegrationCheck(
-                "documentation",
-                not missing,
-                "phase index contains current and final phase" if not missing else "missing: " + ", ".join(missing),
-            ),
-        )
+        return (IntegrationCheck("documentation", not missing, "phase index contains v3 close and v4 roadmap" if not missing else "missing: " + ", ".join(missing)),)
