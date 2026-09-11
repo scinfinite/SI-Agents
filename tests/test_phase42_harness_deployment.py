@@ -1,4 +1,4 @@
-"""Phase 42 harness deployment planning and boundary tests."""
+"""Phase 42 harness deployment planning and security coverage."""
 
 from pathlib import Path
 
@@ -7,7 +7,6 @@ import pytest
 from core.deployment_center.api import create, snapshot
 from core.deployment_center.models import DeploymentState
 from core.deployment_center.service import DeploymentCenter
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -24,7 +23,9 @@ def test_valid_plan_is_planning_only() -> None:
     plan = center.plan("p1", "opencode", ("agent-a",), ("team-a",), ("skill-a",))
     assert plan.state is DeploymentState.VALID
     assert center.get("p1") == plan
-    assert snapshot(center)["plans"] == [plan.as_dict()]
+    state = snapshot(center)
+    assert state["authority"] == "planning-only; deployment execution is a separate governed boundary"
+    assert state["plans"] == [plan.as_dict()]
 
 
 def test_unknown_target_and_authority_requests_fail_closed() -> None:
