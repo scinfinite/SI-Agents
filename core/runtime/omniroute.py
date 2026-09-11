@@ -114,12 +114,25 @@ class UrllibOmniRouteTransport:
         url = f"{self.base_url}/{path.lstrip('/')}"
         return f"{url}?{urllib.parse.urlencode(query)}" if query else url
 
-    def request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None, token: str | None = None) -> Any:
+    def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        query: Mapping[str, str] | None = None,
+        body: Mapping[str, Any] | None = None,
+        token: str | None = None,
+    ) -> Any:
         payload = json.dumps(body).encode() if body is not None else None
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         if token:
             headers["Authorization"] = f"Bearer {token}"
-        request = urllib.request.Request(self._url(path, query), data=payload, method=method.upper(), headers=headers)
+        request = urllib.request.Request(
+            self._url(path, query),
+            data=payload,
+            method=method.upper(),
+            headers=headers,
+        )
         try:
             with urllib.request.urlopen(request, timeout=self.timeout) as response:
                 raw = response.read()
@@ -165,7 +178,13 @@ class OmniRouteBridge(HarnessAdapter):
         self.base_url = base_url.rstrip("/")
         self._transport = transport or UrllibOmniRouteTransport(self.base_url, timeout)
         self._metadata = HarnessMetadata("omniroute", RuntimeKind.API, version)
-        self._capabilities = RuntimeCapabilities(streaming=True, cancellation=False, tool_calls=False, structured_output=True, session_continuity=False)
+        self._capabilities = RuntimeCapabilities(
+            streaming=True,
+            cancellation=False,
+            tool_calls=False,
+            structured_output=True,
+            session_continuity=False,
+        )
         self._credential_ref = credential_ref or OmniRouteCredentialRef("default")
         self._lock = threading.RLock()
         self._catalog: tuple[OmniRouteModel, ...] = ()
@@ -212,42 +231,109 @@ class OmniRouteBridge(HarnessAdapter):
             self._catalog = models
         return models
 
-    def select_model(self, policy: OmniRoutePolicy, *, models: tuple[OmniRouteModel, ...] | None = None) -> OmniRouteModel:
+    def select_model(
+        self,
+        policy: OmniRoutePolicy,
+        *,
+        models: tuple[OmniRouteModel, ...] | None = None,
+    ) -> OmniRouteModel:
         catalog = models if models is not None else self.list_models()
         candidates = [m for m in catalog if policy.required_capabilities <= m.capabilities]
         if policy.max_input_cost is not None:
-            candidates = [m for m in candidates if m.input_cost is None or m.input_cost <= policy.max_input_cost]
+            candidates = [
+                m
+                for m in candidates
+                if m.input_cost is None or m.input_cost <= policy.max_input_cost
+            ]
         if policy.max_output_cost is not None:
-            candidates = [m for m in candidates if m.output_cost is None or m.output_cost <= policy.max_output_cost]
+            candidates = [
+                m
+                for m in candidates
+                if m.output_cost is None or m.output_cost <= policy.max_output_cost
+            ]
         by_id = {m.model_id: m for m in candidates}
         for model_id in (*policy.preferred_models, *policy.fallback_models):
             if model_id in by_id:
                 return by_id[model_id]
         if candidates:
-            return sorted(candidates, key=lambda m: (m.input_cost if m.input_cost is not None else float("inf"), m.model_id))[0]
+            return sorted(
+                candidates,
+                key=lambda m: (
+                    m.input_cost if m.input_cost is not None else float("inf"),
+                    m.model_id,
+                ),
+            )[0]
         raise LookupError("no OmniRoute model satisfies the requested policy")
 
     def invoke(self, request: InvocationRequest) -> InvocationResponse:
         try:
             policy = self._policy_from_request(request)
             model = self.select_model(policy)
-            result = self._request("POST", "/v1/chat/completions", body=self._completion_body(request, model))
+            result = self._request(
+                "POST",
+                "/v1/chat/completions",
+                body=self._completion_body(request, model),
+            )
             output = self._extract_output(result)
             usage = self._extract_usage(result)
             event = RuntimeEvent(RuntimeEventType.COMPLETED, request.request_id, 0, output)
-            return InvocationResponse(request.request_id, InvocationStatus.COMPLETED, output=output, events=(event,), usage=usage)
+            return InvocationResponse(
+                request.request_id,
+                InvocationStatus.COMPLETED,
+                output=output,
+                events=(event,),
+                usage=usage,
+            )
         except LookupError as exc:
-            return InvocationResponse(request.request_id, InvocationStatus.FAILED, error=SIRuntimeError(RuntimeErrorCode.NOT_SUPPORTED, str(exc), retryable=False))
+            return InvocationResponse(
+                request.request_id,
+                InvocationStatus.FAILED,
+                error=SIRuntimeError(RuntimeErrorCode.NOT_SUPPORTED, str(exc), retryable=False),
+            )
         except OmniRouteTransportError as exc:
-            code = RuntimeErrorCode.TIMEOUT if exc.kind == "transport_error" else RuntimeErrorCode.EXECUTION_FAILED
-            retryable = exc.status in {408, 409, 425, 429, 500, 502, 503, 504}
-            return InvocationResponse(request.request_id, InvocationStatus.FAILED, error=SIRuntimeError(code, "OmniRoute request failed", retryable=retryable))
+            code = (
+                RuntimeErrorCode.TIMEOUT
+                if exc.kind == "transport_error"
+                else RuntimeErrorCode.EXECUTION_FAILED
+            )
+            retryable = exc.kind == "transport_error" or exc.status in {
+                408,
+                409,
+                425,
+                429,
+                500,
+                502,
+                503,
+                504,
+            }
+            return InvocationResponse(
+                request.request_id,
+                InvocationStatus.FAILED,
+                error=SIRuntimeError(
+                    code,
+                    "OmniRoute request failed",
+                    retryable=retryable,
+                ),
+            )
 
     def cancel(self, request_id: str) -> bool:
         return False
 
-    def _request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None) -> Any:
-        return self._transport.request(method, path, query=query, body=body, token=self._credential_ref.resolve())
+    def _request(
+        self,
+        method: str,
+        path: str,
+        *,
+        query: Mapping[str, str] | None = None,
+        body: Mapping[str, Any] | None = None,
+    ) -> Any:
+        return self._transport.request(
+            method,
+            path,
+            query=query,
+            body=body,
+            token=self._credential_ref.resolve(),
+        )
 
     @staticmethod
     def _parse_model(item: Mapping[str, Any]) -> OmniRouteModel:
@@ -255,12 +341,23 @@ class OmniRouteBridge(HarnessAdapter):
         if not isinstance(model_id, str) or not model_id.strip():
             raise OmniRouteTransportError(None, "invalid_model_entry")
         raw_caps = item.get("capabilities")
-        capabilities = frozenset(str(value) for value in raw_caps if str(value).strip()) if isinstance(raw_caps, list) else frozenset()
+        capabilities = (
+            frozenset(str(value) for value in raw_caps if str(value).strip())
+            if isinstance(raw_caps, list)
+            else frozenset()
+        )
         provider_id = item.get("provider") or item.get("provider_id")
         context = item.get("context_window") or item.get("context_length")
         input_cost = item.get("input_cost")
         output_cost = item.get("output_cost")
-        return OmniRouteModel(model_id, str(provider_id) if provider_id else None, capabilities, int(context) if isinstance(context, (int, float)) else None, float(input_cost) if isinstance(input_cost, (int, float)) else None, float(output_cost) if isinstance(output_cost, (int, float)) else None)
+        return OmniRouteModel(
+            model_id,
+            str(provider_id) if provider_id else None,
+            capabilities,
+            int(context) if isinstance(context, (int, float)) else None,
+            float(input_cost) if isinstance(input_cost, (int, float)) else None,
+            float(output_cost) if isinstance(output_cost, (int, float)) else None,
+        )
 
     @staticmethod
     def _policy_from_request(request: InvocationRequest) -> OmniRoutePolicy:
@@ -271,13 +368,24 @@ class OmniRouteBridge(HarnessAdapter):
         return OmniRoutePolicy(required, preferred, fallback)
 
     @staticmethod
-    def _completion_body(request: InvocationRequest, model: OmniRouteModel) -> dict[str, Any]:
+    def _completion_body(
+        request: InvocationRequest,
+        model: OmniRouteModel,
+    ) -> dict[str, Any]:
         if isinstance(request.input, Mapping) and isinstance(request.input.get("messages"), list):
             messages = request.input["messages"]
         else:
-            text = request.input if isinstance(request.input, str) else json.dumps(request.input, ensure_ascii=False, sort_keys=True)
+            text = (
+                request.input
+                if isinstance(request.input, str)
+                else json.dumps(request.input, ensure_ascii=False, sort_keys=True)
+            )
             messages = [{"role": "user", "content": text}]
-        body: dict[str, Any] = {"model": model.model_id, "messages": messages, "stream": False}
+        body: dict[str, Any] = {
+            "model": model.model_id,
+            "messages": messages,
+            "stream": False,
+        }
         metadata = dict(request.metadata)
         for key in ("temperature", "max_tokens", "response_format"):
             if key not in metadata:
