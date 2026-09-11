@@ -1,11 +1,12 @@
 # SI-Agents v4 — Agent Operating System Roadmap
 
-**Status:** Planning / architecture baseline
+**Status:** Active implementation
 **Baseline:** SI-Agents v3, Phases 1–43 complete and CI-verified
+**Implemented:** Phases 44–47 complete and final-CI verified
+**Current phase:** Phase 48 — OmniRoute Integration
 **Planned sequence:** Phases 44–71
-**Current implementation status:** Phase 44 implementation has not started on `main`
 
-> **Planning rule:** This document defines the intended v4 direction. It does not claim implementation is complete. A phase is complete only after implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
+> **Planning rule:** This document defines the intended v4 direction and records implementation state where verified. A phase is complete only after implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
 
 ## 1. Executive vision
 
@@ -126,15 +127,19 @@ Provider routing is downstream. It cannot grant authority, change provenance or 
 
 ## Phase 44 — Execution Runtime Foundation
 
+**Status: Complete + final-CI verified.**
+
 **Objective:** Establish durable execution primitives and the runtime contract.
 
 **Scope:** execution/run model; task model; canonical IDs; lifecycle state machine; attempt model; runtime API contracts; persistence; cancellation; pause/resume; deadlines/timeouts; ownership/cleanup; deterministic transitions; adapter boundary; normalized outcomes; idempotency foundations; restart recovery.
 
 **Acceptance:** executions/tasks have stable IDs; state survives restart; invalid transitions fail; cancellation cleans owned resources; retries create explicit attempts; runtime cannot bypass Control API authority; unit/integration/negative tests cover contracts.
 
-**Gate:** contract review and v4 preflight must be complete before implementation expands. The prepared Phase 44 runtime contract is architectural input, not evidence of implementation.
+**Final evidence:** CI #919 (`34610448789`) passed distribution, wheel installation/import, repository audit, integration verification, Ruff, compileall and the complete pytest suite.
 
 ## Phase 45 — Event Bus + State Architecture
+
+**Status: Complete + final-CI verified.**
 
 **Objective:** Make runtime state durable, ordered, replayable and shared by every surface.
 
@@ -142,7 +147,11 @@ Provider routing is downstream. It cannot grant authority, change provenance or 
 
 **Acceptance:** Web, TUI, CLI and OpenCode observe the same authoritative state; replay reconstructs state; duplicate delivery is safe; exactly one canonical terminal outcome exists per execution/attempt.
 
+**Final evidence:** exact-tree CI #935 (`34612616978`) passed after documentation/evidence alignment.
+
 ## Phase 46 — Parallel Scheduler + Executor
+
+**Status: Complete + final-CI verified.**
 
 **Objective:** Execute real task graphs concurrently with deterministic dependency and resource controls.
 
@@ -150,7 +159,11 @@ Provider routing is downstream. It cannot grant authority, change provenance or 
 
 **Acceptance:** independent tasks demonstrably run in parallel; dependencies block correctly; concurrency never exceeds limits; failures follow policy; cancellation propagates safely; scheduler behavior is deterministic under stress tests.
 
+**Final evidence:** CI #938 (`34615157829`) on commit `772716428868a7597540a0bea72f715dfd46a224` passed all repository gates.
+
 ## Phase 47 — OpenCode Bridge
+
+**Status: Complete + final-CI verified.**
 
 **Objective:** Connect SI-managed objectives to the current supported OpenCode protocol/session mechanisms.
 
@@ -158,7 +171,11 @@ Provider routing is downstream. It cannot grant authority, change provenance or 
 
 **Acceptance:** a user can initiate an SI-managed objective through OpenCode and receive live progress and a verified result without manually synchronizing state. No undocumented coupling is allowed.
 
+**Final evidence:** implementation CI #941 (`34615709124`) passed; final documentation exact-tree CI #942 (`34615862860`) on `main` also passed.
+
 ## Phase 48 — OmniRoute Integration
+
+**Status: Next.**
 
 **Objective:** Use OmniRoute as the model/provider access layer without creating a competing router.
 

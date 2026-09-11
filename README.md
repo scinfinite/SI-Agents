@@ -4,22 +4,22 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**v3 is complete and closed. v4 planning is established through Phase 71; Phase 44 implementation has not started on `main`.**
+**v3 is complete and closed. V4 is active through Phase 47; Phases 44–47 are complete and final-CI verified. Phase 48 — OmniRoute Integration — is next.**
 
 The verified v3 foundation includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, localhost-first Web, Control Center, visual organization/workflow inspection, Agent Builder, evidence-first observability, TUI, the governed Harness Deployment Center, and final cross-cutting integration hardening.
 
-The v4 goal is to evolve this foundation into a real agent operating system with persistent execution state, parallel task orchestration, live events/control, first-class OpenCode + OmniRoute integration, richer agent/team/workflow capabilities, security and economics controls, advanced Web/TUI/CLI surfaces, and a simple npm-based installation experience.
+V4 is now extending that foundation into a real agent operating system with durable execution state, parallel task orchestration, live events/control, first-class OpenCode + OmniRoute integration, richer agent/team/workflow capabilities, security and economics controls, advanced Web/TUI/CLI surfaces, and a simple npm-based installation experience.
 
 ## V4 roadmap
 
 The complete v4 plan is `docs/architecture/SI_AGENTS_V4_PLAN.md` and covers Phases 44–71.
 
 ```text
-44 Runtime Foundation
- → 45 Event + State
- → 46 Scheduler / Executor
- → 47 OpenCode Bridge
- → 48 OmniRoute
+44 Runtime Foundation       [complete]
+ → 45 Event + State         [complete]
+ → 46 Scheduler / Executor  [complete]
+ → 47 OpenCode Bridge       [complete]
+ → 48 OmniRoute             [next]
  → 49 Agent + Team Builder
  → 50 Capability Authorization
  → 51 Checkpoints + Resume
@@ -70,16 +70,25 @@ This remains a V4 target and is not a claim of a currently released npm contract
 
 ## Current verification baseline
 
-Phase 43 final correction merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI #886 (`34558002476`) passed the repository release gates, including distribution, wheel installation, repository audit, Ruff, and the complete pytest suite.
+Phase 43 final correction merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI #886 (`34558002476`) passed the V3 release gates.
+
+V4 verification:
+- Phase 44 final CI #919 (`34610448789`) passed.
+- Phase 45 final exact-tree CI #935 (`34612616978`) passed.
+- Phase 46 final CI #938 (`34615157829`) passed.
+- Phase 47 implementation CI #941 (`34615709124`) passed, followed by final documentation exact-tree CI #942 (`34615862860`) on `main`.
 
 ## Documentation
 
 - `docs/README.md` — documentation navigation and current baseline.
 - `docs/architecture/PHASES.md` — authoritative current status.
-- `docs/architecture/README.md` — architecture index.
+- `docs/architecture/README.md` — architecture index and phase navigation.
 - `docs/architecture/SI_AGENTS_V4_PLAN.md` — V4 roadmap and acceptance gates through Phase 71.
-- `docs/architecture/SI_AGENTS_V3.md` — completed V3 architecture record.
-- `docs/architecture/PHASE_43_INTEGRATION_HARDENING.md` — final V3 phase evidence.
+- `docs/architecture/SI_AGENTS_V3.md` — completed V3 architecture.
+- `docs/architecture/PHASE_44_EXECUTION_RUNTIME.md` — Phase 44 evidence.
+- `docs/architecture/PHASE_45_EVENT_BUS_STATE.md` — Phase 45 evidence.
+- `docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md` — Phase 46 evidence.
+- `docs/architecture/PHASE_47_OPENCODE_BRIDGE.md` — Phase 47 evidence.
 
 ## Engineering loop
 
@@ -90,4 +99,4 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 ## Documentation rule
 
-Historical phase Markdown preserves phase-time evidence. Current/index Markdown must reflect the latest verified status. Documentation must never claim implementation that has not been implemented and CI-verified.
+Historical phase Markdown preserves phase-time evidence. Current/index Markdown must reflect the latest verified status. After every completed phase, current status, navigation/index, roadmap state, verification baseline, and relevant cross-cutting documentation must be updated. Documentation must never claim implementation that has not been implemented and CI-verified.
