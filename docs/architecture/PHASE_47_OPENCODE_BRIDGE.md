@@ -1,13 +1,13 @@
 # Phase 47 — OpenCode Bridge
 
-**Status:** Implementation active; final CI gate pending.
+**Status:** Complete and CI-verified
 **Roadmap:** V4 Phase 47
 
 ## Objective
 
 Provide a first-class OpenCode protocol adapter while preserving the SI control/runtime authority boundary. OpenCode supplies transport/session/execution mechanics; SI retains caller authorization, capability policy, provenance, approvals, lifecycle authority, and audit semantics.
 
-## Current implementation
+## Implemented
 
 - `core/runtime/opencode.py` provides `OpenCodeBridge` and a stdlib HTTP/SSE transport.
 - OpenCode health discovery via `/global/health`.
@@ -22,6 +22,8 @@ Provide a first-class OpenCode protocol adapter while preserving the SI control/
 - Loopback-only default endpoint policy; remote endpoints require explicit `allow_remote=True`.
 - Transport error normalization with retryability classification and no upstream response-body leakage.
 - Injectable transport for deterministic tests and alternate platform clients.
+- Session-filtered event consumption so global/unscoped events cannot leak another session's output into an SI invocation.
+- Transport failures during session creation are normalized to a stable SI failed response.
 
 ## Authority invariants
 
@@ -32,17 +34,24 @@ Provide a first-class OpenCode protocol adapter while preserving the SI control/
 5. Cancellation is exposed through the existing SI adapter contract and OpenCode abort endpoint only.
 6. Streaming terminality is normalized to exactly one SI terminal response.
 7. Remote OpenCode access is opt-in rather than the default.
+8. Events without the active OpenCode session identity are ignored by the bridge.
 
 ## Upstream protocol alignment
 
-The bridge targets the current OpenCode server surface: health, session creation, session message/prompt_async, abort, and event streaming. The upstream server source currently exposes these session operations and an SSE event surface; SI keeps this integration behind its own stable adapter contract rather than coupling core runtime code to OpenCode internals.
-
-The bridge also follows the project's established verification principles: explicit capability discovery, injectable transports, fail-closed endpoint policy, secret-safe error normalization, deterministic tests, and no hidden authority transfer.
+The bridge targets the current OpenCode server surface: health, session creation, session message/prompt_async, abort, and event streaming. The integration is intentionally isolated behind SI's stable adapter contract so upstream protocol changes do not become SI core authority changes.
 
 ## Verification coverage
 
 `tests/test_phase47_opencode.py` covers endpoint policy, health/session discovery, blocking invocation, session reuse, model forwarding, cancellation, SSE filtering, streaming terminality, streaming failures, and transport-error normalization.
 
-## CI gate
+## Final verification evidence
 
-Phase 47 may only be marked complete after the exact `main` tree containing implementation, tests, docs, and status evidence passes the full CI release gate: distribution, wheel install/import, repository audit, integration verification, Ruff, compileall, and complete pytest.
+The implementation initially ran as CI **#940 (`34615549738`)** on commit `21479716adffba5f1ab03742e2b49905666abf3b`. That gate caught two correctness gaps: cancellation was asserted after a completed request, and transport errors during session creation were not normalized. Both were corrected in commit **`52176a1d612637cbc892b354771f80e6af86910e`**.
+
+Final Phase 47 CI **#941 (`34615709124`)** on commit `52176a1d612637cbc892b354771f80e6af86910e` completed successfully. The final job passed distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
+
+## Phase 47 gate result
+
+Phase 47 is closed. The OpenCode bridge is implemented on `main`, exported through the runtime package, tested for transport/session/invocation/stream/cancellation/security-boundary behavior, documented, packaging-verified, and final-CI verified.
+
+Phase 48 — OmniRoute Integration is the next implementation phase.
