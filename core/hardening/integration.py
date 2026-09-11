@@ -46,21 +46,21 @@ class IntegrationAuditor:
         "core/deployment_center/models.py",
         "core/evidence/models.py",
     )
-    REQUIRED_SCRIPTS = ("si", "si-api", "si-web", "si-tui", "si-deploy")
+    REQUIRED_SCRIPTS = ("si", "si-api", "si-web", "si-tui", "si-deploy", "si-verify")
 
     def __init__(self, root: str | Path) -> None:
         self.root = Path(root).resolve()
 
     def run(self) -> IntegrationReport:
-        checks = (
+        groups = (
             self._files(),
             self._catalogs(),
             self._authority_boundaries(),
             self._packaging(),
             self._documentation(),
         )
-        flattened = tuple(item for group in checks for item in group)
-        return IntegrationReport(all(check.passed for check in flattened), flattened)
+        checks = tuple(item for group in groups for item in group)
+        return IntegrationReport(all(check.passed for check in checks), checks)
 
     def _files(self) -> tuple[IntegrationCheck, ...]:
         missing = tuple(path for path in self.REQUIRED_FILES if not (self.root / path).is_file())
@@ -87,23 +87,28 @@ class IntegrationAuditor:
             ]
             division_count = len(divisions)
             agent_count = len(agents)
-            checks.append(IntegrationCheck(
-                "agent_catalog",
-                division_count == 18 and agent_count == 279,
-                f"{agent_count} agents across {division_count} divisions",
-            ))
-        except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            checks.append(
+                IntegrationCheck(
+                    "agent_catalog",
+                    division_count == 18 and agent_count == 279,
+                    f"{agent_count} agents across {division_count} divisions",
+                )
+            )
+        except (OSError, TypeError, ValueError) as exc:
             checks.append(IntegrationCheck("agent_catalog", False, f"unreadable: {exc}"))
 
         for relative in ("config/governance.v1.json", "config/organization-expansion.v1.json"):
             try:
                 payload = json.loads((self.root / relative).read_text(encoding="utf-8"))
-                checks.append(IntegrationCheck(
-                    relative,
-                    isinstance(payload, dict) and isinstance(payload.get("version"), (int, str)),
-                    "valid JSON configuration" if isinstance(payload, dict) else "root must be an object",
-                ))
-            except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+                valid = isinstance(payload, dict) and isinstance(payload.get("version"), (int, str))
+                checks.append(
+                    IntegrationCheck(
+                        relative,
+                        valid,
+                        "valid JSON configuration" if valid else "root/version is invalid",
+                    )
+                )
+            except (OSError, TypeError, ValueError) as exc:
                 checks.append(IntegrationCheck(relative, False, f"unreadable: {exc}"))
         return tuple(checks)
 
@@ -116,7 +121,9 @@ class IntegrationAuditor:
             IntegrationCheck(
                 "deployment_planning_only",
                 not found,
-                "no apply/deploy state or method in deployment planning" if not found else "forbidden: " + ", ".join(found),
+                "no apply/deploy state or method in deployment planning"
+                if not found
+                else "forbidden: " + ", ".join(found),
             ),
         )
 
