@@ -40,10 +40,12 @@ It does **not** become an authorization or governance plane. Control API authori
 
 ## Final verification evidence
 
-The exact implementation/documentation tree before this evidence-alignment commit was **`17031c61316bd221a8f43f713f00765c236ae5c7`**. Final CI run **#933 (`34612429660`)** completed successfully, covering the implementation and the first complete closure documentation tree.
+The final exact `main` tree is commit **`d2821c86865df18d3b8d7988413e31df0e20c753`**. Final CI run **#935 (`34612616978`)** completed successfully.
 
-The subsequent evidence-alignment change is documentation-only and triggers the final exact-tree CI gate. That final run must remain green before this phase is considered closed.
+The final CI gate passed the repository release checks, including distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
 
 ## Phase 45 gate result
 
-Implementation is complete. Closure is governed by the final CI run on the exact current `main` tree.
+Phase 45 is closed. The event bus/state architecture is implemented on `main`, integrated with the Phase 44 runtime, tested for durability/order/replay/projection/concurrency/security-boundary behavior, documented, packaging-verified, and final-CI verified.
+
+Phase 46 — Parallel Scheduler + Executor is the next implementation phase.
