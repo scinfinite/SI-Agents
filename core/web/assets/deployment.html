@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SI-Agents Deployment Center</title><link rel="stylesheet" href="/assets/deployment.css">
+</head>
+<body>
+  <main>
+    <header><h1>Harness Deployment Center</h1><p>Inspect and prepare deployment plans. This surface never deploys or executes workers.</p></header>
+    <section aria-labelledby="targets"><h2 id="targets">Registered targets</h2><div id="targets-list">Loading…</div></section>
+    <section aria-labelledby="plans"><h2 id="plans">Plans</h2><div id="plans-list">Loading…</div></section>
+    <section aria-labelledby="create"><h2 id="create">Prepare a plan</h2>
+      <form id="plan-form">
+        <label>Plan ID <input id="plan-id" required pattern="[A-Za-z0-9._:-]+"></label>
+        <label>Harness <input id="harness-id" required></label>
+        <label>Agents <textarea id="agents" placeholder="one ID per line"></textarea></label>
+        <label>Teams <textarea id="teams" placeholder="one ID per line"></textarea></label>
+        <label>Skills <textarea id="skills" placeholder="one ID per line"></textarea></label>
+        <button type="submit">Validate plan</button>
+      </form><pre id="result" aria-live="polite"></pre>
+    </section>
+  </main><script src="/assets/deployment.js" defer></script>
+</body></html>
