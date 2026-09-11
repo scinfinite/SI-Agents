@@ -14,6 +14,69 @@ Phase 43 adds a deterministic integration audit over the complete v3 surface and
 
 The final hardening pass also removed the unused deployment `APPLIED` state, retained fail-closed release-gate semantics, and added adversarial regression coverage. A schema-version compatibility regression found by mainline CI was corrected before final closure.
 
+## Quick start
+
+### 1. Install from a checkout
+
+```bash
+git clone https://github.com/scinfinite/SI-Agents.git
+cd SI-Agents
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
+python -m pip install -r requirements-dev.txt
+```
+
+Python 3.11 or newer is required.
+
+### 2. Verify the installation and repository
+
+```bash
+si doctor --json
+si audit --json
+si verify --json
+```
+
+`si verify` is a deterministic readiness check. It does not execute downstream agents, tools, shell commands, deployments, or external calls.
+
+### 3. Inspect the system
+
+```bash
+si status --json
+si agents --json
+si personas --division si-engineering --json
+si teams --json
+si skills --json
+```
+
+### 4. Use the operator surfaces
+
+```bash
+si tui --once
+si web --host 127.0.0.1 --port 8787
+```
+
+Open `http://127.0.0.1:8787/` when the Web server is running locally.
+
+### 5. Plan, do not execute, deployments
+
+```bash
+si deploy targets --json
+si deploy plans --json
+si deploy plan PLAN_ID HARNESS_ID --json
+```
+
+The Deployment Center is deliberately planning-only: it does not grant authority, migrate credentials, enable adapters, execute workers, or perform external deployment calls.
+
+### 6. Run a governed team workflow
+
+```bash
+si run TEAM --objective "Inspect the repository and propose a verified change"
+```
+
+Use `si setup` when you need to prepare optional local OpenCode integration. Credentials are not stored by SI-Agents.
+
 ## Architecture
 
 ```text

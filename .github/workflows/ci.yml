@@ -65,6 +65,9 @@ jobs:
       - name: Run SI repository audit
         run: si audit --json
 
+      - name: Run SI integration verification
+        run: si verify --json
+
       - name: Run Ruff
         run: python -m ruff check . --output-format=json > ruff-report.json || (cat ruff-report.json; exit 1)
 
