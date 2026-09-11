@@ -1,6 +1,13 @@
 """Security and governance primitives with fail-closed decision boundaries."""
 
 from core.governance.audit import AuditLog, AuditRecord
+from core.governance.authorization import (
+    AuthorizationDecision,
+    AuthorizationEvidence,
+    AuthorizationRequest,
+    CapabilityAuthorizer,
+    CapabilitySubject,
+)
 from core.governance.catalog import GovernanceCatalogError, load_catalog
 from core.governance.engine import GovernanceEngine
 from core.governance.models import (
@@ -27,7 +34,12 @@ __all__ = [
     "Approval",
     "AuditLog",
     "AuditRecord",
+    "AuthorizationDecision",
+    "AuthorizationEvidence",
+    "AuthorizationRequest",
     "Capability",
+    "CapabilityAuthorizer",
+    "CapabilitySubject",
     "CostConstraint",
     "CredentialReference",
     "DataClass",
