@@ -109,8 +109,7 @@ class CapabilityAuthorizer:
         reasons: list[str] = []
         matched: list[str] = []
         denied: list[str] = []
-        policies = [policy for policy in self._policies if policy.deny_capabilities]
-        matched_policy_names = tuple(policy.name for policy in policies)
+        matched_policy_names = tuple(policy.name for policy in self._policies)
 
         if declared is not None and not set(request.capabilities).issubset(declared):
             missing = sorted(set(request.capabilities) - declared)
@@ -126,6 +125,9 @@ class CapabilityAuthorizer:
                 reasons.append(f"policy {policy.name} denies external egress")
             if policy.max_cost is not None and request.estimated_cost > policy.max_cost:
                 reasons.append(f"policy {policy.name} cost limit exceeded")
+
+        if request.external_egress and not any(policy.allow_external_egress for policy in self._policies):
+            reasons.append("external egress requires an explicit allow policy")
 
         for capability in request.capabilities:
             cap_permissions = [
@@ -151,7 +153,7 @@ class CapabilityAuthorizer:
         if reasons:
             return self._decision(DecisionStatus.DENY, reasons, matched, denied, matched_policy_names, request)
 
-        approval_required = any(request.risk in policy.approval_risks for policy in self._policies)
+        approval_required = request.risk in (RiskLevel.HIGH, RiskLevel.CRITICAL) or any(request.risk in policy.approval_risks for policy in self._policies)
         if approval_required and (request.approval is None or not request.approval.active()):
             return self._decision(DecisionStatus.APPROVAL_REQUIRED, ["active approval required by risk policy"], matched, denied, matched_policy_names, request)
 
