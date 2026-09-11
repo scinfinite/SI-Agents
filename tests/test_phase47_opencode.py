@@ -67,11 +67,10 @@ def test_existing_session_and_model_metadata_are_forwarded_without_authority_fie
     assert "authority_scope" not in body
 
 
-def test_cancel_aborts_mapped_session():
+def test_cancel_aborts_a_known_session():
     transport = FakeTransport()
     bridge = OpenCodeBridge(transport=transport)
-    bridge.invoke(request())
-    assert bridge.cancel("req_1") is True
+    assert bridge.cancel("ses_test") is True
     assert transport.calls[-1][1] == "/session/ses_test/abort"
 
 

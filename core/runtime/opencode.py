@@ -144,11 +144,12 @@ class OpenCodeBridge(HarnessAdapter):
         return OpenCodeSession(session_id, project_id)
 
     def invoke(self, request: InvocationRequest) -> InvocationResponse:
-        session_id = request.session_id or self.create_session(request.project_id).session_id
-        with self._lock:
-            self._sessions[request.request_id] = session_id
-        body = self._message_body(request)
+        session_id: str | None = None
         try:
+            session_id = request.session_id or self.create_session(request.project_id).session_id
+            with self._lock:
+                self._sessions[request.request_id] = session_id
+            body = self._message_body(request)
             if request.streaming:
                 self._request("POST", f"/session/{urllib.parse.quote(session_id, safe='')}/prompt_async", body=body)
                 return self._invoke_streaming(request, session_id)
