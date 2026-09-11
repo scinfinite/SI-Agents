@@ -11,11 +11,7 @@ from .models import DeploymentPlan, DeploymentState, HarnessTarget
 
 
 class DeploymentCenter:
-    """Inspect, validate, and prepare harness deployment plans.
-
-    Applying a plan is intentionally outside this service. This boundary can
-    produce a manifest, but cannot enable adapters, invoke workers, or move credentials.
-    """
+    """Inspect, validate, and prepare harness deployment plans."""
 
     def __init__(self, root: str | Path):
         self.root = Path(root).resolve()
@@ -32,29 +28,30 @@ class DeploymentCenter:
                 result.append(HarnessTarget(path.name, "unknown", str(path.relative_to(self.root))))
         return tuple(result)
 
-    def plan(
-        self,
-        plan_id: str,
-        harness_id: str,
-        agents: tuple[str, ...],
-        teams: tuple[str, ...],
-        skills: tuple[str, ...] = (),
-        capabilities: tuple[str, ...] = (),
-        permissions: tuple[str, ...] = (),
-    ) -> DeploymentPlan:
+    @staticmethod
+    def _normalize(name: str, values: tuple[str, ...]) -> tuple[str, ...]:
+        if len(set(values)) != len(values):
+            raise ValueError(f"{name} must contain unique identifiers")
+        if any(not value.strip() for value in values):
+            raise ValueError(f"{name} cannot contain empty identifiers")
+        return tuple(sorted(values))
+
+    def plan(self, plan_id: str, harness_id: str, agents: tuple[str, ...], teams: tuple[str, ...],
+             skills: tuple[str, ...] = (), capabilities: tuple[str, ...] = (),
+             permissions: tuple[str, ...] = ()) -> DeploymentPlan:
         target_ids = {target.id for target in self.targets()}
         reasons: list[str] = []
         if harness_id not in target_ids:
             reasons.append("harness target is not registered")
         if capabilities:
-            reasons.append("requested capabilities require existing governance authorization")
+            reasons.append("requested capabilities are authority-bearing and require existing governance authorization")
         if permissions:
-            reasons.append("requested permissions require existing governance authorization")
+            reasons.append("requested permissions are authority-bearing and require existing governance authorization")
         state = DeploymentState.BLOCKED if reasons else DeploymentState.VALID
         result = DeploymentPlan(
-            plan_id, harness_id, tuple(sorted(set(agents))), tuple(sorted(set(teams))),
-            tuple(sorted(set(skills))), tuple(sorted(set(capabilities))), tuple(sorted(set(permissions))),
-            state, tuple(reasons),
+            plan_id, harness_id, self._normalize("agents", agents), self._normalize("teams", teams),
+            self._normalize("skills", skills), self._normalize("requested_capabilities", capabilities),
+            self._normalize("requested_permissions", permissions), state, tuple(reasons),
         )
         with self._lock:
             self._plans[plan_id] = result
