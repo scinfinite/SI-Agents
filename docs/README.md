@@ -15,11 +15,12 @@ This directory is the maintained documentation surface for SI-Agents.
 9. `architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md` — Phase 46 evidence.
 10. `architecture/PHASE_47_OPENCODE_BRIDGE.md` — Phase 47 evidence.
 11. `architecture/PHASE_48_OMNIROUTE_INTEGRATION.md` — Phase 48 evidence.
-12. `architecture/CLI.md` — CLI contract.
-13. `architecture/EXECUTION_BACKENDS.md` — execution backend contract.
-14. `architecture/DEVELOPMENT_VERIFICATION.md` — verification workflow.
-15. `../AGENTS.md` — engineering rules.
-16. `../governance/legal/IP_PROVENANCE.md` — IP/provenance policy.
+12. `architecture/PHASE_49_AGENT_TEAM_BUILDER.md` — Phase 49 evidence.
+13. `architecture/CLI.md` — CLI contract.
+14. `architecture/EXECUTION_BACKENDS.md` — execution backend contract.
+15. `architecture/DEVELOPMENT_VERIFICATION.md` — verification workflow.
+16. `../AGENTS.md` — engineering rules.
+17. `../governance/legal/IP_PROVENANCE.md` — IP/provenance policy.
 
 ## Source-of-truth rules
 
@@ -36,9 +37,9 @@ After every completed phase: implement and test; run relevant verification; upda
 
 ## Current baseline
 
-**V3 Phases 1–43 are complete and CI-verified. V4 Phases 44–48 are complete and final-CI verified. Phase 49 — Agent + Team Builder — is next.**
+**V3 Phases 1–43 are complete and CI-verified. V4 Phases 44–49 are complete and final-CI verified. Phase 50 — Capability Authorization — is next.**
 
-Phase 48 final CI run 949 (`34623762921`) passed distribution, wheel import, repository audit, integration verification, Ruff and the complete pytest suite; the phase is merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
+Phase 49 CI run 954 (`34625018676`) passed distribution, wheel import, repository audit, integration verification, Ruff and the complete pytest suite; it is merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
 
 ## V4 sequence
 
