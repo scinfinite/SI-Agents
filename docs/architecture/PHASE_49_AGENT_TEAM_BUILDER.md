@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation complete; final CI gate pending.**
+**Complete and final-CI verified.**
 
 ## Objective
 
@@ -19,7 +19,7 @@ Provide a typed, deterministic, auditable composition layer for SI-native agents
 
 ## Security and governance boundary
 
-Agent/team definitions are declarative inputs. Capabilities are declarations only. Actual authorization is deliberately deferred to Phase 50's capability authorization layer. Model policy is selection metadata and cannot grant permissions. Resource limits are declarative until runtime enforcement is connected by later phases.
+Agent/team definitions are declarative inputs. Capabilities are declarations only. Actual authorization is owned by Phase 50's capability authorization layer. Model policy is selection metadata and cannot grant permissions. Resource limits are declarative until runtime enforcement is connected by later phases.
 
 ## Determinism
 
@@ -29,6 +29,10 @@ Catalog ordering, canonical manifests, member ordering, capability aggregation, 
 
 Tests: `tests/test_phase49_agent_team_builder.py` cover invalid identifiers, resource limits, duplicate conflicts, missing members, invalid handoffs, deterministic catalog output, capability aggregation, and manifest stability.
 
-## Acceptance gate
+Phase 49 CI run 954 (`34625018676`) passed distribution, wheel installation/import, repository audit, integration verification, Ruff, and the complete pytest suite. The implementation was merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
 
-Phase 49 is not complete until repository audit, integration verification, Ruff, full tests, security/adversarial checks, documentation synchronization, and final exact-tree CI pass on the merged mainline.
+After merge, current/index documentation was synchronized and the resulting mainline tree is the baseline for Phase 50.
+
+## Acceptance
+
+All Phase 49 acceptance requirements are satisfied: implementation, tests, governance-boundary/adversarial coverage, documentation, packaging verification, and CI evidence are complete.
