@@ -1,845 +1,471 @@
-# SI-Agents v4 — Agent Operating System Plan
+# SI-Agents v4 — Agent Operating System Roadmap
 
 **Status:** Planning / architecture baseline
 **Baseline:** SI-Agents v3, Phases 1–43 complete and CI-verified
-**Planned sequence:** Phases 44–55
-**Primary product goal:** Turn SI-Agents from a strong governance/control surface into a real agent operating system with persistent execution, parallel orchestration, live control, first-class OpenCode + OmniRoute integration, and a simple npm-based installation experience.
+**Planned sequence:** Phases 44–71
+**Current implementation status:** Phase 44 implementation has not started on `main`
 
-> **Planning rule:** This document defines the intended v4 direction. It does not claim an implementation is complete. A phase is complete only after implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
-
----
+> **Planning rule:** This document defines the intended v4 direction. It does not claim implementation is complete. A phase is complete only after implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
 
 ## 1. Executive vision
 
-SI-Agents v4 should make multi-agent development feel like one coherent system rather than a collection of independent tools.
+SI-Agents v4 evolves the verified v3 governance/control foundation into a real agent operating system: persistent execution, parallel orchestration, durable state/events, live control, first-class OpenCode and OmniRoute integration, richer agents/teams/workflows, security and economics controls, and production-grade Web/TUI/CLI/distribution.
 
-The intended user experience is:
+The target experience is:
 
 ```text
-                    ┌─────────────────────────┐
-                    │        SI Web            │
-                    │ Primary control plane    │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │   SI Control API        │
-                    │ Single source of truth  │
-                    └────────────┬────────────┘
-                                 │
-              ┌──────────────────┼──────────────────┐
-              │                  │                  │
-        ┌─────▼─────┐      ┌─────▼─────┐      ┌────▼─────┐
-        │ SI Core   │      │ Scheduler │      │ Event Bus│
-        │ Registry  │      │ Executor  │      │  State   │
-        └─────┬─────┘      └─────┬─────┘      └────┬─────┘
-              │                  │                  │
-              └──────────────────┼──────────────────┘
-                                 │
-                       ┌─────────▼─────────┐
-                       │ OpenCode Bridge   │
-                       └─────────┬─────────┘
-                                 │
-                              OpenCode
-                                 │
-                             OmniRoute
-                                 │
-                         Models / Providers
-
-       TUI = live operator control surface
-       CLI = automation / scripting control surface
+User / External System
+        │
+        ├── Web  ───────────────┐
+        ├── TUI  ───────────────┤
+        ├── CLI  ───────────────┤
+        └── OpenCode ───────────┤
+                                ▼
+                       SI Control API
+                       single authority
+                                │
+                    Workflow / Orchestrator
+                                │
+                    Runtime / Scheduler
+                                │
+             ┌──────────────────┼──────────────────┐
+             ▼                  ▼                  ▼
+        OpenCode            OmniRoute       Native/MCP adapters
+             │                  │                  │
+             └──────────────────┼──────────────────┘
+                                ▼
+                         Models / Tools
 ```
 
 ### Product principles
 
-1. **One Core, one authority.** Web, TUI, CLI, and integrations operate through the same SI Core/Control API and never create competing execution state.
-2. **Web-first control.** The Web application is the primary configuration and operational control plane.
-3. **OpenCode remains the interactive coding harness.** SI orchestrates work around it rather than replacing it.
-4. **OmniRoute remains model/provider routing infrastructure.** SI consumes that capability rather than becoming another provider router.
-5. **Parallelism is real.** Independent tasks must be able to execute concurrently with explicit limits and dependency handling.
-6. **State is persistent and observable.** Users must be able to understand what is running, why, by whom, using which model, and what evidence was produced.
-7. **Control is reversible where possible.** Pause, resume, continue, stop, cancellation, retry, and approval gates are explicit state transitions.
-8. **Evidence before completion.** An agent saying it finished is not sufficient; tests, artifacts, logs, and verification gates must establish completion.
-9. **Secure by default.** Credentials remain outside SI state where possible; permissions and authority boundaries fail closed.
-10. **Simple installation.** The target public installation experience is `npm install -g @scinfinite/si`, followed by a guided setup flow.
-11. **Preserve v3 contracts.** Existing personas, skills, governance, memory, organization, and control-plane capabilities evolve without silently reopening the completed v3 sequence.
-12. **No blind copying.** External projects such as ECC and Agency Agents may provide engineering patterns and research input, but SI implementations remain independently designed and governed.
+1. **One Core, one authority.** Web, TUI, CLI and integrations use the same SI Core/Control API and authoritative state.
+2. **Web-first product surface.** Web is the richest visual control plane and runs locally/localhost-first.
+3. **TUI-first operations.** TUI is the fastest terminal-native operator cockpit.
+4. **CLI-first automation.** CLI provides stable scripting, JSON output and exit-code contracts.
+5. **OpenCode remains the interactive coding harness.** SI integrates with it rather than replacing it.
+6. **OmniRoute remains provider/model routing infrastructure.** SI consumes routing capability rather than becoming a competing provider router.
+7. **Real parallelism.** Independent tasks execute concurrently within explicit dependency, resource and governance limits.
+8. **Persistent observable state.** Every execution is inspectable through correlated events, state, logs, artifacts and evidence.
+9. **Explicit control.** Pause, resume, continue, stop, cancellation, retry and approvals are typed state transitions.
+10. **Evidence before completion.** Completion requires verification evidence, not an agent assertion alone.
+11. **Secure by default.** Secrets stay out of state; capability and authority boundaries fail closed.
+12. **Preserve v3 contracts.** Existing governance, personas, skills, memory, organization and Control API capabilities evolve without reopening completed v3 phases.
+13. **Surface parity.** Operationally important capabilities are available consistently across Web/TUI/CLI where the surface is appropriate.
+14. **Animation communicates state.** Web animation and TUI visual feedback must explain progress/state, never hide or replace authoritative information.
+15. **No blind copying.** ECC, Agency Agents, OpenCode, OmniRoute and n8n are reference systems for patterns and research, not implementation dependencies or sources for copied prompts/code.
 
----
+## 2. V3 → V4 transition
 
-## 2. Current baseline and transition
-
-SI-Agents v3 is closed. Its architecture already establishes one SI Core, one Control API, and multiple operator/harness surfaces. The v4 effort should therefore extend the existing system rather than replace it wholesale.
-
-The key transition is:
+V3 established governance, catalogs, configuration, Control API and operator surfaces. V4 adds durable execution semantics underneath them.
 
 ```text
-v3:
-Governance + catalogs + configuration + control surfaces
-
-                ↓
-
-v4:
-Persistent runtime + event/state model + scheduler + live orchestration
-                +
-OpenCode/OmniRoute integration + polished Web/TUI/CLI + npm distribution
+V3: Governance + catalogs + configuration + control surfaces
+                         ↓
+V4: Runtime + events/state + scheduler + sessions + automation
+    + OpenCode/OmniRoute + security/economics + rich Web/TUI/CLI
+    + distribution + production validation
 ```
 
-The most important architectural decision is to build the execution/runtime foundation before investing heavily in presentation surfaces. Otherwise Web/TUI/CLI risk becoming increasingly sophisticated dashboards over incomplete execution semantics.
+The implementation order intentionally builds execution/state foundations before final presentation and packaging work.
 
----
-
-## 3. Target system model
+## 3. Target architecture and contracts
 
 ### 3.1 Core domains
 
-The v4 core should establish explicit domains/contracts for:
+- Agent Registry
+- Team Registry
+- Skill Registry
+- Workflow/Runbook Registry
+- Task Manager
+- Execution Manager
+- Scheduler/Executor
+- Event Bus
+- State Store and projections
+- Evidence/Artifact Store
+- Governance and authorization
+- OpenCode adapter
+- OmniRoute adapter
+- Automation/scheduling engine
+- Session/context/memory services
+- Security/secrets platform
+- Observability/evaluation services
 
-- **Agent Registry** — agents/personas, capabilities, constraints, models, tools, permissions.
-- **Team Registry** — reusable teams, composition, roles, concurrency and evidence policy.
-- **Skill Registry** — portable capabilities and their machine-readable contracts.
-- **Workflow Registry** — DAGs/runbooks, triggers, conditions, actions, gates, continuation policy.
-- **Task Manager** — task identity, lifecycle, dependencies, ownership, attempts, results.
-- **Execution Manager** — runs, workers, cancellation, pause/resume, retries, resource controls.
-- **Scheduler** — dependency resolution, ready queue, concurrency, fairness and prioritization.
-- **Event Bus** — durable/ordered operational events and subscriptions.
-- **State Store** — authoritative execution state and projections.
-- **Evidence Store** — test results, artifacts, logs, verification records and completion evidence.
-- **Governance Engine** — permissions, approval gates, policy evaluation, fail-closed decisions.
-- **OpenCode Bridge** — session/task/status/result integration boundary.
-- **OmniRoute Adapter** — model/provider discovery and request integration boundary.
-- **Automation Engine** — schedules, event triggers, continuous mode and chained workflows.
+### 3.2 Canonical identity
 
-### 3.2 Canonical identifiers
-
-Every runtime object should use stable identifiers and explicit relationships:
-
-- `execution_id`
-- `workflow_id`
-- `task_id`
-- `agent_id`
-- `team_id`
-- `session_id`
-- `attempt_id`
-- `event_id`
-- `evidence_id`
-- `artifact_id`
-
-Parent/child relationships must be explicit so a user can navigate from a run to its workflow, tasks, agents, attempts, events and evidence.
-
-### 3.3 Lifecycle state machine
-
-The runtime should use explicit, validated transitions rather than ad-hoc booleans.
+Runtime relationships are explicit:
 
 ```text
-QUEUED → PLANNING → READY → RUNNING
-                         │       │
-                         │       ├──→ PAUSED ──→ RUNNING
-                         │       │
-                         │       ├──→ FAILED ──→ RETRY → READY
-                         │       │
-                         │       ├──→ CANCELLED
-                         │       │
-                         │       └──→ COMPLETED → NEXT TASK
-                         │
-                         └──→ BLOCKED → READY
+task_id → execution_id → attempt_id
 ```
 
-The exact transition matrix must be defined and tested in Phase 44/45. Invalid transitions must fail closed.
+Additional stable identifiers include `workflow_id`, `agent_id`, `team_id`, `session_id`, `event_id`, `evidence_id`, `artifact_id`, and `approval_id`.
 
----
+A retry creates a new attempt under the same execution unless policy explicitly creates a new execution.
 
-# 4. Phase roadmap
+### 3.3 Canonical lifecycle
+
+```text
+accepted → queued → running → succeeded
+                         ├── failed
+                         ├── cancelled
+                         └── expired
+```
+
+Pause/resume, blocked/ready and retry transitions are represented by explicit typed transitions and events. Invalid transitions fail closed.
+
+### 3.4 Authority boundaries
+
+The Control API remains authoritative for caller identity, authorization, admission, policy, authority scope, provenance, approvals, audit and externally visible intent.
+
+The execution runtime owns mechanics only: materializing attempts, invoking adapters, consuming streams/events, enforcing authorized runtime deadlines/cancellation, normalizing outcomes, maintaining runtime state and emitting telemetry/evidence.
+
+Provider routing is downstream. It cannot grant authority, change provenance or bypass governance. OpenCode is a protocol/harness adapter, not a second SI control plane.
+
+## 4. Phase roadmap
 
 ## Phase 44 — Execution Runtime Foundation
 
-### Objective
-Create the persistent runtime primitives required for real agent execution.
+**Objective:** Establish durable execution primitives and the runtime contract.
 
-### Scope
+**Scope:** execution/run model; task model; canonical IDs; lifecycle state machine; attempt model; runtime API contracts; persistence; cancellation; pause/resume; deadlines/timeouts; ownership/cleanup; deterministic transitions; adapter boundary; normalized outcomes; idempotency foundations; restart recovery.
 
-- Execution/run model.
-- Task model and lifecycle state machine.
-- Agent/team/workflow references.
-- Persistent execution state.
-- Attempt tracking.
-- Cancellation primitives.
-- Pause/resume primitives.
-- Timeout abstraction.
-- Resource ownership and cleanup.
-- Runtime API contracts.
-- Deterministic state transitions.
-- Runtime unit/integration tests.
+**Acceptance:** executions/tasks have stable IDs; state survives restart; invalid transitions fail; cancellation cleans owned resources; retries create explicit attempts; runtime cannot bypass Control API authority; unit/integration/negative tests cover contracts.
 
-### Acceptance criteria
-
-- A workflow can create an execution and tasks with stable IDs.
-- State survives process restart.
-- Invalid transitions are rejected.
-- Pause/stop/resume semantics are deterministic.
-- Cancellation cleans up owned resources.
-- Runtime state is exposed through the existing Control API without duplicating authority.
-
----
+**Gate:** contract review and v4 preflight must be complete before implementation expands. The prepared Phase 44 runtime contract is architectural input, not evidence of implementation.
 
 ## Phase 45 — Event Bus + State Architecture
 
-### Objective
-Make execution observable and synchronize every control surface through authoritative events/state.
+**Objective:** Make runtime state durable, ordered, replayable and shared by every surface.
 
-### Scope
+**Scope:** typed append-only event envelope; event/correlation/causation IDs; timestamps and ordering; durable retention; state projections/read models; subscriptions/streaming; replay/reconnect; execution/task/agent/evidence/governance/error/retry events; terminality rules.
 
-- Typed event envelope.
-- Event IDs and timestamps.
-- Correlation/causation IDs.
-- Event persistence/retention policy.
-- State projections/read models.
-- Subscriptions/streaming.
-- Agent/task/run status events.
-- Evidence events.
-- Governance/approval events.
-- Error and retry events.
-- Reconnection and replay semantics.
-
-### Required event examples
-
-```text
-execution.created
-execution.started
-execution.paused
-execution.resumed
-execution.stopped
-execution.completed
-execution.failed
-
-task.queued
-task.ready
-task.started
-task.paused
-task.retrying
-task.completed
-task.failed
-
-agent.started
-agent.progress
-agent.completed
-agent.failed
-
-evidence.created
-approval.required
-approval.granted
-approval.denied
-```
-
-### Acceptance criteria
-
-Web, TUI, CLI and OpenCode integration can observe the same execution state without maintaining separate truth.
-
----
+**Acceptance:** Web, TUI, CLI and OpenCode observe the same authoritative state; replay reconstructs state; duplicate delivery is safe; exactly one canonical terminal outcome exists per execution/attempt.
 
 ## Phase 46 — Parallel Scheduler + Executor
 
-### Objective
-Turn the runtime into a real multi-task execution engine.
+**Objective:** Execute real task graphs concurrently with deterministic dependency and resource controls.
 
-### Scope
+**Scope:** DAGs; dependency resolution; ready queues; worker pools; bounded concurrency; fan-out/fan-in; retries; deadlines; cancellation propagation; failure recovery; priorities/fairness; resource limits; approval gates; idempotency.
 
-- DAG/task graph representation.
-- Dependency resolution.
-- Ready queue.
-- Worker pools.
-- Configurable maximum concurrency.
-- Parallel fan-out.
-- Fan-in/join semantics.
-- Retries with bounded policy.
-- Timeouts.
-- Cancellation propagation.
-- Failure recovery.
-- Resource limits.
-- Priority/fairness policy.
-- Approval gates.
-- Idempotency protection.
-
-### Target behavior
-
-```text
-                    Workflow
-                       │
-              ┌────────┼────────┐
-              ▼        ▼        ▼
-           Task A    Task B    Task C
-              │        │        │
-              └────────┼────────┘
-                       ▼
-                   Review D
-                       │
-                    Verify E
-```
-
-A, B and C must execute concurrently when dependencies and concurrency limits permit. D must not start until its prerequisites satisfy their completion policy.
-
-### Acceptance criteria
-
-- Independent tasks demonstrably run in parallel.
-- Dependent tasks wait correctly.
-- A failed task follows its configured retry/recovery policy.
-- Stop/cancel propagates safely.
-- Concurrency never exceeds configured limits.
-- Scheduler behavior is deterministic under test.
-
----
+**Acceptance:** independent tasks demonstrably run in parallel; dependencies block correctly; concurrency never exceeds limits; failures follow policy; cancellation propagates safely; scheduler behavior is deterministic under stress tests.
 
 ## Phase 47 — OpenCode Bridge
 
-### Objective
-Make OpenCode a first-class interactive harness connected to SI runtime state.
+**Objective:** Connect SI-managed objectives to the current supported OpenCode protocol/session mechanisms.
 
-### Scope
+**Scope:** versioned integration contract; capability discovery/negotiation; session association; task submission; status/progress; event streaming; supported pause/resume/stop/continue operations; result delivery; errors; reconnect/recovery; secure local integration.
 
-- Inspect current OpenCode protocol/session/ACP capabilities before implementation.
-- Define a versioned SI ↔ OpenCode integration contract.
-- Session association.
-- Task submission.
-- Execution status.
-- Live events/progress.
-- Pause/resume/stop/continue controls where supported.
-- Result delivery.
-- Error propagation.
-- Reconnect/recovery behavior.
-- Capability negotiation.
-- Secure local integration.
-
-### Canonical relationship
-
-```text
-OpenCode
-   │ user prompt
-   ▼
-SI Bridge
-   │
-SI Runtime / Scheduler
-   │
-Agents / Tasks
-   │
-result + evidence
-   ▼
-OpenCode
-```
-
-The bridge must use the current supported OpenCode integration mechanisms discovered during implementation. It must not invent undocumented coupling.
-
-### Acceptance criteria
-
-A user can initiate an SI-managed objective from OpenCode and receive live status plus the final result without manually copying execution state between systems.
-
----
+**Acceptance:** a user can initiate an SI-managed objective through OpenCode and receive live progress and a verified result without manually synchronizing state. No undocumented coupling is allowed.
 
 ## Phase 48 — OmniRoute Integration
 
-### Objective
-Make OmniRoute the model/provider access layer used by SI-managed execution without turning SI into a competing router.
+**Objective:** Use OmniRoute as the model/provider access layer without creating a competing router.
 
-### Scope
+**Scope:** health/status; model catalog; capability-aware model policy; preferred/fallback selection; routing adapter; rate-limit/error handling; usage metadata; credential references; interoperability tests.
 
-- OmniRoute health/status integration.
-- Model catalog discovery.
-- Model policy abstraction.
-- Preferred/fallback model selection.
-- Capability-aware model selection.
-- Request routing adapter.
-- Error/rate-limit handling.
-- Usage metadata where available.
-- Credential references without storing secrets.
-- OpenCode + OmniRoute + SI interoperability tests.
+**Acceptance:** SI can discover usable configured models through OmniRoute and execute the canonical workload through OpenCode → SI → OmniRoute.
 
-### Acceptance criteria
+## Phase 49 — Agent + Team Builder
 
-SI can identify usable models through the configured OmniRoute boundary and execute the canonical workload through the OpenCode → SI → OmniRoute path.
+**Objective:** Make SI-native agents and teams composable, validated and governable.
 
----
+**Agent contract:** identity/persona; capabilities; skills; tool permissions; model policy; resource limits; governance; evidence policy; runtime constraints.
 
-## Phase 49 — Web 2.0: Primary Control Plane
+**Team contract:** members; roles; routing; parallelism; dependencies; evidence; approvals; failure/retry policy.
 
-### Objective
-Replace the current limited Web experience with a polished, live, production-quality control center backed by the real runtime.
+**Acceptance:** configurations are typed and validated; UI edits cannot silently grant authority; imported text cannot bypass governance; builder output is deterministic and auditable.
 
-### Core areas
+## Phase 50 — Capability Authorization
 
-- Overview dashboard.
-- Live executions.
-- Tasks.
-- Agents/personas.
-- Teams.
-- Workflows/runbooks.
-- Skills.
-- Tools and permissions.
-- Models/model policies.
-- Automation.
-- Memory/knowledge controls.
-- Governance/approvals.
-- Evidence.
-- Events.
-- Logs.
-- OpenCode integration.
-- OmniRoute integration.
-- Runtime/worker settings.
-- System health.
+**Objective:** Turn capabilities, tools and resources into explicit authorization boundaries.
 
-### Live execution view
+**Scope:** capability registry; allow/deny policy; scoped permissions; resource/action constraints; tool-level authorization; delegation; approval requirements; policy explanations; fail-closed behavior; audit records; secret-aware enforcement.
 
-Each run should expose:
+**Acceptance:** unauthorized actions are rejected before execution; grants are scoped and attributable; policy decisions are observable and testable; no surface can bypass authorization.
 
-- Current phase/status.
-- Active agents.
-- Queued tasks.
-- Completed tasks.
-- Failed/blocked tasks.
-- Current task per agent.
-- Model/provider.
-- Time and usage metrics when available.
-- Files/artifacts touched.
-- Logs/events.
-- Evidence.
-- Dependencies.
-- Parent/child tasks.
-- Approval requirements.
+## Phase 51 — Checkpoints + Resume
 
-### Operator controls
+**Objective:** Make long-running execution recoverable without losing provenance.
 
-- Pause.
-- Resume.
-- Continue.
-- Stop.
-- Retry where policy permits.
-- Approve/deny gated actions.
-- Inspect logs/events/evidence.
+**Scope:** execution/task checkpoints; durable snapshots; resumable attempts where supported; restart recovery; partial-result handling; checkpoint retention; compatibility/versioning; safe replay; recovery evidence.
 
-### UX principle
+**Acceptance:** process/runtime interruption can recover eligible executions deterministically; unsafe/non-resumable work is explicitly marked; resumed work never duplicates an irreversible action without idempotency protection.
 
-The Web UI should feel like a coherent product, not a collection of API forms. Visual quality, information hierarchy, responsiveness, accessibility, error states and loading states are part of the acceptance criteria.
+## Phase 52 — Context / Memory Economics
 
----
+**Objective:** Make context and memory useful, bounded and cost-aware.
 
-## Phase 50 — TUI 2.0: Terminal Control Center
+**Scope:** context budgets; compaction/summarization; retrieval policy; memory tiers; relevance scoring; token/latency/cost accounting; cache policy; context provenance; retention/deletion rules; agent-specific context limits.
 
-### Objective
-Turn the TUI into a serious live operator console sharing exactly the same SI state and controls as Web.
+**Acceptance:** context growth is bounded; retrieval is attributable; sensitive data follows policy; context/cost metrics are available for evaluation.
 
-### Primary panels
+## Phase 53 — Persistent Sessions
 
-- Overview.
-- Tasks.
-- Agents.
-- Teams.
-- Workflows.
-- Runs.
-- Models.
-- Automation.
-- Memory.
-- Events.
-- Logs.
+**Objective:** Provide durable user/agent execution sessions across restarts and surfaces.
 
-### Interaction model
+**Scope:** session lifecycle; session-to-execution links; resumable conversation/task context; checkpoints; session history; compaction; reconnect; concurrent session safety; retention; export/import where appropriate.
+
+**Acceptance:** users can reconnect to active/recent work from Web/TUI/CLI/OpenCode without creating competing state.
+
+## Phase 54 — Human-in-the-Loop
+
+**Objective:** Make approvals and human decisions first-class execution gates.
+
+**Scope:** approval requests; typed decision payloads; approver identity; scopes; expiry; escalation; deny/cancel behavior; approval UI/CLI/TUI; audit/evidence; sensitive-action confirmation.
+
+**Acceptance:** gated work cannot proceed without required authorization; decisions are durable, attributable and replayable; expired approvals fail safely.
+
+## Phase 55 — Durable Waiting + Scheduling
+
+**Objective:** Support waits, timers, schedules and event-driven continuation without holding workers unnecessarily.
+
+**Scope:** durable timers; cron-like schedules; wait-for-event; queue triggers; delayed retry; wake-up/recovery; time-zone handling; bounded execution windows; cancellation; missed-trigger policy.
+
+**Acceptance:** waiting survives restart; scheduled work is idempotent; worker resources are released during waits; cancellation and expiry are deterministic.
+
+## Phase 56 — Intelligent Routing + Economics
+
+**Objective:** Optimize model/provider choices for capability, reliability, latency and cost while preserving policy.
+
+**Scope:** model capability matrix; workload classification; cost/usage telemetry; latency/reliability scoring; budget policies; fallback strategy; sticky routing where appropriate; quota awareness; cache/compression economics; policy-constrained optimization.
+
+**Acceptance:** routing decisions are explainable and policy-compliant; budget limits cannot be bypassed; economics telemetry supports evaluation.
+
+## Phase 57 — Security Platform
+
+**Objective:** Harden SI as an execution system rather than only a configuration system.
+
+**Scope:** secret isolation; credential references; least privilege; capability sandbox boundaries where supported; input/output trust boundaries; artifact scanning; dependency/security checks; prompt/tool injection defenses; SSRF/network controls; audit integrity; secure defaults; adversarial tests.
+
+**Acceptance:** secrets do not appear in logs/events/artifacts; unauthorized capability use fails closed; security regressions are CI-gated; high-risk operations have explicit policy and audit evidence.
+
+## Phase 58 — Workspace / Worktree Lifecycle
+
+**Objective:** Safely manage isolated workspaces for concurrent agent work.
+
+**Scope:** workspace allocation; Git worktrees/branches where applicable; lifecycle ownership; cleanup; conflict detection; merge/reconciliation workflows; artifact mapping; resource quotas; recovery after interrupted execution.
+
+**Acceptance:** parallel tasks receive explicit workspace ownership; cleanup is reliable; abandoned workspaces are detectable; destructive operations require policy.
+
+## Phase 59 — Observability
+
+**Objective:** Provide production-grade visibility into executions, system health and economics.
+
+**Scope:** structured logs; metrics; traces/correlation; execution timelines; worker health; queue depth; latency; retries; failures; model/provider usage; cost; evidence indexes; diagnostic bundles; retention/redaction.
+
+**Acceptance:** an operator can trace an objective from admission through tasks, adapter calls, events, evidence and final result without exposing secrets.
+
+## Phase 60 — Evaluation + Benchmarking
+
+**Objective:** Measure agent, workflow, runtime and system quality continuously.
+
+**Scope:** deterministic fixtures; benchmark workloads; task success; evidence quality; regression suites; latency/cost/reliability metrics; model comparisons; failure taxonomy; evaluation datasets; release gates.
+
+**Acceptance:** important behavior has repeatable evaluations; regressions are detected before release; benchmark results are attributable to code/config/model changes.
+
+## Phase 61 — Continuous Improvement
+
+**Objective:** Learn from verified execution evidence without allowing silent authority changes.
+
+**Scope:** failure-pattern mining; reusable engineering patterns; recommendations; workflow optimization; agent/skill improvement proposals; evaluation-driven iteration; change provenance; approval for policy-affecting changes; rollback.
+
+**Safety:** learning may recommend or stage changes, but it cannot silently grant permissions, rewrite governance or change authority.
+
+**Acceptance:** every learned improvement has evidence, provenance, evaluation and controlled promotion/rollback.
+
+## Phase 62 — Cross-Runtime / Cross-Harness
+
+**Objective:** Make SI portable across supported execution harnesses and runtimes through adapters.
+
+**Scope:** adapter SDK/contracts; capability negotiation; harness lifecycle; normalized events/results/errors; compatibility matrix; OpenCode-first implementation; future harnesses without duplicating SI authority.
+
+**Acceptance:** adding a supported harness does not create a second control plane; adapter failures are isolated and observable; portability tests cover contract compatibility.
+
+## Phase 63 — Ecosystem / Marketplace
+
+**Objective:** Establish a governed ecosystem for agents, teams, skills, workflows and extensions.
+
+**Scope:** package metadata; manifests; provenance/signing where appropriate; compatibility/versioning; discovery; install/update/remove; trust levels; security scanning; dependency graph; local/private catalogs; drift detection; deterministic installation ledger.
+
+**Acceptance:** third-party content cannot silently obtain authority; installations are reproducible and auditable; incompatible or unsafe packages are blocked or explicitly quarantined.
+
+## Phase 64 — SDK / Developer Platform
+
+**Objective:** Make SI extensible without weakening core contracts.
+
+**Scope:** typed SDKs; adapter APIs; agent/team/skill/workflow APIs; event APIs; Control API clients; plugin lifecycle; examples; local development tools; contract tests; compatibility/version policy.
+
+**Acceptance:** developers can build extensions against stable contracts; SDK behavior is tested against the same authoritative core; breaking changes are explicit.
+
+## Phase 65 — Workflow + Automation
+
+**Objective:** Deliver a durable visual and programmatic workflow/runbook engine over the real runtime.
+
+**Workflow model:**
 
 ```text
-↑ / ↓       Navigate
-Enter       Details
-Tab         Panels
-P           Pause
-R           Resume
-S           Stop
-C           Continue
-L           Logs
-E           Events
-A           Agents
-T           Tasks
-W           Workflows
-M           Models
-Q           Quit
+Trigger → Condition → Action/Task → Evidence/Gate → Next Task
+                                      │
+                                      └→ approval / retry / block / continue
 ```
 
-The exact bindings may evolve during implementation, but the TUI must support fast keyboard-first operation and clear live updates.
+**Scope:** manual/scheduled/event/queue triggers; DAGs; conditions; branching; loops where bounded; subworkflows; retries; approvals; waits; failure handling; notifications/events; run-once; continue; stop conditions; continuous mode; execution bounds.
 
-### Acceptance criteria
+**Acceptance:** workflows serialize to typed validated contracts; visual and API-created workflows behave identically; continuous mode is bounded, observable, cancellable and resource-limited.
 
-- TUI updates from the same event/state stream as Web.
-- Operator controls invoke the same Control API.
-- No duplicated business logic exists in the TUI.
-- Long-running executions remain readable and navigable.
-- Terminal degradation/resize/reconnect is handled gracefully.
+## Phase 66 — Advanced Web Control Plane
 
----
+**Objective:** Build the richest SI interface as a polished localhost-first operational product.
 
-## Phase 51 — CLI 2.0
+**Core areas:** overview; live executions; tasks; agents; teams; workflows; skills; tools/permissions; models; automation; memory/context; governance/approvals; evidence; events; logs; OpenCode; OmniRoute; runtime/workers; system health; settings.
 
-### Objective
-Create a coherent command-line product for operators, automation and scripts.
+**Advanced UX:** responsive desktop/tablet/mobile layouts; dark/light themes; design system; command palette; global search/navigation; keyboard shortcuts; drag/drop where useful; interactive DAG/workflow canvas; live charts; execution timelines; artifact previews; code/Markdown/JSON viewers; diff viewer; structured log/event viewer; contextual actions; skeleton/loading states; empty/error/recovery states; confirmations; accessibility.
 
-### Target command tree
+**Live execution:** status, active/queued/completed/failed tasks, agents, model/provider, timing/usage, dependencies, files/artifacts, logs/events, evidence and approvals.
+
+**Controls:** pause, resume, continue, stop, retry where policy permits, approve/deny, inspect/replay evidence/events.
+
+**Acceptance:** Web uses the same Control API and authoritative event/state stream as every other surface; visual workflow editing produces validated contracts; animations communicate state and never become a source of truth; localhost startup/reconnect/error behavior is production-quality.
+
+## Phase 67 — Advanced TUI Control Center
+
+**Objective:** Build a terminal-native live operator cockpit with fast keyboard control.
+
+**Panels:** overview; executions; tasks; agents; teams; workflows; runs; models/providers; automation; memory/context; approvals; events; logs; evidence; system health.
+
+**Capabilities:** live refresh; split panes; trees; fuzzy search; filters; event/log streams; JSON/Markdown/code/diff/artifact inspection; execution timelines; status/progress visualization; pause/resume/continue/stop/retry; approval decisions; reconnect; terminal resize/degradation handling.
+
+**Acceptance:** TUI consumes the same state/event stream and invokes the same Control API as Web; no duplicated business authority exists; long-running work remains readable and operable.
+
+## Phase 68 — Advanced CLI Platform
+
+**Objective:** Build the strongest automation/scripting surface with human, interactive and machine modes.
+
+**Target command families:**
 
 ```text
 si
-si status
-si doctor
-si setup
-si verify
-si audit
-si logs
-si events
-si config
-
-si agents list
-si agents show <agent>
-si agents run <agent>
-
-si teams list
-si teams show <team>
-si teams run <team>
-
-si tasks list
-si tasks show <task>
-si tasks pause <task>
-si tasks resume <task>
-si tasks stop <task>
-
-si runs list
-si runs show <run>
-
-si workflows list
-si workflows show <workflow>
-si workflows run <workflow>
-
-si models list
-si models test
-
-si opencode status
-si opencode setup
-
-si omniroute status
-si omniroute models
+si status | doctor | setup | verify | audit | logs | events | config
+si agents list | show <agent> | run <agent>
+si teams list | show <team> | run <team>
+si tasks list | show <task> | pause <task> | resume <task> | stop <task>
+si runs list | show <run>
+si workflows list | show <workflow> | run <workflow>
+si models list | test
+si opencode status | setup
+si omniroute status | models
 ```
 
-### CLI requirements
+**Requirements:** consistent terminology/help; `--json`; `--quiet`; `--verbose`; stable exit codes; streaming/log/event modes; safe secret redaction; scripting-friendly selectors; same authority as Web/TUI through Control API; useful interactive behavior for `si` with no arguments.
 
-- Consistent help and terminology.
-- Machine-readable `--json` output for operational commands.
-- `--quiet` and `--verbose` where appropriate.
-- Stable exit codes.
-- No secrets printed.
-- Same authority as Web/TUI through Control API/core.
-- Useful interactive behavior for `si` with no arguments where appropriate.
+**Acceptance:** every operational command maps to authoritative SI APIs; machine-readable output is schema-stable and tested; no CLI path bypasses governance.
 
----
+## Phase 69 — npm Distribution + Setup
 
-## Phase 52 — Agent + Team Builder
+**Objective:** Deliver a simple, reliable public installation and onboarding experience.
 
-### Objective
-Make agent and team configuration genuinely manageable from the Web control plane while preserving SI-native governance and typed contracts.
-
-### Agent configuration
-
-- Identity/persona.
-- Capabilities.
-- Skills.
-- Tool permissions.
-- Model policy.
-- Resource limits.
-- Governance requirements.
-- Evidence policy.
-- Runtime constraints.
-
-### Team configuration
-
-- Member agents.
-- Roles.
-- Task routing.
-- Parallelism.
-- Dependencies.
-- Evidence requirements.
-- Approval gates.
-- Failure/retry policy.
-
-### Safety
-
-Web-created configurations must produce validated machine contracts. Imported text must never silently grant permissions or execution authority.
-
----
-
-## Phase 53 — Workflow + Automation
-
-### Objective
-Provide reusable runbooks and continuous automation over the real runtime.
-
-### Workflow model
-
-```text
-Trigger
-  ↓
-Condition
-  ↓
-Action / Task
-  ↓
-Evidence / Gate
-  ↓
-Next Task
-  ↓
-Condition
-  ↓
-Continue / Complete / Block
-```
-
-### Automation capabilities
-
-- Manual trigger.
-- Scheduled trigger.
-- Event trigger.
-- Queue-based trigger.
-- Conditional branching.
-- Retry policy.
-- Approval gates.
-- Failure handling.
-- Notifications/events.
-- Continuous mode.
-- Run-once mode.
-- Continue mode.
-- Stop conditions.
-- Maximum execution bounds.
-
-### Continuous mode
-
-Continuous mode must not mean uncontrolled infinite execution. It requires explicit boundaries, observable progress, cancellation, resource limits and a clear completion/blocked/approval-required state.
-
----
-
-## Phase 54 — npm Distribution + Setup Wizard
-
-### Objective
-Make SI-Agents simple to install and start, especially for users who should not need to understand Python environments.
-
-### Target installation
+**Target experience:**
 
 ```bash
 npm install -g @scinfinite/si
-```
-
-A zero-install alternative may be supported where useful:
-
-```bash
-npx @scinfinite/si
-```
-
-### Guided setup
-
-```bash
 si setup
 ```
 
-The setup flow should:
+`npx @scinfinite/si` may be supported where technically appropriate.
 
-1. Detect the operating environment.
-2. Detect Node/npm prerequisites.
-3. Detect SI runtime requirements.
-4. Detect OpenCode.
-5. Detect OmniRoute.
-6. Validate connectivity where possible.
-7. Configure integration references safely.
-8. Create only required local state.
-9. Avoid storing provider credentials in SI unless explicitly required by a future contract.
-10. Explain any missing optional dependency clearly.
-11. Run a final health/verification check.
+**Setup responsibilities:** detect OS/runtime/Node/npm; detect or configure SI runtime; detect OpenCode/OmniRoute; validate connectivity; configure safe references; explain missing dependencies; avoid persisting provider secrets unless explicitly required; run health/doctor/verify checks; provide deterministic upgrade/uninstall behavior.
 
-### Distribution architecture
+**Acceptance:** clean-machine installation is repeatable; setup is safe and idempotent; failures are actionable; package contents contain no secrets; installation/version state is auditable.
 
-The public package may use Node as the installation/bootstrap layer while keeping internal runtime components in Python or another implementation language where that remains technically appropriate. The user-facing installation experience should hide unnecessary environment complexity.
+## Phase 70 — End-to-End Production Validation
 
-### Acceptance criteria
+**Objective:** Prove the complete V4 system as one user-visible product before final hardening.
 
-A supported clean environment can install SI using the npm package, run `si doctor`, complete guided setup, and reach a verified ready state without manual virtual-environment creation or hand-editing JSON.
+**Canonical acceptance scenario:**
 
----
+1. User submits a calculator-building objective through OpenCode.
+2. SI recognizes the objective and creates a task graph.
+3. SI selects appropriate agents/team members.
+4. Independent tasks execute concurrently where permitted.
+5. OmniRoute supplies policy-compliant model/provider access.
+6. OpenCode remains interactive.
+7. Web shows live execution and TUI/CLI show the same authoritative state.
+8. User can pause/stop/resume/continue where policy allows.
+9. Agents produce evidence and artifacts.
+10. Tests/review/verification execute.
+11. Final result returns through the OpenCode/SI integration.
+12. SI stops when the objective is complete; continuous mode stops on completion, block, approval, resource bound or explicit stop.
 
-## Phase 55 — End-to-End Production Validation
+**Validation matrix:** runtime; state/events; scheduler; adapters; governance; authorization; evidence; OpenCode; OmniRoute; sessions; memory/context; approvals; waiting/scheduling; security; workspace lifecycle; observability; evaluation; workflow automation; Web; TUI; CLI; npm distribution; recovery; documentation; full CI.
 
-### Objective
-Prove that v4 works as one system rather than as individually passing components.
+**Acceptance:** clean-machine install plus canonical workload succeeds with captured evidence; failure/recovery, cancellation, restart, approval and budget/security scenarios pass; all required CI gates are green.
 
-### Canonical calculator scenario
+## Phase 71 — Final Production Hardening
 
-This is the primary acceptance benchmark:
+**Objective:** Close V4 only after the entire platform is hardened, audited and release-ready.
 
-```text
-1. User enters a calculator-building request in OpenCode.
-2. SI recognizes the objective.
-3. SI creates a task graph.
-4. SI selects appropriate agents/team members.
-5. Independent tasks execute concurrently where possible.
-6. OmniRoute provides model/provider access.
-7. OpenCode remains interactive.
-8. Web shows live execution state.
-9. User can pause/stop/resume/continue.
-10. Agents produce evidence.
-11. Tests and review tasks execute.
-12. Final result returns to OpenCode.
-13. SI stops automatically when the objective is complete.
-14. In continuous mode, SI proceeds to the next eligible task until completion, blocking, approval, or explicit stop.
-```
+**Scope:** full architecture audit; contract compatibility; security/adversarial testing; performance/load/stress testing; race/concurrency testing; fault injection; restart/recovery; data retention/redaction; dependency audit; packaging audit; docs audit; UX/accessibility audit; cross-surface parity audit; upgrade/rollback testing; clean-machine install; operational runbooks; release checklist; final CI.
 
-### Validation matrix
+**Release gates:**
 
-| Area | Required proof |
-|---|---|
-| Runtime | Persistent state and valid lifecycle transitions |
-| Events | Live, correlated execution events |
-| Scheduler | Real bounded parallel execution |
-| Governance | Permission/approval gates fail closed |
-| Evidence | Completion is backed by artifacts/tests/evidence |
-| OpenCode | Initiation, status and result integration |
-| OmniRoute | Model discovery/request path works |
-| Web | Live dashboard and operational controls |
-| TUI | Live terminal control and monitoring |
-| CLI | Stable commands, JSON output and exit codes |
-| Automation | Run once, continue and continuous modes |
-| Distribution | npm install + guided setup |
-| Recovery | Retry, timeout, cancellation and restart behavior |
-| Security | No secret leakage; authority boundaries enforced |
-| Documentation | Current behavior accurately documented |
-| CI | Full repository verification green |
+- No known authority-boundary violation.
+- No known secret leakage path.
+- No unresolved critical/high runtime or security defect.
+- Web/TUI/CLI use the same authoritative state and Control API.
+- OpenCode and OmniRoute boundaries remain adapters/downstream services.
+- Canonical execution lifecycle and terminality are enforced.
+- Evidence supports completion claims.
+- Recovery/cancellation/retry behavior is tested.
+- Documentation matches the verified implementation.
+- Distribution/install/upgrade/uninstall paths are verified.
+- Full CI is green on the final release commit.
 
----
+**Only after these gates pass may V4 be declared complete.**
 
-# 5. Cross-phase engineering requirements
+## 5. Cross-surface capability parity
 
-## Testing
+The three primary interfaces have deliberately different strengths but share one authority:
 
-Every phase must add tests for its new contracts and preserve existing tests. Runtime and scheduler work should include deterministic unit tests plus integration tests for lifecycle, concurrency, restart, cancellation and failure paths.
+| Capability | Web | TUI | CLI |
+|---|---|---|---|
+| Live execution | Rich visual | Fast live cockpit | Stream/JSON |
+| Tasks/agents/teams | Full | Full | Full |
+| Workflow builder | Visual | Inspect/control | Define/run/automation |
+| Approvals | Rich | Fast | Scriptable |
+| Logs/events/evidence | Rich viewers | Fast streams | Machine-readable |
+| Pause/resume/stop/retry | Full policy-gated | Full policy-gated | Full policy-gated |
+| Search/filter | Global/visual | Fuzzy/keyboard | Selectors/flags |
+| Automation | Visual | Inspect/control | Strongest scripting |
+| Setup/doctor | Guided | Interactive | Primary |
 
-## Security
+Surface differences are UX choices, not authority differences.
 
-- Never print or commit credentials.
-- Do not persist provider secrets unnecessarily.
-- Validate imported configurations.
-- Fail closed on unknown authorities/targets.
-- Enforce tool/resource permissions at the runtime boundary.
-- Treat Web/TUI/CLI as clients, not trusted execution authorities.
-- Audit dangerous transitions and approval decisions.
+## 6. External reference strategy
 
-## Observability
+SI-Agents continues to study current ECC, Agency Agents, OpenCode, OmniRoute and n8n implementations for useful patterns in agents, skills, hooks, memory, security, sessions, routing, workflows, approvals, observability, packaging and ecosystem design.
 
-Every meaningful state transition should be attributable to an execution, task, agent and/or workflow where applicable. Events should provide enough correlation information to reconstruct what happened.
+Patterns must be generalized and independently implemented. SI-Agents must not become a copy of any reference system, and none of those projects becomes an authority over SI governance or provenance.
 
-## Compatibility
+## 7. Definition of done for V4
 
-Existing v3 contracts should remain stable unless a v4 change is explicitly versioned and migrated. Backward compatibility should be preferred for configuration and read APIs when it does not compromise correctness or security.
-
-## Performance
-
-Concurrency must be bounded and measurable. Avoid designs that require an unbounded number of processes, threads, events or retained logs. The system should degrade predictably under load.
-
-## Failure handling
-
-Failures must be explicit states, not silent disappearance. Retry behavior must be bounded and policy-driven. Cancellation must be distinguishable from failure. A restart must not corrupt authoritative state.
-
-## Documentation
-
-Documentation must follow implementation and CI evidence. Phase documents should record exact acceptance criteria, tests, verification results, migrations and known limitations.
-
----
-
-# 6. External engineering references
-
-SI-Agents should continue to study current ECC and Agency Agents material as external engineering references. Useful patterns may include:
-
-- harness-neutral session/state adapters;
-- specialized agent delegation;
-- orchestrator/runbook patterns;
-- continuous-agent-loop concepts;
-- hook and supply-chain hardening;
-- agent manifests and governance contracts;
-- division/team consistency workflows;
-- installer/control surfaces;
-- one-click runbooks and reusable agent teams.
-
-These references are inputs to design review, not dependencies or sources of copied implementation. Each adopted idea must be independently specified, tested and checked against SI's authority, provenance and governance model.
-
----
-
-# 7. Dependency and implementation order
-
-The intended dependency chain is:
-
-```text
-44 Runtime
-   ↓
-45 Event + State
-   ↓
-46 Scheduler / Executor
-   ↓
-47 OpenCode Bridge ───┐
-   ↓                  │
-48 OmniRoute ─────────┘
-   ↓
-49 Web 2.0
-   ↓
-50 TUI 2.0
-   ↓
-51 CLI 2.0
-   ↓
-52 Agent / Team Builder
-   ↓
-53 Workflow / Automation
-   ↓
-54 npm Distribution / Setup
-   ↓
-55 End-to-End Production Validation
-```
-
-Some implementation work may proceed in parallel after contracts are stable, but presentation-layer work must not become a substitute for the runtime foundation.
-
----
-
-# 8. Definition of v4 complete
-
-SI-Agents v4 should not be declared complete because the Web looks polished or because individual tests pass. Completion requires the whole operating model to work together.
-
-The release gate is:
+V4 is complete only when Phases 44–71 have individually satisfied their phase gates and the final Phase 71 verification proves the complete product lifecycle:
 
 ```text
 INSTALL
-  ↓
-SETUP
-  ↓
-DISCOVER
-  ↓
-PLAN
-  ↓
-SCHEDULE
-  ↓
-EXECUTE IN PARALLEL
-  ↓
-OBSERVE LIVE
-  ↓
-CONTROL
-  ↓
-VERIFY WITH EVIDENCE
-  ↓
-RETURN RESULT
-  ↓
-STOP OR CONTINUE
+  → SETUP
+  → DISCOVER
+  → PLAN
+  → AUTHORIZE
+  → SCHEDULE
+  → EXECUTE IN PARALLEL
+  → OBSERVE LIVE
+  → CONTROL
+  → APPROVE WHEN REQUIRED
+  → VERIFY WITH EVIDENCE
+  → RETURN RESULT
+  → RECOVER/RESUME WHEN NEEDED
+  → STOP OR CONTINUE
 ```
 
-The canonical calculator scenario must demonstrate this path across OpenCode, SI Core, Scheduler, agents, OmniRoute, Web, TUI and CLI with persistent state, live events, governance, evidence and recovery behavior.
-
-Only after final CI verification is green, documentation is synchronized with implementation, and the end-to-end acceptance matrix is satisfied should the v4 sequence be declared complete.
-
----
-
-# 9. Immediate next step
-
-Before Phase 44 implementation begins:
-
-1. Re-verify that Phase 43 is closed on `main` and that current CI remains green.
-2. Inspect the current SI runtime/control API implementation to identify reusable v3 contracts.
-3. Inspect current OpenCode integration/protocol capabilities and current OmniRoute interfaces rather than assuming APIs.
-4. Freeze the v4 runtime/event/state contracts.
-5. Implement Phase 44 with tests before building higher-level surfaces.
-
-**Planning status:** ready for Phase 44 architecture review and implementation.
+A roadmap item, design document, mock UI, passing unit test or partial integration is not phase completion by itself. Implementation evidence, adversarial/security evidence, documentation and final CI verification are mandatory.
