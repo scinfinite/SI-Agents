@@ -4,11 +4,11 @@ from concurrent.futures import ThreadPoolExecutor
 import pytest
 
 from core.runtime.events import EventBus
+from core.runtime.execution import AuthorizedTask, ExecutionRuntime, ExecutionStore, State
 
 
 def test_append_orders_per_aggregate_and_replays(tmp_path):
-    path = tmp_path / "events.db"
-    bus = EventBus(str(path))
+    bus = EventBus(str(tmp_path / "events.db"))
     first = bus.append("accepted", "execution", "e1", {"state": "accepted"}, correlation_id="c1")
     second = bus.append("queued", "execution", "e1", {"state": "queued"}, correlation_id="c1", causation_id=first.event_id)
     assert (first.sequence, second.sequence) == (0, 1)
@@ -83,3 +83,25 @@ def test_invalid_event_inputs_fail_closed(tmp_path):
         bus.append("started", "", "e1", {})
     with pytest.raises(ValueError):
         bus.stream("execution", "e1", -2)
+
+
+def test_execution_runtime_emits_canonical_lifecycle_events(tmp_path):
+    bus = EventBus(str(tmp_path / "events.db"))
+    store = ExecutionStore(str(tmp_path / "runtime.db"), event_bus=bus)
+    runtime = ExecutionRuntime(store)
+
+    class Adapter:
+        def invoke(self, task, cancel_event):
+            return {"answer": 42}
+
+        def cancel(self, execution_id):
+            pass
+
+    execution = runtime.accept(AuthorizedTask("task-1", {"input": 6}))
+    assert runtime.run(execution.execution_id, Adapter()).state == State.SUCCEEDED
+    events = bus.stream("execution", execution.execution_id)
+    assert [event.event_type for event in events] == [
+        "execution.accepted", "execution.queued", "execution.running", "execution.succeeded"
+    ]
+    assert all(event.correlation_id == execution.execution_id for event in events)
+    assert events[-1].payload["to"] == "succeeded"
