@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: V3 closed; V4 Phases 44–49 complete and final-CI verified; Phase 50 — Capability Authorization — is next.**
+**Current status: V3 closed; V4 Phases 44–50 complete and final-CI verified; Phase 51 — Checkpoints + Resume — is next.**
 
 This file is the authoritative current implementation/status record. Historical phase records preserve phase-time evidence.
 
@@ -38,6 +38,8 @@ Phase 48 — OmniRoute Integration: **complete and final-CI verified** (CI run 9
 
 Phase 49 — Agent + Team Builder: **complete and final-CI verified** (CI run 954, `34625018676`), merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
 
+Phase 50 — Capability Authorization: **complete and final-CI verified** (CI run 962, `34625560602`), merged to `main` as `03029d301f77ff6931bfa68415893686a849201b`.
+
 ## Integration markers
 
 43. Final v3 Integration & Hardening
@@ -55,7 +57,8 @@ Phase 71
 - **Phase 47:** complete and CI-verified.
 - **Phase 48:** complete and final-CI verified.
 - **Phase 49:** complete and final-CI verified.
-- **Phase 50:** next.
+- **Phase 50:** complete and final-CI verified.
+- **Phase 51:** next.
 
 ## V4 planned sequence
 
@@ -67,8 +70,8 @@ Phase 71
 | 47 | OpenCode Bridge | **Complete + CI verified** |
 | 48 | OmniRoute Integration | **Complete + final-CI verified** |
 | 49 | Agent + Team Builder | **Complete + final-CI verified** |
-| 50 | Capability Authorization | Planned / next |
-| 51 | Checkpoints + Resume | Planned |
+| 50 | Capability Authorization | **Complete + final-CI verified** |
+| 51 | Checkpoints + Resume | Planned / next |
 | 52 | Context / Memory Economics | Planned |
 | 53 | Persistent Sessions | Planned |
 | 54 | Human-in-the-Loop | Planned |
@@ -104,6 +107,8 @@ Phase 71
 - Phase 48 merge commit: `f670563c7df06c05d269fe714e63abfe518036e0`.
 - Phase 49 final CI: run 954 (`34625018676`).
 - Phase 49 merge commit: `de06398f2abefe24b58e52a7629dc5af3c191428`.
+- Phase 50 final CI: run 962 (`34625560602`).
+- Phase 50 merge commit: `03029d301f77ff6931bfa68415893686a849201b`.
 
 ## Documentation lifecycle
 
