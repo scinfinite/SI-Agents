@@ -4,38 +4,37 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–40 complete and CI-verified.**
+**Post-v2 evolution — Phases 19–41 complete and CI-verified.**
 
-The verified v3 foundation now includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, a localhost-first Web foundation, the live Control Center, interactive visual organization/workflow inspection, a governed Agent Builder/customization boundary, and evidence-first observability.
+The verified v3 foundation now includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, a localhost-first Web foundation, the live Control Center, visual organization/workflow inspection, a governed Agent Builder/customization boundary, evidence-first observability, and a first-class terminal operator interface.
 
-### Phase 40 — Evidence & Observability
+### Phase 41 — SI TUI
 
-Phase 40 adds an explicit evidence boundary for recorded facts, observations, inferences, and uncertainties. Evidence carries provenance, source, confidence, verification state, optional run relationships, and supersession/contradiction state. Local evidence is persisted atomically under `.si/` with restrictive permissions.
+Phase 41 adds a dependency-free, keyboard-first terminal operator surface for Termux, Codespaces, SSH, and ordinary terminals. It reads the same `ControlApiService` authority used by Web and exposes Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings.
 
-The Control API exposes evidence records, detail, verification, and per-run timelines. A dependency-free Evidence Explorer is packaged at `/assets/evidence.html` and linked from the Control Center. Recording or inspecting evidence never executes agents, Skills, workflows, tools, shell commands, harnesses, or external calls.
+Navigation, filtering, selection, and refresh are local UI state only. `--once` supports deterministic non-interactive output; `NO_COLOR` and `--no-color` suppress terminal control behavior. The TUI cannot execute agents, tools, Skills, workflows, shells, harnesses, or governance mutations.
 
 ## Architecture
 
 ```text
-CLI / Web Control Center / TUI / Harness
-                    ↓
-               Control API v1
-                    ↓
-             SI Core authorities
-       ┌────────────┼─────────────┐
-    Agents       Organization   Governance
-    Skills       Memory         Verification
-                    ↓
-            Evidence / Observability
+CLI / TUI / Web Control Center / Harness
+                 ↓
+            Control API v1
+                 ↓
+           SI Core authorities
+                 ↓
+       Runtime / Governance / Evidence
+                 ↓
+             Harness boundary
 ```
 
-There is one SI Core and one Control API. Operator surfaces are views/boundaries, not independent authorities. `POST /api/v1/runs` remains governance-gated and creates a queued control record only.
+There is one SI Core and one Control API. Operator surfaces are views/boundaries, not independent authorities.
 
 ## Security model
 
-Agents, capabilities, tools, Skills, Rules, Hooks, events, memory, knowledge, automation, teams, harness adapters, environments, persona artifacts, Builder drafts, and evidence records are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk operations remain approval-gated and important claims require explicit evidence/verification state.
+Agents, capabilities, tools, Skills, Rules, Hooks, events, memory, knowledge, automation, teams, harness adapters, environments, persona artifacts, Builder drafts, evidence records, and UI state are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk operations remain approval-gated and evidence/verification state remains explicit.
 
-The Web server is dependency-free and localhost-first. Remote exposure is explicit and authenticated, CORS is allowlisted, JSON mutation bodies are bounded, security headers are restrictive, audit data is redacted, and telemetry is not introduced. The Agent Builder and Evidence Explorer add no execution engine, external scripts, CDN dependencies, inline script/style, or persistent browser credentials.
+The Web and TUI use no third-party runtime dependencies. Web remains localhost-first with explicit authenticated remote opt-in, bounded JSON mutations, restrictive security headers, redacted audit logging, and no telemetry. TUI has no mutation transport or credential persistence.
 
 ## `si` CLI
 
@@ -53,6 +52,7 @@ si handoff create TEAM --objective TEXT --source termux|codespace --target termu
 si handoff inspect FILE [--json]
 si handoff import FILE
 si web [--host HOST] [--port PORT] [--root PATH] [--allow-remote]
+si tui [--root PATH] [--view VIEW] [--filter TEXT] [--once] [--no-color]
 ```
 
 Read-only commands do not mutate state. Mutation requires explicit `--apply` where applicable. Credentials are not stored by SI-Agents.
@@ -60,10 +60,10 @@ Read-only commands do not mutate state. Mutation requires explicit `--apply` whe
 ## Documentation
 
 - `docs/README.md` — documentation navigation and current baseline.
-- `docs/architecture/README.md` — architecture navigation and phase index through Phase 40.
+- `docs/architecture/README.md` — architecture navigation and phase index through Phase 41.
 - `docs/architecture/PHASES.md` — authoritative implementation/status and verification record.
-- `docs/architecture/PHASE_29_AGENT_PERSONA.md` through `PHASE_40_EVIDENCE_OBSERVABILITY.md` — canonical post-v2 phase records.
-- `docs/architecture/SI_AGENTS_V3.md` — forward roadmap for Phases 41–43.
+- `docs/architecture/PHASE_29_AGENT_PERSONA.md` through `PHASE_41_TUI.md` — canonical post-v2 phase records.
+- `docs/architecture/SI_AGENTS_V3.md` — forward roadmap for Phases 42–43.
 
 ## Engineering loop
 
@@ -74,8 +74,8 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 ## Verification baseline
 
-Phase 40 implementation merged from PR #40 as `2e363034f8140ea8ecc90cf7c0f2fe73`; mainline CI **#860** (`34512774276`) caught one evidence-route regression, fixed in PR #41 as `4900401c48af52a6e8d901b622575bc49bdab563`. Final mainline CI **#862** (`34513000130`) passed all build, packaging, audit, Ruff, test, diagnostics, and cleanup gates with **458 passed**.
+Phase 40 final mainline CI **#864** (`34513486696`) was green with 458 tests passed. Phase 41 implementation merged from PR #43 as `531d2b964a6567aaa0a6b34b2d9b8f4471eb83f5`; feature CI **#865** (`34553393908`) and post-merge mainline CI **#866** (`34553461275`) passed all repository gates. The final documentation-closed mainline verification is recorded in the Phase 41 closure update.
 
 ## Next phase
 
-**Phase 41 — TUI.**
+**Phase 42 — Harness Deployment Center.**
