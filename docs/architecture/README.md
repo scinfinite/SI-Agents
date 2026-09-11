@@ -12,7 +12,7 @@ Code, executable contracts, governance decisions, and CI results outrank prose w
 
 ## Current phase index
 
-V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–48 are complete and final-CI verified**. Phase **49 — Agent + Team Builder** is next.
+V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–49 are complete and final-CI verified**. Phase **50 — Capability Authorization** is next.
 
 | Phase | Canonical record | State |
 |---:|---|---|
@@ -22,16 +22,17 @@ V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–48 are compl
 | 46 | `PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md` | Complete + CI verified |
 | 47 | `PHASE_47_OPENCODE_BRIDGE.md` | Complete + CI verified |
 | 48 | `PHASE_48_OMNIROUTE_INTEGRATION.md` | Complete + final-CI verified |
-| 49–71 | `SI_AGENTS_V4_PLAN.md` | Planned |
+| 49 | `PHASE_49_AGENT_TEAM_BUILDER.md` | Complete + final-CI verified |
+| 50–71 | `SI_AGENTS_V4_PLAN.md` | Planned |
 
 ## Cross-cutting architecture
 
 - One SI Core and one Control API remain the authority boundaries.
 - CLI, Web and TUI are control surfaces, not independent authorities.
 - Evidence is explicit and provenance-bearing.
-- V4 now has a durable runtime, event/state model, dependency-aware scheduler, OpenCode bridge, and OmniRoute model/provider adapter.
+- V4 now has a durable runtime, event/state model, dependency-aware scheduler, OpenCode bridge, OmniRoute model/provider adapter, and deterministic agent/team composition layer.
 - OpenCode remains the interactive coding harness; OmniRoute remains downstream model/provider routing infrastructure.
-- Model selection cannot grant authority or capabilities.
+- Model selection and agent/team composition cannot grant authority or capabilities.
 - Credentials are references and must not become runtime state.
 - Web is the richest planned V4 control plane; TUI is the fastest operator surface; CLI is the strongest automation surface.
 
