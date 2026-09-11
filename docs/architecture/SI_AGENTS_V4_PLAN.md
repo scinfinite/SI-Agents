@@ -6,7 +6,7 @@ V3 is closed. V4 implementation has completed Phases 44–51 in sequence. Phase 
 
 ## Architecture direction
 
-The V4 target is a governed execution platform with one authoritative SI Core. Web, TUI, CLI, OpenCode, OmniRoute, agent teams, workflow automation, and external harnesses integrate through explicit runtime and governance boundaries.
+The V4 target is a governed execution platform with one authoritative SI Core. Web, TUI, CLI, agent teams, workflow automation, and external harnesses integrate through explicit runtime and governance boundaries.
 
 Core principles:
 
@@ -56,7 +56,7 @@ Phase 51 introduces `CheckpointStore`, `Checkpoint`, `ResumePlan`, and `Checkpoi
 - SQLite append-only persistence with ordered per-execution lineage.
 - SHA-256 canonical integrity digests.
 - Parent checkpoint validation and lineage verification.
-- Secret-like field rejection and 256 KiB serialized size limit.
+- Secret-like field rejection and 256 KiB serialized state/metadata limit.
 - Durable reopen behavior.
 - Terminal-only resume through authoritative `ExecutionStore.new_attempt()`.
 - Resume plans preserve checkpoint progress while deliberately excluding metadata-derived authority.
