@@ -10,7 +10,6 @@ from core.web.audit import AuditLogger
 from core.web.models import WebConfig
 from core.web.server import create_server
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -25,14 +24,19 @@ def test_web_deployment_get_and_post(tmp_path: Path) -> None:
         with urllib.request.urlopen(base + "/api/v1/deployments") as response:
             data = json.load(response)
         assert "targets" in data and "plans" in data
-        request = urllib.request.Request(base + "/api/v1/deployments", data=json.dumps({
-            "id": "web-plan", "harness_id": "opencode", "agents": [], "teams": [], "skills": []
-        }).encode(), headers={"Content-Type": "application/json"}, method="POST")
+        request = urllib.request.Request(
+            base + "/api/v1/deployments",
+            data=json.dumps({"id": "web-plan", "harness_id": "opencode", "agents": [], "teams": [], "skills": []}).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
         with urllib.request.urlopen(request) as response:
             created = json.load(response)
         assert created["state"] == "valid"
     finally:
-        server.shutdown(); thread.join(timeout=3); server.server_close()
+        server.shutdown()
+        thread.join(timeout=3)
+        server.server_close()
 
 
 def test_deployment_assets_are_present_and_audit_logger_is_constructible(tmp_path: Path) -> None:
