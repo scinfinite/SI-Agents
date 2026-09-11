@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import os
+from pathlib import Path
 
 import pytest
 
@@ -221,5 +221,6 @@ def test_cancellation_is_explicitly_unsupported():
 
 
 def test_audit_allows_explicit_external_reference_documents():
-    checks = {check.name: check for check in audit_repository(os.getcwd())}
+    root = Path(__file__).resolve().parents[1]
+    checks = {check.name: check for check in audit_repository(root)}
     assert checks["external-branding"].ok is True
