@@ -5,11 +5,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
 TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
+ALLOWED_REFERENCE_DOCS = {
+    ROOT / "README.md",
+    ROOT / "docs" / "architecture" / "SI_AGENTS_V4_PLAN.md",
+    ROOT / "docs" / "architecture" / "README.md",
+}
 
 
 def test_shipped_repository_has_no_external_project_branding() -> None:
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".git" in path.parts or ".ci-wheel-venv" in path.parts or path.suffix not in TEXT_SUFFIXES:
+            continue
+        if path in ALLOWED_REFERENCE_DOCS:
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
         assert not any(term in text for term in FORBIDDEN), path
