@@ -19,43 +19,16 @@ This directory is the maintained documentation surface for SI-Agents. Documentat
 13. **Phase 38 canonical record:** `architecture/PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md`
 14. **Phase 39 canonical record:** `architecture/PHASE_39_AGENT_BUILDER.md`
 15. **Phase 40 canonical record:** `architecture/PHASE_40_EVIDENCE_OBSERVABILITY.md`
-16. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
-17. **Engineering rules:** `../AGENTS.md`
-18. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
-
-## Documentation map
-
-```text
-docs/
-├── README.md
-└── architecture/
-    ├── README.md
-    ├── PHASES.md
-    ├── PHASE_29_AGENT_PERSONA.md
-    ├── PHASE_30_PORTABLE_SKILLS.md
-    ├── PHASE_31_RULES_HOOKS_EVENTS.md
-    ├── PHASE_32_MEMORY_KNOWLEDGE.md
-    ├── PHASE_33_SECURITY_GOVERNANCE_CENTER.md
-    ├── PHASE_34_ORGANIZATION_EXPANSION.md
-    ├── PHASE_35_CONTROL_API.md
-    ├── PHASE_36_LOCAL_WEB_FOUNDATION.md
-    ├── PHASE_37_CONTROL_CENTER.md
-    ├── PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md
-    ├── PHASE_39_AGENT_BUILDER.md
-    ├── PHASE_40_EVIDENCE_OBSERVABILITY.md
-    ├── SI_AGENTS_V3.md
-    ├── PHASE_1_FOUNDATION.md
-    ├── EXECUTION_BACKENDS.md
-    └── PHASE_<n>_*.md                         # Historical phase contracts/evidence
-```
-
-The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been retired. Phase 1 is explicitly indexed as `PHASE_1_FOUNDATION.md`, and the important control-plane execution contract is consolidated into `PHASE_2_CONTROL_PLANE.md`.
+16. **Phase 41 canonical record:** `architecture/PHASE_41_TUI.md`
+17. **v3 roadmap (next work):** `architecture/SI_AGENTS_V3.md`
+18. **Engineering rules:** `../AGENTS.md`
+19. **IP/provenance policy:** `../governance/legal/IP_PROVENANCE.md`
 
 ## Source-of-truth rules
 
-- `PHASES.md` is authoritative for current implementation status and verification.
+- `architecture/PHASES.md` is authoritative for current implementation status and verification.
 - `architecture/README.md` is the maintained architecture navigation/index.
-- `PHASE_29_AGENT_PERSONA.md` through `PHASE_40_EVIDENCE_OBSERVABILITY.md` are canonical records for their respective post-v2 phases.
+- `PHASE_29_AGENT_PERSONA.md` through `PHASE_41_TUI.md` are canonical records for their respective post-v2 phases.
 - `SI_AGENTS_V3.md` is authoritative for forward-looking v3 planning.
 - Earlier `PHASE_<n>_*.md` files are historical implementation records and preserve phase-time evidence.
 - Runtime, governance, executable contracts, and CI results remain authoritative over prose.
@@ -63,14 +36,7 @@ The former `FOUNDATION.md` and duplicate `CONTROL_PLANE.md` names have been reti
 
 ## Documentation lifecycle
 
-When a phase changes state:
-
-1. Implement and test the code.
-2. Run the required CI gates.
-3. Record the verified result in `PHASES.md` and the phase's canonical record.
-4. Update root README and navigation indexes when public project state changes.
-5. Keep future roadmap text separate from completed functionality.
-6. Preserve historical phase evidence instead of rewriting history.
+When a phase changes state: implement and test; run CI; record verified results in the phase record and `PHASES.md`; update navigation/root documentation; keep future roadmap text separate from completed functionality; preserve historical evidence.
 
 ## Security and provenance
 
@@ -78,6 +44,6 @@ Markdown is documentation/configuration, not an authority boundary. Imported or 
 
 ## Current baseline
 
-**Phases 1–40 are complete and CI-verified.** Phase 40 implementation merged from PR #40 as `2e363034f8140ea8ecc90cf7c0f2fe73`; CI #860 caught one evidence-route regression, which was fixed in PR #41 as `4900401c48af52a6e8d901b622575bc49bdab563`. Final mainline CI **#862** (`34513000130`) passed all repository gates with **458 passed**.
+**Phases 1–41 are complete and CI-verified.** Phase 41 implementation merged from PR #43 as `531d2b964a6567aaa0a6b34b2d9b8f4471eb83f5`. Feature CI **#865** (`34553393908`) and post-merge mainline CI **#866** (`34553461275`) passed all repository gates. The final documentation-closed mainline verification is recorded in the Phase 41 closure update.
 
-**Next implementation: Phase 41 — TUI.**
+**Next implementation: Phase 42 — Harness Deployment Center.**
