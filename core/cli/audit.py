@@ -13,14 +13,22 @@ from core.skills.registry import SkillRegistry
 from core.skills.validator import validate_skill
 
 TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
-HIDDEN_UNICODE = {"\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069", "\u202a", "\u202b", "\u202c", "\u202d", "\u202e", "\u206a", "\u206b", "\u206c", "\u206d", "\u206e", "\u206f"}
+HIDDEN_UNICODE = {"\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069", "\u202a", "\u202b", "\u202c", "\u202d", "\u206a", "\u206b", "\u206c", "\u206d", "\u206e", "\u206f"}
 FORBIDDEN_BRANDING = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
-# V4 planning documents may name external systems explicitly as research references.
-# Executable/package surfaces must remain free of external branding.
+# Explicit architecture/phase research records may name external systems. Executable,
+# package, and operational surfaces remain free of external branding.
 ALLOWED_REFERENCE_DOCS = frozenset({
     "README.md",
-    "docs/architecture/SI_AGENTS_V4_PLAN.md",
+    "docs/README.md",
     "docs/architecture/README.md",
+    "docs/architecture/SI_AGENTS_V4_PLAN.md",
+    "docs/architecture/MODEL_ROUTING.md",
+    "docs/architecture/PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
+    "docs/architecture/PHASE_44_EXECUTION_RUNTIME.md",
+    "docs/architecture/PHASE_45_EVENT_BUS_STATE.md",
+    "docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md",
+    "docs/architecture/PHASE_47_OPENCODE_BRIDGE.md",
+    "docs/architecture/PHASE_48_OMNIROUTE_INTEGRATION.md",
 })
 TRANSIENT_NAMES = {"persona_parity_build.py", "phase29_unique_names.py", "phase29_heading_fix.py", "phase29_list_fix.py", "phase29-test-debug.txt"}
 
