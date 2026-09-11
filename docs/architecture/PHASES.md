@@ -23,11 +23,18 @@ This file is the authoritative current implementation/status record. Historical 
 41. TUI — **Complete and CI-verified.**
 42. Harness Deployment Center — **Complete and CI-verified.** Planning-only; no downstream deployment authority was introduced.
 43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the V3 release gates.
-44. Execution Runtime Foundation — **Complete and CI-verified.** Durable execution/attempt identity, lifecycle transitions, persistence, idempotency, cancellation, pause/resume boundaries, deadlines, retries, restart recovery, adapter isolation, terminality protection and secret-isolation checks.
-45. Event Bus + State Architecture — **Complete and CI-verified.** Durable append-only events, ordered aggregate streams, correlation/causation, replay, subscriptions, projections/checkpoints, concurrent append safety and lifecycle integration.
-46. Parallel Scheduler + Executor — **Complete and CI-verified.** Durable dependency-aware scheduling, priority/aging, bounded parallel execution, cancellation, failure propagation, restart recovery, scheduler events and runtime-authoritative finalization.
-47. OpenCode Bridge — **Complete and CI-verified.** Health/session discovery, blocking/streaming invocation, cancellation, SSE filtering, loopback-default endpoint policy, remote opt-in and transport error normalization.
-48. OmniRoute Integration — **Implementation complete; final CI pending.** Health/model discovery, typed model capabilities, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage metadata, rate-limit/error classification, credential references, endpoint security and deterministic transport tests are implemented.
+
+### V4 current milestones
+
+**Phase 44 — Execution Runtime Foundation:** complete and CI-verified.
+
+**Phase 45 — Event Bus + State Architecture:** complete and CI-verified.
+
+**Phase 46 — Parallel Scheduler + Executor:** complete and CI-verified.
+
+**Phase 47 — OpenCode Bridge:** complete and CI-verified.
+
+**Phase 48 — OmniRoute Integration:** implementation complete; final CI pending. Health/model discovery, typed model capabilities, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage metadata, rate-limit/error classification, credential references, endpoint security and deterministic transport tests are implemented.
 
 ## Release status
 
