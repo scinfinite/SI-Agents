@@ -105,3 +105,15 @@ def test_execution_runtime_emits_canonical_lifecycle_events(tmp_path):
     ]
     assert all(event.correlation_id == execution.execution_id for event in events)
     assert events[-1].payload["to"] == "succeeded"
+
+
+def test_live_subscription_receives_committed_events_and_can_unsubscribe(tmp_path):
+    bus = EventBus(str(tmp_path / "events.db"))
+    seen = []
+    token = bus.subscribe(seen.append)
+    event = bus.append("started", "execution", "e1", {"safe": True})
+    assert seen == [event]
+    assert bus.unsubscribe(token) is True
+    bus.append("completed", "execution", "e1", {"safe": True})
+    assert seen == [event]
+    assert bus.unsubscribe(token) is False
