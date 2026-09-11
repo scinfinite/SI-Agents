@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v3 closed; v4 Phase 44 complete and CI-verified; Phase 45 is next.**
+**Current status: v3 closed; v4 Phase 44 complete and CI-verified; v4 Phase 45 implementation in progress.**
 
 > This file is the authoritative current implementation/status record. `SI_AGENTS_V3.md` records the completed v3 architecture. `SI_AGENTS_V4_PLAN.md` records the approved v4 planning direction. Historical phase records preserve phase-time evidence.
 
@@ -23,22 +23,22 @@
 41. TUI — **Complete and CI-verified.**
 42. Harness Deployment Center — **Complete and CI-verified.** Planning-only; no downstream deployment authority was introduced.
 43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the repository release gates after the Phase 43 schema-version compatibility regression was corrected.
-
 44. Execution Runtime Foundation — **Complete and CI-verified.** Durable execution/attempt identity, lifecycle transitions, SQLite persistence, idempotency, cancellation, pause/resume capability boundaries, deadlines, retries, restart recovery, adapter isolation, terminality protection, and secret-isolation checks are implemented and covered by the final CI suite.
 
 ## Release status
 
 - **v2.0:** complete.
 - **v3:** complete and CI-verified through Phase 43.
-- **v4:** implementation started and Phase 44 is complete; Phase 45 is next.
+- **v4:** implementation active; Phase 44 complete and Phase 45 in progress.
 - **Phase 44:** complete and CI-verified.
+- **Phase 45:** implementation in progress; not yet closed.
 
 ## V4 planned sequence
 
 | Phase | Planned scope | State |
 |---:|---|---|
 | 44 | Execution Runtime Foundation | **Complete + CI verified** |
-| 45 | Event Bus + State Architecture | Planned / next |
+| 45 | Event Bus + State Architecture | **In progress** |
 | 46 | Parallel Scheduler + Executor | Planned |
 | 47 | OpenCode Bridge | Planned |
 | 48 | OmniRoute Integration | Planned |
@@ -84,11 +84,15 @@ The final Phase 44 implementation CI was **#919 (`34610448789`)**, on commit `1a
 
 CI-discovered regressions were fixed before closure: the repository audit/hygiene test was aligned with the V4 rule allowing explicit external reference documentation, runtime terminality/concurrency coverage was strengthened, and the phase index was corrected to retain the required literal `Phase 71` integration marker.
 
+## Phase 45 verification record
+
+Phase 45 started only after the green Phase 44 baseline was verified on `main`. The implementation adds `core/runtime/events.py`, exports the durable event contracts through `core.runtime`, and connects canonical execution lifecycle transitions to the event bus. Dedicated tests cover ordering, replay, idempotent event IDs, persistence/reopen, projections/checkpoints, concurrency, invalid input, and runtime lifecycle emission.
+
+**Closure is intentionally deferred until final Phase 45 CI is green.**
+
 ## V4 contract status
 
-The Phase 44 execution-runtime contract has been implemented and verified on `main`. It establishes the authority boundary between Control API and runtime, canonical identifiers/lifecycle, adapter boundaries, idempotency, cancellation/deadlines, retries, restart recovery, terminality and secret-isolation expectations.
-
-The contract remains intentionally downstream of Control API authority and provider/model routing. No runtime component may grant authority, alter provenance or bypass governance.
+The Phase 44 execution-runtime contract has been implemented and verified on `main`. Phase 45 extends that boundary with durable runtime facts and materialized state; it does not grant authority or alter provenance.
 
 ## Documentation rules
 
@@ -100,4 +104,4 @@ The contract remains intentionally downstream of Control API authority and provi
 
 ## Next state
 
-**Phase 44 is closed. The next implementation phase is Phase 45 — Event Bus + State Architecture.**
+**Phase 45 is in progress. It must not be marked complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification all pass.**
