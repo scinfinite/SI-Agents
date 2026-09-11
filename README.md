@@ -66,7 +66,7 @@ This remains a V4 target and is not a claim of a currently released npm contract
 - Evidence is required before completion claims.
 - Secrets remain isolated from execution state wherever possible.
 - Surface parity means operationally important capabilities remain available consistently across Web/TUI/CLI where appropriate.
-- ECC, Agency Agents, OpenCode, OmniRoute and n8n are external reference systems for engineering patterns, not copied dependencies or authorities over SI governance.
+- External engineering reference systems are used for pattern research only, not as copied dependencies or authorities over SI governance.
 
 ## Current verification baseline
 
