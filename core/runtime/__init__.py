@@ -8,6 +8,7 @@ from core.runtime.events import EventBus, RuntimeEventRecord
 from core.runtime.execution import AuthorizedTask, Attempt, Execution, ExecutionRuntime, ExecutionStore, RuntimeAdapter, RuntimeFailure, State
 from core.runtime.local import LocalHarnessAdapter
 from core.runtime.models import InvocationRequest, InvocationResponse, InvocationStatus, RuntimeCapabilities, RuntimeError, RuntimeErrorCode, RuntimeEvent, RuntimeEventType, RuntimeKind
+from core.runtime.omniroute import OmniRouteBridge, OmniRouteCredentialRef, OmniRouteModel, OmniRoutePolicy, OmniRouteTransportError
 from core.runtime.opencode import OpenCodeBridge, OpenCodeSession, OpenCodeTransportError
 from core.runtime.protocol import HarnessAdapter, HarnessMetadata, normalize_metadata
 from core.runtime.registry import HarnessRegistry
@@ -19,7 +20,8 @@ __all__ = [
     "WIRE_PROTOCOL", "AuthorizedTask", "Attempt", "CallbackHarnessAdapter", "ConformanceFailure",
     "EventBus", "Execution", "ExecutionRuntime", "ExecutionStore", "HarnessAdapter", "HarnessDeploymentManifest",
     "HarnessMetadata", "HarnessRegistry", "InvocationRequest", "InvocationResponse", "InvocationStatus",
-    "LocalHarnessAdapter", "OpenCodeBridge", "OpenCodeSession", "OpenCodeTransportError", "ParallelScheduler",
+    "LocalHarnessAdapter", "OmniRouteBridge", "OmniRouteCredentialRef", "OmniRouteModel", "OmniRoutePolicy",
+    "OmniRouteTransportError", "OpenCodeBridge", "OpenCodeSession", "OpenCodeTransportError", "ParallelScheduler",
     "RuntimeAdapter", "RuntimeCapabilities", "RuntimeEngine", "RuntimeError", "RuntimeErrorCode", "RuntimeEvent",
     "RuntimeEventRecord", "RuntimeEventType", "RuntimeFailure", "RuntimeKind", "RuntimeSession", "ScheduleState",
     "ScheduledItem", "SessionRegistry", "SessionStatus", "State", "adapter_metadata", "build_manifest",

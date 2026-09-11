@@ -1,14 +1,14 @@
 # SI-Agents Implementation Phases
 
-**Current status: v3 closed; v4 Phases 44–47 complete and CI-verified; Phase 48 is the next implementation phase.**
+**Current status: V3 closed; V4 Phases 44–47 complete and final-CI verified; Phase 48 implementation complete and awaiting final CI.**
 
-> This file is the authoritative current implementation/status record. `SI_AGENTS_V3.md` records the completed v3 architecture. `SI_AGENTS_V4_PLAN.md` records the approved v4 planning direction. Historical phase records preserve phase-time evidence.
+This file is the authoritative current implementation/status record. Historical phase records preserve phase-time evidence.
 
 ## Completed phases
 
 1–28. Foundation through Cross-environment & Handoff — **Complete.**
 
-29. Complete SI Agent Persona System — **Complete and CI-verified.** Exactly 279 SI-native specialist personas across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, provenance, packaging, and CI verification.
+29. Complete SI Agent Persona System — **Complete and CI-verified.**
 30. First-Class Portable Skills — **Complete and CI-verified.**
 31. Rules, Hooks & Event System — **Complete and CI-verified.**
 32. Memory & Knowledge — **Complete and CI-verified.**
@@ -22,21 +22,23 @@
 40. Evidence & Observability — **Complete and CI-verified.**
 41. TUI — **Complete and CI-verified.**
 42. Harness Deployment Center — **Complete and CI-verified.** Planning-only; no downstream deployment authority was introduced.
-43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the repository release gates after the Phase 43 schema-version compatibility regression was corrected.
-44. Execution Runtime Foundation — **Complete and CI-verified.** Durable execution/attempt identity, lifecycle transitions, SQLite persistence, idempotency, cancellation, pause/resume capability boundaries, deadlines, retries, restart recovery, adapter isolation, terminality protection, and secret-isolation checks are implemented and covered by the final CI suite.
-45. Event Bus + State Architecture — **Complete and CI-verified.** Durable append-only event log, ordered aggregate streams, correlation/causation, replay, live subscriptions, projections/checkpoints, concurrent append safety, and canonical Phase 44 lifecycle-event integration are implemented, tested, documented, and final-CI verified.
-46. Parallel Scheduler + Executor — **Complete and CI-verified.** Durable dependency-aware scheduling, priority/aging, bounded parallel execution, cancellation, failure propagation, restart recovery, scheduler events, and authoritative runtime finalization are implemented, tested, documented, and final-CI verified.
-47. OpenCode Bridge — **Complete and CI-verified.** Health/session discovery, blocking and streaming invocation, cancellation, SSE filtering, loopback-default endpoint policy, remote opt-in, transport error normalization, and SI authority-boundary preservation are implemented, tested, documented, and final-CI verified.
+43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the V3 release gates.
+44. Execution Runtime Foundation — **Complete and CI-verified.** Durable execution/attempt identity, lifecycle transitions, persistence, idempotency, cancellation, pause/resume boundaries, deadlines, retries, restart recovery, adapter isolation, terminality protection and secret-isolation checks.
+45. Event Bus + State Architecture — **Complete and CI-verified.** Durable append-only events, ordered aggregate streams, correlation/causation, replay, subscriptions, projections/checkpoints, concurrent append safety and lifecycle integration.
+46. Parallel Scheduler + Executor — **Complete and CI-verified.** Durable dependency-aware scheduling, priority/aging, bounded parallel execution, cancellation, failure propagation, restart recovery, scheduler events and runtime-authoritative finalization.
+47. OpenCode Bridge — **Complete and CI-verified.** Health/session discovery, blocking/streaming invocation, cancellation, SSE filtering, loopback-default endpoint policy, remote opt-in and transport error normalization.
+48. OmniRoute Integration — **Implementation complete; final CI pending.** Health/model discovery, typed model capabilities, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage metadata, rate-limit/error classification, credential references, endpoint security and deterministic transport tests are implemented.
 
 ## Release status
 
-- **v2.0:** complete.
-- **v3:** complete and CI-verified through Phase 43.
-- **v4:** implementation active; Phases 44–47 complete and CI-verified.
+- **V2:** complete.
+- **V3:** complete and CI-verified through Phase 43.
+- **V4:** active implementation.
 - **Phase 44:** complete and CI-verified.
 - **Phase 45:** complete and CI-verified.
 - **Phase 46:** complete and CI-verified.
 - **Phase 47:** complete and CI-verified.
+- **Phase 48:** implementation complete; final CI pending.
 
 ## V4 planned sequence
 
@@ -46,7 +48,7 @@
 | 45 | Event Bus + State Architecture | **Complete + CI verified** |
 | 46 | Parallel Scheduler + Executor | **Complete + CI verified** |
 | 47 | OpenCode Bridge | **Complete + CI verified** |
-| 48 | OmniRoute Integration | **Next** |
+| 48 | OmniRoute Integration | **Implementation complete; final CI pending** |
 | 49 | Agent + Team Builder | Planned |
 | 50 | Capability Authorization | Planned |
 | 51 | Checkpoints + Resume | Planned |
@@ -71,60 +73,18 @@
 | 70 | End-to-End Production Validation | Planned |
 | 71 | Final Production Hardening | Planned / final gate |
 
-**Phase 71 is the final V4 production-hardening gate.** No V4 phase may be marked complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
+**No phase is complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.**
 
-See `SI_AGENTS_V4_PLAN.md` for complete scope, architecture, dependencies, surface-parity requirements and acceptance criteria.
+## Verification references
 
-## Phase 43 verification record
+- Phase 43 final mainline CI: `34558002476`.
+- Phase 44 final CI: `34610448789`.
+- Phase 45 final exact-tree CI: `34612616978`.
+- Phase 46 final CI: `34615157829`.
+- Phase 47 implementation CI: `34615709124`.
+- Phase 47 final documentation exact-tree CI: `34615862860`.
+- Phase 48: final gate pending.
 
-Phase 42 was verified fully closed before Phase 43 started: documentation-closed main commit `ea901db9ed45a13c78c6a980aa3e53b0175049f`; final mainline CI #881 (`34555338259`) was green.
+## Documentation lifecycle
 
-Phase 43 implementation merged as `d4aaddc0008d6af05161d8b79dfc1f9507e0c61e`. Mainline CI #884 (`34557632059`) caught a schema-version compatibility regression in the new integration audit. The regression was corrected in PR #50, merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI #886 (`34558002476`) passed all repository gates.
-
-## Phase 44 verification record
-
-Phase 44 began only after the v3 Phase 43 baseline was confirmed on `main`. The runtime implementation was added in `core/runtime/execution.py` and exported through `core/runtime/__init__.py`, with dedicated tests in `tests/test_phase44_runtime.py` and implementation evidence in `docs/architecture/PHASE_44_EXECUTION_RUNTIME.md`.
-
-The final Phase 44 implementation CI was **#919 (`34610448789`)**, on commit `1ac21225fb6d723c010b164da7b597e1bfced5a6`. The final CI job completed successfully: distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall and the complete pytest suite all passed.
-
-## Phase 45 verification record
-
-Phase 45 started only after the green Phase 44 baseline was verified on `main`. The implementation adds `core/runtime/events.py`, exports the durable event contracts through `core.runtime`, connects canonical execution lifecycle transitions to the event bus, and adds dedicated tests for ordering, replay, idempotent event IDs, persistence/reopen, projections/checkpoints, concurrency, invalid input, subscriptions, and runtime lifecycle emission.
-
-The implementation CI **#930 (`34612083838`)** on commit `7e4be5c2ab9b0073fd9868dedc311e59037befb8` passed all repository gates. The exact-tree final CI **#935 (`34612616978`)** on commit `d2821c86865df18d3b8d7988413e31df0e20c753` also completed successfully after the final documentation/evidence alignment.
-
-The Phase 45 event architecture preserves the Control API authority boundary: the event bus records runtime facts and materializes state but does not grant permissions, change provenance, or become a second control plane.
-
-## Phase 46 verification record
-
-Phase 46 started only after Phase 45 final CI #935 was verified green on `main`. The implementation added `core/runtime/scheduler.py` and `tests/test_phase46_scheduler.py`, with durable SQLite scheduling metadata, dependency edges, priority/aging selection, bounded parallel workers, cancellation, failure propagation, restart recovery, and scheduler event integration. Implementation evidence is in `docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md`.
-
-CI **#936 (`34614754832`)** caught Ruff issues in the initial implementation. CI **#937 (`34614989252`)** passed Ruff and all repository gates through build/audit/integration, then caught one queued-cancellation runtime-state gap in pytest. That gap was corrected in commit `772716428868a7597540a0bea72f715dfd46a224`.
-
-Final Phase 46 CI **#938 (`34615157829`)** on commit `772716428868a7597540a0bea72f715dfd46a224` completed successfully. The final job passed distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
-
-## Phase 47 verification record
-
-Phase 47 started only after Phase 46 final CI #938 was verified green on `main`. The implementation added `core/runtime/opencode.py`, exported the bridge through `core.runtime`, and added `tests/test_phase47_opencode.py` plus `docs/architecture/PHASE_47_OPENCODE_BRIDGE.md`.
-
-CI **#940 (`34615549738`)** on commit `21479716adffba5f1ab03742e2b49905666abf3b` caught two correctness gaps: cancellation was asserted after a completed request, and transport errors during session creation were not normalized. Both were corrected in commit `52176a1d612637cbc892b354771f80e6af86910e`.
-
-Final Phase 47 CI **#941 (`34615709124`)** on commit `52176a1d612637cbc892b354771f80e6af86910e` completed successfully. The final job passed distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
-
-The Phase 47 bridge preserves the Control API authority boundary: OpenCode is a downstream protocol adapter and its session, permission, identity, and provenance semantics are never promoted into SI authorization.
-
-## V4 contract status
-
-The Phase 44 execution-runtime contract has been implemented and verified on `main`. Phase 45 extends that boundary with durable runtime facts and materialized state. Phase 46 adds scheduling orchestration without granting authority or altering provenance. Phase 47 adds OpenCode as a downstream protocol adapter without granting it SI authority.
-
-## Documentation rules
-
-- Current status belongs here.
-- V4 planning belongs in `SI_AGENTS_V4_PLAN.md`.
-- Historical phase documents preserve their phase-time claims and evidence.
-- Code, executable contracts, governance decisions, and CI results outrank prose.
-- Current/index documentation must never claim implementation that has not been verified.
-
-## Next state
-
-**Phase 47 is closed. The next implementation phase is Phase 48 — OmniRoute Integration.**
+After every completed phase, update the phase record, this status file, architecture index, project/documentation navigation, roadmap status, verification references, and affected cross-cutting contracts before the final exact-tree CI gate. Historical phase records remain phase-time evidence and are not rewritten merely to reflect later work.
