@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**V3 is complete and closed. V4 is active through Phase 48; Phases 44–48 are complete and final-CI verified. Phase 49 — Agent + Team Builder — is next.**
+**V3 is complete and closed. V4 is active through Phase 49; Phases 44–49 are complete and final-CI verified. Phase 50 — Capability Authorization — is next.**
 
 V4 is extending the verified V3 governance/control foundation into a real agent operating system with durable execution state, parallel orchestration, live events/control, first-class OpenCode and OmniRoute integration, richer agents/teams/workflows, security/economics controls, advanced Web/TUI/CLI surfaces, and distribution.
 
@@ -16,7 +16,7 @@ V4 is extending the verified V3 governance/control foundation into a real agent 
  → 46 Scheduler / Executor  [complete]
  → 47 OpenCode Bridge       [complete]
  → 48 OmniRoute             [complete]
- → 49 Agent + Team Builder
+ → 49 Agent + Team Builder  [complete]
  → 50 Capability Authorization
  → 51 Checkpoints + Resume
  → 52 Context / Memory Economics
@@ -51,6 +51,7 @@ The roadmap builds runtime/state/scheduling/governance foundations before the fi
 - OmniRoute remains downstream model/provider routing infrastructure.
 - Runtime and provider adapters cannot grant authority or bypass governance.
 - Model selection is policy-bounded; it cannot create permissions.
+- Agent/team builders declare capabilities but cannot grant them.
 - Credentials remain references and are resolved at transport time.
 - Evidence is required before completion claims.
 - Surface parity means operationally important capabilities share authoritative state.
@@ -66,6 +67,7 @@ V4:
 - Phase 46 final CI #938 (`34615157829`) passed.
 - Phase 47 implementation CI #941 (`34615709124`) passed, followed by documentation exact-tree CI #942 (`34615862860`).
 - Phase 48 implementation/final CI run 949 (`34623762921`) passed; merge commit `f670563c7df06c05d269fe714e63abfe518036e0` is on `main`.
+- Phase 49 implementation CI run 954 (`34625018676`) passed; merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
 
 ## Documentation
 
@@ -74,7 +76,7 @@ V4:
 - `docs/architecture/README.md` — architecture index and phase navigation.
 - `docs/architecture/SI_AGENTS_V4_PLAN.md` — V4 roadmap and acceptance gates.
 - `docs/architecture/MODEL_ROUTING.md` — model/provider routing contract.
-- `docs/architecture/PHASE_44_EXECUTION_RUNTIME.md` through `PHASE_48_OMNIROUTE_INTEGRATION.md` — phase evidence.
+- `docs/architecture/PHASE_44_EXECUTION_RUNTIME.md` through `PHASE_49_AGENT_TEAM_BUILDER.md` — phase evidence.
 
 ## Engineering loop
 
