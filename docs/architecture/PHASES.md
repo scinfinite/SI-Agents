@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: V3 closed; V4 Phases 44–48 complete and final-CI verified; Phase 49 — Agent + Team Builder — is next.**
+**Current status: V3 closed; V4 Phases 44–49 complete and final-CI verified; Phase 50 — Capability Authorization — is next.**
 
 This file is the authoritative current implementation/status record. Historical phase records preserve phase-time evidence.
 
@@ -36,6 +36,8 @@ Phase 47 — OpenCode Bridge: **complete and CI-verified** (`34615709124`, follo
 
 Phase 48 — OmniRoute Integration: **complete and final-CI verified** (CI run 949, `34623762921`), merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
 
+Phase 49 — Agent + Team Builder: **complete and final-CI verified** (CI run 954, `34625018676`), merged to `main` as `de06398f2abefe24b58e52a7629dc5af3c191428`.
+
 ## Integration markers
 
 43. Final v3 Integration & Hardening
@@ -52,7 +54,8 @@ Phase 71
 - **Phase 46:** complete and CI-verified.
 - **Phase 47:** complete and CI-verified.
 - **Phase 48:** complete and final-CI verified.
-- **Phase 49:** next.
+- **Phase 49:** complete and final-CI verified.
+- **Phase 50:** next.
 
 ## V4 planned sequence
 
@@ -63,8 +66,8 @@ Phase 71
 | 46 | Parallel Scheduler + Executor | **Complete + CI verified** |
 | 47 | OpenCode Bridge | **Complete + CI verified** |
 | 48 | OmniRoute Integration | **Complete + final-CI verified** |
-| 49 | Agent + Team Builder | Planned / next |
-| 50 | Capability Authorization | Planned |
+| 49 | Agent + Team Builder | **Complete + final-CI verified** |
+| 50 | Capability Authorization | Planned / next |
 | 51 | Checkpoints + Resume | Planned |
 | 52 | Context / Memory Economics | Planned |
 | 53 | Persistent Sessions | Planned |
@@ -99,6 +102,8 @@ Phase 71
 - Phase 47 final documentation exact-tree CI: `34615862860`.
 - Phase 48 final CI: run 949 (`34623762921`).
 - Phase 48 merge commit: `f670563c7df06c05d269fe714e63abfe518036e0`.
+- Phase 49 final CI: run 954 (`34625018676`).
+- Phase 49 merge commit: `de06398f2abefe24b58e52a7629dc5af3c191428`.
 
 ## Documentation lifecycle
 
