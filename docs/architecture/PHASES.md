@@ -1,39 +1,13 @@
 # SI-Agents Implementation Phases
 
-**Current status: v2.0 baseline plus Phases 19–41 complete and CI-verified.**
+**Current status: v2.0 baseline plus Phases 19–42 complete and CI-verified.**
 
 > This file is the authoritative current implementation/status record. `docs/architecture/SI_AGENTS_V3.md` is the forward-looking roadmap. `docs/README.md` and `docs/architecture/README.md` are documentation navigation indexes.
 
 ## Completed phases
 
-1. Foundation — repository standards, architecture, policies, isolation, verification rules. **Complete.**
-2. Control Plane — orchestration, task state, workflows, context, permissions, approvals, checkpoints. **Complete.**
-3. Tool System — filesystem, terminal, Git, GitHub, web, code analysis, build/test tooling, containers, sandbox. **Complete.**
-4. Engineering Brain — decomposition, planning, reasoning, hypotheses, root-cause analysis, trade-offs, uncertainty. **Complete.**
-5. Developer/Debugger/Tester — first end-to-end engineering workflow and Alpha acceptance test. **Complete.**
-6. Skills Engine — reusable, verifiable engineering procedures, lifecycle, selection, permissioned execution, and evidence. **Complete.**
-7. Verification + Evidence — claims, evidence provenance, confidence, regression, red-team checks, production-readiness gates. **Complete.**
-8. Technical Knowledge — universal programming model, languages, frameworks, ecosystems, standards. **Complete.**
-9. Technology Discovery — detect, research, experiment, verify, and record unfamiliar technologies. **Complete.**
-10. Open-Source Intelligence — repository archaeology, history, issues, PRs, releases, security, licenses, health. **Complete.**
-11. Pattern Extraction — deterministic normalization, conservative extraction, independent validation, counterexamples, provenance, promotion, and matching. **Complete.**
-12. Engineering Memory — task/project/global memory, evidence-gated promotion, scoped retrieval, lifecycle, supersession, and auditable persistence. **Complete.**
-13. Security + Legal + Cost — executable governance gates, free-first cost controls, data classification/egress, provenance/legal review, risk classification, approvals, and audit evidence. **Complete.**
-14. Model/Provider Intelligence — capability, quota, cost, latency, reliability, fallback, circuit breakers. **Complete.**
-15. Automation — scheduled research, monitoring, maintenance, testing, reporting, retries, idempotency, persistence, and governance-gated execution. **Complete.**
-16. Controlled Self-Improvement + Capability Intelligence — evidence-backed proposals, benchmark/regression/safety gates, explicit approval, rollback, capability readiness intelligence, conservative unknown handling, and auditable persistence. **Complete.**
-17. Harness & Runtime Interoperability — transport-neutral invocation, capability negotiation, normalized events/errors, project sessions, explicit harness registration, governed local adapter, and conformance tests. **Complete.**
-18. Production Hardening — deterministic readiness, explicit resource limits, telemetry redaction, evidence-based release gates, migration/rollback requirements, and CI hardening. **Complete.**
-19. v2.0 Reality Audit — executable baseline audit, runtime E2E acceptance, distribution correctness, isolated wheel verification, documentation/roadmap consistency, and evidence-backed future-boundary definition. **Complete.**
-20. Agent Organization & Catalog — canonical divisions, typed agent definitions, declarative selection, lifecycle status, implementation references, and organization validation. **Complete.**
-21. Agent Teams & Workflows — dependency DAG scheduling, bounded parallelism, context isolation/handoffs, retries, escalation, verification/evidence gates, cancellation, checkpoints, and auditable workflow events. **Complete.**
-22. Universal Harness Integration — versioned language-neutral wire contract, structural callback bridge, adapter discovery, organization deployment manifests, and conformance coverage. **Complete.**
-23. OpenCode Integration — headless-server adapter, session continuity, normalized messages/events, cancellation, safe authentication handling, and distribution/CI verification. **Complete.**
-24. OmniRoute Integration — OpenAI-compatible gateway transport, deterministic model discovery, secure credential handling, fail-closed health/failure classification, correlation/session forwarding, and a governed delegation boundary. **Complete.**
-25. Termux Runtime — environment detection, readiness checks, OpenCode/OmniRoute health integration, read-only doctor, sanitized reports, conservative package planning, and workspace validation. **Complete.**
-26. GitHub Codespaces Runtime — Codespaces detection, toolchain/workspace readiness, OpenCode/GitHub CLI/OmniRoute requirements, read-only doctor, and sanitized reports. **Complete.**
-27. `si` CLI + Easy Setup — user-facing doctor/status/catalog/team/setup/update/run commands, non-secret configuration, explicit mutation gates, and packaged canonical catalogs. **Complete.**
-28. Cross-environment & Handoff — portable `si.handoff.v1` state, SHA-256 integrity, secret-like field rejection, resumable workflow context, atomic storage, and governance. **Complete and CI-verified.**
+1–28. Foundation through Cross-environment & Handoff — **Complete.**
+
 29. Complete SI Agent Persona System — **Complete and CI-verified.** Exactly 279 SI-native specialist personas across 18 SI-owned domain divisions, with deterministic parsing, typed catalog parity, security checks, provenance, packaging, and CI verification.
 30. First-Class Portable Skills — **Complete and CI-verified.** Portable `SKILL.md` artifacts, deterministic parsing/validation, dependency-aware composition, manifests, governed execution, explicit verification/evidence, six canonical Skills, CLI integration, packaging, and safety boundaries.
 31. Rules, Hooks & Event System — **Complete and CI-verified.** Immutable events, deterministic Rules, bounded in-process Hooks, fail-closed dangerous-event handling, Skill event integration, declarative Rule catalog, packaging, regression/adversarial tests, and synchronized documentation.
@@ -47,6 +21,7 @@
 39. Agent Builder & Customization — **Complete and CI-verified.** Immutable bounded agent drafts, canonical-agent projections, deterministic non-escalation validation, durable atomic local draft storage, revision/archive/test lifecycle, deterministic Markdown authoring preview, dependency-free Web authoring surface, versioned API/OpenAPI routes, audited mutations, and regression coverage for authority boundaries and Web behavior.
 40. Evidence & Observability — **Complete and CI-verified.** Immutable typed evidence records for facts, observations, inferences, and uncertainties; bounded confidence and explicit verification states; provenance, run relationships, contradiction/supersession tracking; atomic restrictive local persistence; Control API evidence detail/record/verification and run timelines; OpenAPI synchronization; dependency-free Evidence Explorer; and regression coverage for persistence, API routing, security boundaries, and epistemic state handling.
 41. TUI — **Complete and CI-verified.** Dependency-free keyboard-first terminal operator surface over the existing Control API service, covering all Control Center views with deterministic rendering, local filtering/selection/navigation, non-interactive `--once` rendering, `NO_COLOR` support, stable `si tui` and `si-tui` launchers, no mutation/execution authority, and regression coverage for navigation and fail-closed boundaries.
+42. Harness Deployment Center — **Complete and CI-verified.** Immutable harness targets and deployment plans, deterministic validation, fail-closed unknown-target and authority-bearing requests, planning-only manifest preparation, dependency-free Web Deployment Center, `/api/v1/deployments`, `si deploy`/`si-deploy`, packaging, audit-safe mutations, and adversarial regression coverage. No apply/deploy or credential migration authority was introduced.
 
 ## Release targets
 
@@ -55,35 +30,24 @@
 - **v1.0:** phases 10–13 — complete
 - **v1.5:** phases 14–15 — complete
 - **v2.0:** phases 16–18 — complete
-- **Post-v2 validation through Phase 41:** complete and CI-verified
+- **Post-v2 validation through Phase 42:** complete and CI-verified
 
 ## Phase completion gate
 
 A phase is not complete merely because files exist. Acceptance criteria must be implemented, relevant tests must pass, CI must verify installation/build/lint/tests, every CI failure must be fixed and rerun, and documentation must never claim a stronger state than implementation and verification evidence support.
 
-## Phase 41 verification record
+## Phase 42 verification record
 
-Phase 40 was verified fully closed before Phase 41 started: main commit `1a13c015eed3510987494c6f69941dc8b021a4e1` recorded the Phase 40 documentation closure, and final mainline CI **#864** (`34513486696`) passed all repository gates with **458 passed**.
+Phase 41 was verified fully closed before Phase 42 started: final documentation-closed mainline CI **#868** (`34553771653`) passed on main commit `d10f509a3201ef9899c08d4a9a9bda820e5861c4`.
 
-Phase 41 implementation merged from PR #43 as squash commit `531d2b964a6567aaa0a6b34b2d9b8f4471eb83f5`. Feature CI **#865** (`34553393908`) passed all repository gates. Post-merge mainline CI **#866** (`34553461275`) also passed all build, packaging, repository-audit, Ruff, test, diagnostics, and cleanup gates. The final documentation-closed mainline CI is recorded in the Phase 41 closure update before the phase is declared complete.
+Phase 42 implementation was merged through PR #46 as squash commit `70d5f96c15bfbf200804a50f43dc6e12f5dde903`. CI exposed an OpenAPI syntax regression, then Ruff exposed compact-handler violations, and pytest exposed duplicate normalization and an assertion mismatch. Each issue was isolated and fixed; the final validation run on the corrected head passed wheel installation, repository audit, Ruff, and the full test suite. Final mainline CI is the required closure gate after documentation synchronization.
 
 ## Documentation structure
 
-- `PHASE_29_AGENT_PERSONA.md` — canonical persona/parity/provenance/security/packaging record.
-- `PHASE_30_PORTABLE_SKILLS.md` — canonical portable Skill record.
-- `PHASE_31_RULES_HOOKS_EVENTS.md` — canonical Rules/Hooks/Events record.
-- `PHASE_32_MEMORY_KNOWLEDGE.md` — canonical Memory/Knowledge contract and final verification record.
-- `PHASE_33_SECURITY_GOVERNANCE_CENTER.md` — canonical Security/Governance contract and final verification record.
-- `PHASE_34_ORGANIZATION_EXPANSION.md` — canonical Organization Expansion contract and final verification record.
-- `PHASE_35_CONTROL_API.md` — canonical Control API contract and final verification record.
-- `PHASE_36_LOCAL_WEB_FOUNDATION.md` — canonical Web foundation contract and final verification record.
-- `PHASE_37_CONTROL_CENTER.md` — canonical Control Center contract and final verification record.
-- `PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md` — canonical Visual Organization & Workflow contract and final verification record.
-- `PHASE_39_AGENT_BUILDER.md` — canonical Agent Builder & Customization contract and final verification record.
-- `PHASE_40_EVIDENCE_OBSERVABILITY.md` — canonical Evidence & Observability contract and final verification record.
-- `PHASE_41_TUI.md` — canonical TUI contract and final verification record.
+- `PHASE_29_AGENT_PERSONA.md` through `PHASE_42_HARNESS_DEPLOYMENT_CENTER.md` — canonical post-v2 phase records.
+- `SI_AGENTS_V3.md` — forward roadmap.
 - `EXECUTION_BACKENDS.md` — cross-cutting execution-backend boundary.
 
 ## Next phase
 
-**Phase 42 — Harness Deployment Center.**
+**Phase 43 — Final v3 Integration & Hardening.**
