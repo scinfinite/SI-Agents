@@ -1,14 +1,14 @@
-# SI-Agents v3 — Product & Architecture Roadmap
+# SI-Agents v3 — Product & Architecture Record
 
-**Status:** v3 implementation complete  
-**Baseline:** SI-Agents v2.0 + Phases 19–43 implemented and CI-verified  
-**Remaining:** none in the v3 implementation sequence  
-**Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
+**Status:** v3 implementation complete and closed
+**Baseline:** SI-Agents v2.0 + Phases 19–43 implemented and CI-verified
+**Remaining:** none in the v3 implementation sequence
+**Current successor:** SI-Agents v4 planning is recorded in `SI_AGENTS_V4_PLAN.md`
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
 
 ## Architecture
 
-SI-Agents is the organization, intelligence, governance, verification, and deployment layer around coding harnesses. It does not replace downstream harnesses or recreate provider routing authority.
+SI-Agents v3 established the organization, intelligence, governance, verification, deployment planning, and control-plane layer around coding harnesses. It does not replace downstream harnesses or recreate provider routing authority.
 
 ```text
                     SI-AGENTS CORE
@@ -28,25 +28,17 @@ SI-Agents is the organization, intelligence, governance, verification, and deplo
                        OmniRoute
 ```
 
-Web and TUI are views/operator boundaries, not authorities. Deployment Center is a governed planning boundary and must not become a second execution authority. Final Integration Hardening is a verification boundary and has no downstream execution authority.
+Web and TUI are operator boundaries, not independent authorities. Deployment Center is a governed planning boundary. Final Integration Hardening is a verification boundary with no downstream execution authority.
 
-## Phase 42 — Harness Deployment Center
+## Phase 43 closure
 
-**Complete + CI verified.** Adds immutable harness targets and deployment plans, deterministic validation, fail-closed unknown-target and authority-bearing requests, planning-only manifest preparation, dependency-free Web Deployment Center, `/api/v1/deployments`, and `si deploy`/`si-deploy`. No apply/deploy command or credential migration authority exists.
+**Complete + CI verified.** Phase 43 added the deterministic cross-cutting integration audit, packaged `si verify`/`si-verify`, canonical catalog/config consistency checks, deployment planning-only hardening, and adversarial release-gate coverage.
 
-Implementation merge `70d5f96c15bfbf200804a50f43dc6e12f5dde903`. Final documentation-closed mainline verification was green.
+The final correction was merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI #886 (`34558002476`) passed the repository gates.
 
-Canonical record: `docs/architecture/PHASE_42_HARNESS_DEPLOYMENT_CENTER.md`.
+Canonical record: `PHASE_43_INTEGRATION_HARDENING.md`.
 
-## Phase 43 — Final v3 Integration & Hardening
-
-**Complete + CI verified.** Adds a deterministic cross-cutting integration audit, immutable integration reports/checks, packaged `si verify`/`si-verify` entry points, canonical catalog/config consistency checks, deployment planning-only hardening, and adversarial release-gate coverage. The audit accepts the repository's canonical schema-versioned governance/organization configuration markers and fails closed for missing or malformed inputs.
-
-Implementation merged as `d4aaddc0008d6af05161d8b79dfc1f9507e0c61e9`. Mainline CI #884 (`34557632059`) exposed a schema-version compatibility regression; PR #50 corrected it and merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI #886 (`34558002476`) was green across all repository gates.
-
-Canonical record: `docs/architecture/PHASE_43_INTEGRATION_HARDENING.md`.
-
-## Completion principle
+## v3 completion sequence
 
 ```text
 29 Personas [complete]
@@ -66,8 +58,12 @@ Canonical record: `docs/architecture/PHASE_43_INTEGRATION_HARDENING.md`.
  → 43 Integration/Hardening [complete]
 ```
 
-Each phase required implementation, tests, security/adversarial checks, documentation, distribution verification where relevant, and successful CI. That v3 sequence is now closed.
+Each phase required implementation, tests, security/adversarial checks, documentation, relevant distribution verification, and successful CI. The v3 sequence is closed and must not be silently reopened.
 
-## Post-v3 direction
+## Transition to v4
 
-New work after Phase 43 should be treated as maintenance, security/defect fixes, operational improvements, or explicitly versioned post-v3 features. The v3 roadmap must not silently reopen completed phase contracts.
+v4 is an explicitly versioned successor, not unfinished v3 work. Its planning baseline is `SI_AGENTS_V4_PLAN.md` and covers Phases 44–55.
+
+The primary architectural transition is from the completed v3 governance/control foundation to a real execution operating system with persistent runtime state, event/state synchronization, parallel scheduling, OpenCode and OmniRoute integration, a live Web control plane, improved TUI/CLI surfaces, workflow automation, and simple npm distribution.
+
+The v4 implementation must preserve v3 authority boundaries, governance, evidence semantics, persona/Skill contracts, and provenance rules unless a versioned migration explicitly changes them.
