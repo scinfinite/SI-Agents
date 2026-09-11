@@ -14,6 +14,7 @@ si = "core.cli.dispatch:main"
 si-api = "core.control_api.cli:main"
 si-web = "core.web.cli:main"
 si-tui = "core.tui.cli:main"
+si-deploy = "core.deployment_center.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["adapters*", "agents*", "core*", "skills*", "tools*"]

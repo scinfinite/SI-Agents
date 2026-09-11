@@ -1,3 +1,4 @@
+# ruff: noqa: E701, E702
 """Dependency-free localhost-first Web server over the Control API."""
 
 from __future__ import annotations
@@ -13,6 +14,8 @@ from urllib.parse import urlparse
 from core.agent_builder.service import AgentBuilderService
 from core.control_api.openapi import document
 from core.control_api.service import ControlApiService
+from core.deployment_center.api import create as create_deployment, snapshot as deployment_snapshot
+from core.deployment_center.service import DeploymentCenter
 from core.evidence.service import EvidenceService
 
 from .audit import AuditLogger
@@ -104,14 +107,15 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             "/api/v1/governance": service.governance_state(), "/api/v1/evidence": service.evidence(),
             "/api/v1/evidence/records": self.web_server.evidence.list(),
             "/api/v1/environments": service.environments(), "/api/v1/harnesses": service.harnesses(),
+            "/api/v1/deployments": deployment_snapshot(self.web_server.deployment),
             "/api/v1/settings": service.settings(), "/api/v1/visualization": service.visualization(),
             "/api/v1/events": service.events(), "/api/v1/runs": service.runs(),
             "/api/v1/agent-builder": self.web_server.builder.list(),
         }
         if path == "/api/v1/control-center":
             return {"snapshot": service.snapshot().as_dict(), "settings": service.settings(), "environments": service.environments(),
-                    "harnesses": service.harnesses(), "evidence": service.evidence(), "visualization": service.visualization(),
-                    "agent_builder": self.web_server.builder.list()}
+                    "harnesses": service.harnesses(), "deployments": deployment_snapshot(self.web_server.deployment),
+                    "evidence": service.evidence(), "visualization": service.visualization(), "agent_builder": self.web_server.builder.list()}
         if path.startswith("/api/v1/evidence/"):
             evidence_id = path.removeprefix("/api/v1/evidence/")
             if evidence_id.endswith("/verify"):
@@ -154,15 +158,14 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             return
         path = urlparse(self.path).path.rstrip("/") or "/"
         static = {
-            "/": ("index.html", "text/html; charset=utf-8"),
-            "/agent-builder": ("agent-builder.html", "text/html; charset=utf-8"),
-            "/assets/app.js": ("app.js", "text/javascript; charset=utf-8"),
-            "/app.js": ("app.js", "text/javascript; charset=utf-8"),
-            "/assets/app.css": ("app.css", "text/css; charset=utf-8"),
-            "/app.css": ("app.css", "text/css; charset=utf-8"),
-            "/assets/agent-builder.html": ("agent-builder.html", "text/html; charset=utf-8"),
-            "/assets/builder.js": ("builder.js", "text/javascript; charset=utf-8"),
-            "/assets/builder.css": ("builder.css", "text/css; charset=utf-8"),
+            "/": ("index.html", "text/html; charset=utf-8"), "/agent-builder": ("agent-builder.html", "text/html; charset=utf-8"),
+            "/deployments": ("deployment.html", "text/html; charset=utf-8"), "/assets/app.js": ("app.js", "text/javascript; charset=utf-8"),
+            "/app.js": ("app.js", "text/javascript; charset=utf-8"), "/assets/app.css": ("app.css", "text/css; charset=utf-8"),
+            "/app.css": ("app.css", "text/css; charset=utf-8"), "/assets/agent-builder.html": ("agent-builder.html", "text/html; charset=utf-8"),
+            "/assets/builder.js": ("builder.js", "text/javascript; charset=utf-8"), "/assets/builder.css": ("builder.css", "text/css; charset=utf-8"),
+            "/assets/evidence.html": ("evidence.html", "text/html; charset=utf-8"), "/assets/evidence.js": ("evidence.js", "text/javascript; charset=utf-8"),
+            "/assets/evidence.css": ("evidence.css", "text/css; charset=utf-8"), "/assets/deployment.html": ("deployment.html", "text/html; charset=utf-8"),
+            "/assets/deployment.js": ("deployment.js", "text/javascript; charset=utf-8"), "/assets/deployment.css": ("deployment.css", "text/css; charset=utf-8"),
         }
         if path in static:
             filename, content_type = static[path]
@@ -210,6 +213,11 @@ class WebRequestHandler(BaseHTTPRequestHandler):
                 self._send(200, result)
                 self._audit(200, {"mutation": "evidence_verify", "evidence_id": evidence_id, "verification": state})
                 return
+            if path == "/api/v1/deployments":
+                result = create_deployment(self.web_server.deployment, payload)
+                self._send(201, result)
+                self._audit(201, {"mutation": "deployment_plan_create", "plan_id": result.get("id"), "harness_id": result.get("harness_id")})
+                return
             if path == "/api/v1/agent-builder/validate":
                 result = self.web_server.builder.validate_payload(payload)
                 self._send(200, result.as_dict())
@@ -253,8 +261,6 @@ class WebRequestHandler(BaseHTTPRequestHandler):
 
 
 class WebServer(ThreadingHTTPServer):
-    """HTTP server carrying the Web surface dependencies."""
-
     daemon_threads = True
     allow_reuse_address = True
 
@@ -265,17 +271,16 @@ class WebServer(ThreadingHTTPServer):
         self.service = service
         self.builder = AgentBuilderService(service.root)
         self.evidence = EvidenceService(str(Path(service.root) / ".si" / "evidence.v1.json"))
+        self.deployment = DeploymentCenter(service.root)
         self.audit = audit
 
 
 def create_server(config: WebConfig, service: ControlApiService) -> WebServer:
-    """Create a validated Web server without starting it."""
     path = config.audit_log or Path.home() / ".local" / "state" / "si-agents" / "web-audit.jsonl"
     return WebServer(config, service, AuditLogger(path))
 
 
 def serve(config: WebConfig, service: ControlApiService) -> None:
-    """Run until SIGINT/SIGTERM, then shut down cleanly."""
     server = create_server(config, service)
     stopped = Event()
 
