@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v3 closed; v4 Phase 44 complete and CI-verified; v4 Phase 45 complete and CI-verified.**
+**Current status: v3 closed; v4 Phase 44 complete and CI-verified; v4 Phase 45 complete and CI-verified; Phase 46 implementation active pending final CI closure.**
 
 > This file is the authoritative current implementation/status record. `SI_AGENTS_V3.md` records the completed v3 architecture. `SI_AGENTS_V4_PLAN.md` records the approved v4 planning direction. Historical phase records preserve phase-time evidence.
 
@@ -30,9 +30,10 @@
 
 - **v2.0:** complete.
 - **v3:** complete and CI-verified through Phase 43.
-- **v4:** implementation active; Phases 44 and 45 complete and CI-verified.
+- **v4:** implementation active; Phases 44 and 45 complete and CI-verified; Phase 46 active.
 - **Phase 44:** complete and CI-verified.
 - **Phase 45:** complete and CI-verified.
+- **Phase 46:** implementation active; final CI gate pending.
 
 ## V4 planned sequence
 
@@ -40,7 +41,7 @@
 |---:|---|---|
 | 44 | Execution Runtime Foundation | **Complete + CI verified** |
 | 45 | Event Bus + State Architecture | **Complete + CI verified** |
-| 46 | Parallel Scheduler + Executor | Planned |
+| 46 | Parallel Scheduler + Executor | **Implementation active; final CI pending** |
 | 47 | OpenCode Bridge | Planned |
 | 48 | OmniRoute Integration | Planned |
 | 49 | Agent + Team Builder | Planned |
@@ -87,13 +88,19 @@ The final Phase 44 implementation CI was **#919 (`34610448789`)**, on commit `1a
 
 Phase 45 started only after the green Phase 44 baseline was verified on `main`. The implementation adds `core/runtime/events.py`, exports the durable event contracts through `core.runtime`, connects canonical execution lifecycle transitions to the event bus, and adds dedicated tests for ordering, replay, idempotent event IDs, persistence/reopen, projections/checkpoints, concurrency, invalid input, subscriptions, and runtime lifecycle emission.
 
-The implementation CI **#930 (`34612083838`)** on commit `7e4be5c2ab9b0073fd9868dedc311e59037befb8` passed all repository gates. The final documentation-tree CI **#932 (`34612277732`)** on commit `ccc115b2448a40c1a815216ed692c24d5be8dd9a` also completed successfully, verifying the exact documented closure tree before this final status update.
+The implementation CI **#930 (`34612083838`)** on commit `7e4be5c2ab9b0073fd9868dedc311e59037befb8` passed all repository gates. The exact-tree final CI **#935 (`34612616978`)** on commit `d2821c86865df18d3b8d7988413e31df0e20c753` also completed successfully after the final documentation/evidence alignment.
 
 The Phase 45 event architecture preserves the Control API authority boundary: the event bus records runtime facts and materializes state but does not grant permissions, change provenance, or become a second control plane.
 
+## Phase 46 implementation record
+
+Phase 46 began only after Phase 45 final CI #935 was verified green on `main`. The implementation adds `core/runtime/scheduler.py` and `tests/test_phase46_scheduler.py`, with durable SQLite scheduling metadata, dependency edges, priority/aging selection, bounded parallel workers, cancellation, failure propagation, restart recovery, and scheduler event integration. Implementation documentation is in `docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md`.
+
+The first implementation CI was **#936 (`34614754832`)** on commit `e72751484bcae7ffc2c6665aade4204ccd63e139`. Repository build, wheel installation, audit, integration verification and packaging gates passed; Ruff correctly caught hygiene issues in the new implementation/tests. Those issues are being corrected before the final Phase 46 gate.
+
 ## V4 contract status
 
-The Phase 44 execution-runtime contract has been implemented and verified on `main`. Phase 45 extends that boundary with durable runtime facts and materialized state; it does not grant authority or alter provenance.
+The Phase 44 execution-runtime contract has been implemented and verified on `main`. Phase 45 extends that boundary with durable runtime facts and materialized state. Phase 46 adds scheduling orchestration without granting authority or altering provenance.
 
 ## Documentation rules
 
@@ -105,4 +112,4 @@ The Phase 44 execution-runtime contract has been implemented and verified on `ma
 
 ## Next state
 
-**Phase 45 is closed. The next implementation phase is Phase 46 — Parallel Scheduler + Executor.**
+**Phase 46 is active. Phase 47 must not begin until Phase 46 receives a green final CI gate and its documentation is closed.**

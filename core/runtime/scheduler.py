@@ -1,7 +1,6 @@
 """Phase 46 durable parallel scheduling and execution orchestration."""
 from __future__ import annotations
 
-import json
 import sqlite3
 import threading
 import time
@@ -24,9 +23,7 @@ class ScheduleState(StrEnum):
     BLOCKED = "blocked"
 
 
-TERMINAL_SCHEDULE = frozenset(
-    {ScheduleState.SUCCEEDED, ScheduleState.FAILED, ScheduleState.CANCELLED, ScheduleState.BLOCKED}
-)
+TERMINAL_SCHEDULE = frozenset({ScheduleState.SUCCEEDED, ScheduleState.FAILED, ScheduleState.CANCELLED, ScheduleState.BLOCKED})
 
 
 @dataclass(frozen=True)
@@ -106,14 +103,8 @@ class ParallelScheduler:
         with self._lock:
             try:
                 self._db.execute("BEGIN IMMEDIATE")
-                self._db.execute(
-                    "INSERT INTO schedules VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, NULL)",
-                    (schedule_id, execution.execution_id, task.task_id, priority, ScheduleState.WAITING.value, now),
-                )
-                self._db.executemany(
-                    "INSERT INTO schedule_dependencies VALUES (?, ?)",
-                    ((schedule_id, dep) for dep in depends_on),
-                )
+                self._db.execute("INSERT INTO schedules VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, NULL)", (schedule_id, execution.execution_id, task.task_id, priority, ScheduleState.WAITING.value, now))
+                self._db.executemany("INSERT INTO schedule_dependencies VALUES (?, ?)", ((schedule_id, dep) for dep in depends_on))
                 self._db.execute("COMMIT")
             except Exception:
                 self._db.execute("ROLLBACK")
