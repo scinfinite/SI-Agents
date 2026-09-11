@@ -1,4 +1,4 @@
-"""Durable Phase 45 event bus, replay, and state projections."""
+"""Durable Phase 45 event bus, replay, subscriptions, and projections."""
 from __future__ import annotations
 
 import json
@@ -23,14 +23,18 @@ class RuntimeEventRecord:
     payload: Mapping[str, Any]
 
 
+Subscriber = Callable[[RuntimeEventRecord], None]
+
+
 class EventBus:
-    """Append-only durable event log with ordered per-aggregate streams."""
+    """Append-only durable event log with ordered streams and projections."""
 
     def __init__(self, path: str = ":memory:") -> None:
         self.path = path
         self._db = sqlite3.connect(path, check_same_thread=False, isolation_level=None)
         self._db.row_factory = sqlite3.Row
         self._lock = threading.RLock()
+        self._subscribers: dict[str, Subscriber] = {}
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.executescript("""
         CREATE TABLE IF NOT EXISTS runtime_events (
@@ -58,6 +62,19 @@ class EventBus:
     def close(self) -> None:
         with self._lock:
             self._db.close()
+            self._subscribers.clear()
+
+    def subscribe(self, callback: Subscriber) -> str:
+        if not callable(callback):
+            raise ValueError("subscriber must be callable")
+        token = str(uuid.uuid4())
+        with self._lock:
+            self._subscribers[token] = callback
+        return token
+
+    def unsubscribe(self, token: str) -> bool:
+        with self._lock:
+            return self._subscribers.pop(token, None) is not None
 
     def append(
         self, event_type: str, aggregate_type: str, aggregate_id: str,
@@ -75,7 +92,7 @@ class EventBus:
                 if event_id:
                     existing = self._db.execute("SELECT * FROM runtime_events WHERE event_id=?", (event_id,)).fetchone()
                     if existing:
-                        if existing["payload"] != encoded or existing["event_type"] != event_type:
+                        if existing["payload"] != encoded or existing["event_type"] != event_type or existing["aggregate_id"] != aggregate_id:
                             raise ValueError("event_id conflicts with existing event")
                         self._db.execute("COMMIT")
                         return self._record(existing)
@@ -87,7 +104,14 @@ class EventBus:
             except Exception:
                 self._db.execute("ROLLBACK")
                 raise
-            return RuntimeEventRecord(record[0], record[1], record[2], record[3], record[4], record[5], record[6], record[7], payload)
+            event = RuntimeEventRecord(record[0], record[1], record[2], record[3], record[4], record[5], record[6], record[7], payload)
+            subscribers = tuple(self._subscribers.values())
+        for subscriber in subscribers:
+            try:
+                subscriber(event)
+            except Exception:
+                pass
+        return event
 
     def _record(self, row: sqlite3.Row) -> RuntimeEventRecord:
         return RuntimeEventRecord(row["event_id"], row["event_type"], row["aggregate_type"], row["aggregate_id"], row["sequence"], row["occurred_at"], row["correlation_id"], row["causation_id"], json.loads(row["payload"]))
@@ -124,8 +148,7 @@ class EventBus:
             checkpoint = self._db.execute("SELECT last_event_id FROM projection_checkpoints WHERE projection_name=?", (projection_name,)).fetchone()
             last = checkpoint["last_event_id"] if checkpoint else None
         processed = 0
-        events = self._events_after(last)
-        for event in events:
+        for event in self._events_after(last):
             with self._lock:
                 row = self._db.execute("SELECT state FROM event_projections WHERE projection_name=? AND aggregate_type=? AND aggregate_id=?", (projection_name, event.aggregate_type, event.aggregate_id)).fetchone()
                 current = json.loads(row["state"]) if row else {}
