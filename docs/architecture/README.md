@@ -12,7 +12,7 @@ Code, executable contracts, governance decisions, and CI results outrank prose w
 
 ## Current phase index
 
-V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–49 are complete and final-CI verified**. Phase **50 — Capability Authorization** is next.
+V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–50 are complete and final-CI verified**. Phase **51 — Checkpoints + Resume** is next.
 
 | Phase | Canonical record | State |
 |---:|---|---|
@@ -23,16 +23,17 @@ V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–49 are compl
 | 47 | `PHASE_47_OPENCODE_BRIDGE.md` | Complete + CI verified |
 | 48 | `PHASE_48_OMNIROUTE_INTEGRATION.md` | Complete + final-CI verified |
 | 49 | `PHASE_49_AGENT_TEAM_BUILDER.md` | Complete + final-CI verified |
-| 50–71 | `SI_AGENTS_V4_PLAN.md` | Planned |
+| 50 | `PHASE_50_CAPABILITY_AUTHORIZATION.md` | Complete + final-CI verified |
+| 51–71 | `SI_AGENTS_V4_PLAN.md` | Planned |
 
 ## Cross-cutting architecture
 
 - One SI Core and one Control API remain the authority boundaries.
 - CLI, Web and TUI are control surfaces, not independent authorities.
 - Evidence is explicit and provenance-bearing.
-- V4 now has a durable runtime, event/state model, dependency-aware scheduler, OpenCode bridge, OmniRoute model/provider adapter, and deterministic agent/team composition layer.
+- V4 now has a durable runtime, event/state model, dependency-aware scheduler, OpenCode bridge, OmniRoute model/provider adapter, deterministic agent/team composition, and fail-closed capability authorization.
 - OpenCode remains the interactive coding harness; OmniRoute remains downstream model/provider routing infrastructure.
-- Model selection and agent/team composition cannot grant authority or capabilities.
+- Model selection and agent/team composition cannot grant authority or capabilities; authorization is the explicit admission boundary.
 - Credentials are references and must not become runtime state.
 - Web is the richest planned V4 control plane; TUI is the fastest operator surface; CLI is the strongest automation surface.
 
