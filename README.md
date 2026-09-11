@@ -7,7 +7,7 @@ SI-Agents is the governed execution and agent platform for Project-SI. V4 is bei
 - **Phases 44–51 complete and merged to `main`.**
 - **Next:** Phase 52 — Context / Memory Economics.
 - Phase 50 baseline: `9222379cfcb091858f0c5dcc1ec1616f933fca38` with final docs CI run `34625819419`.
-- Phase 51 implementation is merged and its final documentation synchronization is subject to the repository CI gates before this status is considered closed.
+- Phase 51 final exact-tree CI: run 977 / `34627956634` — green.
 
 ## Phase 51 — Checkpoints + Resume
 

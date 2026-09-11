@@ -2,7 +2,7 @@
 
 ## Final status
 
-**Complete pending the final exact-tree CI gate for this documentation synchronization.**
+**Complete — final exact-tree CI run 977 / `34627956634` is green.**
 
 ## Scope
 
@@ -43,4 +43,4 @@ Phase 51 is built on the Phase 44 authoritative runtime and must remain compatib
 
 Phase 50 prerequisite was closed on `main` at `9222379cfcb091858f0c5dcc1ec1616f933fca38`; final Phase 50 docs CI was run `34625819419`.
 
-Phase 51 implementation was merged to `main` after the implementation branch CI gate. The current documentation synchronization is the final exact-tree gate. Closure requires repository audit, distribution/wheel install/import, integration verification, Ruff, compileall, and full pytest to pass after the docs update.
+Phase 51 implementation was merged to `main`. The final documentation synchronization passed repository audit, distribution/wheel install/import, integration verification, Ruff, compileall, and full pytest in CI run 977 / `34627956634`.

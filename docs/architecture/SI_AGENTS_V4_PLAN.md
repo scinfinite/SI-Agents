@@ -2,7 +2,7 @@
 
 ## Current verified position
 
-V3 is closed. V4 implementation has completed Phases 44–51 in sequence. Phase 50 was fully closed on `main` at `9222379cfcb091858f0c5dcc1ec1616f933fca38`, with final documentation CI run `34625819419`. Phase 51 implementation is merged to `main`; the final exact-tree documentation CI is the last closure gate.
+V3 is closed. V4 implementation has completed Phases 44–51 in sequence. Phase 50 was fully closed on `main` at `9222379cfcb091858f0c5dcc1ec1616f933fca38`, with final documentation CI run `34625819419`. Phase 51 implementation is merged to `main`; final exact-tree CI run 977 / `34627956634` is green.
 
 ## Architecture direction
 
@@ -65,4 +65,4 @@ Phase 51 introduces `CheckpointStore`, `Checkpoint`, `ResumePlan`, and `Checkpoi
 
 ## Closure gate
 
-Every phase requires implementation, tests, security/adversarial checks, documentation, all current/index document updates, and final CI verification. Final CI must cover repository audit, distribution/wheel install/import, integration verification, Ruff, compileall, and full pytest. No phase is declared complete before the final exact-tree CI run is green.
+Every phase requires implementation, tests, security/adversarial checks, documentation, all current/index document updates, and final CI verification. Final CI must cover repository audit, distribution/wheel install/import, integration verification, Ruff, compileall, and full pytest. Phase 51 final exact-tree CI run 977 / `34627956634` is green.

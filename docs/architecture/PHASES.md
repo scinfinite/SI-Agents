@@ -19,7 +19,7 @@
 | 48 | OmniRoute Integration | Complete | CI #949 / `34623762921` |
 | 49 | Agent + Team Builder | Complete | CI #954 / `34625018676` |
 | 50 | Capability Authorization | Complete | CI #970 / `34625819419` |
-| 51 | Checkpoints + Resume | Complete after final exact-tree CI |
+| 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | Next |
 | 53 | Persistent Sessions | Planned |
 | 54 | Human-in-the-Loop | Planned |
@@ -57,7 +57,7 @@ Phase 51 integrates with the Phase 44 authoritative execution runtime and Phase 
 - [x] Fresh authoritative attempt creation.
 - [x] Authority is not restored from checkpoint metadata.
 - [x] Reopen/persistence and tamper tests.
-- [ ] Final exact-tree CI after this documentation synchronization.
+- [x] Final exact-tree CI after documentation synchronization — run 977 / `34627956634` green.
 
 ## Next-phase marker
 
