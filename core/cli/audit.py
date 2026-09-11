@@ -15,6 +15,13 @@ from core.skills.validator import validate_skill
 TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
 HIDDEN_UNICODE = {"\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069", "\u202a", "\u202b", "\u202c", "\u202d", "\u202e", "\u206a", "\u206b", "\u206c", "\u206d", "\u206e", "\u206f"}
 FORBIDDEN_BRANDING = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
+# V4 planning documents may name external systems explicitly as research references.
+# Executable/package surfaces must remain free of external branding.
+ALLOWED_REFERENCE_DOCS = frozenset({
+    "README.md",
+    "docs/architecture/SI_AGENTS_V4_PLAN.md",
+    "docs/architecture/README.md",
+})
 TRANSIENT_NAMES = {"persona_parity_build.py", "phase29_unique_names.py", "phase29_heading_fix.py", "phase29_list_fix.py", "phase29-test-debug.txt"}
 
 @dataclass(frozen=True)
@@ -77,14 +84,15 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     hidden: list[str] = []
     branding: list[str] = []
     for path in _text_files(root):
+        relative = str(path.relative_to(root))
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
         if any(char in text for char in HIDDEN_UNICODE):
-            hidden.append(str(path.relative_to(root)))
-        if any(term in text for term in FORBIDDEN_BRANDING):
-            branding.append(str(path.relative_to(root)))
+            hidden.append(relative)
+        if relative not in ALLOWED_REFERENCE_DOCS and any(term in text for term in FORBIDDEN_BRANDING):
+            branding.append(relative)
     checks.append(AuditCheck("hidden-unicode", not hidden, "clean" if not hidden else ", ".join(hidden[:10])))
     checks.append(AuditCheck("external-branding", not branding, "clean" if not branding else ", ".join(branding[:10])))
     transient = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_file() and path.name in TRANSIENT_NAMES]
