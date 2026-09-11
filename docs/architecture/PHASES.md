@@ -36,6 +36,12 @@ Phase 47 — OpenCode Bridge: **complete and CI-verified** (`34615709124`, follo
 
 Phase 48 — OmniRoute Integration: **complete and final-CI verified** (CI run 949, `34623762921`), merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
 
+## Integration markers
+
+43. Final v3 Integration & Hardening
+Phase 44
+Phase 71
+
 ## Release status
 
 - **V2:** complete.
