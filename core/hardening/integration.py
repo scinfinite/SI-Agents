@@ -77,8 +77,12 @@ class IntegrationAuditor:
         catalog_path = self.root / "config/agent-catalog.json"
         try:
             catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+            if not isinstance(catalog, dict):
+                raise TypeError("catalog root must be an object")
             divisions = catalog.get("divisions", [])
             agents = catalog.get("agents", [])
+            if not isinstance(divisions, list) or not isinstance(agents, list):
+                raise TypeError("catalog divisions and agents must be arrays")
             valid_divisions = all(isinstance(item, dict) and isinstance(item.get("id"), str) for item in divisions)
             valid_agents = all(isinstance(item, dict) and isinstance(item.get("id"), str) for item in agents)
             division_count = len(divisions)
