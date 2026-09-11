@@ -66,7 +66,9 @@
 | 70 | End-to-End Production Validation | Planned |
 | 71 | Final Production Hardening | Planned / final gate |
 
-See `SI_AGENTS_V4_PLAN.md` for complete scope, architecture, dependencies, surface-parity requirements and acceptance criteria. No v4 phase may be marked complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
+**Phase 71 is the final V4 production-hardening gate.** No V4 phase may be marked complete until implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification provide evidence.
+
+See `SI_AGENTS_V4_PLAN.md` for complete scope, architecture, dependencies, surface-parity requirements and acceptance criteria.
 
 ## Phase 43 verification record
 
@@ -78,13 +80,15 @@ Phase 43 implementation merged as `d4aaddc0008d6af05161d8b79dfc1f9507e0c61e`. Ma
 
 Phase 44 began only after the v3 Phase 43 baseline was confirmed on `main`. The runtime implementation was added in `core/runtime/execution.py` and exported through `core/runtime/__init__.py`, with dedicated tests in `tests/test_phase44_runtime.py` and implementation evidence in `docs/architecture/PHASE_44_EXECUTION_RUNTIME.md`.
 
-The final mainline CI run for Phase 44 was **#916 (`34609972530`)**, on commit `e48fd1d0722c4aa7b70879961294f296e5aff662`. The CI job completed successfully: distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall and the complete pytest suite all passed.
+The final green Phase 44 implementation CI was **#916 (`34609972530`)**, on commit `e48fd1d0722c4aa7b70879961294f296e5aff662`. That run passed distribution, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall and the complete pytest suite.
 
 A CI hygiene regression caused by the new V4 external-reference documentation was found and corrected by aligning the repository audit and hygiene test to permit explicit reference-only documentation while keeping executable/package surfaces protected. Earlier runtime test failures were diagnosed from the CI pytest artifact, fixed, and re-run successfully.
 
+After documentation was synchronized, CI #918 (`34610138225`) correctly exposed one remaining documentation-contract mismatch: the integration verifier requires the literal `Phase 71` marker in the current phase index. This final documentation fix is now applied and must itself pass the final CI run before the phase is considered closed.
+
 ## V4 contract status
 
-The Phase 44 execution-runtime contract has now been implemented and verified on `main`. It establishes the authority boundary between Control API and runtime, canonical identifiers/lifecycle, adapter boundaries, idempotency, cancellation/deadlines, retries, restart recovery, terminality and secret-isolation expectations.
+The Phase 44 execution-runtime contract has been implemented and verified on `main`. It establishes the authority boundary between Control API and runtime, canonical identifiers/lifecycle, adapter boundaries, idempotency, cancellation/deadlines, retries, restart recovery, terminality and secret-isolation expectations.
 
 The contract remains intentionally downstream of Control API authority and provider/model routing. No runtime component may grant authority, alter provenance or bypass governance.
 
@@ -98,4 +102,4 @@ The contract remains intentionally downstream of Control API authority and provi
 
 ## Next state
 
-**Phase 44 is closed. The next execution step is Phase 45 — Event Bus + State Architecture.**
+**Phase 44 is closed only after the final CI run on this synchronized documentation state is green. The next implementation phase is Phase 45 — Event Bus + State Architecture.**
