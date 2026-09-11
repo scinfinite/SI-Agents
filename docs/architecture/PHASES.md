@@ -24,17 +24,23 @@ This file is the authoritative current implementation/status record. Historical 
 42. Harness Deployment Center — **Complete and CI-verified.** Planning-only; no downstream deployment authority was introduced.
 43. Final v3 Integration & Hardening — **Complete and CI-verified.** Final mainline CI #886 (`34558002476`) passed the V3 release gates.
 
-### V4 current milestones
+## V4 current milestones
 
-**Phase 44 — Execution Runtime Foundation:** complete and CI-verified.
+Phase 44 — Execution Runtime Foundation: **complete and CI-verified.**
 
-**Phase 45 — Event Bus + State Architecture:** complete and CI-verified.
+Phase 45 — Event Bus + State Architecture: **complete and CI-verified.**
 
-**Phase 46 — Parallel Scheduler + Executor:** complete and CI-verified.
+Phase 46 — Parallel Scheduler + Executor: **complete and CI-verified.**
 
-**Phase 47 — OpenCode Bridge:** complete and CI-verified.
+Phase 47 — OpenCode Bridge: **complete and CI-verified.**
 
-**Phase 48 — OmniRoute Integration:** implementation complete; final CI pending. Health/model discovery, typed model capabilities, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage metadata, rate-limit/error classification, credential references, endpoint security and deterministic transport tests are implemented.
+Phase 48 — OmniRoute Integration: **implementation complete; final CI pending.** Health/model discovery, typed model capabilities, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage metadata, rate-limit/error classification, credential references, endpoint security and deterministic transport tests are implemented.
+
+## Integration markers
+
+43. Final v3 Integration & Hardening
+Phase 44
+Phase 71
 
 ## Release status
 
