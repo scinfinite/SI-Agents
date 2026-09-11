@@ -209,16 +209,26 @@ class ExecutionStore:
             changed = self._db.execute("UPDATE executions SET state=?, result=?, error_code=?, updated_at=? WHERE execution_id=? AND state=?", (target.value, encoded, error_code, now, execution_id, current.value)).rowcount
             if changed != 1:
                 return self.get(execution_id)
-            self._db.execute("UPDATE attempts SET state=?, finished_at=?, error_code=?, result=? WHERE attempt_id=?", (target.value, now if target in TERMINAL else None, error_code, encoded, row["attempt_id"]))
+            self._db.execute("UPDATE attempts SET state=?, started_at=COALESCE(started_at, ?), finished_at=?, error_code=?, result=? WHERE attempt_id=?", (target.value, now if target == State.RUNNING else None, now if target in TERMINAL else None, error_code, encoded, row["attempt_id"]))
             return self.get(execution_id)
 
     def request_cancel(self, execution_id: str) -> Execution:
         with self._lock:
+            row = self._db.execute("SELECT state FROM executions WHERE execution_id=?", (execution_id,)).fetchone()
+            if row is None:
+                raise RuntimeFailure(RuntimeErrorCode.NOT_FOUND, f"execution {execution_id} not found")
+            if State(row["state"]) in TERMINAL:
+                return self.get(execution_id)
             self._db.execute("UPDATE executions SET cancel_requested=1, updated_at=? WHERE execution_id=?", (time.time(), execution_id))
         return self.get(execution_id)
 
     def request_pause(self, execution_id: str) -> Execution:
         with self._lock:
+            row = self._db.execute("SELECT state FROM executions WHERE execution_id=?", (execution_id,)).fetchone()
+            if row is None:
+                raise RuntimeFailure(RuntimeErrorCode.NOT_FOUND, f"execution {execution_id} not found")
+            if State(row["state"]) in TERMINAL:
+                return self.get(execution_id)
             self._db.execute("UPDATE executions SET pause_requested=1, updated_at=? WHERE execution_id=?", (time.time(), execution_id))
         return self.get(execution_id)
 
@@ -274,7 +284,8 @@ class ExecutionRuntime:
 
     def cancel(self, execution_id: str) -> Execution:
         execution = self.store.request_cancel(execution_id)
-        self._control(execution_id).cancel.set()
+        if execution.state not in TERMINAL:
+            self._control(execution_id).cancel.set()
         return execution
 
     def pause(self, execution_id: str, adapter: RuntimeAdapter) -> Execution:
@@ -293,7 +304,7 @@ class ExecutionRuntime:
         if execution.pause_requested and resume is None:
             raise RuntimeFailure(RuntimeErrorCode.PAUSE_UNSUPPORTED, "adapter does not support resume")
         self.store.clear_pause(execution_id)
-        if resume is not None:
+        if resume is not None and execution.pause_requested:
             resume(execution_id)
         return self.store.get(execution_id)
 
