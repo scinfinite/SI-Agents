@@ -44,7 +44,7 @@ Phases **1–43 are complete and CI-verified**. Phase 44 is the next planned imp
 - OpenCode remains the interactive coding harness; OmniRoute remains the model/provider routing layer.
 - Web is the richest planned V4 control plane; TUI is the fastest operator surface; CLI is the strongest automation surface.
 - Surface parity means operationally important capabilities share the same authoritative state and Control API across Web/TUI/CLI.
-- ECC and Agency Agents are external engineering references, not copied implementations or authority sources.
+- External engineering reference systems are used for pattern research only; they are not copied implementations or authority sources.
 
 ## V4 sequence
 
