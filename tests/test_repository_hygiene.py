@@ -7,8 +7,15 @@ FORBIDDEN = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
 TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
 ALLOWED_REFERENCE_DOCS = {
     ROOT / "README.md",
+    ROOT / "docs" / "README.md",
     ROOT / "docs" / "architecture" / "SI_AGENTS_V4_PLAN.md",
     ROOT / "docs" / "architecture" / "README.md",
+    ROOT / "docs" / "architecture" / "PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
+    ROOT / "docs" / "architecture" / "PHASE_44_EXECUTION_RUNTIME.md",
+    ROOT / "docs" / "architecture" / "PHASE_45_EVENT_BUS_STATE.md",
+    ROOT / "docs" / "architecture" / "PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md",
+    ROOT / "docs" / "architecture" / "PHASE_47_OPENCODE_BRIDGE.md",
+    ROOT / "docs" / "architecture" / "PHASE_48_OMNIROUTE_INTEGRATION.md",
 }
 
 
