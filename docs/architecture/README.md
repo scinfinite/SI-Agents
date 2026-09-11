@@ -13,7 +13,7 @@ SI-Agents V4 uses a single authoritative SI Core. Web, TUI, CLI, runtime adapter
 | 48 | OmniRoute Integration | Complete |
 | 49 | Agent + Team Builder | Complete |
 | 50 | Capability Authorization | Complete |
-| 51 | Checkpoints + Resume | Complete pending final docs-tree CI |
+| 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 
 ## Phase 51 authority rules
 

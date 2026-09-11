@@ -14,4 +14,4 @@ SI-Agents V4 has completed Phases **44–51**. Phase 51 adds durable checkpoints
 
 ## Phase closure rule
 
-After every phase, implementation evidence, security/adversarial coverage, documentation, current/index documents, and CI verification are synchronized. A phase is only declared complete after the final exact-tree CI run is green.
+After every phase, implementation evidence, security/adversarial coverage, documentation, current/index documents, and CI verification are synchronized. Phase 51 final exact-tree CI run 977 / `34627956634` is green.
