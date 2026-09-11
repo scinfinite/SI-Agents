@@ -1,0 +1,8 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: Canvas; color: CanvasText; }
+main { max-width: 960px; margin: auto; padding: 2rem; }
+section { border: 1px solid GrayText; border-radius: .6rem; padding: 1rem; margin: 1rem 0; }
+label { display: block; margin: .8rem 0; }
+input, textarea { display: block; width: 100%; max-width: 680px; box-sizing: border-box; padding: .55rem; margin-top: .3rem; font: inherit; }
+textarea { min-height: 5rem; }
+button { padding: .6rem 1rem; font: inherit; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
