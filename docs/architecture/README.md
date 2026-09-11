@@ -3,7 +3,7 @@
 ## Authority order
 
 1. `PHASES.md` — current implementation status and verification evidence.
-2. `SI_AGENTS_V3.md` — forward architecture and remaining roadmap.
+2. `SI_AGENTS_V3.md` — forward architecture and post-v3 maintenance direction.
 3. Detailed phase documents — historical contracts and phase evidence.
 4. Cross-cutting contracts such as `PHASE_1_FOUNDATION.md`, `PHASE_2_CONTROL_PLANE.md`, and `EXECUTION_BACKENDS.md`.
 
@@ -11,7 +11,7 @@ Code, executable contracts, governance decisions, and CI results outrank prose w
 
 ## Phase index
 
-Phases **1–42 are complete and CI-verified**.
+Phases **1–43 are complete and CI-verified**.
 
 | Phase | Canonical/current record | State |
 |---:|---|---|
@@ -30,6 +30,7 @@ Phases **1–42 are complete and CI-verified**.
 | 40 | `PHASE_40_EVIDENCE_OBSERVABILITY.md` | Complete + CI verified |
 | 41 | `PHASE_41_TUI.md` | Complete + CI verified |
 | 42 | `PHASE_42_HARNESS_DEPLOYMENT_CENTER.md` | Complete + CI verified |
+| 43 | `PHASE_43_INTEGRATION_HARDENING.md` | Complete + CI verified |
 
 ## Cross-cutting architecture
 
@@ -39,6 +40,7 @@ Phases **1–42 are complete and CI-verified**.
 - Agent Builder is a governed authoring boundary, not an execution engine.
 - The TUI is a terminal view over the same Control API service used by Web.
 - Harness Deployment Center is a planning/deployment-description boundary; it does not grant permissions, migrate credentials, or execute harnesses.
+- Final Integration Hardening is a verification boundary; it checks consistency but never executes downstream work.
 - Harnesses remain downstream execution boundaries.
 
 ## v3 sequence
@@ -58,9 +60,9 @@ Phases **1–42 are complete and CI-verified**.
  → 40 Evidence/Observability [complete]
  → 41 TUI [complete]
  → 42 Harness Deployment Center [complete]
- → 43 Integration/Hardening
+ → 43 Integration/Hardening [complete]
 ```
 
 ## Documentation maintenance
 
-`PHASES.md` is authoritative for current status. `SI_AGENTS_V3.md` is authoritative for future work. Historical phase records preserve their phase-time evidence. New changes must update the current status/index documents without rewriting historical claims.
+`PHASES.md` is authoritative for current status. `SI_AGENTS_V3.md` records the completed v3 architecture and post-v3 direction. Historical phase records preserve their phase-time evidence. New changes must update the current status/index documents without rewriting historical claims.
