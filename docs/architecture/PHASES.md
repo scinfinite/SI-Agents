@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: v3 closed; v4 Phases 44–46 complete and CI-verified; Phase 47 is the next implementation phase.**
+**Current status: v3 closed; v4 Phases 44–46 complete and CI-verified; Phase 47 implementation active pending final CI closure.**
 
 > This file is the authoritative current implementation/status record. `SI_AGENTS_V3.md` records the completed v3 architecture. `SI_AGENTS_V4_PLAN.md` records the approved v4 planning direction. Historical phase records preserve phase-time evidence.
 
@@ -31,10 +31,11 @@
 
 - **v2.0:** complete.
 - **v3:** complete and CI-verified through Phase 43.
-- **v4:** implementation active; Phases 44–46 complete and CI-verified.
+- **v4:** implementation active; Phases 44–46 complete and CI-verified; Phase 47 active.
 - **Phase 44:** complete and CI-verified.
 - **Phase 45:** complete and CI-verified.
 - **Phase 46:** complete and CI-verified.
+- **Phase 47:** implementation active; final CI gate pending.
 
 ## V4 planned sequence
 
@@ -43,7 +44,7 @@
 | 44 | Execution Runtime Foundation | **Complete + CI verified** |
 | 45 | Event Bus + State Architecture | **Complete + CI verified** |
 | 46 | Parallel Scheduler + Executor | **Complete + CI verified** |
-| 47 | OpenCode Bridge | **Next** |
+| 47 | OpenCode Bridge | **Implementation active; final CI pending** |
 | 48 | OmniRoute Integration | Planned |
 | 49 | Agent + Team Builder | Planned |
 | 50 | Capability Authorization | Planned |
@@ -101,9 +102,15 @@ CI **#936 (`34614754832`)** caught Ruff issues in the initial implementation. CI
 
 Final Phase 46 CI **#938 (`34615157829`)** on commit `772716428868a7597540a0bea72f715dfd46a224` completed successfully. The final job passed distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
 
+## Phase 47 implementation record
+
+Phase 47 began only after Phase 46 final CI #938 was verified green on `main`. The implementation adds `core/runtime/opencode.py`, exports the bridge through `core.runtime`, and adds `tests/test_phase47_opencode.py` plus `docs/architecture/PHASE_47_OPENCODE_BRIDGE.md`.
+
+The bridge covers OpenCode health/session discovery, blocking and streaming invocation, cancellation, SSE event normalization, session filtering, loopback-default endpoint policy, remote opt-in, and transport-error normalization while preserving SI authorization/provenance boundaries. Final CI remains pending and Phase 47 must not be marked complete until that gate is green.
+
 ## V4 contract status
 
-The Phase 44 execution-runtime contract has been implemented and verified on `main`. Phase 45 extends that boundary with durable runtime facts and materialized state. Phase 46 adds scheduling orchestration without granting authority or altering provenance.
+The Phase 44 execution-runtime contract has been implemented and verified on `main`. Phase 45 extends that boundary with durable runtime facts and materialized state. Phase 46 adds scheduling orchestration without granting authority or altering provenance. Phase 47 adds OpenCode as a downstream protocol adapter without granting it SI authority.
 
 ## Documentation rules
 
@@ -115,4 +122,4 @@ The Phase 44 execution-runtime contract has been implemented and verified on `ma
 
 ## Next state
 
-**Phase 46 is closed. The next implementation phase is Phase 47 — OpenCode Bridge.**
+**Phase 47 is active. It must receive a green final CI gate before it can be closed and before Phase 48 begins.**
