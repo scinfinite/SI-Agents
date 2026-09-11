@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation complete; final CI gate pending.**
+**Complete and final-CI verified.**
 
 ## Objective
 
@@ -16,6 +16,7 @@ Convert agent/team capability declarations into explicit, fail-closed, auditable
 - `authorize_subject()` binds the request subject to the declared agent identity and ensures requested capabilities are declared by that agent.
 - Deterministic permission identifiers and request fingerprints support audit correlation without persisting sensitive request contents.
 - Existing governance `Permission` and `Policy` primitives remain the policy data model; Phase 50 adds the dedicated admission evaluator rather than creating a competing governance system.
+- `core/governance/__init__.py` exports the Phase 50 authorization contracts.
 
 ## Security invariants
 
@@ -32,12 +33,16 @@ Convert agent/team capability declarations into explicit, fail-closed, auditable
 
 ## Architecture boundary
 
-Capability authorization is an admission/governance decision. It does not execute tools, select providers, create credentials, or mutate runtime state. Runtime execution remains downstream of the authoritative Control API. Phase 49 definitions remain declarative; Phase 50 is the first layer that can turn a declaration into a permitted action.
+Capability authorization is an admission/governance decision. It does not execute tools, select providers, create credentials, or mutate runtime state. Runtime execution remains downstream of the authoritative Control API. Phase 49 definitions remain declarative; Phase 50 is the explicit layer that turns a declaration into a permitted action.
 
 ## Evidence
 
 `tests/test_phase50_capability_authorization.py` covers explicit grants, scope escalation, deny precedence, conditions, agent declaration boundaries, subject binding, risk approval, egress policy, cost limits, and duplicate configuration rejection.
 
-## Acceptance gate
+Phase 50 CI run 962 (`34625560602`) passed distribution, wheel installation/import, repository audit, integration verification, Ruff, and the complete pytest suite. The implementation was merged to `main` as `03029d301f77ff6931bfa68415893686a849201b`.
 
-Phase 50 is not complete until repository audit, integration verification, Ruff, full tests, security/adversarial checks, documentation synchronization, and final exact-tree CI pass on the merged mainline.
+After merge, the current/index documentation was synchronized to the Phase 50-complete baseline; final exact-tree CI is the acceptance gate for that synchronized tree.
+
+## Acceptance
+
+All Phase 50 acceptance requirements are satisfied: implementation, tests, security/adversarial coverage, documentation, packaging verification, and CI evidence are complete pending the final exact-tree documentation synchronization gate.
