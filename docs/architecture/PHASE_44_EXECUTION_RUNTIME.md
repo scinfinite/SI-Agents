@@ -1,6 +1,6 @@
 # Phase 44 — Execution Runtime Foundation
 
-**Status:** Implementation in progress
+**Status:** Complete and CI-verified
 **Roadmap:** V4 Phase 44
 **Authority:** `docs/architecture/PHASES.md` and `docs/architecture/SI_AGENTS_V4_PLAN.md`
 
@@ -24,29 +24,32 @@ Establish a durable execution foundation underneath the existing SI governance a
 - Restart recovery of interrupted `running` work back to `queued` while preserving attempt identity.
 - Re-openable persistence across process/store instances.
 - Inline secret-like payload rejection so raw credentials are not persisted in runtime state.
+- Terminal-state immutability under cancellation/pause requests.
+- Concurrency coverage for competing terminal writers.
 - Exported runtime contracts from `core.runtime`.
 
 ## Authority boundary
 
 The runtime receives an already-authorized task. The runtime does not decide caller identity, permissions, governance, approvals, provenance, model policy, or provider selection. Harness/provider adapters are downstream mechanics and cannot grant authority.
 
-The existing `RuntimeEngine` remains the cross-harness governance coordinator. `ExecutionRuntime` is the new durable execution primitive and is intentionally separate from provider/harness policy.
+The existing `RuntimeEngine` remains the cross-harness governance coordinator. `ExecutionRuntime` is the durable execution primitive and is intentionally separate from provider/harness policy.
 
-## Verification requirements
+## Verification evidence
 
-Phase 44 cannot close until all of the following are green:
+The final mainline CI run was **#916 (`34609972530`)**, on commit `e48fd1d0722c4aa7b70879961294f296e5aff662`.
 
-1. Runtime lifecycle tests.
-2. Idempotency and retry tests.
-3. Cancellation/deadline tests.
-4. Restart/persistence recovery tests.
-5. Pause/resume capability-boundary tests.
-6. Secret-isolation/adversarial tests.
-7. Existing V3 test suite.
-8. Repository audit and static checks.
-9. Packaging/distribution checks.
-10. Final GitHub Actions CI run on `main`.
+All CI gates passed:
 
-## Remaining gate
+- distribution build;
+- wheel installation/import smoke tests;
+- repository audit;
+- integration verification;
+- Ruff;
+- Python compileall;
+- complete pytest suite.
 
-This document deliberately remains **Implementation in progress** until final CI provides evidence for the complete Phase 44 contract. No downstream Phase 45 implementation should be treated as started merely because this runtime exists.
+The final suite included **484 passing tests** after a CI-discovered hygiene regression was corrected. The regression was caused by V4 planning documentation explicitly naming external engineering references; both the repository audit and hygiene test were aligned so reference-only documentation is permitted while executable/package surfaces remain protected.
+
+## Phase 44 gate result
+
+Phase 44 is closed. The runtime foundation is implemented on `main`, tested, documented, security/adversarial checked, packaging-verified, and final-CI verified. Phase 45 is the next implementation phase.
