@@ -4,15 +4,15 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–42 complete and CI-verified.**
+**Post-v2 evolution — Phases 19–43 complete and CI-verified.**
 
-The verified v3 foundation now includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, localhost-first Web, Control Center, visual organization/workflow inspection, Agent Builder, evidence-first observability, TUI, and the governed Harness Deployment Center.
+The verified v3 foundation includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, localhost-first Web, Control Center, visual organization/workflow inspection, Agent Builder, evidence-first observability, TUI, the governed Harness Deployment Center, and final cross-cutting integration hardening.
 
-### Phase 42 — Harness Deployment Center
+### Phase 43 — Final v3 Integration & Hardening
 
-Phase 42 adds a deterministic planning and inspection boundary for registered harness adapters. Deployment plans can be validated and can prepare existing portable deployment descriptions, but cannot grant authority, move credentials, enable adapters, execute workers, invoke tools/shells, or make external calls. Unknown targets and authority-bearing capability/permission requests fail closed.
+Phase 43 adds a deterministic integration audit over the complete v3 surface and a packaged `si verify`/`si-verify` readiness command. It checks canonical catalog/config consistency, required operator surfaces, packaging entry points, deployment planning-only boundaries, and documentation status without executing downstream work.
 
-The Web surface is available at `/deployments`; the API exposes `GET/POST /api/v1/deployments`; and the CLI exposes `si deploy` plus `si-deploy` for target/plan inspection and planning. There is intentionally no apply/deploy command in this phase.
+The final hardening pass also removed the unused deployment `APPLIED` state, retained fail-closed release-gate semantics, and added adversarial regression coverage. A schema-version compatibility regression found by mainline CI was corrected before final closure.
 
 ## Architecture
 
@@ -28,13 +28,13 @@ CLI / TUI / Web Control Center / Deployment Center / Harness
                    Harness boundary
 ```
 
-There is one SI Core and one Control API. Operator surfaces and deployment planning are views/boundaries, not independent authorities.
+There is one SI Core and one Control API. Operator surfaces, deployment planning, and integration verification are boundaries, not independent authorities.
 
 ## Security model
 
 Agents, capabilities, tools, Skills, Rules, Hooks, events, memory, knowledge, automation, teams, harness adapters, environments, persona artifacts, Builder drafts, evidence records, deployment plans, and UI state are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk operations remain approval-gated and evidence/verification state remains explicit.
 
-Web/TUI/deployment surfaces use no third-party runtime dependencies. Web remains localhost-first with explicit authenticated remote opt-in, bounded JSON mutations, restrictive security headers, redacted audit logging, and no telemetry. Deployment planning has no credential persistence or execution transport.
+Web/TUI/deployment/verification surfaces use no third-party runtime dependencies. Web remains localhost-first with explicit authenticated remote opt-in, bounded JSON mutations, restrictive security headers, redacted audit logging, and no telemetry. Deployment planning has no credential persistence or execution transport. Integration verification has no downstream execution authority.
 
 ## `si` CLI
 
@@ -56,6 +56,7 @@ si tui [--root PATH] [--view VIEW] [--filter TEXT] [--once] [--no-color]
 si deploy targets [--root PATH] [--json]
 si deploy plans [--root PATH] [--json]
 si deploy plan PLAN_ID HARNESS_ID [--root PATH] [--json]
+si verify [--root PATH] [--json]
 ```
 
 Read-only commands do not mutate state. Mutation requires explicit `--apply` where applicable. Credentials are not stored by SI-Agents.
@@ -63,10 +64,10 @@ Read-only commands do not mutate state. Mutation requires explicit `--apply` whe
 ## Documentation
 
 - `docs/README.md` — documentation navigation and current baseline.
-- `docs/architecture/README.md` — architecture navigation and phase index through Phase 42.
+- `docs/architecture/README.md` — architecture navigation and phase index through Phase 43.
 - `docs/architecture/PHASES.md` — authoritative implementation/status and verification record.
-- `docs/architecture/PHASE_29_AGENT_PERSONA.md` through `PHASE_42_HARNESS_DEPLOYMENT_CENTER.md` — canonical post-v2 phase records.
-- `docs/architecture/SI_AGENTS_V3.md` — forward roadmap for Phase 43.
+- `docs/architecture/PHASE_29_AGENT_PERSONA.md` through `PHASE_43_INTEGRATION_HARDENING.md` — canonical post-v2 phase records.
+- `docs/architecture/SI_AGENTS_V3.md` — completed v3 architecture and post-v3 direction.
 
 ## Engineering loop
 
@@ -77,8 +78,8 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 
 ## Verification baseline
 
-Phase 42 implementation merged through PR #46 as `70d5f96c15bfbf200804a50f43dc6e12f5dde903`. During validation, wheel installation caught an OpenAPI syntax regression; Ruff then caught compact-handler/test style violations; pytest caught duplicate normalization and an assertion mismatch. These issues were fixed and revalidated before merge. The documentation-closed mainline CI is the final Phase 42 closure gate.
+Phase 43 implementation merged as `d4aaddc0008d6af05161d8b79dfc1f9507e0c61e`. Mainline CI **#884** (`34557632059`) exposed a schema-version compatibility regression in the new integration audit; it was fixed through PR #50 and merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI **#886** (`34558002476`) passed all repository gates.
 
-## Next phase
+## v3 status
 
-**Phase 43 — Final v3 Integration & Hardening.**
+**The SI-Agents v3 implementation is complete.** Future changes are maintenance, security/defect fixes, or explicitly versioned post-v3 evolution.
