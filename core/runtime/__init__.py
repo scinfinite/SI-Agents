@@ -1,6 +1,7 @@
-"""Harness interoperability, durable execution, scheduling, and V4 event primitives."""
+"""Harness interoperability, durable execution, scheduling, and V4 runtime primitives."""
 
 from core.runtime.bridge import CallbackHarnessAdapter, adapter_metadata, is_harness_adapter
+from core.runtime.checkpoints import Checkpoint, CheckpointError, CheckpointStore, ResumePlan
 from core.runtime.conformance import ConformanceFailure, run_conformance
 from core.runtime.deployment import HarnessDeploymentManifest, build_manifest
 from core.runtime.engine import RuntimeEngine
@@ -17,13 +18,14 @@ from core.runtime.session import RuntimeSession, SessionRegistry, SessionStatus
 from core.runtime.wire import WIRE_PROTOCOL, capabilities_to_dict, request_to_dict, response_to_dict
 
 __all__ = [
-    "WIRE_PROTOCOL", "AuthorizedTask", "Attempt", "CallbackHarnessAdapter", "ConformanceFailure",
-    "EventBus", "Execution", "ExecutionRuntime", "ExecutionStore", "HarnessAdapter", "HarnessDeploymentManifest",
-    "HarnessMetadata", "HarnessRegistry", "InvocationRequest", "InvocationResponse", "InvocationStatus",
-    "LocalHarnessAdapter", "OmniRouteBridge", "OmniRouteCredentialRef", "OmniRouteModel", "OmniRoutePolicy",
-    "OmniRouteTransportError", "OpenCodeBridge", "OpenCodeSession", "OpenCodeTransportError", "ParallelScheduler",
-    "RuntimeAdapter", "RuntimeCapabilities", "RuntimeEngine", "RuntimeError", "RuntimeErrorCode", "RuntimeEvent",
-    "RuntimeEventRecord", "RuntimeEventType", "RuntimeFailure", "RuntimeKind", "RuntimeSession", "ScheduleState",
-    "ScheduledItem", "SessionRegistry", "SessionStatus", "State", "adapter_metadata", "build_manifest",
-    "capabilities_to_dict", "is_harness_adapter", "normalize_metadata", "request_to_dict", "response_to_dict", "run_conformance",
+    "WIRE_PROTOCOL", "AuthorizedTask", "Attempt", "CallbackHarnessAdapter", "Checkpoint", "CheckpointError",
+    "CheckpointStore", "ConformanceFailure", "EventBus", "Execution", "ExecutionRuntime", "ExecutionStore",
+    "HarnessAdapter", "HarnessDeploymentManifest", "HarnessMetadata", "HarnessRegistry", "InvocationRequest",
+    "InvocationResponse", "InvocationStatus", "LocalHarnessAdapter", "OmniRouteBridge", "OmniRouteCredentialRef",
+    "OmniRouteModel", "OmniRoutePolicy", "OmniRouteTransportError", "OpenCodeBridge", "OpenCodeSession",
+    "OpenCodeTransportError", "ParallelScheduler", "ResumePlan", "RuntimeAdapter", "RuntimeCapabilities",
+    "RuntimeEngine", "RuntimeError", "RuntimeErrorCode", "RuntimeEvent", "RuntimeEventRecord", "RuntimeEventType",
+    "RuntimeFailure", "RuntimeKind", "RuntimeSession", "ScheduleState", "ScheduledItem", "SessionRegistry",
+    "SessionStatus", "State", "adapter_metadata", "build_manifest", "capabilities_to_dict", "is_harness_adapter",
+    "normalize_metadata", "request_to_dict", "response_to_dict", "run_conformance",
 ]
