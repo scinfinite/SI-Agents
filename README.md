@@ -4,133 +4,58 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**Post-v2 evolution — Phases 19–43 complete and CI-verified.**
+**v3 is complete and closed. v4 planning is established; Phase 44 has not started.**
 
 The verified v3 foundation includes 279 SI-native specialist personas across 18 divisions, portable Skills, Rules/Hooks/Events, scoped Memory/Knowledge, Security/Governance, organization teams/workflows, Control API v1, localhost-first Web, Control Center, visual organization/workflow inspection, Agent Builder, evidence-first observability, TUI, the governed Harness Deployment Center, and final cross-cutting integration hardening.
 
-### Phase 43 — Final v3 Integration & Hardening
+The v4 goal is to evolve this foundation into a real agent operating system with persistent execution state, parallel task orchestration, live events/control, first-class OpenCode + OmniRoute integration, substantially improved Web/TUI/CLI surfaces, workflow automation, and a simple npm-based installation experience.
 
-Phase 43 adds a deterministic integration audit over the complete v3 surface and a packaged `si verify`/`si-verify` readiness command. It checks canonical catalog/config consistency, required operator surfaces, packaging entry points, deployment planning-only boundaries, and documentation status without executing downstream work.
+## v4 planning
 
-The final hardening pass also removed the unused deployment `APPLIED` state, retained fail-closed release-gate semantics, and added adversarial regression coverage. A schema-version compatibility regression found by mainline CI was corrected before final closure.
-
-## Quick start
-
-### 1. Install from a checkout
-
-```bash
-git clone https://github.com/scinfinite/SI-Agents.git
-cd SI-Agents
-python -m venv .venv
-. .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-python -m pip install -r requirements-dev.txt
-```
-
-Python 3.11 or newer is required.
-
-### 2. Verify the installation and repository
-
-```bash
-si doctor --json
-si audit --json
-si verify --json
-```
-
-`si verify` is a deterministic readiness check. It does not execute downstream agents, tools, shell commands, deployments, or external calls.
-
-### 3. Inspect the system
-
-```bash
-si status --json
-si agents --json
-si personas --division si-engineering --json
-si teams --json
-si skills --json
-```
-
-### 4. Use the operator surfaces
-
-```bash
-si tui --once
-si web --host 127.0.0.1 --port 8787
-```
-
-Open `http://127.0.0.1:8787/` when the Web server is running locally.
-
-### 5. Plan, do not execute, deployments
-
-```bash
-si deploy targets --json
-si deploy plans --json
-si deploy plan PLAN_ID HARNESS_ID --json
-```
-
-The Deployment Center is deliberately planning-only: it does not grant authority, migrate credentials, enable adapters, execute workers, or perform external deployment calls.
-
-### 6. Run a governed team workflow
-
-```bash
-si run TEAM --objective "Inspect the repository and propose a verified change"
-```
-
-Use `si setup` when you need to prepare optional local OpenCode integration. Credentials are not stored by SI-Agents.
-
-## Architecture
+The complete v4 plan is `docs/architecture/SI_AGENTS_V4_PLAN.md` and covers Phases 44–55.
 
 ```text
-CLI / TUI / Web Control Center / Deployment Center / Harness
-                         ↓
-                    Control API v1
-                         ↓
-                   SI Core authorities
-                         ↓
-              Runtime / Governance / Evidence
-                         ↓
-                   Harness boundary
+44 Runtime
+ → 45 Event + State
+ → 46 Scheduler / Executor
+ → 47 OpenCode Bridge
+ → 48 OmniRoute
+ → 49 Web 2.0
+ → 50 TUI 2.0
+ → 51 CLI 2.0
+ → 52 Agent / Team Builder
+ → 53 Workflow / Automation
+ → 54 npm Distribution / Setup
+ → 55 End-to-End Validation
 ```
 
-There is one SI Core and one Control API. Operator surfaces, deployment planning, and integration verification are boundaries, not independent authorities.
+The target public installation experience is:
 
-## Security model
-
-Agents, capabilities, tools, Skills, Rules, Hooks, events, memory, knowledge, automation, teams, harness adapters, environments, persona artifacts, Builder drafts, evidence records, deployment plans, and UI state are workers/data—not policy authorities. Registration or selection does not grant permission. High-risk operations remain approval-gated and evidence/verification state remains explicit.
-
-Web/TUI/deployment/verification surfaces use no third-party runtime dependencies. Web remains localhost-first with explicit authenticated remote opt-in, bounded JSON mutations, restrictive security headers, redacted audit logging, and no telemetry. Deployment planning has no credential persistence or execution transport. Integration verification has no downstream execution authority.
-
-## `si` CLI
-
-```text
-si doctor [--json]
-si status [--json]
-si audit [--json]
-si agents [--division DIVISION] [--status STATUS] [--search TEXT] [--json]
-si personas [--division DIVISION] [--search TEXT] [--json]
-si teams [--search TEXT] [--json]
-si setup [--apply] [--install-opencode] [--configure-opencode] [--model MODEL]
-si update [--apply]
-si run TEAM --objective TEXT [--handoff FILE]
-si handoff create TEAM --objective TEXT --source termux|codespace --target termux|codespace --output FILE
-si handoff inspect FILE [--json]
-si handoff import FILE
-si web [--host HOST] [--port PORT] [--root PATH] [--allow-remote]
-si tui [--root PATH] [--view VIEW] [--filter TEXT] [--once] [--no-color]
-si deploy targets [--root PATH] [--json]
-si deploy plans [--root PATH] [--json]
-si deploy plan PLAN_ID HARNESS_ID [--root PATH] [--json]
-si verify [--root PATH] [--json]
+```bash
+npm install -g @scinfinite/si
+si setup
 ```
 
-Read-only commands do not mutate state. Mutation requires explicit `--apply` where applicable. Credentials are not stored by SI-Agents.
+This is a v4 target, not a currently released npm contract.
+
+## Current architecture principle
+
+There is one SI Core and one Control API. Web, TUI and CLI are control surfaces, not competing authorities. OpenCode remains the interactive coding harness, and OmniRoute remains the model/provider routing layer.
+
+The v4 implementation order deliberately starts with the execution runtime and state/event contracts before rebuilding presentation surfaces. This prevents Web/TUI/CLI from becoming sophisticated dashboards over incomplete execution semantics.
+
+## Current verification baseline
+
+Phase 43 final correction merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI #886 (`34558002476`) passed the repository release gates, including distribution, wheel installation, repository audit, Ruff, and the complete pytest suite.
 
 ## Documentation
 
 - `docs/README.md` — documentation navigation and current baseline.
-- `docs/architecture/README.md` — architecture navigation and phase index through Phase 43.
-- `docs/architecture/PHASES.md` — authoritative implementation/status and verification record.
-- `docs/architecture/PHASE_29_AGENT_PERSONA.md` through `PHASE_43_INTEGRATION_HARDENING.md` — canonical post-v2 phase records.
-- `docs/architecture/SI_AGENTS_V3.md` — completed v3 architecture and post-v3 direction.
+- `docs/architecture/PHASES.md` — authoritative current status.
+- `docs/architecture/README.md` — architecture index.
+- `docs/architecture/SI_AGENTS_V4_PLAN.md` — v4 planning baseline.
+- `docs/architecture/SI_AGENTS_V3.md` — completed v3 architecture record.
+- `docs/architecture/PHASE_43_INTEGRATION_HARDENING.md` — final v3 phase evidence.
 
 ## Engineering loop
 
@@ -139,10 +64,6 @@ OBSERVE → UNDERSTAND → RESEARCH → PLAN → EXECUTE → MEASURE
 → TEST → ATTACK THE SOLUTION → VERIFY → DOCUMENT → LEARN → GENERALIZE → REUSE
 ```
 
-## Verification baseline
+## Documentation rule
 
-Phase 43 implementation merged as `d4aaddc0008d6af05161d8b79dfc1f9507e0c61e`. Mainline CI **#884** (`34557632059`) exposed a schema-version compatibility regression in the new integration audit; it was fixed through PR #50 and merged as `52588921c0956f091fb569c4b51e9fd741790744`. Final mainline CI **#886** (`34558002476`) passed all repository gates.
-
-## v3 status
-
-**The SI-Agents v3 implementation is complete.** Future changes are maintenance, security/defect fixes, or explicitly versioned post-v3 evolution.
+Historical phase Markdown preserves phase-time evidence. Current/index Markdown must reflect the latest verified status. Documentation must never claim implementation that has not been implemented and CI-verified.
