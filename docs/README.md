@@ -36,7 +36,9 @@ After every completed phase: implement and test; run relevant verification; upda
 
 ## Current baseline
 
-**V3 Phases 1–43 are complete and CI-verified. V4 Phases 44–47 are complete and final-CI verified. Phase 48 — OmniRoute Integration — is implementation-complete and awaiting its final CI gate.**
+**V3 Phases 1–43 are complete and CI-verified. V4 Phases 44–48 are complete and final-CI verified. Phase 49 — Agent + Team Builder — is next.**
+
+Phase 48 final CI run 949 (`34623762921`) passed distribution, wheel import, repository audit, integration verification, Ruff and the complete pytest suite; the phase is merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
 
 ## V4 sequence
 

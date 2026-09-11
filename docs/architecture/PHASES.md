@@ -1,6 +1,6 @@
 # SI-Agents Implementation Phases
 
-**Current status: V3 closed; V4 Phases 44–47 complete and final-CI verified; Phase 48 implementation complete and awaiting final CI.**
+**Current status: V3 closed; V4 Phases 44–48 complete and final-CI verified; Phase 49 — Agent + Team Builder — is next.**
 
 This file is the authoritative current implementation/status record. Historical phase records preserve phase-time evidence.
 
@@ -26,21 +26,15 @@ This file is the authoritative current implementation/status record. Historical 
 
 ## V4 current milestones
 
-Phase 44 — Execution Runtime Foundation: **complete and CI-verified.**
+Phase 44 — Execution Runtime Foundation: **complete and CI-verified** (`34610448789`).
 
-Phase 45 — Event Bus + State Architecture: **complete and CI-verified.**
+Phase 45 — Event Bus + State Architecture: **complete and CI-verified** (`34612616978`).
 
-Phase 46 — Parallel Scheduler + Executor: **complete and CI-verified.**
+Phase 46 — Parallel Scheduler + Executor: **complete and CI-verified** (`34615157829`).
 
-Phase 47 — OpenCode Bridge: **complete and CI-verified.**
+Phase 47 — OpenCode Bridge: **complete and CI-verified** (`34615709124`, followed by documentation exact-tree CI `34615862860`).
 
-Phase 48 — OmniRoute Integration: **implementation complete; final CI pending.** Health/model discovery, typed model capabilities, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage metadata, rate-limit/error classification, credential references, endpoint security and deterministic transport tests are implemented.
-
-## Integration markers
-
-43. Final v3 Integration & Hardening
-Phase 44
-Phase 71
+Phase 48 — OmniRoute Integration: **complete and final-CI verified** (CI run 949, `34623762921`), merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
 
 ## Release status
 
@@ -51,7 +45,8 @@ Phase 71
 - **Phase 45:** complete and CI-verified.
 - **Phase 46:** complete and CI-verified.
 - **Phase 47:** complete and CI-verified.
-- **Phase 48:** implementation complete; final CI pending.
+- **Phase 48:** complete and final-CI verified.
+- **Phase 49:** next.
 
 ## V4 planned sequence
 
@@ -61,8 +56,8 @@ Phase 71
 | 45 | Event Bus + State Architecture | **Complete + CI verified** |
 | 46 | Parallel Scheduler + Executor | **Complete + CI verified** |
 | 47 | OpenCode Bridge | **Complete + CI verified** |
-| 48 | OmniRoute Integration | **Implementation complete; final CI pending** |
-| 49 | Agent + Team Builder | Planned |
+| 48 | OmniRoute Integration | **Complete + final-CI verified** |
+| 49 | Agent + Team Builder | Planned / next |
 | 50 | Capability Authorization | Planned |
 | 51 | Checkpoints + Resume | Planned |
 | 52 | Context / Memory Economics | Planned |
@@ -96,7 +91,8 @@ Phase 71
 - Phase 46 final CI: `34615157829`.
 - Phase 47 implementation CI: `34615709124`.
 - Phase 47 final documentation exact-tree CI: `34615862860`.
-- Phase 48: final gate pending.
+- Phase 48 final CI: run 949 (`34623762921`).
+- Phase 48 merge commit: `f670563c7df06c05d269fe714e63abfe518036e0`.
 
 ## Documentation lifecycle
 

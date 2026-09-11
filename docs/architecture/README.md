@@ -12,7 +12,7 @@ Code, executable contracts, governance decisions, and CI results outrank prose w
 
 ## Current phase index
 
-V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–47 are complete and final-CI verified**. Phase **48 — OmniRoute Integration** is implementation-complete and awaiting its final CI gate.
+V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–48 are complete and final-CI verified**. Phase **49 — Agent + Team Builder** is next.
 
 | Phase | Canonical record | State |
 |---:|---|---|
@@ -21,7 +21,7 @@ V3 Phases **1–43 are complete and CI-verified**. V4 Phases **44–47 are compl
 | 45 | `PHASE_45_EVENT_BUS_STATE.md` | Complete + CI verified |
 | 46 | `PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md` | Complete + CI verified |
 | 47 | `PHASE_47_OPENCODE_BRIDGE.md` | Complete + CI verified |
-| 48 | `PHASE_48_OMNIROUTE_INTEGRATION.md` | Implementation complete; final CI pending |
+| 48 | `PHASE_48_OMNIROUTE_INTEGRATION.md` | Complete + final-CI verified |
 | 49–71 | `SI_AGENTS_V4_PLAN.md` | Planned |
 
 ## Cross-cutting architecture

@@ -2,8 +2,8 @@
 
 **Status:** Active implementation
 **Baseline:** V3 Phases 1–43 complete and CI-verified
-**Implemented:** V4 Phases 44–47 complete and final-CI verified
-**Current phase:** Phase 48 — OmniRoute Integration (implementation complete; final CI pending)
+**Implemented:** V4 Phases 44–48 complete and final-CI verified
+**Current phase:** Phase 49 — Agent + Team Builder
 **Planned sequence:** Phases 44–71
 
 > A phase is complete only after implementation, tests, security/adversarial checks, documentation, packaging where relevant, and final CI verification. Current/index documentation must be synchronized before the final exact-tree gate.
@@ -64,8 +64,8 @@ Control API owns identity, authorization, admission, policy, authority scope, pr
 | 45 | Event Bus + State Architecture | **Complete + final-CI verified** |
 | 46 | Parallel Scheduler + Executor | **Complete + final-CI verified** |
 | 47 | OpenCode Bridge | **Complete + final-CI verified** |
-| 48 | OmniRoute Integration | **Implementation complete; final CI pending** |
-| 49 | Agent + Team Builder | Planned |
+| 48 | OmniRoute Integration | **Complete + final-CI verified** |
+| 49 | Agent + Team Builder | Planned / next |
 | 50 | Capability Authorization | Planned |
 | 51 | Checkpoints + Resume | Planned |
 | 52 | Context / Memory Economics | Planned |
@@ -107,19 +107,13 @@ Durable dependency-aware scheduling, priority/aging, bounded parallel execution,
 
 Health/session discovery, blocking and streaming invocation, cancellation, SSE filtering, loopback-default endpoint policy, remote opt-in and transport-error normalization. Implementation CI `34615709124` and documentation exact-tree CI `34615862860` passed.
 
-## Phase 48 — OmniRoute Integration
+### Phase 48 — OmniRoute Integration
 
-**Objective:** Use OmniRoute as the model/provider access layer without creating a competing router.
-
-**Implemented scope:** health/status; model catalog; typed capability metadata; capability-aware preferred/fallback selection; OpenAI-compatible chat completion; usage metadata; rate-limit and upstream-error classification; credential references; loopback-default endpoint policy; deterministic injectable transport; explicit unsupported-cancellation behavior.
-
-**Authority invariants:** model selection cannot grant authority; governance metadata is not forwarded as provider authority; credentials are resolved at transport time; upstream response bodies are not exposed; no silent unauthorized fallback occurs.
-
-**Acceptance:** SI can discover usable configured models through OmniRoute and invoke the canonical OpenAI-compatible workload through the runtime adapter while preserving SI authority. Final acceptance additionally requires repository CI and synchronized documentation.
+Health/model discovery, typed capability metadata, capability-aware preferred/fallback selection, OpenAI-compatible inference, usage normalization, rate-limit/upstream/transient transport classification, credential references, endpoint security, deterministic transport tests and authority-boundary enforcement. Final CI run 949 (`34623762921`) passed; merged to `main` as `f670563c7df06c05d269fe714e63abfe518036e0`.
 
 ## Phase 49 — Agent + Team Builder
 
-Typed, composable SI-native agents and teams with capabilities, skills, model policy, resource limits, governance, evidence and deterministic/auditable builder output.
+Next objective: typed, composable SI-native agents and teams with capabilities, skills, model policy, resource limits, governance, evidence and deterministic/auditable builder output.
 
 ## Phases 50–71
 

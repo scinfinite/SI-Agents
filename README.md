@@ -4,7 +4,7 @@ SI-Agents is an evidence-driven AI engineering system designed to inspect softwa
 
 ## Current status
 
-**V3 is complete and closed. V4 is active through Phase 48; Phases 44–47 are complete and final-CI verified, and Phase 48 implementation is complete pending its final CI gate.**
+**V3 is complete and closed. V4 is active through Phase 48; Phases 44–48 are complete and final-CI verified. Phase 49 — Agent + Team Builder — is next.**
 
 V4 is extending the verified V3 governance/control foundation into a real agent operating system with durable execution state, parallel orchestration, live events/control, first-class OpenCode and OmniRoute integration, richer agents/teams/workflows, security/economics controls, advanced Web/TUI/CLI surfaces, and distribution.
 
@@ -15,7 +15,7 @@ V4 is extending the verified V3 governance/control foundation into a real agent 
  → 45 Event + State         [complete]
  → 46 Scheduler / Executor  [complete]
  → 47 OpenCode Bridge       [complete]
- → 48 OmniRoute             [implementation complete; CI gate]
+ → 48 OmniRoute             [complete]
  → 49 Agent + Team Builder
  → 50 Capability Authorization
  → 51 Checkpoints + Resume
@@ -65,7 +65,7 @@ V4:
 - Phase 45 final exact-tree CI #935 (`34612616978`) passed.
 - Phase 46 final CI #938 (`34615157829`) passed.
 - Phase 47 implementation CI #941 (`34615709124`) passed, followed by documentation exact-tree CI #942 (`34615862860`).
-- Phase 48 implementation CI is the next gate after this implementation commit.
+- Phase 48 implementation/final CI run 949 (`34623762921`) passed; merge commit `f670563c7df06c05d269fe714e63abfe518036e0` is on `main`.
 
 ## Documentation
 
