@@ -1,51 +1,19 @@
 # SI-Agents v3 — Product & Architecture Roadmap
 
 **Status:** Active forward roadmap  
-**Baseline:** SI-Agents v2.0 + Phases 19–40 implemented and CI-verified  
-**Scope:** Phases 30–43  
+**Baseline:** SI-Agents v2.0 + Phases 19–41 implemented and CI-verified  
+**Remaining:** Phases 42–43  
 **Primary surfaces:** CLI, SI TUI, localhost Web Control Center  
 **Core principle:** one SI Core, one Control API, multiple operator/harness surfaces
 
----
+## Architecture
 
-## 1. What SI-Agents v3 is
-
-SI-Agents v3 evolves the verified runtime/governance foundation into a complete, inspectable, customizable **agent organization and control system**.
-
-The v3 layer combines human-authored agent personas, typed machine contracts, portable Skills, scoped Rules/Hooks/Events, scoped Memory/Knowledge, teams/workflows, Security/Governance, evidence-first execution/observability, harness interoperability, Termux/Codespaces support, localhost Web Control Center, keyboard-first TUI, and a stable Control API shared by operator surfaces.
-
-SI-Agents does not replace coding harnesses. It is the organization, intelligence, governance, verification, and deployment layer around them.
-
-**OmniRoute remains the model/provider routing authority.** SI-Agents must not recreate provider quota, pricing, fallback, circuit-breaker, or model-routing authority around OmniRoute.
-
-## 2. Architectural principles
-
-### One source of truth
-
-```text
-Human-authored Markdown Persona
-            ↓
-       Persona Parser
-            ↓
-   Typed Agent Definition
-            ↓
- Organization / Registry
-            ↓
- Skills + Rules + Governance
-            ↓
-        SI Runtime
-            ↓
-   Control API / Execution
-```
-
-Phase 29 established the persona-to-typed-contract boundary. Phase 30 established portable Skill artifacts. Phase 31 added the explicit event/policy layer without creating a parallel permission authority. Phase 32 added scoped evidence-gated Memory and source-backed Knowledge without turning retrieval into authority. Phase 33 made governance and security scanning explicit without granting authority to configuration or scanner findings. Phase 34 added a declarative organization layer that coordinates existing agents into operating teams and verified workflows without becoming a new authority boundary. Phase 35 established the stable machine-facing API over those existing authorities. Phase 36 established the first Web transport/presentation boundary over that API. Phase 37 turned that foundation into the live Control Center. Phase 38 added visual organization/workflow inspection while preserving the same authority boundary. Phase 39 added a governed authoring boundary for agent customization without mutating the canonical catalog or granting new authority. Phase 40 made evidence and observability explicit at the inspection boundary with typed claims, provenance, confidence, verification, supersession/contradiction state, and per-run timelines.
-
-### Web and TUI are views, not authorities
+SI-Agents is the organization, intelligence, governance, verification, and deployment layer around coding harnesses. It does not replace downstream harnesses or recreate provider routing authority.
 
 ```text
                     SI-AGENTS CORE
                           │
-                    Control API
+                    Control API v1
                           │
              ┌────────────┼────────────┐
              │            │            │
@@ -60,75 +28,45 @@ Phase 29 established the persona-to-typed-contract boundary. Phase 30 establishe
                        OmniRoute
 ```
 
-No business logic, authorization logic, agent authority, or workflow engine is duplicated inside Web/TUI surfaces. Phase 38 graph rendering remains read-only, Phase 39 authoring is validation/storage only, and Phase 40 evidence recording is a provenance/inspection boundary; none becomes an independent execution authority.
+Web and TUI are views/operator boundaries, not authorities. They must not duplicate authorization, workflow execution, agent authority, credential storage, or provider-routing logic.
 
 ### Evidence-first operation
 
-Important operations must remain inspectable: selected agent, selection reason, Skill, requested capabilities/tools, governance decisions, execution events, evidence, verification state, provenance, supersession/contradiction, confidence, and unresolved uncertainty.
+Important operations remain inspectable through explicit evidence: provenance, source, confidence, verification state, supersession/contradiction, unresolved uncertainty, control-plane events, and run relationships. Recording evidence does not make a claim automatically true or verified.
 
 ### Security and provenance
 
-Markdown personas, Skills, Rules, Hooks, Memory, deployment manifests, UI-authored artifacts, and evidence are data/configuration until explicitly authorized. Importing or editing an artifact must never silently grant permission or execute code. Public implementation claims must match independently verified SI-owned behavior and current repository evidence.
+Personas, Skills, Rules, Hooks, Memory, deployment manifests, Builder drafts, evidence, and UI state are data/configuration until explicitly authorized. Importing or editing artifacts must never silently grant permission or execute code. Remote exposure, credentials, network access, paid resources, publication, destructive actions, and sensitive data require explicit governance.
 
-### Local-first
+## Phase 38 — Visual Organization & Workflow
 
-The Web Control Center is localhost-first and requires no cloud control plane or telemetry service by default. Remote exposure, credentials, network access, paid resources, publication, destructive operations, and sensitive data require explicit governance.
+**Complete + CI verified.** Deterministic graph read model and dependency-free SVG operator surface for organizational/workflow topology with filtering, inspection, pan/zoom/reset, keyboard access, and explicit read-only execution boundaries. Final mainline CI #845 (`34508914827`) was green.
 
----
+## Phase 39 — Agent Builder & Customization
 
-# Phase 38 — Visual Organization & Workflow
+**Complete + CI verified.** Governed local authoring surface with immutable bounded drafts, canonical projections, non-escalation validation, atomic persistence, revision/archive/test lifecycle, deterministic Markdown previews, Web/API/OpenAPI integration, and no execution authority. Implementation merge `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`; final mainline CI #857 (`34511559646`) was green.
 
-**State: Complete + CI verified.**
+## Phase 40 — Evidence & Observability
 
-Phase 38 provides a deterministic visual read model and dependency-free SVG operator surface for organizational and workflow topology. It covers divisions, teams, agents, Skills, capabilities, permissions, workflows, steps, dependencies, relationships, and current control-plane run state. Organization, workflow, and Skills/security graph modes support filtering, node inspection, pan/zoom/reset, responsive layout, and keyboard activation.
+**Complete + CI verified.** Typed evidence records for facts, observations, inferences, and uncertainties; bounded confidence; explicit verification; provenance; run relationships; contradiction/supersession; atomic restrictive persistence; Control API evidence routes/timelines; Evidence Explorer; and regression coverage. Final mainline CI #864 (`34513486696`) was green with 458 tests passed.
 
-The visualization remains read-only: it does not edit artifacts, authorize requests, execute workers/tools/workflows, or infer downstream execution progress. `/api/v1/visualization` and the Control Center aggregate expose the same canonical state used elsewhere by the operator UI.
+## Phase 41 — SI TUI
 
-Final mainline CI **#845** (`34508914827`) passed all repository gates on implementation merge commit `657530eefa41794fb425cd0fe38d2aced9bd316d`.
+**Complete + CI verified.** Dependency-free keyboard-first terminal operator interface for Termux, Codespaces, SSH, and ordinary terminals. It consumes the same `ControlApiService` as Web and covers Overview, Agents, Teams, Workflows, Skills, Memory, Knowledge, Evidence, Runs, Organization, Governance, Environments, Harnesses, and Settings. Navigation, filtering, selection, refresh, and terminal rendering are local UI behavior; there is no mutation or execution authority. `--once`, `--filter`, `--view`, `--no-color`, and `NO_COLOR` support deterministic/non-interactive use.
 
-Canonical record: `docs/architecture/PHASE_38_VISUAL_ORGANIZATION_WORKFLOW.md`.
+Implementation merge `531d2b964a6567aaa0a6b34b2d9b8f4471eb83f5`; feature CI #865 (`34553393908`) and post-merge mainline CI #866 (`34553461275`) were green.
 
----
+Canonical record: `docs/architecture/PHASE_41_TUI.md`.
 
-# Phase 39 — Agent Builder & Customization
-
-**State: Complete + CI verified.**
-
-Phase 39 provides a dependency-free local authoring surface for inspect, customize, create, validate, test, save, revise, and archive operations over agent drafts. Canonical agents can be projected into editable drafts, but identity/division and authority-bearing fields remain constrained. New agents cannot self-grant capabilities, permissions, harnesses, or environments. Drafts are stored atomically under `.si/agent-builder.json` with restrictive permissions and produce deterministic Markdown previews marked as authoring artifacts.
-
-The Builder does not execute agents, tools, Skills, workflows, shell commands, harnesses, or external calls, and it never mutates `config/agent-catalog.json`. The Web Agent Builder is available at `/agent-builder`, with versioned API/OpenAPI routes and audited mutations.
-
-Feature CI **#853** (`34511009965`) passed all repository gates. Implementation merge: `22c381e23c6efb2e2eaa1819e975f308fcf3ff73`.
-
-Canonical record: `docs/architecture/PHASE_39_AGENT_BUILDER.md`.
-
-# Phase 40 — Evidence & Observability
-
-**State: Complete + CI verified.**
-
-Phase 40 makes the evidence-first architecture directly inspectable. `EvidenceRecord` distinguishes facts, observations, inferences, and explicit uncertainties and carries source, provenance, confidence, verification state, optional run linkage, related records, and supersession. Verification states are explicit (`unverified`, `verified`, `contradicted`, `superseded`), uncertainty cannot be marked verified, and confidence is bounded to `[0, 1]`.
-
-Evidence is persisted atomically in local `.si/` state with restrictive permissions. The Control API exposes evidence listing/detail/recording/verification and run timelines; OpenAPI is synchronized. A dependency-free Evidence Explorer is packaged and linked from the Control Center. Evidence recording and inspection never execute workers or grant authority.
-
-Mainline CI **#860** (`34512774276`) intentionally caught one route-shadowing regression with **457 passed, 1 failed**. The fix was merged in PR #41 as `4900401c48af52a6e8d901b622575bc49bdab563`. Final mainline CI **#862** (`34513000130`) passed every repository gate with **458 passed**.
-
-Canonical record: `docs/architecture/PHASE_40_EVIDENCE_OBSERVABILITY.md`.
-
-# Phase 41 — SI TUI
-
-Provide a first-class terminal operator interface for Termux, Codespaces, SSH, and other terminal environments. The TUI is an SI organization and operations console, not a replacement for a coding harness.
-
-# Phase 42 — Harness Deployment Center
+## Phase 42 — Harness Deployment Center
 
 Make SI organization deployment into supported harnesses understandable, inspectable, and governed. Deployment manifests cannot grant permissions, execute workers, migrate credentials, or bypass governance.
 
-# Phase 43 — Final v3 Integration & Hardening
+## Phase 43 — Final v3 Integration & Hardening
 
-Integrate the complete v3 stack and close remaining architecture/security/verification gaps. Final gates cover tests, distribution, Ruff, Control API contracts, Web/TUI checks, organization/catalog consistency, governance/security scanning, evidence integrity, harness conformance, migration/rollback, documentation audit, and adversarial fail-closed checks.
+Integrate the complete v3 stack and close remaining architecture, security, verification, distribution, migration/rollback, documentation, and adversarial gaps. Final gates must cover tests, packaging, Ruff, Control API, Web/TUI, organization/catalog consistency, governance/security scanning, evidence integrity, harness conformance, and fail-closed behavior.
 
-Phase 43 must not be declared complete until final mainline CI evidence is green and current-state documentation matches implementation reality.
-
-## v3 completion principle
+## Completion principle
 
 ```text
 29 Personas [complete]
@@ -143,7 +81,7 @@ Phase 43 must not be declared complete until final mainline CI evidence is green
  → 38 Visual Graphs [complete]
  → 39 Agent Builder [complete]
  → 40 Evidence/Observability [complete]
- → 41 TUI
+ → 41 TUI [complete]
  → 42 Harness Deployment
  → 43 Integration/Hardening
 ```
