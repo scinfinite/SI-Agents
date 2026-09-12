@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from hashlib import sha256
 
@@ -40,7 +40,10 @@ class ModelContextProfile:
             raise ValueError("Model ID must not be empty")
         if self.context_window_tokens < 1:
             raise ValueError("Context window must be positive")
-        if self.reserved_output_tokens < 0 or self.reserved_output_tokens >= self.context_window_tokens:
+        if (
+            self.reserved_output_tokens < 0
+            or self.reserved_output_tokens >= self.context_window_tokens
+        ):
             raise ValueError("Reserved output tokens must be within the context window")
         if self.input_token_cost < 0:
             raise ValueError("Input token cost must not be negative")
