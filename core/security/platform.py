@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import hmac
+import ipaddress
 import json
 import re
 from dataclasses import dataclass, field
@@ -120,6 +121,14 @@ class EgressPolicy:
         host = (parsed.hostname or "").lower().rstrip(".")
         if not host or not self.allowed_hosts:
             return False
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            address = None
+        if address is not None and not self.allow_private_addresses and (
+            address.is_private or address.is_loopback or address.is_link_local or address.is_reserved
+        ):
+            return False
         return host in {item.lower().rstrip(".") for item in self.allowed_hosts}
 
 
@@ -182,6 +191,22 @@ class SecretScanner:
         return result
 
 
+class InjectionScanner:
+    """Conservative prompt/tool injection detector; detected instructions fail closed."""
+
+    _PATTERNS = (
+        re.compile(r"(?i)ignore\s+(?:all|any|the)\s+(?:previous|prior|above)\s+instructions"),
+        re.compile(r"(?i)(?:reveal|print|show|dump)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|instructions)"),
+        re.compile(r"(?i)disable\s+(?:security|safety|authorization|policy)"),
+        re.compile(r"(?i)you\s+are\s+now\s+(?:the\s+)?(?:system|developer|admin)"),
+        re.compile(r"(?i)override\s+(?:policy|permission|approval|security)"),
+    )
+
+    @classmethod
+    def contains_injection(cls, text: str) -> bool:
+        return any(pattern.search(text) for pattern in cls._PATTERNS)
+
+
 class SecurityPolicy:
     """Versioned, deny-by-default security policy."""
 
@@ -225,6 +250,8 @@ class SecurityPolicy:
             reasons.append("missing tenant isolation")
         if SecretScanner.contains_secret(request.input_text):
             reasons.append("secret-like input rejected")
+        if InjectionScanner.contains_injection(request.input_text):
+            reasons.append("prompt or tool injection rejected")
         if request.external_egress and not self.egress.permits(request.network_target):
             reasons.append("egress target is not allowlisted")
         if request.credential_access and request.approval is None:
@@ -245,7 +272,8 @@ class SecurityPolicy:
             reasons.append("no active least-privilege grant")
         elif grant.require_approval and request.approval is None:
             reasons.append("grant requires approval")
-        if any("denied" in reason or "rejected" in reason or "no active" in reason or "not allowlisted" in reason or "not explicitly" in reason or "unauthenticated" in reason or "missing tenant" in reason for reason in reasons):
+        deny_markers = ("denied", "rejected", "no active", "not allowlisted", "not explicitly", "unauthenticated", "missing tenant")
+        if any(any(marker in reason for marker in deny_markers) for reason in reasons):
             return Decision.DENY, tuple(reasons)
         if reasons:
             return Decision.APPROVAL_REQUIRED, tuple(reasons)
@@ -307,7 +335,7 @@ class SecurityPlatform:
         try:
             padding = "=" * (-len(encoded) % 4)
             payload = json.loads(base64.urlsafe_b64decode(encoded + padding))
-        except (ValueError, json.JSONDecodeError):
+        except (ValueError, json.JSONDecodeError, UnicodeDecodeError):
             return False
         if payload.get("pol") != self.policy.version.version or int(payload.get("exp", 0)) <= int(datetime.now(UTC).timestamp()):
             return False
