@@ -28,6 +28,14 @@ capacity after reserving output tokens.
 - Every selection has a stable decision ID and accounting evidence.
 - Snapshots are written atomically for recovery/audit.
 
+## Phase 52 evidence
+
+Phase 52 is complete on main. Mainline CI #1015 (`34673115687`) passed distribution build,
+wheel verification, repository audit, integration verification, Ruff, and the full test suite.
+The implementation is covered by deterministic/adversarial tests for budget validation,
+deduplication, sensitivity, secret handling, compaction/summarization, cost ceilings,
+and snapshot serialization/schema handling.
+
 ## Memory quality
 
 Future phases can add richer retrieval, utilization metrics, persistent sessions, and model-aware
