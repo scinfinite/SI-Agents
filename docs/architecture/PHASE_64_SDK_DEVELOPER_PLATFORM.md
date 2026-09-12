@@ -42,7 +42,7 @@ Phase 64 turns the versioned Control API into a stable developer surface without
 
 ### CI/CD and reference tooling
 
-The SDK is packaged with the Python distribution, while the TypeScript package contains its own strict build/check metadata. The Phase 64 test suite covers cursor binding, filtering, pagination, auth failures, idempotent replay, subscription registration, and stable Python error mapping. The existing repository closure gate remains authoritative for compileall, Ruff, pytest, wheel verification, audit, and integration verification.
+The SDK is packaged with the Python distribution, while the TypeScript package contains its own strict build/check metadata. A dedicated SDK workflow validates Python compilation/tests and strict TypeScript checking/building. The repository closure gate remains authoritative for compileall, Ruff, pytest, wheel verification, audit, and integration verification.
 
 ## Security invariants
 
@@ -62,5 +62,5 @@ Current ECC emphasizes security-first, research-first agent tooling and broad mu
 ## Closure evidence
 
 - Phase 63 was verified merged into `main` before Phase 64 began.
-- PR #78 contains the Phase 64 implementation and test surface.
-- Closure requires a green PR gate followed by a final exact-tree `main` CI run after documentation synchronization.
+- PR #78 was merged into `main` after the implementation gate.
+- The synchronized documentation tree is now the exact-tree target for final mainline CI; Phase 65 is blocked until that gate is green.
