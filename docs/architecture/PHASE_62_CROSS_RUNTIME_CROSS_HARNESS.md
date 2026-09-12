@@ -2,74 +2,40 @@
 
 ## Status
 
-**Implemented; closure pending final CI.**
+**Complete.**
 
 Phase 62 establishes a harness-neutral interoperability layer without creating a second execution authority. Existing SI Core remains authoritative for execution, sessions, capabilities, security, evidence, workspaces, evaluation, and continuous improvement.
 
 ## Contract
 
-The portable boundary covers the V4 resource families:
+The portable boundary covers runtime, session, tool, model, event, capability, context, checkpoint, and artifact resource families through `PortableAdapterDescriptor`, `PortableAdapter`, and `PortableAdapterRegistry`. The registry is deny-by-default and discovery-only.
 
-- runtime
-- session
-- tool
-- model
-- event
-- capability
-- context
-- checkpoint
-- artifact
-
-`PortableAdapterDescriptor` and `PortableAdapter` provide a common discovery/health contract. `PortableAdapterRegistry` is deny-by-default, deterministic, and does not grant permissions or mutate state.
-
-Harnesses continue to implement `HarnessAdapter`. `CrossRuntimeGateway` adds the cross-harness authority for:
-
-1. deterministic capability-aware discovery;
-2. enabled/disabled harness state;
-3. health probing and bounded quarantine/recovery;
-4. deterministic preferred-harness selection;
-5. streaming capability filtering;
-6. project + harness session binding;
-7. explicit session migration;
-8. safe fallback only when a failure is retryable and no execution-start event was emitted;
-9. non-secret routing decisions with bounded retention;
-10. fail-closed behavior when no eligible harness exists.
+Harnesses implement `HarnessAdapter`. `CrossRuntimeGateway` provides deterministic discovery, streaming capability filtering, preferred selection, health probing, bounded degradation/quarantine/recovery, project+harness session binding, explicit session migration, and safe pre-start fallback.
 
 ## Security and authority invariants
 
-- Registration and discovery never grant execution capability.
+- Registration/discovery never grants execution capability.
 - Disabled or quarantined harnesses are never selected.
-- Session identity is bound to both project and harness; cross-project/cross-harness use fails closed.
-- Migration is explicit and creates a replacement session; it never silently rewrites an existing session binding.
-- Fallback is prohibited after `started`, `delta`, `tool_call`, or `tool_result` events to prevent duplicate side effects.
-- Request input is excluded from route-decision fingerprints, preventing arbitrary payloads from entering decision evidence.
-- Health failures are bounded and quarantine duration is bounded.
-- Transport exceptions are isolated; a failed transport does not become an authorization grant.
-- Runtime authorization remains outside the adapter registry/gateway.
+- Session identity is bound to project and harness; mismatches fail closed.
+- Migration is explicit and creates a replacement session.
+- Fallback is prohibited after `started`, `delta`, `tool_call`, or `tool_result` events.
+- Request input is excluded from route-decision fingerprints.
+- Health failure counts and quarantine duration are bounded.
+- Transport failures do not become authorization grants.
+- Runtime authorization remains outside the gateway.
 
 ## Compatibility
 
-The existing OpenCode bridge, OmniRoute bridge, local harness, runtime engine, session registry, wire protocol, checkpoints, and deployment manifests remain valid. Phase 62 composes with these contracts rather than replacing them.
-
-OpenCode is therefore a supported harness, not the definition of the runtime protocol. Future CLI, IDE, API, embedded, or agent harnesses can implement the same `HarnessAdapter` contract and participate through the gateway without creating parallel SI state ownership.
-
-## Failure model
-
-| Condition | Behavior |
-|---|---|
-| No enabled harness | fail closed |
-| Missing streaming capability | candidate excluded |
-| Session project mismatch | reject |
-| Session harness mismatch | reject |
-| Transport failure before response | try next eligible harness |
-| Retryable failure before execution start | safe fallback |
-| Retryable failure after execution starts | no fallback |
-| Repeated harness failures | degrade, then bounded quarantine |
-| Successful health probe | restore healthy state |
-| Duplicate portable adapter | reject |
+Existing OpenCode, OmniRoute, local harness, runtime engine, session, wire protocol, checkpoint, and deployment contracts remain valid. OpenCode is a supported harness, not the runtime definition.
 
 ## Verification
 
-Dedicated adversarial coverage is in `tests/unit/test_phase62_cross_runtime.py`, including deterministic discovery, capability filtering, safe/unsafe fallback, quarantine and recovery, session isolation, explicit migration, deny-by-default selection, portable resource-kind coverage, duplicate registration protection, and non-secret decision fingerprints.
+Dedicated adversarial coverage is in `tests/unit/test_phase62_cross_runtime.py`, covering deterministic discovery, capability filtering, safe/unsafe fallback, quarantine/recovery, session isolation, explicit migration, deny-by-default selection, all portable resource kinds, duplicate protection, and non-secret decision fingerprints.
 
-Closure requires the normal repository gate: distribution/wheel verification, repository audit, integration verification, Ruff, compileall, full pytest, and final synchronized-tree mainline CI.
+Closure evidence:
+
+- PR #76 merged into `main` as `607085782a75e31a60774afe975edcbd38bf5e4c`.
+- PR CI #1166 / run `34692621358`: repository audit, integration verification, Ruff, wheel verification, and full pytest all passed.
+- Final synchronized-tree mainline CI is required and is the authoritative post-merge closure gate.
+
+**Phase 63 — Ecosystem / Marketplace is next.**
