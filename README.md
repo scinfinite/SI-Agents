@@ -18,15 +18,15 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 - **Phases 44–65 are complete on `main`.**
 - **Phase 63 — Ecosystem / Marketplace** is fully implemented, audited, documented, merged, and verified by final mainline CI #1198 (`34694418960`).
-- **Phase 64 — SDK / Developer Platform** is fully implemented and merged through PR #78 and its synchronized-tree closure gate.
-- **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by implementation-tree CI #1239 (`34697885027`); the synchronized documentation tree is the final closure target.
+- **Phase 64 — SDK / Developer Platform** is fully implemented and merged through PR #78; its repository closure suite passed in CI #1239 (`34697885027`).
+- **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by final synchronized-tree CI #1249 (`34698187600`).
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
 
 ## Phase 65 — Workflow + Automation
 
 Phase 65 adds a transport-neutral workflow state machine for versioned declarative DAGs, conditional branching, bounded fan-out and loops, delegation, human approval gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates/import/export, restart validation, and reverse-order compensation.
 
-Workflow adapters remain clients of SI Core and never create competing governance or execution authority. See `docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract.
+Workflow adapters remain clients of SI Core and never create competing governance or execution authority. See `docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract and closure evidence.
 
 ## V4 roadmap
 
@@ -55,7 +55,7 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 62 | Cross-Runtime / Cross-Harness | Complete |
 | 63 | Ecosystem / Marketplace | Complete |
 | 64 | SDK / Developer Platform | Complete |
-| 65 | Workflow + Automation | Complete |
+| 65 | Workflow + Automation | **Complete / 100%** |
 | 66 | Advanced Web Control Plane | Next |
 | 67 | Advanced TUI Control Center | Planned |
 | 68 | Advanced CLI Platform | Planned |
@@ -65,8 +65,8 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 
 ## Engineering gate
 
-A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
+A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate.**
 
 ## Current phase
 
-**Phase 65 — Workflow + Automation is complete. Phase 66 — Advanced Web Control Plane is next after the final synchronized-tree CI for the current documentation state is green.**
+**Phase 65 — Workflow + Automation is 100% complete. Phase 66 — Advanced Web Control Plane is next.**
