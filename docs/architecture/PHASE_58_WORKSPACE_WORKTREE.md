@@ -1,7 +1,6 @@
 # Phase 58 — Workspace / Worktree Lifecycle
 
-**Status:** Complete; final synchronized-tree mainline CI #1128 (`34686980055`) passed all required gates.
-
+**Status:** Complete at advanced-hardening level; PR #74 and final synchronized-tree mainline CI #1144 (`34691176676`) passed all repository closure gates.
 
 ## Authority
 
@@ -22,12 +21,16 @@ Phase 58 establishes an isolation-first workspace lifecycle authority inside SI 
 - tamper-evident hash-chained workspace lifecycle events
 - bounded garbage-collection candidate discovery for archived/recovery state
 
+## Advanced hardening closure
+
+The hardening pass added adversarial verification of event-chain tampering and sensitive-operation authorization callbacks, alongside the existing scope, lock, revision, filesystem, Git, cleanup, and recovery tests. This closes the Phase 58 verification gap identified during the post-phase audit.
+
 ## Authority boundaries
 
 The workspace service does not grant capabilities, credentials, provider access, or execution identity. A merge preparation is inspection-only. A resume is a lifecycle transition; downstream execution must independently authorize any resumed work.
 
 ## Verification
 
-tests/test_phase58_workspace.py covers scope isolation, lock contention and heartbeat, optimistic revisions, secret-like metadata rejection, symlink rejection, Git materialization, diff artifacts, branch creation, merge preparation, approval/lock requirements, cleanup, and garbage-collection discovery.
+tests/test_phase58_workspace.py covers scope isolation, lock contention and heartbeat, optimistic revisions, authorization callbacks, tamper detection, secret-like metadata rejection, symlink rejection, Git materialization, diff artifacts, branch creation, merge preparation, approval/lock requirements, cleanup, and garbage-collection discovery.
 
-The phase closure gate additionally requires repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, documentation synchronization, and final exact-tree mainline CI.
+The closure gate requires repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, documentation synchronization, and final exact-tree mainline CI. Final mainline CI #1144 succeeded.
