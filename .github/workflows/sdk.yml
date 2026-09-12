@@ -19,6 +19,7 @@ jobs:
           python-version: "3.11"
       - name: Python SDK compile and tests
         run: |
+          python -m pip install --disable-pip-version-check pytest
           python -m compileall -q sdk/python
           python -m pytest -q tests/unit/test_phase64_sdk.py
       - uses: actions/setup-node@v4
