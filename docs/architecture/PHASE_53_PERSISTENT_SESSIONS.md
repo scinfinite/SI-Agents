@@ -47,13 +47,12 @@ Adversarial tests cover isolation, stale revision updates, secret leakage, malfo
 export ownership, expiry, archive immutability, artifact size bounds, deterministic event replay,
 search bounds, JSON safety, clone lineage, restart persistence, and OpenCode/harness mismatch.
 
-## External-reference synthesis
+## Engineering-reference synthesis
 
-ECC and Agency Agents patterns reinforce explicit context/memory boundaries and reusable agent/session
-state; OpenCode emphasizes durable user-facing session continuity; n8n demonstrates persistent
-execution records and resumable history; OmniRoute remains the model/provider routing layer.
-SI-Agents generalizes these patterns without making any external runtime the authority for session
-state or governance.
+External systems were reviewed for general patterns around durable sessions, bounded context,
+shared execution state, resumable history, and runtime/harness separation. SI-Agents generalizes
+those patterns into its own contracts and tests without making an external runtime the authority
+for session state or governance.
 
 ## Closure evidence
 
