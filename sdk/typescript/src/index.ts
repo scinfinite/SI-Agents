@@ -125,7 +125,7 @@ export class SIClient {
 
   eventsWebSocketUrl(): string { return this.baseUrl.replace(/^http/, "ws") + `/api/${API_VERSION}/events/ws`; }
 
-  openWebSocket(onEvent: (event: Event) => void, onError?: (error: Event) => void): WebSocket {
+  openWebSocket(onEvent: (event: Event) => void, onError?: (error: globalThis.Event) => void): WebSocket {
     const socket = new WebSocket(this.eventsWebSocketUrl());
     socket.onmessage = (message) => onEvent(JSON.parse(String(message.data)) as Event);
     if (onError) socket.onerror = onError;
