@@ -15,12 +15,32 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–55 are complete on main.**
-- **Phase 56 — Intelligent Routing + Economics is next.**
+- **Phases 44–56 are complete on main.**
+- **Phase 57 — Security Platform is next.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
 - Phase 54 final synchronized-tree mainline CI **#1051 (`34676632475`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Phase 55 implementation CI **#1074 (`34678184341`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- The final synchronized-tree CI after this documentation synchronization is the Phase 55 closure gate.
+- Phase 55 final synchronized-tree closure CI **#1080 (`34678317246`)** passed all required repository gates.
+- Phase 56 final synchronized-tree mainline CI **#1095 (`34682748193`)** passed all required repository gates on the synchronized Phase 56 tree.
+
+## Phase 56 — Intelligent Routing + Economics
+
+Phase 56 adds deterministic SI-side routing intelligence while preserving OmniRoute as the model/provider/API routing boundary.
+
+Covered contracts:
+
+- explicit task complexity and capability requirements;
+- model/agent capability, context-window, streaming, structured-output, vision, coding, reasoning, and tool matching;
+- quality, reliability-history, latency, cost, and preference scoring;
+- quota, provider/model enablement, and circuit-breaker gating;
+- preferred providers/models and deterministic tie-breaking;
+- budget reservations and settlement with fail-closed limits;
+- cost and retry forecasting;
+- bounded transient/rate-limit fallback;
+- escalation/downgrade controls;
+- non-secret route evidence and failure classification;
+- health outcome recording and recovery probes.
+
+The implementation lives in `core/provider_intelligence/intelligent_router.py`, with adversarial/unit coverage in `tests/test_phase56_intelligent_routing.py`.
 
 ## Phase 55 — Durable Waiting + Scheduling
 
