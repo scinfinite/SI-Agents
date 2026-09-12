@@ -22,7 +22,14 @@ def _server():
 
 
 def _get(server, path: str, headers: dict[str, str] | None = None):
-    return urllib.request.urlopen(urllib.request.Request(f"http://127.0.0.1:{server.server_port}{path}", headers=headers or {}), timeout=3)
+    request = urllib.request.Request(f"http://127.0.0.1:{server.server_port}{path}", headers=headers or {})
+    return urllib.request.urlopen(request, timeout=3)
+
+
+def _close(server, thread):
+    server.shutdown()
+    server.server_close()
+    thread.join(timeout=2)
 
 
 def test_existing_web_server_exposes_phase66_control_surface():
@@ -36,7 +43,7 @@ def test_existing_web_server_exposes_phase66_control_surface():
         source = json.loads(_get(server, "/api/v1/source?path=README.md").read())
         assert source["path"] == "README.md"
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        _close(server, thread)
 
 
 def test_inspection_never_exposes_git_paths():
@@ -46,13 +53,14 @@ def test_inspection_never_exposes_git_paths():
             _get(server, "/api/v1/source?path=.git/config")
         assert exc.value.code == 400
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        _close(server, thread)
 
 
 def test_remote_server_keeps_existing_auth_boundary():
     config = WebConfig(host="127.0.0.1", port=0, auth_token="secret")
     server = create_advanced_server(config, ControlApiService(Path.cwd()))
-    thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
     try:
         with pytest.raises(urllib.error.HTTPError) as exc:
             _get(server, "/control/")
@@ -60,4 +68,4 @@ def test_remote_server_keeps_existing_auth_boundary():
         page = _get(server, "/control/", {"Authorization": "Bearer secret"})
         assert page.status == 200
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        _close(server, thread)
