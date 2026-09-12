@@ -65,12 +65,12 @@ class AdvancedWebRequestHandler(WebRequestHandler):
             target = self._repo_path(relative)
             if not target.is_file():
                 raise KeyError(relative)
-            result = subprocess.run(["git", "diff", "HEAD~1", "HEAD", "--", relative], cwd=root, capture_output=True, text=True, timeout=2, check=False)
-            if result.returncode not in (0, 1):
+            result = subprocess.run(["git", "show", "--format=", "--patch", "HEAD", "--", relative], cwd=root, capture_output=True, text=True, timeout=2, check=False)
+            if result.returncode != 0:
                 raise ValueError("unable to compute repository diff")
             if len(result.stdout.encode("utf-8")) > _MAX_SOURCE:
                 raise ValueError("diff exceeds viewer size limit")
-            self._send(200, {"path": relative, "base": "HEAD~1", "head": "HEAD", "diff": result.stdout})
+            self._send(200, {"path": relative, "base": "previous commit when available", "head": "HEAD", "diff": result.stdout})
             return
         needle = query.get("q", [""])[0].strip()
         if not needle or len(needle) > 128:
