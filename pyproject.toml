@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "si-agents"
-version = "0.1.0"
+version = "0.2.0"
 description = "Evidence-driven AI engineering system"
 requires-python = ">=3.11"
 dependencies = []
@@ -18,12 +18,12 @@ si-deploy = "core.deployment_center.cli:main"
 si-verify = "core.hardening.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["adapters*", "agents*", "core*", "skills*", "tools*"]
+include = ["adapters*", "agents*", "core*", "skills*", "tools*", "sdk*"]
 
 [tool.setuptools.package-data]
 agents = ["**/*.md"]
 skills = ["**/*.md", "*.json", "*.yaml"]
-"core.web" = ["assets/*.html", "assets/*.js", "assets/*.css"]
+core.web = ["assets/*.html", "assets/*.js", "assets/*.css"]
 
 [tool.setuptools.data-files]
 "share/si-agents/config" = ["config/agent-catalog.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
@@ -37,7 +37,7 @@ line-length = 100
 required-version = "==0.13.1"
 
 [tool.ruff.lint.isort]
-known-first-party = ["adapters", "agents", "core", "skills", "tools"]
+known-first-party = ["adapters", "agents", "core", "sdk", "skills", "tools"]
 
 [tool.ruff.format]
 line-ending = "lf"
