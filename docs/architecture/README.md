@@ -26,7 +26,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **In implementation** | Deterministic context contracts, economics service, adversarial tests, snapshots, and architecture docs on the active branch; final mainline CI remains the closure gate. |
+| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687` on `215dd5491b4e6f38f454faaf5b0a2f8331694455` |
 
 ## Advanced hardening status
 
@@ -35,7 +35,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 - **Phase 49:** schema-versioned deterministic catalogs/manifests, stronger definition/metadata validation, acyclic handoffs, deterministic topological execution layers, bounded team composition, and declaration/runtime authority separation.
 - **Phase 50:** request-fingerprint-bound approvals, replay prevention, secret-like metadata rejection, bounded governance inputs, explicit/fail-closed egress, declared-capability enforcement, scope checks, and cost/risk controls.
 
-Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The post-merge mainline CI remains the authoritative exact-tree closure gate.
+Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 
 ## Phase 51 authority rules
 
@@ -53,6 +53,7 @@ Checkpoints are progress evidence, not authority. Their snapshots cannot restore
 - Deterministic compaction plus an explicit summarizer hook.
 - Token/cost accounting and stable decision IDs with evidence.
 - Atomic JSON snapshots for recovery/provenance.
+- Comprehensive adversarial/unit coverage and green mainline CI evidence.
 
 See `CONTEXT_MEMORY.md` and `PHASE_52_CONTEXT_MEMORY_ECONOMICS.md` for the contract and evidence.
 
@@ -98,6 +99,6 @@ All surfaces operate on the same SI Core authority.
 
 ## Next
 
-**Phase 53 — Persistent Sessions** after Phase 52 receives its final mainline exact-tree CI closure.
+**Phase 53 — Persistent Sessions.** Phase 52 is closed on main after implementation, adversarial testing, documentation synchronization, and mainline CI #1015.
 
 See `SI_AGENTS_V4_PLAN.md` for the complete detailed feature specification and `PHASES.md` for status/evidence and closure rules.

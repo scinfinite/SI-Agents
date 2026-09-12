@@ -36,8 +36,8 @@
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **In implementation** | Active branch implementation + adversarial tests + architecture docs; final mainline CI pending |
-| 53 | Persistent Sessions | Planned | Planned |
+| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687` on `215dd5491b4e6f38f454faaf5b0a2f8331694455`; documentation closure is pending its final exact-tree CI. |
+| 53 | Persistent Sessions | **Next** | Planned next implementation phase |
 | 54 | Human-in-the-Loop | Planned | Planned |
 | 55 | Durable Waiting + Scheduling | Planned | Planned |
 | 56 | Intelligent Routing + Economics | Planned | Planned |
@@ -75,7 +75,11 @@ Schema-versioned deterministic catalogs/manifests, stronger duplicate definition
 
 Request-fingerprint-bound high/critical approvals, approval replay prevention, secret-like metadata rejection, bounded governance inputs, explicit/fail-closed egress, declared-capability enforcement, scope checks, identity binding, and cost/risk controls.
 
-Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The mainline CI run after merge is the authoritative exact-tree closure gate.
+Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+
+## Phase 52 closure evidence
+
+Phase 52 implementation and adversarial coverage passed PR CI #1014, then the merged mainline exact-tree CI #1015 (`34673115687`) passed distribution build, wheel installation verification, repository audit, integration verification, Ruff, and the full test suite on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`. The documentation-closure branch updates the current/index records and requires one final mainline exact-tree CI after merge.
 
 ## Detailed planned scope — Phases 52–71
 
