@@ -68,6 +68,17 @@ def test_session_storage_is_bounded_and_does_not_store_auth_tokens(tmp_path, mon
     assert "super-secret" not in (tmp_path / "sessions.json").read_text()
 
 
+def test_profiles_store_transport_metadata_without_credentials(tmp_path, monkeypatch, capsys) -> None:
+    monkeypatch.setenv("SI_PROFILES", str(tmp_path / "profiles.json"))
+    from core.cli.profile import main as profile_main
+    assert profile_main(["set", "dev", "transport", "remote"]) == 0
+    capsys.readouterr()
+    assert profile_main(["get", "dev"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["data"]["transport"] == "remote"
+    assert "token" not in (tmp_path / "profiles.json").read_text()
+
+
 def test_platform_client_rejects_bad_timeout_and_transport() -> None:
     with pytest.raises(ValueError):
         PlatformClient(ROOT, timeout=0)
