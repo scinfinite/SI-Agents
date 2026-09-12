@@ -12,6 +12,8 @@ class Capability(str, Enum):
     VISION = "vision"
     TOOL_USE = "tool_use"
     EMBEDDINGS = "embeddings"
+    STREAMING = "streaming"
+    STRUCTURED_OUTPUT = "structured_output"
 
 
 @dataclass(frozen=True)
@@ -24,6 +26,7 @@ class ModelProfile:
     output_cost_per_million: float = 0.0
     reliability: float = 1.0
     latency_ms: float = 0.0
+    quality: float = 1.0
     enabled: bool = True
 
     def __post_init__(self) -> None:
@@ -33,8 +36,8 @@ class ModelProfile:
             raise ValueError("token limits must be non-negative")
         if self.input_cost_per_million < 0 or self.output_cost_per_million < 0:
             raise ValueError("model costs must be non-negative")
-        if not 0.0 <= self.reliability <= 1.0:
-            raise ValueError("reliability must be between 0 and 1")
+        if not 0.0 <= self.reliability <= 1.0 or not 0.0 <= self.quality <= 1.0:
+            raise ValueError("reliability and quality must be between 0 and 1")
         if self.latency_ms < 0:
             raise ValueError("latency must be non-negative")
 
