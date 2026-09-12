@@ -19,7 +19,15 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-Phases 44–64 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+**Phases 44–65 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened. **Phase 66 — Advanced Web Control Plane is next.**
+
+## Phase 65 architecture
+
+Phase 65 adds a transport-neutral workflow state machine for versioned declarative DAGs. It supports conditional branching, bounded fan-out/loops, delegation, human gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates, restart validation, and reverse-order compensation.
+
+Workflow definitions and persisted runs contain only JSON-safe data. Action/condition/delegate callables are explicit process-local adapters and never become persisted authority. Loop termination predicates are evaluated after each bounded iteration, while ordinary step predicates control branch eligibility. SI Core remains the authorization and execution authority.
+
+See `PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract and security invariants.
 
 ## Phase 64 architecture
 
@@ -27,12 +35,12 @@ Phase 64 adds typed Python and TypeScript SDK adapters over the versioned Contro
 
 See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and security invariants.
 
-## Phase 63 closure evidence
+## Closure evidence
 
-- PR #77 merged into `main` as `19be0c14774e7073871a21fde42132a73c2a77d4`.
-- PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Final exact-tree mainline CI #1198 / `34694418960` passed on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
+- Phase 63: PR #77 merged; final exact-tree mainline CI #1198 / `34694418960` passed on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
+- Phase 64: PR #78 merged and the SDK implementation-tree gate passed; synchronized documentation closure is included in the current Phase 65 final gate.
+- Phase 65: implementation-tree CI #1239 / `34697885027` passed distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest. The current documentation commit is the final synchronized-tree target.
 
 ## Current position
 
-**Phase 64 — SDK / Developer Platform is implemented and merged; the synchronized-tree final mainline CI is the closure gate. Phase 65 is blocked until that gate is green.**
+**Phase 65 — Workflow + Automation is complete. Phase 66 — Advanced Web Control Plane is next, after the final synchronized-tree CI for this documentation state is green.**
