@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete / 100%.** Phase 65 was closed on `main` before Phase 66 began. Phase 66 implementation was merged as PR #79 and passed the complete implementation-tree closure gates. The current synchronized documentation tree is the final mainline closure target.
+**Complete / 100% — fully closed on `main`.** Phase 65 was closed on `main` before Phase 66 began. Phase 66 implementation was merged as PR #79. The final synchronized documentation tree was then validated by mainline CI #1280 / run `34699748468` on commit `89e59f31c5785ab7a29aab8eec927cbebaa3b383`, which completed successfully. This is the authoritative final closure evidence.
 
 ## Objective
 
@@ -58,10 +58,10 @@ The browser refresh loop is deliberately bounded and disposable. SSE/WebSocket r
 
 ## Verification
 
-PR #79 closure CI #1275 / `34699632473` passed distribution build, wheel verification, repository audit, integration verification, Ruff, full pytest, and the SDK workflow. Acceptance tests are in `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
+PR #79 implementation/closure CI #1275 / `34699632473` passed the implementation closure suite. The final synchronized-tree mainline CI #1280 / `34699748468` on the final documentation state completed successfully. The SDK workflow on the same final commit also completed successfully as run `34699748479`.
 
-The final synchronized documentation state is required to pass the authoritative mainline CI closure gate before Phase 66 is considered fully closed.
+Acceptance tests are in `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
 
 ## Closure rule
 
-Phase 66 is complete only when the implementation, security/accessibility tests, repository-wide validation, documentation synchronization, and final exact-tree `main` CI are green. This document records the completed implementation and its closure evidence; the final synchronized-tree CI is the authoritative last gate.
+Phase 66 is complete only when the implementation, security/accessibility tests, repository-wide validation, documentation synchronization, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree `main` CI are green. **All required gates are now green; Phase 66 is fully closed at 100%.**
