@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from core.evidence.service import EvidenceService
 
@@ -38,7 +38,10 @@ class ControlApiHandler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Request-ID", self._request_id())
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError):
+            self.close_connection = True
 
     def _read_json(self) -> dict[str, object]:
         content_type = self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
@@ -62,42 +65,80 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             raise TypeError("request body must be a JSON object")
         return payload
 
+    def _identity(self) -> tuple[str, str]:
+        subject_id = self.headers.get("X-SI-Subject", "").strip()
+        project_id = self.headers.get("X-SI-Project", "").strip()
+        if not subject_id or not project_id:
+            raise PermissionError("X-SI-Subject and X-SI-Project are required")
+        return subject_id[:512], project_id[:512]
+
     def do_GET(self):
-        path = urlparse(self.path).path.rstrip("/") or "/"
+        parsed = urlparse(self.path)
+        path = parsed.path.rstrip("/") or "/"
         routes: dict[str, object] = {
-            "/": self.service.snapshot().as_dict(), "/api/v1": self.service.snapshot().as_dict(),
+            "/": self.service.snapshot().as_dict(),
+            "/api/v1": self.service.snapshot().as_dict(),
             "/api/v1/health": {"status": "ok", "api_version": "v1"},
-            "/api/v1/openapi.json": document(), "/api/v1/agents": self.service.agents(),
-            "/api/v1/teams": self.service.teams(), "/api/v1/workflows": self.service.workflows(),
-            "/api/v1/organization": self.service.organization(), "/api/v1/skills": self.service.skills(),
-            "/api/v1/memory": self.service.memory(), "/api/v1/governance": self.service.governance_state(),
-            "/api/v1/evidence": self.service.evidence(), "/api/v1/evidence/records": self.evidence.list(),
-            "/api/v1/environments": self.service.environments(), "/api/v1/harnesses": self.service.harnesses(),
-            "/api/v1/settings": self.service.settings(), "/api/v1/visualization": self.service.visualization(),
-            "/api/v1/events": self.service.events(), "/api/v1/runs": self.service.runs(),
+            "/api/v1/openapi.json": document(),
+            "/api/v1/agents": self.service.agents(),
+            "/api/v1/teams": self.service.teams(),
+            "/api/v1/workflows": self.service.workflows(),
+            "/api/v1/organization": self.service.organization(),
+            "/api/v1/skills": self.service.skills(),
+            "/api/v1/memory": self.service.memory(),
+            "/api/v1/governance": self.service.governance_state(),
+            "/api/v1/evidence": self.service.evidence(),
+            "/api/v1/evidence/records": self.evidence.list(),
+            "/api/v1/environments": self.service.environments(),
+            "/api/v1/harnesses": self.service.harnesses(),
+            "/api/v1/settings": self.service.settings(),
+            "/api/v1/visualization": self.service.visualization(),
+            "/api/v1/events": self.service.events(),
+            "/api/v1/runs": self.service.runs(),
         }
-        if path in routes:
-            self._send(200, routes[path])
-            return
-        if path.startswith("/api/v1/evidence/"):
-            evidence_id = path.removeprefix("/api/v1/evidence/")
-            if evidence_id.endswith("/verify"):
-                self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
+        try:
+            if path == "/api/v1/approvals":
+                subject_id, project_id = self._identity()
+                params = parse_qs(parsed.query)
+                limit = int(params.get("limit", ["100"])[0])
+                self._send(200, self.service.approvals_queue(subject_id=subject_id, project_id=project_id, limit=limit))
                 return
-            try:
-                self._send(200, self.evidence.get(evidence_id))
-            except KeyError:
-                self._send(404, {"error": "not_found", "message": "evidence not found", "request_id": self._request_id()})
-            return
-        if path.startswith("/api/v1/runs/"):
-            suffix = path.removeprefix("/api/v1/runs/")
-            if suffix.endswith("/timeline"):
-                self._send(200, self.evidence.timeline(suffix.removesuffix("/timeline")))
+            if path in routes:
+                self._send(200, routes[path])
                 return
-            try:
-                self._send(200, self.service.get_run(suffix))
-            except KeyError:
-                self._send(404, {"error": "not_found", "message": "run not found", "request_id": self._request_id()})
+            if path.startswith("/api/v1/approvals/"):
+                approval_id = path.removeprefix("/api/v1/approvals/")
+                subject_id, project_id = self._identity()
+                if approval_id.endswith("/events"):
+                    self._send(200, self.service.approval_events(approval_id.removesuffix("/events"), subject_id=subject_id, project_id=project_id))
+                else:
+                    self._send(200, self.service.get_approval(approval_id, subject_id=subject_id, project_id=project_id))
+                return
+            if path.startswith("/api/v1/evidence/"):
+                evidence_id = path.removeprefix("/api/v1/evidence/")
+                if evidence_id.endswith("/verify"):
+                    self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
+                    return
+                try:
+                    self._send(200, self.evidence.get(evidence_id))
+                except KeyError:
+                    self._send(404, {"error": "not_found", "message": "evidence not found", "request_id": self._request_id()})
+                return
+            if path.startswith("/api/v1/runs/"):
+                suffix = path.removeprefix("/api/v1/runs/")
+                if suffix.endswith("/timeline"):
+                    self._send(200, self.evidence.timeline(suffix.removesuffix("/timeline")))
+                    return
+                try:
+                    self._send(200, self.service.get_run(suffix))
+                except KeyError:
+                    self._send(404, {"error": "not_found", "message": "run not found", "request_id": self._request_id()})
+                return
+        except PermissionError as exc:
+            self._send(403, {"error": "forbidden", "message": str(exc), "request_id": self._request_id()})
+            return
+        except (TypeError, ValueError) as exc:
+            self._send(400, {"error": "invalid_request", "message": str(exc), "request_id": self._request_id()})
             return
         self._send(404, {"error": "not_found", "message": "route not found", "request_id": self._request_id()})
 
@@ -108,6 +149,15 @@ class ControlApiHandler(BaseHTTPRequestHandler):
             if path == "/api/v1/runs":
                 result = self.service.create_run(payload)
                 self._send(202, result)
+                return
+            if path == "/api/v1/approvals":
+                result = self.service.create_approval(payload)
+                self._send(201, result)
+                return
+            if path.startswith("/api/v1/approvals/") and path.endswith("/decide"):
+                approval_id = path.removeprefix("/api/v1/approvals/").removesuffix("/decide")
+                result = self.service.decide_approval(approval_id, payload)
+                self._send(200, result)
                 return
             if path == "/api/v1/evidence":
                 result = self.evidence.record(payload)
