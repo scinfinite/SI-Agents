@@ -4,14 +4,28 @@ SI-Agents is the governed execution and agent platform for Project-SI. V4 is bei
 
 ## Current V4 status
 
-- **Phases 44–51 complete and merged to `main`.**
+- **Phases 44–51 are complete on the baseline; Phases 46, 47, 49, and 50 have additionally passed an advanced-level hardening audit.**
+- Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite.
+- The advanced hardening closes scheduler idempotency/DAG safety, OpenCode timeout/SSE safety, team topology/schema safety, and request-bound authorization/metadata safety gaps.
 - **Next:** Phase 52 — Context / Memory Economics.
-- Phase 50 baseline: `9222379cfcb091858f0c5dcc1ec1616f933fca38` with final docs CI run `34625819419`.
-- Phase 51 final exact-tree CI: run 977 / `34627956634` — green.
 
-## Phase 51 — Checkpoints + Resume
+## Advanced-hardened phases
 
-Phase 51 adds durable, append-only SQLite checkpoints with per-execution sequence and lineage, SHA-256 integrity verification, bounded state, secret-like field rejection, and safe resume through the authoritative execution runtime. Resume creates a fresh runtime attempt rather than restoring authority from a snapshot. See `docs/architecture/PHASE_51_CHECKPOINTS_RESUME.md`.
+### Phase 46 — Parallel Scheduler + Executor
+
+Advanced hardening now covers explicit execution identity conflicts, runtime/scheduler idempotency, dependency graph cycle defense, bounded concurrency, durable recovery, cancellation finalization, and dependency failure propagation.
+
+### Phase 47 — OpenCode Bridge
+
+Advanced hardening now covers per-request transport timeout propagation, bounded 1 MiB SSE frames, strict session filtering, terminal-event requirements, cancellation, error normalization, and the SI/OpenCode authority boundary.
+
+### Phase 49 — Agent + Team Builder
+
+Advanced hardening now covers schema-versioned deterministic catalogs/manifests, duplicate metadata/definition validation, acyclic handoff graphs, deterministic execution layers, and explicit separation between declarations and runtime authority.
+
+### Phase 50 — Capability Authorization
+
+Advanced hardening now covers request-fingerprint-bound high/critical approvals, approval replay prevention, secret-like metadata rejection, bounded governance input sizes, explicit egress semantics, declared-capability enforcement, scope checks, and fail-closed decisions.
 
 ## V4 roadmap
 
@@ -46,4 +60,4 @@ Phase 51 adds durable, append-only SQLite checkpoints with per-execution sequenc
 
 ## Engineering gate
 
-A phase is not complete until implementation, adversarial/security tests, documentation synchronization, repository audit, distribution/wheel verification, Ruff, compileall, full pytest, and the final exact-tree CI run are green. Historical phase records preserve phase-time evidence; current/index documents are synchronized after every phase.
+A phase is not complete until implementation, adversarial/security tests, documentation synchronization, repository audit, distribution/wheel verification, Ruff, compileall, full pytest, and the final exact-tree CI run are green. Historical phase records preserve phase-time evidence; current/index documents are synchronized after every phase and after any cross-phase hardening audit.
