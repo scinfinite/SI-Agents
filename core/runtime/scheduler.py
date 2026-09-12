@@ -43,11 +43,7 @@ class ScheduledItem:
 class ParallelScheduler:
     """Durable dependency-aware scheduler over the authoritative execution runtime."""
 
-    def __init__(
-        self, runtime: ExecutionRuntime, adapter: object, *, max_workers: int = 4,
-        path: str = ":memory:", event_bus: EventBus | None = None,
-        aging_seconds: float = 30.0, poll_seconds: float = 0.02,
-    ) -> None:
+    def __init__(self, runtime: ExecutionRuntime, adapter: object, *, max_workers: int = 4, path: str = ":memory:", event_bus: EventBus | None = None, aging_seconds: float = 30.0, poll_seconds: float = 0.02) -> None:
         if max_workers < 1:
             raise ValueError("max_workers must be >= 1")
         if aging_seconds <= 0 or poll_seconds <= 0:
@@ -97,14 +93,19 @@ class ParallelScheduler:
             for dependency in depends_on:
                 if self._db.execute("SELECT 1 FROM schedules WHERE execution_id=?", (dependency,)).fetchone() is None:
                     raise ValueError(f"unknown dependency execution: {dependency}")
+            if task.execution_id:
+                existing = self._db.execute("SELECT schedule_id FROM schedules WHERE execution_id=?", (task.execution_id,)).fetchone()
+                if existing is not None:
+                    item = self.get(existing[0])
+                    if tuple(sorted(depends_on)) != item.dependencies or priority != item.priority or task.task_id != item.task_id:
+                        raise ValueError("idempotent execution conflicts with existing schedule metadata")
+                    return item
         execution = self.runtime.accept(task)
         with self._lock:
             existing = self._db.execute("SELECT schedule_id FROM schedules WHERE execution_id=?", (execution.execution_id,)).fetchone()
             if existing is not None:
-                # Runtime idempotency may return an already-scheduled execution. Never
-                # create a duplicate orchestration row or cancel the authoritative run.
                 item = self.get(existing[0])
-                if tuple(sorted(depends_on)) != item.dependencies or priority != item.priority:
+                if tuple(sorted(depends_on)) != item.dependencies or priority != item.priority or task.task_id != item.task_id:
                     raise ValueError("idempotent execution conflicts with existing schedule metadata")
                 return item
             if self._dependency_would_cycle(execution.execution_id, depends_on):
@@ -259,7 +260,6 @@ class ParallelScheduler:
                 self._emit(row["execution_id"], "scheduler.recovered", {"schedule_id": row["schedule_id"]})
 
     def _dependency_would_cycle(self, candidate_execution_id: str, depends_on: tuple[str, ...]) -> bool:
-        """Return true if adding candidate -> dependencies would create a DAG cycle."""
         if candidate_execution_id in depends_on:
             return True
         edges: dict[str, tuple[str, ...]] = {}
