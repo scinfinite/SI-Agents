@@ -19,7 +19,7 @@ User prompt → OpenCode → SI OpenCode Bridge → SI Core / Control API
 
 V3 is closed. V4 implementation has completed Phases 44–52 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics is complete on main. Phase 53 — Persistent Sessions is next.**
 
-Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 mainline CI **#1015 (`34673115687`)** passed distribution build, wheel installation verification, repository audit, integration verification, Ruff, and the full test suite on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`. The documentation-closure merge requires one final exact-tree mainline CI after these synchronized status documents land.
+Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 mainline CI **#1015 (`34673115687`)** passed distribution build, wheel installation verification, repository audit, integration verification, Ruff, and the full test suite on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`. Final synchronized documentation was then merged to main and the exact current tree passed **mainline CI #1018 (`34673281826`)** on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -75,7 +75,7 @@ Implemented deterministic context and memory economics across user/project/sessi
 
 Security/adversarial coverage includes invalid budgets, duplicate amplification, sensitive-context isolation, secret leakage attempts, overflow/compaction, cost ceilings, summarization behavior, snapshot serialization/schema rejection, deterministic ordering, and failure handling.
 
-Evidence: PR CI #1014 on the final branch, followed by mainline CI #1015 (`34673115687`) on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
+Evidence: PR CI #1014, mainline CI #1015 (`34673115687`) on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`, and final synchronized-tree mainline CI #1018 (`34673281826`) on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`.
 
 ## Detailed V4 roadmap — Phases 53–71
 
