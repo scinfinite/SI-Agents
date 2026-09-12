@@ -25,7 +25,7 @@ The V4 target is one authoritative SI Core shared by Web, TUI, CLI, OpenCode, ru
 | 49 | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Complete | CI #977 / `34627956634` |
-| 52 | **Complete** | Mainline CI #1015 / `34673115687` on `215dd5491b4e6f38f454faaf5b0a2f8331694455` |
+| 52 | **Complete** | Mainline CI #1015 / `34673115687`; final synchronized-tree CI #1018 / `34673281826` on `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed` |
 
 ## Advanced hardening
 
@@ -38,7 +38,7 @@ Combined advanced CI **#984 (`34671292491`)** passed distribution, wheel verific
 
 ## Phase 52 — Context / Memory Economics
 
-Complete. The context economics layer provides deterministic context budgets across user/project/session/workflow/team/task/agent scopes, model input-capacity awareness, relevance/importance selection, deduplication, compaction and summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic snapshots. Adversarial coverage includes invalid budgets, duplicate-context amplification, sensitive data isolation, secret handling, overflow/compaction, cost ceilings, summarization, and snapshot schema rejection.
+Complete. The context economics layer provides deterministic context budgets across user/project/session/workflow/team/task/agent scopes, model input-capacity awareness, relevance/importance selection, deduplication, compaction and summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic snapshots. Adversarial coverage includes invalid budgets, duplicate-context amplification, sensitive data isolation, secret handling, overflow/compaction, cost ceilings, summarization, and snapshot schema rejection. Final synchronized-tree mainline CI #1018 is green.
 
 ## V4 product surfaces
 
