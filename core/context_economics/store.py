@@ -19,7 +19,9 @@ class ContextSnapshotStore:
 
     @staticmethod
     def _item(item: ContextItem) -> dict[str, object]:
-        return asdict(item)
+        payload = asdict(item)
+        payload["scope"] = item.scope.value
+        return payload
 
     def save(self, selection: ContextSelection) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -35,7 +37,9 @@ class ContextSnapshotStore:
             "dropped": [self._item(item) for item in selection.dropped],
         }
         encoded = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-        with NamedTemporaryFile("w", encoding="utf-8", dir=self.path.parent, delete=False) as temp:
+        with NamedTemporaryFile(
+            "w", encoding="utf-8", dir=self.path.parent, delete=False
+        ) as temp:
             temp.write(encoded)
             temp.flush()
             os.fsync(temp.fileno())
