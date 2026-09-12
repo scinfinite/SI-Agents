@@ -2,11 +2,9 @@
 
 43. Final v3 Integration & Hardening — historical V3 close
 
-## V4 status
+## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–66 are closed**. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. **Phase 67 — Advanced TUI Control Center is next.**
-
-The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
+Phases **44–66 are closed**. Phase 67 is the active implementation phase. **Phase 67 — Advanced TUI Control Center is implemented and undergoing final closure verification.** Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
@@ -38,29 +36,27 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 59 | Observability | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
-| 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; final mainline #1186 / `34693756693` |
-| 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
-| 64 | SDK / Developer Platform | Complete | PR #78 merged; implementation closure CI #1239 / `34697885027` |
-| 65 | Workflow + Automation | Complete / 100% | Final synchronized-tree CI #1249 / `34698187600` |
-| 66 | Advanced Web Control Plane | **Complete / 100%** | PR #79 merged; PR closure CI #1275 / `34699632473` passed; final synchronized-tree mainline gate follows this documentation state |
-| 67 | Advanced TUI Control Center | **Next** | Planned |
+| 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / final mainline #1186 / `34693756693` |
+| 63 | Ecosystem / Marketplace | Complete | PR #77 / final mainline #1198 / `34694418960` |
+| 64 | SDK / Developer Platform | Complete | PR #78 / closure CI #1239 / `34697885027` |
+| 65 | Workflow + Automation | Complete / 100% | final synchronized-tree CI #1249 / `34698187600` |
+| 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
+| 67 | Advanced TUI Control Center | **Active — implementation complete, closure pending** | Branch `phase-67-advanced-tui` |
 | 68 | Advanced CLI Platform | Planned | Planned |
 | 69 | npm Distribution + Setup | Planned | Planned |
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-## Phase 66 implementation
+## Phase 67 implementation
 
-The web control plane is a same-origin client layered directly on the existing WebServer and versioned Control API. `core/web/advanced.py` installs the Phase 66 handler; `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css` provide the dependency-free responsive UI.
+The advanced TUI is a dependency-free, keyboard-first operator cockpit over the existing Control API. It retains the 14 historical views while adding bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct view navigation, JSON export status, non-interactive rendering, governed run requests, and identity-bound approval controls. Unknown input is inert; the TUI never invokes a shell or bypasses SI Core.
 
-The surface includes overview/health, live activity, workflows/runs, topology/DAG, evidence, identity-bound approvals, governed run-request controls, resources/settings, and bounded repository source/search/diff inspection. It uses semantic navigation, keyboard-accessible controls, a skip link, live status announcements, responsive layouts, and a text-first graph representation.
+Implementation: `core/tui/app.py`, `core/tui/cli.py`.
 
-Security boundaries include inherited WebServer authentication/audit, restrictive CSP, `nosniff`, safe static/repository path resolution, no third-party runtime assets, bounded five-second refresh, bounded repository search/source/diff, `.git` exclusion, and explicit identity headers for approval visibility. Governed run requests remain ordinary Control API requests and cannot bypass SI Core authorization. The UI does not become an execution or authorization authority.
+Acceptance coverage: `tests/test_phase67_tui.py` plus the Phase 41 regression suite `tests/test_phase41_tui.py`.
 
-Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
-
-Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
+Detailed contract: `docs/architecture/PHASE_67_ADVANCED_TUI_CONTROL_CENTER.md`.
 
 ## Closure gate
 
-Phase 66 implementation and PR closure gates are green. The final synchronized-tree mainline CI for this documentation state is the authoritative last gate before Phase 66 is considered fully closed.
+Phase 67 may be marked complete only after implementation review, adversarial/regression tests, Ruff, compileall, full pytest, distribution/wheel verification, repository audit, integration verification, synchronized documentation, and final exact-tree mainline CI are green.

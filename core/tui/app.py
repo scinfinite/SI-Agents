@@ -1,26 +1,14 @@
-"""Keyboard-first, dependency-free SI operator console.
-
-The TUI reads the same ControlApiService used by the Web surface. It owns no
-agent, workflow, governance, or execution authority.
-"""
-
+"""Advanced, dependency-free SI operator control center."""
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from typing import TextIO
 
 from core.control_api.service import ControlApiService
-
-
-@dataclass(frozen=True, slots=True)
-class TuiState:
-    view: str = "overview"
-    filter_text: str = ""
-    selected: int = 0
-
 
 VIEWS = (
     "overview", "agents", "teams", "workflows", "skills", "memory", "knowledge",
@@ -28,16 +16,32 @@ VIEWS = (
 )
 
 
-class TuiApp:
-    """Small deterministic terminal UI; mutation is intentionally absent."""
+@dataclass(frozen=True, slots=True)
+class TuiState:
+    view: str = "overview"
+    filter_text: str = ""
+    selected: int = 0
+    detail: bool = field(default=False, compare=False)
+    paused: bool = field(default=False, compare=False)
+    sort_key: str = field(default="", compare=False)
+    status_message: str = field(default="ready", compare=False)
 
-    def __init__(self, service: ControlApiService, *, color: bool = True) -> None:
+
+class TuiApp:
+    """Keyboard-first cockpit; SI Core remains the sole authority."""
+
+    def __init__(self, service: ControlApiService, *, color: bool = True, page_size: int = 20) -> None:
+        if not 1 <= page_size <= 100:
+            raise ValueError("page_size must be between 1 and 100")
         self.service = service
         self.state = TuiState()
-        self.color = color and sys.stdout.isatty()
+        self.color = color and sys.stdout.isatty() and not terminal_colors_disabled()
+        self.page_size = page_size
+        self.last_data: object = None
+        self.approval_subject = ""
+        self.approval_project = ""
 
     def _data(self) -> object:
-        view = self.state.view
         readers = {
             "overview": self.service.snapshot().as_dict,
             "agents": self.service.agents,
@@ -54,64 +58,188 @@ class TuiApp:
             "harnesses": self.service.harnesses,
             "settings": self.service.settings,
         }
-        return readers[view]()
+        return readers[self.state.view]()
 
     def _filtered(self, data: object) -> object:
         needle = self.state.filter_text.casefold().strip()
-        if not needle or not isinstance(data, list):
-            return data
-        return [item for item in data if needle in repr(item).casefold()]
+        if isinstance(data, list):
+            result = [item for item in data if not needle or needle in repr(item).casefold()]
+            if self.state.sort_key:
+                key = self.state.sort_key
+                result.sort(
+                    key=lambda item: (
+                        str(item.get(key, "")).casefold()
+                        if isinstance(item, dict)
+                        else str(item).casefold()
+                    )
+                )
+            return result
+        if isinstance(data, dict) and needle:
+            return {
+                key: value
+                for key, value in data.items()
+                if needle in str(key).casefold() or needle in repr(value).casefold()
+            }
+        return data
+
+    def refresh(self) -> object:
+        if not self.state.paused:
+            self.last_data = self._filtered(self._data())
+            if isinstance(self.last_data, list):
+                maximum = max(0, len(self.last_data) - 1)
+                self.state = replace(self.state, selected=min(self.state.selected, maximum))
+        return self.last_data
 
     def render(self) -> str:
-        data = self._filtered(self._data())
+        data = self.refresh()
         width = max(60, shutil.get_terminal_size((100, 24)).columns)
         title = f"SI-AGENTS TUI  |  {self.state.view.upper()}"
         lines = ["=" * min(width, 100), title, "=" * min(width, 100)]
-        if self.state.filter_text:
-            lines.append(f"filter: {self.state.filter_text}")
+        lines.append(
+            f"state: {'PAUSED' if self.state.paused else 'LIVE'} | "
+            f"filter: {self.state.filter_text or '-'} | "
+            f"sort: {self.state.sort_key or '-'}"
+        )
+        lines.append(
+            "views: [1-9] views + 10-14 | "
+            + " ".join(f"{i + 1}:{name}" for i, name in enumerate(VIEWS))
+        )
+        lines.append(f"status: {self.state.status_message}")
         if isinstance(data, dict):
             for key, value in data.items():
                 text = str(value).replace("\n", " ")
-                lines.append(f"{key}: {text[: max(20, width - len(key) - 2)]}")
+                lines.append(f"{key}: {text[: max(20, width - len(str(key)) - 2)]}")
         elif isinstance(data, list):
-            lines.append(f"items: {len(data)}")
-            for index, item in enumerate(data[:20]):
-                marker = ">" if index == self.state.selected else " "
-                lines.append(f"{marker} {index + 1:02d} {str(item)[: width - 7]}")
-            if len(data) > 20:
-                lines.append(f"... {len(data) - 20} more")
+            lines.append(f"items: {len(data)} | selected: {self.state.selected + 1 if data else '-'}")
+            if data and self.state.detail:
+                item = data[self.state.selected]
+                if isinstance(item, dict):
+                    for key, value in item.items():
+                        lines.append(f"{key}: {str(value)[: max(20, width - len(str(key)) - 2)]}")
+                else:
+                    lines.append(str(item)[:width])
+            else:
+                for index, item in enumerate(data[: self.page_size]):
+                    marker = ">" if index == self.state.selected else " "
+                    summary = (
+                        json.dumps(item, ensure_ascii=False, sort_keys=True)
+                        if isinstance(item, dict)
+                        else str(item)
+                    )
+                    lines.append(f"{marker} {index + 1:02d} {summary[: max(20, width - 7)]}")
+                if len(data) > self.page_size:
+                    lines.append(f"... {len(data) - self.page_size} more; narrow with /text")
         else:
             lines.append(str(data))
-        lines.extend(("", "[1-9] views  [n/p] view  [j/k] select  [/text] filter  [r] refresh  [q] quit"))
+        lines.extend(
+            (
+                "",
+                "[j/k] select  [n/p] view  [d/Enter] detail  [/] filter  [s field] sort",
+                "[space] pause  [r] refresh  [?] help  [q] quit  [run ...] governed run  [approve ...] governed approval",
+            )
+        )
         return "\n".join(lines)
 
+    def help_text(self) -> str:
+        return "\n".join(
+            (
+                "SI-AGENTS ADVANCED TUI",
+                "1-14: views | view <name>: direct navigation | j/k: selection | n/p: views",
+                "/text: filter | s [field]: sort/clear | d or enter: detail | space/pause: pause refresh | r: refresh",
+                "export: serialize current data | run <action> <subject> [risk]: governed run",
+                "approve <id> <decision> <subject> <project> [reason]: identity-bound approval | q: quit",
+            )
+        )
+
+    def _status(self, message: str) -> bool:
+        self.state = replace(self.state, status_message=message)
+        return True
+
+    def _run_command(self, parts: list[str]) -> bool:
+        if len(parts) < 3:
+            return self._status("usage: run <action> <subject> [risk]")
+        payload: dict[str, object] = {"action": parts[1], "subject": parts[2]}
+        if len(parts) > 3:
+            payload["risk"] = parts[3]
+        try:
+            result = self.service.create_run(payload)
+        except (ValueError, PermissionError, KeyError) as exc:
+            return self._status(f"run rejected: {exc}")
+        return self._status(f"run accepted: {result['id']}")
+
+    def _approval_command(self, parts: list[str]) -> bool:
+        if len(parts) < 5:
+            return self._status("usage: approve <id> <decision> <subject> <project> [reason]")
+        payload: dict[str, object] = {
+            "decision": parts[2],
+            "subject_id": parts[3],
+            "project_id": parts[4],
+            "decision_by": parts[3],
+            "reason": " ".join(parts[5:]),
+        }
+        try:
+            result = self.service.decide_approval(parts[1], payload)
+        except (ValueError, PermissionError, KeyError) as exc:
+            return self._status(f"approval rejected: {exc}")
+        return self._status(f"approval {result['state']}: {parts[1]}")
+
     def handle(self, command: str) -> bool:
-        """Apply a local navigation command. Returns False only for quit."""
         command = command.strip()
+        if not command:
+            return True
         if command in {"q", "quit", "exit"}:
             return False
+        if command in {"?", "help"}:
+            return self._status("help available through app.help_text()")
         if command in {"r", "refresh"}:
+            self.refresh()
+            return self._status("refreshed")
+        if command in {"space", "pause"}:
+            paused = not self.state.paused
+            self.state = replace(self.state, paused=paused, status_message="paused" if paused else "live")
             return True
         if command in {"j", "down"}:
-            self.state = TuiState(self.state.view, self.state.filter_text, self.state.selected + 1)
+            data = self.refresh()
+            maximum = max(0, len(data) - 1) if isinstance(data, list) else 0
+            self.state = replace(self.state, selected=min(maximum, self.state.selected + 1))
             return True
         if command in {"k", "up"}:
-            self.state = TuiState(self.state.view, self.state.filter_text, max(0, self.state.selected - 1))
+            self.state = replace(self.state, selected=max(0, self.state.selected - 1))
+            return True
+        if command in {"d", "detail", "enter"}:
+            enabled = not self.state.detail
+            self.state = replace(self.state, detail=enabled, status_message=f"detail {'on' if enabled else 'off'}")
             return True
         if command.startswith("/"):
-            self.state = TuiState(self.state.view, command[1:].strip(), 0)
+            self.state = replace(self.state, filter_text=command[1:].strip(), selected=0, status_message="filter updated")
+            return True
+        if command == "s":
+            self.state = replace(self.state, sort_key="", status_message="sort cleared")
+            return True
+        if command.startswith("s "):
+            self.state = replace(self.state, sort_key=command[2:].strip(), selected=0, status_message="sort updated")
             return True
         if command in {"n", "next"}:
-            index = (VIEWS.index(self.state.view) + 1) % len(VIEWS)
-            self.state = TuiState(VIEWS[index], self.state.filter_text, 0)
+            self.state = replace(self.state, view=VIEWS[(VIEWS.index(self.state.view) + 1) % len(VIEWS)], selected=0)
             return True
         if command in {"p", "prev"}:
-            index = (VIEWS.index(self.state.view) - 1) % len(VIEWS)
-            self.state = TuiState(VIEWS[index], self.state.filter_text, 0)
+            self.state = replace(self.state, view=VIEWS[(VIEWS.index(self.state.view) - 1) % len(VIEWS)], selected=0)
+            return True
+        if command.startswith("view "):
+            name = command[5:].strip()
+            if name in VIEWS:
+                self.state = replace(self.state, view=name, selected=0)
             return True
         if command.isdigit() and 1 <= int(command) <= len(VIEWS):
-            self.state = TuiState(VIEWS[int(command) - 1], self.state.filter_text, 0)
+            self.state = replace(self.state, view=VIEWS[int(command) - 1], selected=0)
             return True
+        if command == "export":
+            return self._status(json.dumps(self.refresh(), ensure_ascii=False, sort_keys=True)[:240])
+        parts = command.split()
+        if parts and parts[0] == "run":
+            return self._run_command(parts)
+        if parts and parts[0] == "approve":
+            return self._approval_command(parts)
         return True
 
     def run(self, *, stdin: TextIO | None = None, stdout: TextIO | None = None) -> int:

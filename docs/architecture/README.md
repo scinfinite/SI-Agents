@@ -19,13 +19,19 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-**Phases 44–66 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened. **Phase 67 — Advanced TUI Control Center is next.**
+**Phases 44–66 are closed. Phase 67 is active with implementation complete and closure gates pending.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+
+## Phase 67 architecture
+
+Phase 67 upgrades the dependency-free TUI into an advanced operator control center while preserving the historical 14-view contract. The surface provides bounded list selection, deterministic filtering and sorting, detail inspection, pause/live state, direct navigation, bounded JSON status export, non-interactive rendering, and governed run/identity-bound approval commands.
+
+`core/tui/app.py` owns only ephemeral presentation state. It calls the existing `ControlApiService` for all read data and all supported mutations. It never invokes a shell, creates an independent workflow/execution authority, or bypasses SI Core governance. `core/tui/cli.py` exposes strict page-size, root, view, filter, command, approval identity, and non-interactive controls.
+
+Safety properties include bounded page size (1–100), bounded terminal rendering, inert unknown commands, stable navigation, explicit pause state, no shell execution, `NO_COLOR` support, and governed mutation routing. See `PHASE_67_ADVANCED_TUI_CONTROL_CENTER.md` for the detailed contract.
 
 ## Phase 66 architecture
 
 Phase 66 adds a same-origin, dependency-free web control client layered over the existing WebServer and versioned Control API. It exposes operational overview/health, live activity, workflow/run inspection, topology/DAG relationships, evidence, identity-bound approvals, governed run-request controls, resources/settings, and bounded repository source/search/diff inspection. It does not create a second state or authorization authority.
-
-`core/web/advanced.py` installs the Phase 66 handler on the existing `WebServer`; `web/control/` contains the browser surface. The existing authentication/audit boundary is retained. Static resources use a restrictive CSP, `nosniff`, safe path resolution, and no third-party runtime assets. Repository viewers enforce file-type, size, query, traversal, and `.git` bounds.
 
 See `PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md` for the detailed contract and closure requirements.
 
@@ -33,23 +39,16 @@ See `PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md` for the detailed contract and closu
 
 Phase 65 adds a transport-neutral workflow state machine for versioned declarative DAGs. It supports conditional branching, bounded fan-out/loops, delegation, human gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates, restart validation, and reverse-order compensation.
 
-Workflow definitions and persisted runs contain only JSON-safe data. Action/condition/delegate callables are explicit process-local adapters and never become persisted authority. SI Core remains the authorization and execution authority.
-
 See `PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract and security invariants.
-
-## Phase 64 architecture
-
-Phase 64 adds typed Python and TypeScript SDK adapters over the versioned Control API. REST, SSE, and WebSocket transports remain observational/client surfaces; governance and execution authority stay inside SI Core.
-
-See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and security invariants.
 
 ## Closure evidence
 
-- Phase 63: PR #77 merged; final exact-tree mainline CI #1198 / `34694418960` passed on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
-- Phase 64: PR #78 merged; implementation-tree closure CI #1239 / `34697885027` passed the repository closure suite.
-- Phase 65: final synchronized-tree CI #1249 / `34698187600` completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
-- Phase 66: PR #79 merged; closure CI #1275 / `34699632473` passed all repository and SDK gates. The current synchronized documentation tree is the final mainline closure target.
+- Phase 63: PR #77 merged; final exact-tree mainline CI #1198 / `34694418960` passed.
+- Phase 64: PR #78 merged; implementation closure CI #1239 / `34697885027` passed.
+- Phase 65: final synchronized-tree CI #1249 / `34698187600` completed successfully.
+- Phase 66: PR #79 merged; final synchronized-tree mainline CI #1284 / `34701494501` completed successfully on the synchronized documentation tree.
+- Phase 67: implementation branch `phase-67-advanced-tui`; final closure gate pending.
 
 ## Current position
 
-**Phase 66 — Advanced Web Control Plane is closed at 100%. Phase 67 — Advanced TUI Control Center is next, after the final synchronized-tree mainline gate for this documentation state is green.**
+**Phase 67 — Advanced TUI Control Center is the active phase. Implementation and acceptance coverage are complete; only final review/CI closure remains. Phase 68 is next after closure.**
