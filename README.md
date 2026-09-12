@@ -17,11 +17,12 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–51 are complete on the baseline.**
+- **Phases 44–52 are complete on main.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
 - Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite.
+- Phase 52 mainline merge verification CI **#1015** passed distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
 - Advanced hardening closed scheduler idempotency/DAG safety, OpenCode timeout/SSE safety, team topology/schema safety, and request-bound authorization/metadata safety gaps.
-- **Phase 52 — Context / Memory Economics is now under implementation.** It adds deterministic context budgets, model-aware input capacity, relevance/importance selection, deduplication, compaction/summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic decision snapshots.
+- **Phase 53 — Persistent Sessions is next.**
 
 ## Advanced-hardened phases
 
@@ -40,6 +41,10 @@ Advanced hardening covers schema-versioned deterministic catalogs/manifests, str
 ### Phase 50 — Capability Authorization
 
 Advanced hardening covers request-fingerprint-bound high/critical approvals, approval replay prevention, secret-like metadata rejection, bounded governance inputs, explicit/fail-closed egress semantics, declared-capability enforcement, scope checks, cost/risk controls, and deterministic evidence.
+
+## Phase 52 — Context / Memory Economics
+
+Complete. Added deterministic context budgets, model-aware input capacity, relevance/importance selection, deduplication, compaction/summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic decision snapshots. Security/adversarial tests cover budget failures, duplicate amplification, sensitive data isolation, secret handling, overflow/compaction, cost ceilings, summarization, and snapshot schema rejection.
 
 ## V4 roadmap — detailed scope
 
