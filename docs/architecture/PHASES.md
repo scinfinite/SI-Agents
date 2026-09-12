@@ -4,7 +4,7 @@
 
 ## V4 status
 
-Phases 44–63 are closed. Phase 64 is merged and awaiting its exact synchronized-tree mainline closure gate. **Phase 65 — Workflow + Automation is active.** Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening.
+Phases **44–65 are closed**. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. **Phase 66 — Advanced Web Control Plane is next.**
 
 The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
 
@@ -40,9 +40,9 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
 | 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; final mainline #1186 / `34693756693` |
 | 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
-| 64 | SDK / Developer Platform | Active closure | PR #78 merged; synchronized-tree mainline closure pending |
-| 65 | Workflow + Automation | **Active** | Workflow engine + acceptance/adversarial tests implemented; final closure pending |
-| 66 | Advanced Web Control Plane | Planned | Planned |
+| 64 | SDK / Developer Platform | Complete | PR #78 merged; implementation-tree closure CI #1239 / `34697885027`; final synchronized-tree gate follows |
+| 65 | Workflow + Automation | **Complete** | Implementation-tree CI #1239 / `34697885027`; final synchronized documentation-tree CI is the closure gate |
+| 66 | Advanced Web Control Plane | Next | Next implementation phase |
 | 67 | Advanced TUI Control Center | Planned | Planned |
 | 68 | Advanced CLI Platform | Planned | Planned |
 | 69 | npm Distribution + Setup | Planned | Planned |
@@ -65,7 +65,7 @@ Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagi
 
 Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
 
-PR #78 was merged into `main`. The final synchronized-tree mainline CI remains the closure gate.
+PR #78 is merged into `main`. Phase 64 is closed as part of the synchronized-tree documentation closure validated with Phase 65.
 
 ## Closure gate
 
