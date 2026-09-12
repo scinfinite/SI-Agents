@@ -33,13 +33,15 @@ Verification: `tests/unit/test_phase65_workflows.py` and repository-wide CI. Fin
 
 ## Phase 66 — Advanced Web Control Plane
 
-**Active.** Phase 66 provides a secure, accessible, same-origin operational web client over the versioned Control API. It covers dashboards and health, live activity, routing/health/cost/resource read models, workflows and DAG topology, timelines/events/dependencies, evidence, code/Markdown/JSON/diff-oriented inspection surfaces, search/filtering, identity-bound authorized controls, accessibility, and degraded-state UX.
+**Active.** Phase 66 provides a secure, accessible, same-origin operational web client over the existing Control API. It covers dashboard/health, live activity, workflows and DAG topology, timelines/events/dependencies, evidence, identity-bound approval visibility, resource/settings views, and code/Markdown/JSON/diff-oriented repository inspection with bounded search/filtering.
 
-Implementation: `core/control_api/web.py`, `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css`.
+Implementation: `core/web/advanced.py`, `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css`. The advanced handler is installed on the existing `WebServer` rather than creating a competing web authority.
 
-The UI is a client of SI Core rather than a second authority. It inherits the API's localhost-first and authentication boundaries, uses restrictive CSP and safe static-path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh.
+The UI is a client of SI Core rather than a second authority. It inherits the established WebServer authentication/audit boundary, uses restrictive CSP and safe static/repository path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh.
 
-Acceptance tests: `tests/unit/test_phase66_web_control.py`.
+Repository inspection is read-only, excludes `.git`, bounds source/diff payloads and search traversal, and uses a timeout-bounded argument-vector Git diff.
+
+Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
 
 Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
 
