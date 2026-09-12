@@ -17,9 +17,9 @@ User prompt → OpenCode → SI OpenCode Bridge → SI Core / Control API
 
 ## Current verified position
 
-V3 is closed. V4 implementation has completed Phases 44–51 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics is the active implementation phase.**
+V3 is closed. V4 implementation has completed Phases 44–52 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics is complete on main. Phase 53 — Persistent Sessions is next.**
 
-Combined advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. The final mainline exact-tree CI is the authoritative closure gate for the active phase.
+Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 mainline CI **#1015 (`34673115687`)** passed distribution build, wheel installation verification, repository audit, integration verification, Ruff, and the full test suite on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`. The documentation-closure merge requires one final exact-tree mainline CI after these synchronized status documents land.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -69,32 +69,17 @@ Complete. Append-only SQLite checkpoints, ordered lineage, SHA-256 integrity, pa
 
 Evidence: CI #977 / `34627956634`.
 
----
+### Phase 52 — Context / Memory Economics — complete
 
-# Detailed V4 roadmap — Phases 52–71
+Implemented deterministic context and memory economics across user/project/session/workflow/team/task/agent scopes. `core/context_economics/` provides context item/budget/model-profile/selection contracts, deterministic relevance/importance ranking, normalized-content deduplication, model input-capacity enforcement, token/cost accounting, sensitive-context isolation, default secret redaction or fail-closed dropping, deterministic compaction, an explicit summarizer hook, stable decision evidence, and atomic snapshots. The layer remains below authorization and orchestration authority.
+
+Security/adversarial coverage includes invalid budgets, duplicate amplification, sensitive-context isolation, secret leakage attempts, overflow/compaction, cost ceilings, summarization behavior, snapshot serialization/schema rejection, deterministic ordering, and failure handling.
+
+Evidence: PR CI #1014 on the final branch, followed by mainline CI #1015 (`34673115687`) on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
+
+## Detailed V4 roadmap — Phases 53–71
 
 Feature lists are planning scope, not claims of implementation. A phase becomes complete only after implementation, unit/integration tests, security/adversarial coverage, documentation synchronization, and final CI verification.
-
-## Phase 52 — Context / Memory Economics
-
-Build the intelligent context and memory layer controlling token use, relevance, cost, privacy, and context-window pressure across long-running multi-agent work.
-
-### Planned capabilities
-
-- Context manager and budgets at user/project/session/workflow/team/task/agent scopes.
-- Token/cost accounting and context-window awareness.
-- Working memory, shared team memory, persistent memory, execution/artifact/evidence context.
-- Relevance and importance scoring; retrieval; targeted context injection.
-- Compression, summarization, pruning, automatic compaction, deduplication, and cross-agent context reuse.
-- Snapshots, lineage/provenance, overflow protection, model-aware/cost-aware selection.
-- Sensitive-context isolation, secret redaction, permissions, memory quality/utilization metrics.
-- Deterministic, auditable context decisions.
-
-### Active implementation
-
-`core/context_economics/` provides `ContextItem`, `ContextBudget`, `ModelContextProfile`, `ContextSelection`, `ContextEconomics`, and `ContextSnapshotStore`.
-
-The implementation deduplicates normalized content, applies the smallest active scope budget and model input capacity, ranks deterministically, isolates sensitive context, redacts or drops secret-like context, compacts oversized content or uses an explicit summarizer hook, accounts for tokens/cost, and emits stable decision IDs/evidence. Snapshots are written atomically. The layer does not grant permissions, select providers, or become execution authority.
 
 ## Phase 53 — Persistent Sessions
 
