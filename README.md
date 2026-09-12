@@ -15,33 +15,33 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–53 are complete on main.**
+- **Phases 44–54 are complete on main.**
+- **Phase 55 — Durable Waiting + Scheduling is the active implementation phase.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
-- **Phase 54 — Human-in-the-Loop is next.**
-- Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- Phase 54 final synchronized-tree mainline CI **#1051 (`34676632475`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 - Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Phase 53 implementation merge commit: `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`.
-- Phase 53 mainline verification: CI **#1021 / `34674234547`**.
+- Phase 53 final synchronized-tree mainline CI **#1041 (`34675322458`)** passed the same required gates.
 
-## Phase 53 — Persistent Sessions
+## Phase 55 — Durable Waiting + Scheduling
 
-Phase 53 adds durable SQLite-backed `SessionStore` and `PersistentSessionAdapter` for SI Core session continuity.
+Phase 55 adds durable SQLite-backed SI Core waiting and scheduling with an explicit `waiting → ready → claimed → completed` lifecycle.
 
 Covered contracts:
 
-- durable session IDs and lifecycle: active, paused, archived, expired, closed;
-- subject/project/workspace ownership and isolation;
-- harness binding for OpenCode and other clients;
-- optimistic revisions for concurrent updates;
-- durable state, context, token/cost history and ordered events;
-- replay and bounded search/filtering;
-- artifact evidence with SHA-256 digests;
-- expiration, archival and restart recovery;
-- schema-checked export/import;
-- clone/branch lineage;
-- cross-interface runtime continuity without restoring authority.
+- timer and delayed waits without occupying execution workers;
+- recurring interval schedules with bounded occurrence counts;
+- validated five-field UTC cron schedules;
+- approval, human, dependency, resource, and external wake conditions;
+- deadlines and fail-closed expiry;
+- restart-safe state and ordered lifecycle events;
+- priority plus bounded age-based fairness to prevent starvation;
+- optimistic revisions and concurrency-safe claiming/completion;
+- bounded queue and payload sizes;
+- secret-like payload rejection and JSON-safe state;
+- identity/project isolation;
+- Control API create/list/get/events/wake/claim/complete/cancel routes.
 
-Security invariants reject secret-like persisted fields, enforce bounds, fail closed on ownership/harness mismatch, prevent stale revision writes, and keep replay read-only. Credentials, capabilities, grants, provider authorization, and identity are never restored by session persistence.
+A wait is scheduling state, not an authorization grant. Claims never restore or grant credentials, capabilities, provider authorization, or identity; downstream execution must authorize independently.
 
 ## Advanced-hardened phases
 
