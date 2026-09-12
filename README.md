@@ -4,20 +4,20 @@ SI-Agents is the governed execution and agent platform for Project-SI. V4 is bui
 
 ## Current V4 status
 
-- **Phases 44–67 are complete on `main`.**
+- **Phases 44–68 are complete on `main`.**
+- **Phase 68 — Advanced CLI Platform** is fully implemented, audited, documented, merged through PR #81, and verified by final PR CI #1319 (`34703142494`), SDK CI #111 (`34703142515`), and final synchronized-tree mainline CI #1320 (`34703212232`).
 - **Phase 67 — Advanced TUI Control Center** is fully implemented, audited, documented, merged through PR #80, and verified by final PR CI #1288 (`34702115990`).
 - **Phase 66 — Advanced Web Control Plane** is fully implemented, audited, documented, merged through PR #79, and verified by final synchronized-tree mainline CI #1284 (`34701494501`).
 - **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by final synchronized-tree CI #1249 (`34698187600`).
-- **Phase 68 — Advanced CLI Platform** is implementation-complete and in its final CI/documentation closure gate on PR #81.
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
 
 ## Phase 68 — Advanced CLI Platform
 
-Phase 68 adds a transport-neutral, machine-friendly `si` platform over SI Core. It provides governed run/task/execution commands, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, event/state observation and run streaming, model/provider discovery delegation, attachment inspection, non-secret config/auth status, and bounded declarative pipelines.
+Phase 68 adds a transport-neutral, machine-friendly `si` platform over SI Core. It provides governed run/task/execution commands, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, event/state observation and run streaming, model/provider discovery delegation, attachment inspection, non-secret config/auth status, transport profiles, and bounded declarative pipelines.
 
 Local mode calls the existing `ControlApiService`; remote mode uses authenticated HTTP against the existing Control API. The CLI is an adapter rather than a second execution/governance authority. It never invokes arbitrary shells or providers directly, never persists authentication secrets, and fail-closes when downstream execution owns a lifecycle transition such as resume.
 
-Safety/automation contracts include deterministic JSON envelopes and exit classes, 1 MiB remote payload limits, 10 MiB attachment inspection, 256 KiB pipeline files, 100 pipeline steps, 100 retained client sessions, bounded streaming, and path-safe identifiers. See `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md` and `tests/test_phase68_cli.py`.
+Safety/automation contracts include deterministic JSON envelopes and exit classes, 1 MiB remote payload limits, 10 MiB attachment inspection, 256 KiB pipeline files, 100 pipeline steps, 100 retained client sessions, 32 non-secret profiles, bounded streaming, path-safe identifiers, and backward-compatible routing for the established legacy CLI surface. See `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md` and `tests/test_phase68_cli.py`.
 
 ## Phase 67 — Advanced TUI Control Center
 
@@ -57,15 +57,15 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 65 | Workflow + Automation | Complete / 100% |
 | 66 | Advanced Web Control Plane | Complete / 100% |
 | 67 | Advanced TUI Control Center | **Complete / 100%** |
-| 68 | Advanced CLI Platform | **Implementation complete / closure gate** |
+| 68 | Advanced CLI Platform | **Complete / 100%** |
 | 69 | npm Distribution + Setup | Planned |
 | 70 | End-to-End Production Validation | Planned |
 | 71 | Final Production Hardening | Planned |
 
 ## Engineering gate
 
-A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. **Phase 68 is not declared complete until that final mainline gate passes on the synchronized merged tree.**
+A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. **Phase 68 satisfies this gate.**
 
 ## Current phase
 
-**Phase 68 — Advanced CLI Platform is implementation-complete and undergoing its final closure gate.**
+**Phase 68 — Advanced CLI Platform is 100% complete and closed on `main`. Phase 69 — npm Distribution + Setup is next.**
