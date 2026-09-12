@@ -4,7 +4,6 @@ import pytest
 
 from core.waiting import ScheduleSpec, WaitKind, WaitState, WaitingService
 
-
 BASE = datetime(2026, 1, 1, 12, 0, tzinfo=UTC)
 
 
@@ -37,7 +36,7 @@ def test_event_wake_and_deadline_fail_closed(tmp_path):
     wait = db.create(subject_id="u1", project_id="p1", kind=WaitKind.HUMAN, wake_at=BASE + timedelta(hours=1), deadline=BASE + timedelta(minutes=1))
     result = db.wake(wait.wait_id, subject_id="u1", project_id="p1", trigger="human-response", now=BASE + timedelta(minutes=1))
     assert result.state is WaitState.EXPIRED
-    assert db.wake(wait.wait_id, subject_id="u1", project_id="p1", trigger="late") .state is WaitState.EXPIRED
+    assert db.wake(wait.wait_id, subject_id="u1", project_id="p1", trigger="late").state is WaitState.EXPIRED
 
 
 def test_recurring_reschedules_and_bounds_occurrences(tmp_path):
@@ -46,13 +45,15 @@ def test_recurring_reschedules_and_bounds_occurrences(tmp_path):
     wait = db.create(subject_id="u1", project_id="p1", kind=WaitKind.RECURRING, wake_at=BASE, schedule=spec)
     db.promote_due(now=BASE)
     claimed = db.claim_ready(subject_id="u1", project_id="p1", now=BASE)[0]
+    assert claimed.state is WaitState.CLAIMED
     next_wait = db.complete(claimed.wait_id, subject_id="u1", project_id="p1", expected_revision=claimed.revision, now=BASE)
     assert next_wait.state is WaitState.WAITING
     assert next_wait.occurrences == 1
     db.promote_due(now=BASE + timedelta(minutes=1))
     claimed = db.claim_ready(subject_id="u1", project_id="p1", now=BASE + timedelta(minutes=1))[0]
     terminal = db.complete(claimed.wait_id, subject_id="u1", project_id="p1", expected_revision=claimed.revision, now=BASE + timedelta(minutes=1))
-    assert terminal.occurrences == 1
+    assert terminal.state is WaitState.COMPLETED
+    assert terminal.occurrences == 2
 
 
 def test_priority_aging_prevents_old_low_priority_starvation(tmp_path):
