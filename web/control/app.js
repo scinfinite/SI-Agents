@@ -45,6 +45,16 @@ async function renderApprovals() {
     $('approvalsList').innerHTML = approvals.map(a => `<article class="item"><strong>${esc(a.state)}</strong><span>${esc(a.gate)}</span><code>${esc(a.approval_id)}</code><p>${esc(a.reason || '')}</p></article>`).join('') || '<p class="muted">No pending approvals.</p>';
   } catch (error) { $('approvalsList').innerHTML = `<p class="muted">${esc(error.message)}</p>`; }
 }
+async function requestRun() {
+  const action = $('runAction').value.trim(); const subject = $('runSubject').value.trim();
+  if (!action || !subject) { showError('Action and subject are required'); return; }
+  const capabilities = $('runCapabilities').value.split(',').map(x => x.trim()).filter(Boolean);
+  const key = $('runIdempotency').value.trim() || crypto.randomUUID();
+  try {
+    const result = await api('/api/v1/runs', { method: 'POST', headers: {'Content-Type': 'application/json', 'X-Idempotency-Key': key}, body: JSON.stringify({action, subject, capabilities}) });
+    $('controlResult').textContent = JSON.stringify(result, null, 2); await load();
+  } catch (error) { $('controlResult').textContent = error.message; }
+}
 async function searchRepository() {
   const q = $('repoSearch').value.trim(); if (!q) return;
   try {
@@ -71,4 +81,5 @@ $('repoSearchButton').addEventListener('click', searchRepository);
 $('repoSearch').addEventListener('keydown', event => { if (event.key === 'Enter') searchRepository(); });
 $('sourceButton').addEventListener('click', openSource);
 $('diffButton').addEventListener('click', openDiff);
+$('runButton').addEventListener('click', requestRun);
 load(); state.refreshTimer = setInterval(load, 5000);
