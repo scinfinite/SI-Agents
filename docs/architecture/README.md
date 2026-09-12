@@ -26,66 +26,47 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687`; final synchronized-tree CI #1018 / `34673281826` on `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed` |
-
-## Advanced hardening status
-
-- **Phase 46:** explicit execution identity conflict safety, scheduler/runtime idempotency, DAG cycle defense, bounded parallelism, durable recovery, cancellation finalization, dependency propagation, and authority boundaries.
-- **Phase 47:** request timeout propagation, bounded 1 MiB SSE frames, strict terminal streaming semantics, cancellation, session filtering, error normalization, loopback-default security, and authority boundaries.
-- **Phase 49:** schema-versioned deterministic catalogs/manifests, stronger definition/metadata validation, acyclic handoffs, deterministic topological execution layers, bounded team composition, and declaration/runtime authority separation.
-- **Phase 50:** request-fingerprint-bound approvals, replay prevention, secret-like metadata rejection, bounded governance inputs, explicit/fail-closed egress, declared-capability enforcement, scope checks, and cost/risk controls.
-
-Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-
-## Phase 51 authority rules
-
-Checkpoints are progress evidence, not authority. Their snapshots cannot restore credentials, capabilities, grants, provider authorization, or identity. Resume is performed through `ExecutionStore.new_attempt()` after checkpoint integrity, lineage, execution identity, and terminal-state checks.
+| 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
+| 53 | Persistent Sessions | **In implementation** | Phase 53 PR/CI pending final closure |
 
 ## Phase 52 context / memory economics
 
-`core/context_economics` is a deterministic policy layer between already-authorized context retrieval and model invocation. It does not become an execution authority, grant permissions, or select providers.
+`core/context_economics` is a deterministic policy layer between already-authorized context retrieval and model invocation. It provides scoped token/cost budgets, model capacity awareness, deterministic relevance/importance selection, deduplication, sensitive-context isolation, secret handling, compaction/summarization, accounting, stable decision IDs, evidence, and atomic snapshots.
 
-- Per-scope token/cost budgets across user/project/session/workflow/team/task/agent contexts.
-- Model context-window awareness with reserved output capacity.
-- Deterministic importance/relevance ranking and stable tie-breaking.
-- Deduplication by normalized-content fingerprint.
-- Sensitive-context isolation and default secret redaction/fail-closed behavior.
-- Deterministic compaction plus an explicit summarizer hook.
-- Token/cost accounting and stable decision IDs with evidence.
-- Atomic JSON snapshots for recovery/provenance.
-- Comprehensive adversarial/unit coverage and green final exact-tree mainline CI #1018 evidence.
+## Phase 53 persistent sessions
 
-See `CONTEXT_MEMORY.md` and `PHASE_52_CONTEXT_MEMORY_ECONOMICS.md` for the contract and evidence.
+`core/sessions` is the durable session authority. `SessionStore` persists session identity, ownership, lifecycle, state/context, token/cost history, ordered events, artifacts, expiry, archival, and lineage. `PersistentSessionAdapter` binds durable sessions to an authorized runtime/harness identity.
 
-## Planned V4 architecture layers — Phases 53–71
+Key invariants:
 
-| Phase | Architectural layer | Key outcome |
-|---:|---|---|
-| 53 | Persistent Sessions | Durable sessions spanning tasks, agents, workflows, models and interfaces |
-| 54 | Human-in-the-Loop | First-class approvals, human input, review and escalation |
-| 55 | Durable Waiting + Scheduling | Durable waits, timers, triggers and long-running scheduling |
-| 56 | Intelligent Routing + Economics | Quality/cost/latency/reliability-aware orchestration around OmniRoute |
-| 57 | Security Platform | Unified identity, capability, secret, tool, egress and injection controls |
-| 58 | Workspace / Worktree Lifecycle | Isolated and recoverable development workspaces/Git worktrees |
-| 59 | Observability | Live state, logs, metrics, traces, timelines and evidence |
-| 60 | Evaluation + Benchmarking | Measurable quality, reliability, security, cost and regression evaluation |
-| 61 | Continuous Improvement | Controlled evaluation-to-improvement loop with rollback/evidence |
-| 62 | Cross-Runtime / Cross-Harness | Harness-neutral contracts and adapters |
-| 63 | Ecosystem / Marketplace | Governed extension/package ecosystem |
-| 64 | SDK / Developer Platform | Stable APIs and Python/TypeScript developer access |
-| 65 | Workflow + Automation | Durable visualizable automation, triggers and integrations |
-| 66 | Advanced Web Control Plane | Rich localhost operational control and live visualization |
-| 67 | Advanced TUI Control Center | Terminal-native live operator cockpit |
-| 68 | Advanced CLI Platform | Stable human/machine CLI and automation interface |
-| 69 | npm Distribution + Setup | One-command installation and OpenCode/OmniRoute setup |
-| 70 | End-to-End Production Validation | Full real-user, failure, security, recovery, UI and install validation |
-| 71 | Final Production Hardening | Final release/security/reliability/UX/package gate |
+- session operations require subject and project ownership;
+- OpenCode/other harness operations additionally require the expected harness binding;
+- optimistic revisions prevent stale concurrent writes;
+- secret-like fields are rejected instead of persisted;
+- state/events/artifacts/search inputs are bounded;
+- replay is read-only;
+- export/import requires schema and owner validation;
+- clones receive a new identity and explicit parent lineage;
+- session persistence never restores credentials, capabilities, grants, provider authorization, or identity.
+
+The session layer is persistence/lifecycle infrastructure, not a competing execution or authorization authority.
+
+See `PHASE_53_PERSISTENT_SESSIONS.md` and `SI_AGENTS_V4_PLAN.md` for the full contract.
+
+## Advanced hardening status
+
+- **Phase 46:** execution identity conflict safety, idempotency, DAG cycle defense, bounded parallelism, recovery and cancellation.
+- **Phase 47:** timeout propagation, bounded SSE frames, terminal semantics, session filtering, cancellation and endpoint security.
+- **Phase 49:** deterministic versioned catalogs/manifests, validation, acyclic handoffs and execution layers.
+- **Phase 50:** request-bound approvals, replay prevention, metadata rejection, egress/capability/scope controls and cost/risk policy.
+
+Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 
 ## V4 surface contract
 
 ### Web
 
-Localhost-first and richest interface. Planned capabilities include live execution/agent/task/team status, interactive DAG/workflow canvas, timelines, events, logs, evidence, artifacts, code/Markdown/JSON/diff viewers, routing/cost/health, approvals, search, global navigation, command palette, keyboard shortcuts, responsive desktop/tablet/mobile layouts, accessibility, and state-oriented animation.
+Localhost-first and richest interface: live execution/agent/task/team status, DAG/workflow canvas, timelines, events, logs, evidence, artifacts, code/Markdown/JSON/diff viewers, routing/cost/health, approvals, search, global navigation, command palette, keyboard shortcuts, responsive layouts, accessibility, and state-oriented animation.
 
 ### TUI
 
@@ -99,6 +80,4 @@ All surfaces operate on the same SI Core authority.
 
 ## Next
 
-**Phase 53 — Persistent Sessions.** Phase 52 is closed on main after implementation, adversarial testing, documentation synchronization, and final synchronized-tree mainline CI #1018.
-
-See `SI_AGENTS_V4_PLAN.md` for the complete detailed feature specification and `PHASES.md` for status/evidence and closure rules.
+Phase 53 is active until its final exact-tree mainline CI closes the phase. Phase 54 remains the next roadmap phase after Phase 53 closure.
