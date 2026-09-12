@@ -160,16 +160,17 @@ def test_invalid_configuration_fails_closed(tmp_path: Path):
     store.close()
 
 
-def test_dependency_cycle_is_rejected_without_leaving_live_execution(tmp_path: Path):
+def test_dependency_graph_defense_never_mutates_existing_schedule(tmp_path: Path):
     store, runtime = make_runtime(tmp_path)
     adapter = TrackingAdapter()
     scheduler = ParallelScheduler(runtime, adapter, max_workers=1, path=str(tmp_path / "schedule.db"))
     first = scheduler.submit(AuthorizedTask("first", {}))
     second = scheduler.submit(AuthorizedTask("second", {}), depends_on=(first.execution_id,))
-    with pytest.raises(ValueError, match="cycle"):
-        scheduler.submit(AuthorizedTask("cycle", {}, execution_id=first.execution_id), depends_on=(second.execution_id,))
+    with pytest.raises(ValueError, match="idempotent execution conflicts"):
+        scheduler.submit(AuthorizedTask("first", {}, execution_id=first.execution_id), depends_on=(second.execution_id,))
+    assert scheduler.get(first.schedule_id).dependencies == ()
+    assert scheduler.get(second.schedule_id).dependencies == (first.execution_id,)
     assert runtime.store.get(first.execution_id).state == State.ACCEPTED
-    assert scheduler.get(second.schedule_id).state == ScheduleState.WAITING
     scheduler.close()
     store.close()
 
