@@ -16,9 +16,9 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–60 are complete at the required advanced-hardening level on `main`.**
-- **Phase 61 — Continuous Improvement is implemented on the Phase 61 branch and is pending final CI/merge closure.**
-- Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.
+- **Phases 44–61 are complete on `main`.**
+- **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
+- **Phase 61 — Continuous Improvement:** merged PR #75; PR CI #1157 (`34692165853`) green.
 - Phase 58–60 hardening PR #74 passed PR CI #1143 (`34691131729`) and final synchronized-tree mainline CI #1144 (`34691176676`).
 
 ## Phase 61 — Continuous Improvement
@@ -26,10 +26,6 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 Phase 61 converts evaluation evidence into bounded, explainable improvement proposals across agents, teams, models, routing, and workflows. It provides failure clustering, regression signals, recommendation risk/confidence, deterministic weighted experiments, fail-closed canary gates, human approval binding for consequential changes, rollback plans, and tamper-evident improvement history.
 
 The authority rejects secret-like content before persistence and deliberately does **not** mutate runtime state directly. Approved execution remains under SI Core scheduler, capability authorization, deployment/workspace, and runtime authorities.
-
-## Previously advanced-hardened phases
-
-Phases 46, 47, 49, and 50 remain advanced-hardened under hardening CI #984 (`34671292491`).
 
 ## V4 roadmap
 
@@ -54,8 +50,8 @@ The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.
 | 58 | Workspace / Worktree Lifecycle | Advanced hardened |
 | 59 | Observability | Advanced hardened |
 | 60 | Evaluation + Benchmarking | Advanced hardened |
-| 61 | Continuous Improvement | Implemented; pending closure |
-| 62 | Cross-Runtime / Cross-Harness | Planned |
+| 61 | Continuous Improvement | Complete |
+| 62 | Cross-Runtime / Cross-Harness | Next |
 | 63 | Ecosystem / Marketplace | Planned |
 | 64 | SDK / Developer Platform | Planned |
 | 65 | Workflow + Automation | Planned |
@@ -69,3 +65,7 @@ The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.
 ## Engineering gate
 
 A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. After every phase and cross-phase hardening audit, README, docs/index, architecture/index, V4 plan, phase index, phase records, and affected cross-cutting documents must be synchronized.
+
+## Next phase
+
+**Phase 62 — Cross-Runtime / Cross-Harness**.
