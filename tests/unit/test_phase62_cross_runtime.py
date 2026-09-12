@@ -104,10 +104,12 @@ def test_repeated_failures_quarantine_harness_and_probe_recovers() -> None:
 
     registry = HarnessRegistry()
     registry.register(adapter("bad", response=fail), enabled=True)
+    registry.register(adapter("good"), enabled=True)
     gateway = CrossRuntimeGateway(registry, quarantine_after=2, quarantine_seconds=60)
     for _ in range(2):
-        gateway.invoke(InvocationRequest("echo", "x", "project"))
-    assert gateway.discover()[0].health is HarnessHealth.QUARANTINED
+        response = gateway.invoke(InvocationRequest("echo", "x", "project"), preferred_harness="bad")
+        assert response.output == "good"
+    assert next(item for item in gateway.discover() if item.harness_id == "bad").health is HarnessHealth.QUARANTINED
 
     gateway = CrossRuntimeGateway(registry, health_probe=lambda _: True, quarantine_after=2)
     assert gateway.probe("bad") is HarnessHealth.HEALTHY
