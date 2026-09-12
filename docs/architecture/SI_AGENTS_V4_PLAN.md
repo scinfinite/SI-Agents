@@ -17,11 +17,11 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–64** and is implementing **Phase 65 — Workflow + Automation**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. Phase 64 is merged to `main`; its exact synchronized-tree closure remains subject to the repository-wide mainline CI gate.
+V3 is closed. V4 has completed Phases **44–65**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 66 — Advanced Web Control Plane is next.**
 
 ## Closed phases
 
-Phases 44–63 are closed under their recorded implementation/merge evidence. Phase 64 implementation is merged; the final synchronized-tree mainline CI is its closure gate.
+Phases 44–65 are closed under their recorded implementation, merge, documentation, and CI evidence.
 
 ### Phase 63 — Ecosystem / Marketplace
 
@@ -31,7 +31,7 @@ The lifecycle layer is governance-neutral and does not execute package payloads 
 
 Implementation: `core/marketplace/registry.py` and `core/marketplace/__init__.py`.
 
-Verification: `tests/unit/test_phase63_marketplace.py`, PR #77 / CI #1189 (`34694186010`), and final exact-tree mainline CI #1198 (`34694418960`) on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
+Verification: PR #77 / CI #1189 (`34694186010`), and final exact-tree mainline CI #1198 (`34694418960`) on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
 
 ## Phase 64 — SDK / Developer Platform
 
@@ -41,17 +41,15 @@ Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagi
 
 Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
 
-PR #78 was merged into `main`. The dedicated SDK gate is green from the implementation cycle; the synchronized documentation tree must pass the complete mainline closure suite before Phase 64 can be marked fully closed.
+PR #78 is merged into `main`. Phase 64 is closed under the synchronized documentation-tree closure validated with the Phase 65 final gate.
 
-## Phase 65 — Workflow + Automation — active
+## Phase 65 — Workflow + Automation
 
-Scope: sequential/parallel-capable DAG orchestration, conditional branching, bounded loops and fan-out, delegation, human gates, durable waits/timers, event/webhook/interval triggers, retries and failure handling, compensation/rollback, checkpoints/resume, versioning/templates/import/export, and developer integrations.
+Phase 65 delivers a transport-neutral declarative workflow engine with versioned DAG definitions, conditional branching, bounded loops and fan-out, delegation, human approval gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates/importable definitions, restart validation, and reverse-order compensation.
 
-Current implementation: `core/automation/workflows.py`.
+Implementation: `core/automation/workflows.py`.
 
-Current verification: `tests/unit/test_phase65_workflows.py` covers DAG branching, durable waits, human gates, fan-out/loops, event/webhook/interval triggers, retries, runtime expiry, concurrent idempotency, cancellation, persistence corruption, templates/versioning, payload bounds, and compensation.
-
-Phase 65 is **not closed** until the repository-wide closure gate passes on the exact final `main` tree.
+Verification: `tests/unit/test_phase65_workflows.py`; implementation-tree CI #1239 (`34697885027`) passed distribution build, wheel installation, repository audit, integration verification, Ruff, and full pytest. The synchronized documentation tree is the authoritative final closure target.
 
 ## Phase 66 — Advanced Web Control Plane
 
