@@ -13,6 +13,7 @@ from core.automation.registry import AutomationRegistry
 from core.automation.runner import AutomationRunner
 from core.automation.scheduler import AutomationScheduler
 from core.automation.store import AutomationStore
+from core.automation.workflow_io import export_definition, import_definition
 from core.automation.workflows import (
     TriggerKind,
     WorkflowDefinition,
@@ -44,4 +45,6 @@ __all__ = [
     "WorkflowStep",
     "WorkflowStepKind",
     "WorkflowTrigger",
+    "export_definition",
+    "import_definition",
 ]
