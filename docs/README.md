@@ -2,13 +2,14 @@
 
 ## Current V4 baseline
 
-SI-Agents V4 has completed Phases **44–51**. Phases **46, 47, 49, and 50** have additionally passed an advanced-level hardening audit. **Phase 52 — Context / Memory Economics** is next.
+SI-Agents V4 has completed Phases **44–51**. Phases **46, 47, 49, and 50** have additionally passed an advanced-level hardening audit. **Phase 52 — Context / Memory Economics** is under implementation and is the active phase.
 
 ## V4 architecture and roadmap
 
 - `architecture/SI_AGENTS_V4_PLAN.md` — authoritative V4 product vision, detailed Phases 52–71 scope, interface contract, authority model, and closure gates.
 - `architecture/PHASES.md` — phase sequence, current status, evidence, advanced-hardening markers, and documentation closure rules.
 - `architecture/README.md` — architecture status and current verified capabilities.
+- `architecture/CONTEXT_MEMORY.md` — context/memory authority boundaries, budget hierarchy, selection invariants, and auditability.
 
 The V4 target is one authoritative SI Core shared by Web, TUI, CLI, OpenCode, runtime adapters, schedulers, agents, teams, workflows, and integrations.
 
@@ -24,6 +25,7 @@ The V4 target is one authoritative SI Core shared by Web, TUI, CLI, OpenCode, ru
 | 49 | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Complete | CI #977 / `34627956634` |
+| 52 | **In implementation** | Context economics contracts, implementation, adversarial tests and architecture docs are on the active Phase 52 branch; final mainline CI remains the closure gate. |
 
 ## Advanced hardening
 
@@ -50,9 +52,9 @@ Stable human and machine interface with interactive commands, JSON schemas, exit
 
 All three surfaces operate on the same authoritative SI Core state.
 
-## Planned Phases 52–71
+## Active and planned Phases 52–71
 
-- **52 — Context / Memory Economics:** context budgets, memory layers, retrieval, relevance, compaction, deduplication, privacy, token/cost economics.
+- **52 — Context / Memory Economics:** context budgets, memory layers, retrieval, relevance, compaction, deduplication, privacy, token/cost economics. **Active implementation:** deterministic selection contracts, model input capacity, sensitivity/secret controls, cost accounting, compaction, provenance/evidence, and atomic snapshots.
 - **53 — Persistent Sessions:** durable sessions, history, context/memory, recovery, replay, export/import, branching, cross-interface continuity.
 - **54 — Human-in-the-Loop:** approvals, human input, review gates, escalation, controlled resume, audit/evidence, Web/TUI/CLI controls.
 - **55 — Durable Waiting + Scheduling:** durable waits, timers, schedules, triggers, retry/backoff, restart-safe waiting, fairness and long-running workflows.
