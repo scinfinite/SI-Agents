@@ -5,7 +5,7 @@
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
-- **Advanced hardened** — closed phase re-audited with additional production/security invariants and green hardening CI; final documentation-tree CI is required before merge.
+- **Advanced hardened** — closed phase re-audited with additional production/security invariants and green hardening CI; final mainline exact-tree CI is the closure gate.
 - **Next** — planned next phase.
 - **Planned** — not started.
 
@@ -49,7 +49,7 @@
 - Phase 49: schema-versioned catalogs/manifests, stronger definition validation, acyclic handoff topology, deterministic execution layers.
 - Phase 50: request-fingerprint-bound approvals, replay prevention, secret-like metadata rejection, bounded governance inputs, fail-closed egress.
 
-Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The final mainline CI after merge is the authoritative exact-tree closure gate for these hardening changes.
+Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The **mainline CI run after merge** is the authoritative exact-tree closure gate for these hardening changes.
 
 ## Phase 51 integration markers
 
