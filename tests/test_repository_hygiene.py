@@ -17,6 +17,7 @@ ALLOWED_REFERENCE_DOCS = {
     ROOT / "docs" / "architecture" / "PHASE_47_OPENCODE_BRIDGE.md",
     ROOT / "docs" / "architecture" / "PHASE_48_OMNIROUTE_INTEGRATION.md",
     ROOT / "docs" / "architecture" / "PHASE_64_SDK_DEVELOPER_PLATFORM.md",
+    ROOT / "docs" / "architecture" / "PHASE_65_WORKFLOW_AUTOMATION.md",
 }
 
 
