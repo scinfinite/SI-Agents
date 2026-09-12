@@ -1,5 +1,5 @@
 """Fail-closed identity, authorization, egress, secret and audit contracts."""
-from __future__ import annotations
+from __future__ import annotations__
 
 import base64
 import hashlib
@@ -112,11 +112,14 @@ class EgressPolicy:
             parsed = urlparse(target)
             scheme = parsed.scheme.lower()
             host = (parsed.hostname or "").lower().rstrip(".")
-            address = ipaddress.ip_address(host) if host else None
         except ValueError:
             return False
         if scheme not in {s.lower() for s in self.allowed_schemes} or not host:
             return False
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            address = None
         if address is not None and not self.allow_private_addresses and (
             address.is_private or address.is_loopback or address.is_link_local or address.is_reserved
         ):
