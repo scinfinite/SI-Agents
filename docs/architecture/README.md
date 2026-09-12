@@ -23,9 +23,9 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Phase 66 architecture
 
-Phase 66 adds a same-origin, dependency-free web control client layered over the versioned Control API. It exposes operational overview/health, live activity, workflow/run inspection, topology/DAG relationships, evidence, identity-bound approvals, resources/settings, and bounded repository source/search/diff inspection. It does not create a second state or authorization authority.
+Phase 66 adds a same-origin, dependency-free web control client layered over the existing WebServer and versioned Control API. It exposes operational overview/health, live activity, workflow/run inspection, topology/DAG relationships, evidence, identity-bound approvals, resources/settings, and bounded repository source/search/diff inspection. It does not create a second state or authorization authority.
 
-`core/control_api/web.py` supplies the static web adapter and reuses `ControlApiHandler` for API routes, authentication, SSE/WebSocket, governance and evidence behavior. `web/control/` contains the browser surface. Static resources use a restrictive CSP, `nosniff`, safe path resolution, and no third-party runtime assets. Repository viewers enforce file-type and size bounds and never expose `.git` paths.
+`core/web/advanced.py` installs the Phase 66 handler on the existing `WebServer`; `web/control/` contains the browser surface. The existing authentication/audit boundary is retained. Static resources use a restrictive CSP, `nosniff`, safe path resolution, and no third-party runtime assets. Repository viewers enforce file-type, size, query, traversal, and `.git` bounds.
 
 See `PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md` for the detailed contract and closure requirements.
 
