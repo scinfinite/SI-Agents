@@ -42,9 +42,9 @@
 | 55 | Durable Waiting + Scheduling | Complete | Final synchronized-tree closure CI #1080 / `34678317246` |
 | 56 | Intelligent Routing + Economics | Complete | Final synchronized-tree mainline CI #1099 / `34682849381` |
 | 57 | Security Platform | Complete | Final synchronized-tree mainline CI #1113 / `34684260315` |
-| 58 | Workspace / Worktree Lifecycle | Complete | Final synchronized-tree mainline CI #1128 / `34686980055` |
-| 59 | Observability | Complete | Final synchronized-tree mainline CI #1128 / `34686980055` |
-| 60 | Evaluation + Benchmarking | Complete | PR CI #1137 / `34687139768`; final synchronized-tree mainline CI #1138 / `34687181487`; documentation closure CI #1140 / `34687287957` |
+| 58 | Workspace / Worktree Lifecycle | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
+| 59 | Observability | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
+| 60 | Evaluation + Benchmarking | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 61 | Continuous Improvement | **Next** | Planned |
 | 62 | Cross-Runtime / Cross-Harness | Planned | Planned |
 | 63 | Ecosystem / Marketplace | Planned | Planned |
@@ -57,4 +57,8 @@
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is fully closed by merged PR #67, implementation/verification CI #1091 / `34682603137`, and final synchronized-tree mainline CI #1099 / `34682849381`. Phase 57 is fully closed by merged PR #68, verification CI #1112 / `34684200429`, and final synchronized-tree mainline CI #1113 / `34684260315`. Phase 58 is fully closed by its synchronized-tree mainline CI #1128 / `34686980055`. Phase 59 is fully closed by its synchronized-tree mainline CI #1128 / `34686980055`. Phase 60 is fully closed by merged PR #71, PR CI #1137 / `34687139768`, final synchronized-tree mainline CI #1138 / `34687181487`, and documentation closure CI #1140 / `34687287957`. **Phase 61 — Continuous Improvement is now the next roadmap phase.**
+Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is fully closed by merged PR #67, implementation/verification CI #1091 / `34682603137`, and final synchronized-tree mainline CI #1099 / `34682849381`. Phase 57 is fully closed by merged PR #68, verification CI #1112 / `34684200429`, and final synchronized-tree mainline CI #1113 / `34684260315`.
+
+Phase 58 is fully closed at advanced-hardening level by PR #74, PR CI #1143 / `34691131729`, and final synchronized-tree mainline CI #1144 / `34691176676`. Phase 59 is fully closed at advanced-hardening level by the same hardening PR and final mainline CI, including deep redaction/resource-bound and integrity-scan coverage. Phase 60 is fully closed at advanced-hardening level by the same hardening PR and final mainline CI, including enforceable cost/latency release budgets, persisted evidence verification, and expanded secret/failure guards.
+
+**Phase 61 — Continuous Improvement is now the next roadmap phase.**
