@@ -26,7 +26,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687` on `215dd5491b4e6f38f454faaf5b0a2f8331694455` |
+| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687`; final synchronized-tree CI #1018 / `34673281826` on `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed` |
 
 ## Advanced hardening status
 
@@ -53,7 +53,7 @@ Checkpoints are progress evidence, not authority. Their snapshots cannot restore
 - Deterministic compaction plus an explicit summarizer hook.
 - Token/cost accounting and stable decision IDs with evidence.
 - Atomic JSON snapshots for recovery/provenance.
-- Comprehensive adversarial/unit coverage and green mainline CI evidence.
+- Comprehensive adversarial/unit coverage and green final exact-tree mainline CI #1018 evidence.
 
 See `CONTEXT_MEMORY.md` and `PHASE_52_CONTEXT_MEMORY_ECONOMICS.md` for the contract and evidence.
 
@@ -99,6 +99,6 @@ All surfaces operate on the same SI Core authority.
 
 ## Next
 
-**Phase 53 — Persistent Sessions.** Phase 52 is closed on main after implementation, adversarial testing, documentation synchronization, and mainline CI #1015.
+**Phase 53 — Persistent Sessions.** Phase 52 is closed on main after implementation, adversarial testing, documentation synchronization, and final synchronized-tree mainline CI #1018.
 
 See `SI_AGENTS_V4_PLAN.md` for the complete detailed feature specification and `PHASES.md` for status/evidence and closure rules.

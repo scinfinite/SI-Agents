@@ -32,6 +32,8 @@ capacity after reserving output tokens.
 
 Phase 52 is complete on main. Mainline CI #1015 (`34673115687`) passed distribution build,
 wheel verification, repository audit, integration verification, Ruff, and the full test suite.
+Final synchronized-tree mainline CI #1018 (`34673281826`) also passed on commit
+`a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`.
 The implementation is covered by deterministic/adversarial tests for budget validation,
 deduplication, sensitivity, secret handling, compaction/summarization, cost ceilings,
 and snapshot serialization/schema handling.
