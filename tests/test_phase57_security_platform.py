@@ -20,8 +20,8 @@ from core.security import (
 def platform() -> SecurityPlatform:
     policy = SecurityPolicy(
         [
-            PermissionGrant("agent-1", "read", "filesystem", "project-1/*"),
-            PermissionGrant("agent-1", "call", "tool", "safe", require_approval=False),
+            PermissionGrant("agent-1", "project-1", "read", "filesystem", "project-1/*"),
+            PermissionGrant("agent-1", "project-1", "call", "tool", "safe"),
         ],
         egress=EgressPolicy(("api.example.com",)),
         boundaries=(TrustBoundary("project-1", "external:api", True, "approved adapter"),),
@@ -30,12 +30,7 @@ def platform() -> SecurityPlatform:
 
 
 def req(**changes: object) -> AuthorizationRequest:
-    base = dict(
-        identity=Identity("agent-1", "project-1"),
-        action="read",
-        resource="filesystem",
-        scope="project-1/file.txt",
-    )
+    base = dict(identity=Identity("agent-1", "project-1"), action="read", resource="filesystem", scope="project-1/file.txt")
     base.update(changes)
     return AuthorizationRequest(**base)
 
@@ -52,9 +47,9 @@ def test_unauthenticated_and_tenant_isolation_fail_closed(platform: SecurityPlat
 
 
 def test_destructive_and_high_risk_require_approval(platform: SecurityPlatform) -> None:
-    assert platform.authorize(req(destructive=True)).decision is Decision.DENY
+    assert platform.authorize(req(destructive=True)).decision is Decision.APPROVAL_REQUIRED
     assert platform.authorize(req(destructive=True, approval="ticket-1")).decision is Decision.ALLOW
-    assert platform.authorize(req(risk="critical")).decision is Decision.DENY
+    assert platform.authorize(req(risk="critical")).decision is Decision.APPROVAL_REQUIRED
 
 
 def test_egress_allowlist_and_credential_boundary(platform: SecurityPlatform) -> None:
@@ -95,7 +90,7 @@ def test_token_is_bound_to_request_policy_and_single_use(platform: SecurityPlatf
 
 
 def test_token_ttl_and_empty_key_are_rejected() -> None:
-    policy = SecurityPolicy([PermissionGrant("a", "x", "r", "s")])
+    policy = SecurityPolicy([PermissionGrant("a", "t", "x", "r", "s")])
     with pytest.raises(SecurityError):
         SecurityPlatform(policy, b"")
     p = SecurityPlatform(policy, b"k")
@@ -107,7 +102,7 @@ def test_token_ttl_and_empty_key_are_rejected() -> None:
 
 
 def test_expired_grant_fails_closed() -> None:
-    grant = PermissionGrant("a", "x", "r", "s", datetime.now(UTC) - timedelta(seconds=1))
+    grant = PermissionGrant("a", "t", "x", "r", "s", datetime.now(UTC) - timedelta(seconds=1))
     policy = SecurityPolicy([grant])
     p = SecurityPlatform(policy, b"k")
     assert p.authorize(AuthorizationRequest(Identity("a", "t"), "x", "r", "s")).decision is Decision.DENY
@@ -123,7 +118,7 @@ def test_audit_contains_only_safe_evidence(platform: SecurityPlatform) -> None:
 
 def test_external_resource_requires_explicit_trust_boundary(platform: SecurityPlatform) -> None:
     allowed = req(resource="external:api", scope="v1", external_egress=True, network_target="https://api.example.com")
-    assert platform.authorize(allowed).decision is Decision.DENY  # boundary never grants permission
+    assert platform.authorize(allowed).decision is Decision.DENY
 
 
 def test_scope_wildcard_is_prefix_bounded(platform: SecurityPlatform) -> None:
