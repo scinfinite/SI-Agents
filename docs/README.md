@@ -2,19 +2,19 @@
 
 ## Current V4 baseline
 
-SI-Agents V4 has completed Phases **44–52**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 53 — Persistent Sessions is now in implementation.**
+SI-Agents V4 has completed Phases **44–53**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 54 — Human-in-the-Loop is next.**
 
 See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The Phase 53 implementation record is `architecture/PHASE_53_PERSISTENT_SESSIONS.md`.
 
 ## Phase 52 closure
 
-Phase 52 is fully closed on `main`. Final synchronized-tree mainline CI #1020 (`34673411916`) passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+Phase 52 is fully closed on `main`. Final exact-tree mainline CI #1020 (`34673411916`) passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 
-## Phase 53 — Persistent Sessions
+## Phase 53 closure
 
-Phase 53 implements durable SI Core session IDs/lifecycle/ownership, session history/state, ordered events and replay, artifacts/evidence, token/cost history, isolation, recovery, expiration/archival, export/import, cloning/branching, search/filtering, persistent OpenCode/harness continuity, and cross-interface session continuity.
+Phase 53 is fully closed on `main`. It provides durable SQLite-backed SI Core sessions with lifecycle/ownership isolation, harness binding, optimistic revisions, durable state/context/token-cost history, ordered events/replay, artifact evidence, expiration/archival, export/import, clone/branch lineage, bounded search, restart recovery, and persistent OpenCode/runtime continuity. Security tests cover ownership isolation, stale writes, secret leakage, schema/ownership validation, expiry/archive, artifact limits, replay, cloning, JSON safety, and harness mismatch.
 
-The implementation uses a SQLite-backed `SessionStore` plus `PersistentSessionAdapter`. It re-checks subject/project/harness authority on every operation, uses optimistic revisions, rejects secret-like state, bounds persisted inputs, and keeps replay read-only.
+Closure evidence: implementation merge commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), followed by the final documentation-synchronized mainline CI gate.
 
 ## V4 product surfaces
 
