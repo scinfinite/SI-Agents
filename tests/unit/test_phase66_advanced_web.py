@@ -58,7 +58,7 @@ def test_inspection_never_exposes_git_paths():
 
 def test_remote_server_keeps_existing_auth_boundary():
     token = "s" * 32
-    config = WebConfig(host="127.0.0.1", port=0, auth_token=token)
+    config = WebConfig(host="0.0.0.0", port=0, allow_remote=True, auth_token=token)
     server = create_advanced_server(config, ControlApiService(Path.cwd()))
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
