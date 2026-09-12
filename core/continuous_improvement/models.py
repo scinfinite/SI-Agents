@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 import time
 import uuid
-from typing import Any, Mapping
+from typing import Mapping
 
 
 class ImprovementKind(StrEnum):
@@ -105,14 +105,8 @@ class OptimizationRecommendation:
         prerequisites: tuple[str, ...] = (),
     ) -> "OptimizationRecommendation":
         return cls(
-            f"improve_{uuid.uuid4().hex}",
-            kind,
-            target,
-            rationale,
-            dict(expected_benefit),
-            confidence,
-            risk,
-            prerequisites,
+            f"improve_{uuid.uuid4().hex}", kind, target, rationale, dict(expected_benefit),
+            confidence, risk, prerequisites,
         )
 
 
