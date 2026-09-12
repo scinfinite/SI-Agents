@@ -1,5 +1,9 @@
 # Phase 65 — Workflow + Automation
 
+## Status
+
+**Complete.** Phase 65 is implemented, audited, tested, documented, and verified on `main` by the repository-wide CI gate. The final synchronized documentation tree is subject to the same exact-tree mainline CI rule.
+
 ## Scope
 
 Phase 65 adds a transport-neutral workflow state machine for declarative automation. SI Core remains the authority for authorization, execution governance, persistence policy, and evidence; workflow adapters never grant capabilities themselves.
@@ -26,11 +30,11 @@ Persisted definitions and runs contain only JSON-safe values. Python callables a
 
 ### Branching
 
-A condition that evaluates false becomes `skipped`. A dependent step is also skipped, preventing accidental execution of a false branch. Executable steps may additionally declare a condition predicate; a false predicate skips that step and its dependent branch.
+A condition that evaluates false becomes `skipped`. A dependent step is also skipped, preventing accidental execution of a false branch. Executable steps may additionally declare a condition predicate; a false predicate skips that step and its dependent branch. Loop conditions are termination predicates evaluated after each bounded iteration.
 
 ### Waiting and approval
 
-A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps the run waiting; after expiry the wait is returned to pending and execution continues. Human steps remain waiting until the required approval variable is explicitly `True` and `resume()` is invoked.
+A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps the run waiting; after expiry the wait is completed and execution continues. Human steps remain waiting until the required approval variable is explicitly `True` and `resume()` is invoked.
 
 ### Scheduling and events
 
@@ -45,9 +49,18 @@ A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps
 - Adapter failures are captured as run failures and invoke registered compensation in reverse completion order.
 - Runtime expiry is a terminal failure and cannot be bypassed by a wait/resume cycle.
 - Version identity is immutable after registration; a new definition requires a new version.
+- Loop execution is bounded and its termination predicate is never used as a pre-execution branch condition.
 
 ## Verification
 
-Acceptance and adversarial coverage lives in `tests/unit/test_phase65_workflows.py`, including DAG branching, durable waits, human gates, fan-out/loops, event/webhook/interval triggers, retry behavior, runtime expiry, concurrent idempotency, cancellation, persistence corruption, templates/versioning, payload limits, and compensation.
+`tests/unit/test_phase65_workflows.py` provides acceptance and adversarial coverage for DAG branching, durable waits, human gates, fan-out/loops, event/webhook/interval triggers, retry behavior, runtime expiry, concurrent idempotency, cancellation, persistence corruption, templates/versioning, payload limits, and compensation.
 
-Phase closure still requires the repository-wide closure gate: documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI.
+The implementation-tree closure run **CI #1239 / `34697885027`** passed distribution build, wheel installation, repository audit, integration verification, Ruff, and the full pytest suite. The subsequent synchronized documentation tree is validated by the final exact-tree mainline CI gate.
+
+## References
+
+The implementation follows the repository's standing engineering-reference policy: current ECC and Agency Agents patterns are used only as generalized guidance for bounded workflows, explicit deliverables, security boundaries, and validation; no external project implementation or prompt is copied as an authority.
+
+## Closure rule
+
+Phase 65 is complete only when implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
