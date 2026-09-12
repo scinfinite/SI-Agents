@@ -1,5 +1,4 @@
 """Fail-closed identity, authorization, egress, secret and audit contracts."""
-from __future__ import annotations__
 
 import base64
 import hashlib
