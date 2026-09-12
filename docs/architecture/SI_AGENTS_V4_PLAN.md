@@ -17,9 +17,9 @@ User prompt → OpenCode → SI OpenCode Bridge → SI Core / Control API
 
 ## Current verified position
 
-V3 is closed. V4 implementation has completed Phases 44–53 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics and Phase 53 — Persistent Sessions are complete on main. Phase 54 — Human-in-the-Loop is next.**
+V3 is closed. V4 implementation has completed Phases 44–54 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics, Phase 53 — Persistent Sessions, and Phase 54 — Human-in-the-Loop are complete on main. Phase 55 — Durable Waiting + Scheduling is the active implementation phase.**
 
-Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. Phase 53 implementation mainline CI **#1021 (`34674234547`)** passed before documentation closure.
+Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. Phase 53 final synchronized-tree mainline CI **#1041 (`34675322458`)** passed the required gates. Phase 54 final synchronized-tree mainline CI **#1051 (`34676632475`)** passed the required gates.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -87,15 +87,23 @@ Durable session IDs/lifecycle/ownership; history/state; tasks/agents/teams/workf
 
 Delivered through SQLite-backed `SessionStore` and `PersistentSessionAdapter`: active/paused/archived/expired/closed lifecycle, subject/project/workspace isolation, harness binding, optimistic revisions, state/context/token-cost history, ordered events/replay, artifact digests, expiry/archive, export/import, cloning/branch lineage, bounded search, restart recovery, and runtime/harness continuity. Secret-like persisted fields are rejected; replay never restores authority; credentials, grants, capabilities, provider authorization, and identity are never restored from session state.
 
-Evidence: implementation/adversarial tests, merged mainline commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), and final documentation-synchronized exact-tree CI gate.
+Evidence: implementation/adversarial tests, merged mainline commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), and final synchronized-tree exact-tree closure CI #1041 (`34675322458`).
 
-## Phase 54 — Human-in-the-Loop
+## Phase 54 — Human-in-the-Loop — complete
 
 Approval requests/gates; human input/review; risk/cost/egress/destructive/security/deployment approvals; escalation; pause/resume; reject/modify/retry/reassign/authorized alternatives; expiry; identity binding; audit/evidence; notifications; approval queues; Web/TUI/CLI controls; fail-closed behavior.
 
-## Phase 55 — Durable Waiting + Scheduling
+Delivered through the durable human-gate service and shared Control API. Governance decisions are immutable terminal evidence, identity/project bound, revision protected, expiry aware, and never treated as credentials or capability grants. Missing or mismatched identity fails closed.
 
-Durable WAIT; timers; delayed/recurring execution; cron-like schedules; wake-up/event triggers; approval/human/dependency/resource/external waits; deadlines/timeouts; retry backoff/jitter; restart-safe waiting; queue priority/fairness/starvation prevention; calendar execution; long-running workflows without occupying workers while waiting.
+Evidence: final synchronized-tree mainline CI #1051 (`34676632475`).
+
+## Phase 55 — Durable Waiting + Scheduling — active
+
+Durable WAIT; timers; delayed/recurring execution; five-field UTC cron-like schedules; wake-up/event triggers; approval/human/dependency/resource/external waits; deadlines/timeouts; restart-safe waiting; queue priority/fairness/starvation prevention; long-running workflows without occupying workers while waiting.
+
+Current implementation provides SQLite-backed `WaitingService` with explicit `waiting → ready → claimed → completed` lifecycle, cancellation and fail-closed expiry, event history, optimistic revisions, bounded queue/payload limits, secret-like payload rejection, priority plus age-based fairness, interval recurrence with occurrence limits, bounded cron next-occurrence calculation, restart recovery, and identity/project isolation. Control API routes provide create/list/get/events/wake/claim/complete/cancel. A claim is not an authorization grant; downstream execution remains independently governed by SI Core authorization.
+
+Final completion remains gated by documentation/index synchronization and exact-tree mainline CI.
 
 ## Phase 56 — Intelligent Routing + Economics
 
