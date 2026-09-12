@@ -4,7 +4,7 @@
 
 ## V4 status
 
-Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 63 is next.
+Phases 44–63 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 64 is next.
 
 The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
 
@@ -38,9 +38,9 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 59 | Observability | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
-| 62 | Cross-Runtime / Cross-Harness | **Complete** | PR #76 / CI #1166 / `34692621358`; mainline #1180 / `34693460152`; final docs-sync CI pending |
-| 63 | Ecosystem / Marketplace | Next | Planned |
-| 64 | SDK / Developer Platform | Planned | Planned |
+| 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; mainline #1186 / `34693756693` |
+| 63 | Ecosystem / Marketplace | **Complete** | PR #77 / CI #1189 / `34694186010`; final synchronized-tree mainline CI pending |
+| 64 | SDK / Developer Platform | Next | Planned |
 | 65 | Workflow + Automation | Planned | Planned |
 | 66 | Advanced Web Control Plane | Planned | Planned |
 | 67 | Advanced TUI Control Center | Planned | Planned |
@@ -53,4 +53,10 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 
 Phase 62 provides portable resource adapter contracts for runtime/session/tool/model/event/capability/context/checkpoint/artifact families; deterministic harness discovery/capability filtering; health probing with bounded quarantine/recovery; project+harness session isolation; explicit migration; and safe pre-start fallback. Post-start side-effect signals prevent unsafe fallback. The gateway never grants permissions or replaces SI Core execution authority.
 
-Merged PR #76 as `607085782a75e31a60774afe975edcbd38bf5e4c`. PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Mainline CI #1180 / `34693460152` on `ce70cdd53d52399fdaa44f39dcb879a181e8450f` passed the same repository closure suite after the integration-marker correction. The final exact-tree documentation-synchronized mainline CI is the last closure gate.
+Merged PR #76 as `607085782a75e31a60774afe975edcbd38bf5e4c`. PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Mainline CI #1186 / `34693756693` passed the same repository closure suite on the final Phase 62 documentation tree.
+
+## Phase 63 closure
+
+Phase 63 provides governed ecosystem metadata and lifecycle contracts through `MarketplaceManifest`, `MarketplaceRegistry`, and `EcosystemManager`: strict semver, dependencies, compatibility, declared permissions, provenance/trust, exact manifest identity, templates, install/update/uninstall/rollback, bounded history, and drift detection. Marketplace lifecycle never grants execution authority; SI Core remains authoritative for authorization and execution.
+
+Merged PR #77 as `19be0c14774e7073871a21fde42132a73c2a77d4`. PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final documentation-synchronized mainline CI is the remaining closure gate.
