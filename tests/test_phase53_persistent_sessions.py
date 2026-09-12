@@ -25,7 +25,7 @@ def test_durable_lifecycle_and_restart(tmp_path):
 def test_owner_and_project_isolation_is_fail_closed(tmp_path):
     store = SessionStore(tmp_path / "sessions.db")
     store.create(make_session())
-    with pytest.raises(KeyError):
+    with pytest.raises(PermissionError):
         store.get("s1", subject_id="other", project_id="project-1")
     with pytest.raises(PermissionError):
         store.update_state("s1", subject_id="other", project_id="project-1", state=SessionState.PAUSED)
