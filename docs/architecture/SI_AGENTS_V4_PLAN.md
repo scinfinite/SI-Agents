@@ -10,34 +10,30 @@ User → OpenCode / Web / TUI / CLI → SI Core / Control API
      → Capability Authorization → OmniRoute → Models / Providers / APIs
      → Results / Artifacts / Evidence → SI Core
      → Observability → Evaluation → Continuous Improvement
-     → Cross-Runtime → Release Gates / Canaries / Rollback → Clients
+     → Cross-Runtime → Ecosystem / Marketplace → Release Gates / Canaries / Rollback → Clients
 ```
 
 OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, waiting, workspaces, observability, evaluation, and improvement governance.
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–62**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness is complete: implementation, adversarial verification, documentation synchronization, merge, and mainline CI closure are green. Phase 63 — Ecosystem / Marketplace follows.**
+V3 is closed. V4 has completed Phases **44–63**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness and Phase 63 — Ecosystem / Marketplace are complete: implementation, adversarial verification, documentation synchronization, merge, and mainline CI closure are green. Phase 64 — SDK / Developer Platform follows.**
 
 ## Closed phases
 
-Phases 44–62 are closed under their recorded CI evidence. Phase 62 merged as PR #76 (`607085782a75e31a60774afe975edcbd38bf5e4c`) with PR CI #1166 (`34692621358`) green and mainline CI #1180 (`34693460152`) green on the integration-marker correction.
+Phases 44–63 are closed under their recorded CI evidence. Phase 62 merged as PR #76 (`607085782a75e31a60774afe975edcbd38bf5e4c`) with final mainline CI #1186 (`34693756693`) green.
 
-### Phase 62 — Cross-Runtime / Cross-Harness
+### Phase 63 — Ecosystem / Marketplace
 
-Phase 62 establishes harness-neutral interoperability across runtime/session/tool/model/event/capability/context/checkpoint/artifact resource families. It provides common portable adapter contracts, deterministic harness discovery, capability filtering, health probing, bounded quarantine/recovery, preferred selection, project+harness session binding, explicit migration, and safe pre-start fallback.
+Phase 63 establishes governed ecosystem metadata and lifecycle contracts for future agents, skills, tools, teams, workflows, model/provider profiles, and MCP extensions. `MarketplaceManifest` provides strict semver, dependencies, compatibility declarations, permission declarations, provenance/trust, payload identity, and exact manifest identity. `MarketplaceRegistry` provides deterministic package/version lookup and templates. `EcosystemManager` provides governed install/update/uninstall/rollback, bounded lifecycle history, and drift detection.
 
-The gateway refuses fallback after execution-start signals, keeps routing evidence non-secret, and fails closed when no eligible harness exists. It never grants capabilities or mutates SI Core execution state. OpenCode remains a supported harness rather than the runtime definition.
+The lifecycle layer is governance-neutral and does not execute package payloads or grant capabilities. Untrusted packages require an explicit governance hook, requested permissions must be declared, dependency requirements must be satisfied, and governance approval is bound to the exact manifest digest. SI Core remains authoritative for authorization and execution.
 
-Implementation: `core/runtime/cross_runtime.py` and `core/runtime/portable.py`.
+Implementation: `core/marketplace/registry.py` and `core/marketplace/__init__.py`.
 
-Verification: `tests/unit/test_phase62_cross_runtime.py`, PR CI #1166, and mainline CI #1180. The final documentation-synchronized exact-tree mainline CI is the last closure gate for this documentation update.
+Verification: `tests/unit/test_phase63_marketplace.py`, PR #77 / CI #1189 (`34694186010`), and the final synchronized-tree mainline closure suite.
 
-## Phase 63 — Ecosystem / Marketplace — next
-
-Governed agents, skills, tools, teams, workflows, model/provider profiles, MCP extensions, manifests, versions, dependencies, compatibility, permission declarations, provenance/trust, install/update/uninstall/rollback, drift detection, registries, templates, and governance gates.
-
-## Phase 64 — SDK / Developer Platform
+## Phase 64 — SDK / Developer Platform — next
 
 Python and TypeScript/JavaScript SDKs, versioned REST/WebSocket/SSE, typed schemas, stable errors, auth, idempotency, concurrency, pagination/filtering, webhooks/event subscriptions, CI/CD integration, examples, and reference tooling.
 
