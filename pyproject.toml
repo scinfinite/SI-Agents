@@ -18,7 +18,7 @@ si-deploy = "core.deployment_center.cli:main"
 si-verify = "core.hardening.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["adapters*", "agents*", "core*", "skills*", "tools*"]
+include = ["adapters*", "agents*", "core*", "skills*", "tools*", "sdk*"]
 
 [tool.setuptools.package-data]
 agents = ["**/*.md"]
@@ -37,7 +37,7 @@ line-length = 100
 required-version = "==0.13.1"
 
 [tool.ruff.lint.isort]
-known-first-party = ["adapters", "agents", "core", "skills", "tools"]
+known-first-party = ["adapters", "agents", "core", "sdk", "skills", "tools"]
 
 [tool.ruff.format]
 line-ending = "lf"

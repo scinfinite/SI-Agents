@@ -2,10 +2,10 @@
 
 ## Authority
 
-SI-Agents V4 is built around one authoritative SI Core. Web, TUI, CLI, OpenCode, runtime adapters, schedulers, agents, teams, workflows, and integrations are clients/adapters, not competing state authorities.
+SI-Agents V4 is built around one authoritative SI Core. Web, TUI, CLI, OpenCode, runtime adapters, schedulers, agents, teams, workflows, SDKs, and integrations are clients/adapters, not competing state authorities.
 
 ```text
-User → OpenCode / Web / TUI / CLI → SI Core / Control API
+User → OpenCode / Web / TUI / CLI / SDK → SI Core / Control API
      → Scheduler / Orchestrator → Tasks / Agents / Teams / Workflows
      → Capability Authorization → OmniRoute → Models / Providers / APIs
      → Results / Artifacts / Evidence → SI Core
@@ -17,7 +17,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–63**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness and Phase 63 — Ecosystem / Marketplace are complete: implementation, adversarial verification, documentation synchronization, merge, and mainline CI closure are green. Phase 64 — SDK / Developer Platform follows.**
+V3 is closed. V4 has completed Phases **44–63**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness and Phase 63 — Ecosystem / Marketplace are complete: implementation, adversarial verification, documentation synchronization, merge, and mainline CI closure are green. Phase 64 — SDK / Developer Platform is in implementation pending its final exact-tree mainline CI.**
 
 ## Closed phases
 
@@ -31,11 +31,15 @@ The lifecycle layer is governance-neutral and does not execute package payloads 
 
 Implementation: `core/marketplace/registry.py` and `core/marketplace/__init__.py`.
 
-Verification: `tests/unit/test_phase63_marketplace.py`, PR #77 / CI #1189 (`34694186010`), and the final synchronized-tree mainline closure suite.
+Verification: `tests/unit/test_phase63_marketplace.py`, PR #77 / CI #1189 (`34694186010`), and final exact-tree mainline CI #1198 (`34694418960`) on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
 
-## Phase 64 — SDK / Developer Platform — next
+## Phase 64 — SDK / Developer Platform — in implementation
 
-Python and TypeScript/JavaScript SDKs, versioned REST/WebSocket/SSE, typed schemas, stable errors, auth, idempotency, concurrency, pagination/filtering, webhooks/event subscriptions, CI/CD integration, examples, and reference tooling.
+Phase 64 delivers Python and TypeScript SDKs, versioned REST/WebSocket/SSE access, typed schemas and stable errors, optional bearer authentication, header-bound identity, idempotent run creation, bounded concurrency, cursor pagination/filtering, event subscriptions, signed webhook delivery primitives, OpenAPI updates, package metadata, examples, and adversarial tests. SDKs remain clients and do not gain governance or execution authority.
+
+Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagination.py`, `core/control_api/subscriptions.py`, and SDK transport extensions in `core/control_api/server.py` / `openapi.py`.
+
+Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
 
 ## Phase 65 — Workflow + Automation
 

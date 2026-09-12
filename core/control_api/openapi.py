@@ -13,19 +13,20 @@ def _post(description: str) -> dict[str, object]:
 
 def document() -> dict[str, object]:
     descriptions = {
-        "/api/v1": "Control API snapshot", "/api/v1/health": "Healthy API process", "/api/v1/agents": "Canonical agent catalog",
+        "/api/v1": "Control API snapshot", "/api/v1/health": "Healthy API process", "/api/v1/openapi.json": "OpenAPI 3.1 document", "/api/v1/agents": "Canonical agent catalog",
         "/api/v1/teams": "Team catalog", "/api/v1/workflows": "Organization workflows", "/api/v1/organization": "Organization expansion",
         "/api/v1/skills": "Portable Skill inventory", "/api/v1/memory": "Memory read model", "/api/v1/governance": "Governance read model",
         "/api/v1/evidence/records": "Evidence records", "/api/v1/environments": "Sanitized runtime context",
         "/api/v1/harnesses": "Registered adapter families", "/api/v1/deployments": "Harness targets and deployment plans",
         "/api/v1/settings": "Effective control-center settings", "/api/v1/visualization": "Organization/workflow graph",
         "/api/v1/control-center": "Control Center aggregate", "/api/v1/agent-builder": "Agent drafts", "/api/v1/events": "API events",
-        "/api/v1/runs": "Run records", "/api/v1/approvals": "Identity-bound outstanding approval queue",
+        "/api/v1/runs": "Run records", "/api/v1/approvals": "Identity-bound outstanding approval queue", "/api/v1/subscriptions": "Event subscriptions",
+        "/api/v1/events/stream": "Server-sent event stream", "/api/v1/events/ws": "WebSocket event stream",
     }
     paths: dict[str, object] = {path: _get(description) for path, description in descriptions.items()}
     paths["/api/v1/evidence"] = {**_get("Control-plane evidence summary"), **_post("Evidence record")}
     paths["/api/v1/deployments"] = {**_get("Harness targets and deployment plans"), **_post("Deployment plan created")}
-    paths["/api/v1/runs"] = {**_get("Run records"), "post": {"responses": {"202": {"description": "Governed run accepted"}, "400": {"description": "Invalid request"}, "403": {"description": "Governance denied"}}}}
+    paths["/api/v1/runs"] = {**_get("Run records; SDK clients may request cursor pagination"), "post": {"responses": {"200": {"description": "Idempotent replay"}, "202": {"description": "Governed run accepted"}, "400": {"description": "Invalid request"}, "403": {"description": "Governance denied"}}}}
     paths["/api/v1/approvals"] = {"get": {"responses": {"200": {"description": "Pending identity-bound approvals"}}}, "post": {"responses": {"201": {"description": "Approval/input/review gate created"}, "400": {"description": "Invalid request"}, "403": {"description": "Identity denied"}}}}
     paths["/api/v1/approvals/{approval_id}"] = _get("Approval request")
     paths["/api/v1/approvals/{approval_id}/events"] = _get("Approval audit events")
@@ -40,4 +41,6 @@ def document() -> dict[str, object]:
     paths["/api/v1/agent-builder/drafts"] = _post("Validated draft saved")
     paths["/api/v1/agent-builder/drafts/{draft_id}/test"] = _post("Non-executing draft test")
     paths["/api/v1/agent-builder/drafts/{draft_id}/archive"] = _post("Draft archived")
+    paths["/api/v1/subscriptions"] = {"get": {"responses": {"200": {"description": "Registered event subscriptions"}}}, "post": {"responses": {"201": {"description": "Registered event subscription"}, "400": {"description": "Invalid subscription"}}}}
+    paths["/api/v1/subscriptions/{subscription_id}"] = {"delete": {"responses": {"204": {"description": "Subscription removed"}, "404": {"description": "Subscription not found"}}}}
     return {"openapi": OPENAPI_VERSION, "info": {"title": "SI-Agents Control API", "version": "1.0"}, "paths": paths}

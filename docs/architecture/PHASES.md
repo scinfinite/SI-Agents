@@ -4,7 +4,7 @@
 
 ## V4 status
 
-Phases 44–63 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 64 is next.
+Phases 44–63 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 64 is in implementation pending final closure CI.
 
 The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
 
@@ -39,8 +39,8 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 60 | Evaluation + Benchmarking | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
 | 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; final mainline #1186 / `34693756693` |
-| 63 | Ecosystem / Marketplace | **Complete** | PR #77 / CI #1189 / `34694186010`; final mainline #1196 / `34694300408` |
-| 64 | SDK / Developer Platform | Next | Planned |
+| 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
+| 64 | SDK / Developer Platform | **In implementation** | PR #78 |
 | 65 | Workflow + Automation | Planned | Planned |
 | 66 | Advanced Web Control Plane | Planned | Planned |
 | 67 | Advanced TUI Control Center | Planned | Planned |
@@ -49,14 +49,18 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-## Phase 62 closure
+## Phase 64 implementation
 
-Phase 62 provides portable resource adapter contracts for runtime/session/tool/model/event/capability/context/checkpoint/artifact families; deterministic harness discovery/capability filtering; health probing with bounded quarantine/recovery; project+harness session isolation; explicit migration; and safe pre-start fallback. Post-start side-effect signals prevent unsafe fallback. The gateway never grants permissions or replaces SI Core execution authority.
+Phase 64 adds typed Python and TypeScript SDKs, versioned REST access, stable errors, optional bearer authentication, query-bound cursor pagination/filtering, bounded idempotent run creation, bounded client concurrency, SSE/WebSocket event transports, explicit subscription lifecycle, signed webhook delivery primitives, OpenAPI updates, package metadata, and adversarial transport tests. SDKs remain clients; SI Core retains governance and execution authority.
 
-Merged PR #76 as `607085782a75e31a60774afe975edcbd38bf5e4c`. PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Mainline CI #1186 / `34693756693` passed the same repository closure suite on the final Phase 62 documentation tree.
+Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagination.py`, `core/control_api/subscriptions.py`, and the SDK-facing transport extensions in `core/control_api/server.py` / `openapi.py`.
+
+Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
+
+Closure gate: PR #78 must pass the complete repository gate, then the documentation-synchronized exact tree must pass final mainline CI before Phase 64 is marked Complete.
 
 ## Phase 63 closure
 
 Phase 63 provides governed ecosystem metadata and lifecycle contracts through `MarketplaceManifest`, `MarketplaceRegistry`, and `EcosystemManager`: strict semver, dependencies, compatibility, declared permissions, provenance/trust, exact manifest identity, templates, install/update/uninstall/rollback, bounded history, and drift detection. Marketplace lifecycle never grants execution authority; SI Core remains authoritative for authorization and execution.
 
-Merged PR #77 as `19be0c14774e7073871a21fde42132a73c2a77d4`. PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final exact-tree mainline CI #1196 / `34694300408` on `4b260cecbc503ea7d405918b12a3ba80b2588685` passed the complete repository closure suite.
+Merged PR #77 as `19be0c14774e7073871a21fde42132a73c2a77d4`. PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final exact-tree mainline CI #1198 / `34694418960` on `633af3e9a5b1a106fafee37c4c95d0b18e19743e` passed the complete repository closure suite.
