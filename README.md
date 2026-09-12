@@ -2,40 +2,21 @@
 
 SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, SDKs, workflows, and runtime/integration adapters.
 
-## V4 product direction
-
-```text
-User prompt → OpenCode / Web / TUI / CLI / SDK → SI Core → Scheduler/Orchestrator
-→ Agents/Teams/Workflows → Authorization → OmniRoute
-→ Models/Providers/APIs → Results/Evidence → SI Core
-→ Observability → Evaluation → Continuous Improvement
-→ Cross-Runtime → Ecosystem / Marketplace → Release Gates / Canaries / Rollback → Clients
-```
-
-OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, workspace lifecycle, observability, evaluation, continuous improvement, and cross-runtime governance.
-
 ## Current V4 status
 
-- **Phases 44–66 are complete on `main`.**
-- **Phase 66 — Advanced Web Control Plane** is fully implemented, audited, documented, merged through PR #79, and verified by final synchronized-tree mainline CI #1280 (`34699748468`).
-- **Phase 63 — Ecosystem / Marketplace** is fully implemented, audited, documented, merged, and verified by final mainline CI #1198 (`34694418960`).
-- **Phase 64 — SDK / Developer Platform** is fully implemented and merged through PR #78; its repository closure suite passed in CI #1239 (`34697885027`).
+- **Phases 44–67 are complete on `main`.**
+- **Phase 67 — Advanced TUI Control Center** is fully implemented, audited, documented, merged through PR #80, and verified by final PR CI #1288 (`34702115990`).
+- **Phase 66 — Advanced Web Control Plane** is fully implemented, audited, documented, merged through PR #79, and verified by final synchronized-tree mainline CI #1284 (`34701494501`).
 - **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by final synchronized-tree CI #1249 (`34698187600`).
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
 
-## Phase 66 — Advanced Web Control Plane
+## Phase 67 — Advanced TUI Control Center
 
-Phase 66 adds a secure, accessible, same-origin, dependency-free operational web client over the existing WebServer and versioned Control API. It provides dashboard/health, bounded live activity, workflow/run inspection, accessible topology/DAG views, evidence, identity-bound approvals, governed run-request controls, resources/settings, and bounded repository source/search/diff inspection.
+Phase 67 provides a dependency-free, keyboard-first terminal operator cockpit over the existing Control API. It preserves the historical 14-view contract while adding bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct view navigation, bounded JSON status export, non-interactive rendering, governed run creation, and identity-bound approval controls.
 
-The browser is a client of SI Core rather than a second authority. It inherits the established authentication/audit boundary, uses restrictive CSP and `nosniff`, rejects traversal and `.git` access, bounds source/diff/search workloads, uses timeout-bounded argument-vector Git inspection, and keeps streaming in the existing API while using bounded polling for dashboard refresh. No third-party runtime dependency, telemetry, inline script, inline style, or remote font is required.
+The TUI is a client of SI Core rather than a second authority. It owns only ephemeral presentation/navigation state, never executes shell commands, never invokes providers directly, and routes mutations through the existing governed Control API methods. Page size is bounded to 1–100, unknown commands are inert, `NO_COLOR` is respected, and CI/non-TTY rendering is deterministic.
 
-Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
-
-## Phase 65 — Workflow + Automation
-
-Phase 65 adds a transport-neutral workflow state machine for versioned declarative DAGs, conditional branching, bounded fan-out and loops, delegation, human approval gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates/import/export, restart validation, and reverse-order compensation.
-
-Workflow adapters remain clients of SI Core and never create competing governance or execution authority. See `docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract and closure evidence.
+Acceptance coverage: `tests/test_phase67_tui.py` plus the Phase 41 regression suite `tests/test_phase41_tui.py`. See `docs/architecture/PHASE_67_ADVANCED_TUI_CONTROL_CENTER.md` for the complete contract.
 
 ## V4 roadmap
 
@@ -65,17 +46,17 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 63 | Ecosystem / Marketplace | Complete |
 | 64 | SDK / Developer Platform | Complete |
 | 65 | Workflow + Automation | Complete / 100% |
-| 66 | Advanced Web Control Plane | **Complete / 100%** |
-| 67 | Advanced TUI Control Center | **Next** |
-| 68 | Advanced CLI Platform | Planned |
+| 66 | Advanced Web Control Plane | Complete / 100% |
+| 67 | Advanced TUI Control Center | **Complete / 100%** |
+| 68 | Advanced CLI Platform | **Next** |
 | 69 | npm Distribution + Setup | Planned |
 | 70 | End-to-End Production Validation | Planned |
 | 71 | Final Production Hardening | Planned |
 
 ## Engineering gate
 
-A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 66 satisfies this gate.**
+A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 67 satisfies the implementation and PR CI gate; final post-merge mainline CI is the remaining release gate for this documentation update.**
 
 ## Current phase
 
-**Phase 66 — Advanced Web Control Plane is 100% complete and closed on `main`. Phase 67 — Advanced TUI Control Center is next.**
+**Phase 67 — Advanced TUI Control Center is 100% complete and closed on `main`. Phase 68 — Advanced CLI Platform is next.**
