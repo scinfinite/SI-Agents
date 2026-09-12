@@ -1,31 +1,50 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>SI-Agents Control Center</title>
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="SI-Agents production control center">
+  <title>SI-Agents — Control Center</title>
   <link rel="stylesheet" href="/assets/app.css">
 </head>
 <body>
-  <div class="shell">
-    <aside class="sidebar" aria-label="Control Center navigation">
-      <div class="brand"><span class="mark">SI</span><div><strong>SI-Agents</strong><small>Control Center</small></div></div>
-      <a class="button" href="/agent-builder">Agent Builder</a>
-      <a class="button" href="/assets/evidence.html">Evidence Explorer</a>
-      <nav id="nav" class="nav"></nav>
-      <div class="sidebar-foot"><span class="dot" id="connection-dot"></span><span id="connection-text">Connecting</span></div>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Primary navigation">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true"><span>SI</span></div>
+        <div class="brand-copy"><strong>SI-Agents</strong><small>Control Center</small></div>
+        <button id="close-nav" class="icon-button mobile-only" type="button" aria-label="Close navigation">×</button>
+      </div>
+      <div class="workspace-switcher"><span class="workspace-dot"></span><div><strong>Production</strong><small>SI Core workspace</small></div><span class="chevron">⌄</span></div>
+      <nav id="nav" class="nav" aria-label="Control Center sections"></nav>
+      <div class="sidebar-footer">
+        <div class="connection"><span id="connection-dot" class="status-dot"></span><div><strong id="connection-text">Connecting</strong><small>Control API</small></div></div>
+        <button id="help" class="icon-button" type="button" aria-label="About Control Center">?</button>
+      </div>
     </aside>
-    <main class="content">
+    <div id="backdrop" class="backdrop" hidden></div>
+    <main class="main">
       <header class="topbar">
-        <div><p class="eyebrow">OPERATOR CONSOLE</p><h1 id="page-title">Overview</h1><p id="page-subtitle" class="muted">Live state from the Control API.</p></div>
-        <div class="top-actions"><button id="refresh" class="button" type="button">Refresh</button><span id="updated" class="muted">—</span></div>
+        <div class="mobile-brand"><button id="open-nav" class="icon-button" type="button" aria-label="Open navigation">☰</button><strong>SI-Agents</strong></div>
+        <label class="global-search"><span aria-hidden="true">⌕</span><input id="global-search" type="search" autocomplete="off" placeholder="Search runs, agents, workflows, tasks…" aria-label="Search Control Center"></label>
+        <div class="top-actions">
+          <button id="refresh" class="toolbar-button" type="button"><span>↻</span><span class="desktop-only">Refresh</span></button>
+          <button id="theme-toggle" class="toolbar-button" type="button" aria-label="Switch theme"><span id="theme-icon">☀</span><span class="desktop-only">Theme</span></button>
+          <button id="notifications" class="icon-button notification-button" type="button" aria-label="Notifications"><span>♢</span><b>3</b></button>
+          <button id="profile" class="profile-button" type="button" aria-label="Open profile"><span class="avatar">A</span><span class="desktop-only"><strong>admin</strong><small>Operator</small></span><span class="chevron desktop-only">⌄</span></button>
+        </div>
       </header>
-      <div id="error" class="error" role="alert" hidden></div>
-      <section id="view" aria-live="polite"></section>
+      <div class="content">
+        <div class="page-heading"><div><p class="eyebrow">OPERATOR CONSOLE</p><h1 id="page-title">Overview</h1><p id="page-subtitle" class="muted">Live state from the Control API.</p></div><div class="page-heading-actions"><span id="updated" class="updated">—</span></div></div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <section id="view" aria-live="polite"></section>
+      </div>
     </main>
   </div>
-  <noscript><p class="noscript">JavaScript is required for the Control Center interface. The versioned API remains available directly.</p></noscript>
+  <dialog id="info-dialog" class="dialog"><div class="dialog-head"><h2>SI-Agents Control Center</h2><button id="close-dialog" class="icon-button" type="button" aria-label="Close">×</button></div><p>This interface is a governed client of the SI Core Control API. It does not execute agents, tools, workflows, shell commands, or provider calls directly.</p><p class="muted">Theme preference is stored locally in your browser. Operational state is always fetched from the versioned API.</p></dialog>
+  <noscript><div class="noscript">JavaScript is required for the Control Center interface. The versioned API remains available directly.</div></noscript>
   <script src="/assets/app.js" defer></script>
 </body>
 </html>
