@@ -20,11 +20,11 @@ def _load() -> dict[str, dict[str, str]]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError("profile store must be a JSON object")
-    result: dict[str, dict[str, str]] = {}
-    for name, value in list(data.items())[:MAX_PROFILES]:
-        if isinstance(name, str) and isinstance(value, dict):
-            result[name] = {str(k): str(v) for k, v in value.items() if k in ALLOWED_KEYS}
-    return result
+    return {
+        str(name): {str(k): str(v) for k, v in value.items() if k in ALLOWED_KEYS}
+        for name, value in list(data.items())[:MAX_PROFILES]
+        if isinstance(name, str) and isinstance(value, dict)
+    }
 
 
 def _save(data: dict[str, dict[str, str]]) -> None:
@@ -50,11 +50,13 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"ok": True, "command": "profile.get", "data": profiles[args[0]]}, sort_keys=True))
         return 0
     if command == "set":
-        if len(args) < 2 or args[0] not in {"base_url", "transport", "token_env", "root"}:
-            raise ValueError("usage: profile set <key> <value>")
-        name, key, value = args[0], args[1], args[2] if len(args) > 2 else ""
+        if len(args) != 3 or args[1] not in ALLOWED_KEYS:
+            raise ValueError("usage: profile set <name> <key> <value>")
+        name, key, value = args
         if not value or len(name) > 64 or any(ch in name for ch in "/\\\n\r"):
             raise ValueError("invalid profile name/value")
+        if key == "transport" and value not in {"local", "remote"}:
+            raise ValueError("transport must be local or remote")
         profiles.setdefault(name, {})[key] = value
         _save(profiles)
         print(json.dumps({"ok": True, "command": "profile.set", "data": {"name": name, "key": key, "value": value}}, sort_keys=True))
