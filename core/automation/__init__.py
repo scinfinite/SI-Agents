@@ -1,4 +1,4 @@
-"""Phase 15 automation primitives."""
+"""Automation primitives and the Phase 65 workflow state machine."""
 
 from core.automation.models import (
     AutomationJob,
@@ -13,6 +13,16 @@ from core.automation.registry import AutomationRegistry
 from core.automation.runner import AutomationRunner
 from core.automation.scheduler import AutomationScheduler
 from core.automation.store import AutomationStore
+from core.automation.workflows import (
+    TriggerKind,
+    WorkflowDefinition,
+    WorkflowEngine,
+    WorkflowRun,
+    WorkflowRunStatus,
+    WorkflowStep,
+    WorkflowStepKind,
+    WorkflowTrigger,
+)
 
 __all__ = [
     "AutomationJob",
@@ -26,4 +36,12 @@ __all__ = [
     "RunStatus",
     "Schedule",
     "ScheduleKind",
+    "TriggerKind",
+    "WorkflowDefinition",
+    "WorkflowEngine",
+    "WorkflowRun",
+    "WorkflowRunStatus",
+    "WorkflowStep",
+    "WorkflowStepKind",
+    "WorkflowTrigger",
 ]
