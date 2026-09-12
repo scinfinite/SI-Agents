@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation complete; final closure is gated on synchronized-tree mainline CI.**
+**Complete on main.**
 
 ## Scope delivered
 
@@ -72,8 +72,8 @@ to another subject. The API remains localhost-first under the existing Control A
 
 Adversarial coverage verifies lifecycle decisions, identity/project isolation, stale revisions,
 secret rejection, oversized metadata, expiry and restart persistence, and HTTP queue/decision/event
-controls. Existing repository-wide distribution, wheel, audit, integration, Ruff, compileall, and
-full pytest gates remain mandatory.
+controls. Final mainline CI #1050 (`34676573634`) passed distribution build, wheel verification,
+repository audit, integration verification, Ruff, and the full pytest suite.
 
 ## Engineering-reference synthesis
 
@@ -84,5 +84,6 @@ the authoritative execution/governance layer. No external system is treated as S
 ## Closure evidence
 
 - Phase 53 final exact-tree mainline CI #1041 (`34675322458`) was verified before Phase 54 work.
-- Phase 54 implementation branch and PR #66 contain the HITL authority, API, tests, and documentation.
-- Final closure requires the synchronized documentation tree to pass mainline CI before this phase is marked complete.
+- Phase 54 implementation was merged to `main` and then hardened through repository CI.
+- Mainline CI #1050 (`34676573634`) passed all required gates on commit `a28b86e4bc461530cb863369c4c18da220eb4d34`.
+- The synchronized documentation closure is committed on `main`; its final exact-tree CI is required before this documentation commit is itself considered the closure point.
