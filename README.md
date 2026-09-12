@@ -16,11 +16,20 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–65 are complete on `main`.**
+- **Phases 44–66 are complete on `main`.**
+- **Phase 66 — Advanced Web Control Plane** is fully implemented, audited, documented, merged through PR #79, and verified by final synchronized-tree mainline CI #1280 (`34699748468`).
 - **Phase 63 — Ecosystem / Marketplace** is fully implemented, audited, documented, merged, and verified by final mainline CI #1198 (`34694418960`).
 - **Phase 64 — SDK / Developer Platform** is fully implemented and merged through PR #78; its repository closure suite passed in CI #1239 (`34697885027`).
 - **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by final synchronized-tree CI #1249 (`34698187600`).
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
+
+## Phase 66 — Advanced Web Control Plane
+
+Phase 66 adds a secure, accessible, same-origin, dependency-free operational web client over the existing WebServer and versioned Control API. It provides dashboard/health, bounded live activity, workflow/run inspection, accessible topology/DAG views, evidence, identity-bound approvals, governed run-request controls, resources/settings, and bounded repository source/search/diff inspection.
+
+The browser is a client of SI Core rather than a second authority. It inherits the established authentication/audit boundary, uses restrictive CSP and `nosniff`, rejects traversal and `.git` access, bounds source/diff/search workloads, uses timeout-bounded argument-vector Git inspection, and keeps streaming in the existing API while using bounded polling for dashboard refresh. No third-party runtime dependency, telemetry, inline script, inline style, or remote font is required.
+
+Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
 
 ## Phase 65 — Workflow + Automation
 
@@ -55,9 +64,9 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 62 | Cross-Runtime / Cross-Harness | Complete |
 | 63 | Ecosystem / Marketplace | Complete |
 | 64 | SDK / Developer Platform | Complete |
-| 65 | Workflow + Automation | **Complete / 100%** |
-| 66 | Advanced Web Control Plane | Next |
-| 67 | Advanced TUI Control Center | Planned |
+| 65 | Workflow + Automation | Complete / 100% |
+| 66 | Advanced Web Control Plane | **Complete / 100%** |
+| 67 | Advanced TUI Control Center | **Next** |
 | 68 | Advanced CLI Platform | Planned |
 | 69 | npm Distribution + Setup | Planned |
 | 70 | End-to-End Production Validation | Planned |
@@ -65,8 +74,8 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 
 ## Engineering gate
 
-A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate.**
+A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 66 satisfies this gate.**
 
 ## Current phase
 
-**Phase 65 — Workflow + Automation is 100% complete. Phase 66 — Advanced Web Control Plane is next.**
+**Phase 66 — Advanced Web Control Plane is 100% complete and closed on `main`. Phase 67 — Advanced TUI Control Center is next.**
