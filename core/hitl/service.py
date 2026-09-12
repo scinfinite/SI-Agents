@@ -94,33 +94,7 @@ class ApprovalRequest:
     evidence_digest: str
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "approval_id": self.approval_id,
-            "subject_id": self.subject_id,
-            "project_id": self.project_id,
-            "kind": self.kind,
-            "gate": self.gate,
-            "action": self.action,
-            "summary": self.summary,
-            "requested_by": self.requested_by,
-            "requested_at": self.requested_at,
-            "expires_at": self.expires_at,
-            "state": self.state.value,
-            "risk": self.risk,
-            "estimated_cost": self.estimated_cost,
-            "external_egress": self.external_egress,
-            "destructive": self.destructive,
-            "security_sensitive": self.security_sensitive,
-            "deployment": self.deployment,
-            "session_id": self.session_id,
-            "run_id": self.run_id,
-            "revision": self.revision,
-            "decision_by": self.decision_by,
-            "decision_at": self.decision_at,
-            "decision_reason": self.decision_reason,
-            "decision_payload": dict(self.decision_payload),
-            "evidence_digest": self.evidence_digest,
-        }
+        return {"approval_id": self.approval_id, "subject_id": self.subject_id, "project_id": self.project_id, "kind": self.kind, "gate": self.gate, "action": self.action, "summary": self.summary, "requested_by": self.requested_by, "requested_at": self.requested_at, "expires_at": self.expires_at, "state": self.state.value, "risk": self.risk, "estimated_cost": self.estimated_cost, "external_egress": self.external_egress, "destructive": self.destructive, "security_sensitive": self.security_sensitive, "deployment": self.deployment, "session_id": self.session_id, "run_id": self.run_id, "revision": self.revision, "decision_by": self.decision_by, "decision_at": self.decision_at, "decision_reason": self.decision_reason, "decision_payload": dict(self.decision_payload), "evidence_digest": self.evidence_digest}
 
 
 @dataclass(frozen=True)
@@ -133,14 +107,7 @@ class ApprovalDecision:
     evidence_digest: str
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "approval_id": self.approval_id,
-            "state": self.state.value,
-            "decision_by": self.decision_by,
-            "reason": self.reason,
-            "payload": dict(self.payload),
-            "evidence_digest": self.evidence_digest,
-        }
+        return {"approval_id": self.approval_id, "state": self.state.value, "decision_by": self.decision_by, "reason": self.reason, "payload": dict(self.payload), "evidence_digest": self.evidence_digest}
 
 
 class HumanApprovalService:
@@ -186,17 +153,7 @@ class HumanApprovalService:
             self._db.close()
 
     def _row(self, row: sqlite3.Row) -> ApprovalRequest:
-        return ApprovalRequest(
-            approval_id=row["approval_id"], subject_id=row["subject_id"], project_id=row["project_id"],
-            kind=row["kind"], gate=row["gate"], action=row["action"], summary=row["summary"],
-            requested_by=row["requested_by"], requested_at=row["requested_at"], expires_at=row["expires_at"],
-            state=ApprovalState(row["state"]), risk=row["risk"], estimated_cost=row["estimated_cost"],
-            external_egress=bool(row["external_egress"]), destructive=bool(row["destructive"]),
-            security_sensitive=bool(row["security_sensitive"]), deployment=bool(row["deployment"]),
-            session_id=row["session_id"], run_id=row["run_id"], revision=row["revision"],
-            decision_by=row["decision_by"], decision_at=row["decision_at"], decision_reason=row["decision_reason"],
-            decision_payload=json.loads(row["decision_payload"]), evidence_digest=row["evidence_digest"],
-        )
+        return ApprovalRequest(approval_id=row["approval_id"], subject_id=row["subject_id"], project_id=row["project_id"], kind=row["kind"], gate=row["gate"], action=row["action"], summary=row["summary"], requested_by=row["requested_by"], requested_at=row["requested_at"], expires_at=row["expires_at"], state=ApprovalState(row["state"]), risk=row["risk"], estimated_cost=row["estimated_cost"], external_egress=bool(row["external_egress"]), destructive=bool(row["destructive"]), security_sensitive=bool(row["security_sensitive"]), deployment=bool(row["deployment"]), session_id=row["session_id"], run_id=row["run_id"], revision=row["revision"], decision_by=row["decision_by"], decision_at=row["decision_at"], decision_reason=row["decision_reason"], decision_payload=json.loads(row["decision_payload"]), evidence_digest=row["evidence_digest"])
 
     def _expire_locked(self, approval_id: str) -> None:
         row = self._db.execute("SELECT * FROM approvals WHERE approval_id=?", (approval_id,)).fetchone()
@@ -204,15 +161,9 @@ class HumanApprovalService:
             return
         now = time.time()
         digest = hashlib.sha256(f"{approval_id}|expired|{now:.6f}".encode()).hexdigest()
-        self._db.execute(
-            "UPDATE approvals SET state=?, decision_by=?, decision_at=?, decision_reason=?, revision=revision+1, evidence_digest=? WHERE approval_id=?",
-            (ApprovalState.EXPIRED.value, "system", now, "approval expired", digest, approval_id),
-        )
+        self._db.execute("UPDATE approvals SET state=?, decision_by=?, decision_at=?, decision_reason=?, revision=revision+1, evidence_digest=? WHERE approval_id=?", (ApprovalState.EXPIRED.value, "system", now, "approval expired", digest, approval_id))
         sequence = self._db.execute("SELECT COALESCE(MAX(sequence), 0) + 1 FROM approval_events WHERE approval_id=?", (approval_id,)).fetchone()[0]
-        self._db.execute(
-            "INSERT INTO approval_events VALUES (?,?,?,?,?,?,?)",
-            (uuid.uuid4().hex, approval_id, sequence, ApprovalState.EXPIRED.value, "system", now, "{}", digest),
-        )
+        self._db.execute("INSERT INTO approval_events VALUES (?,?,?,?,?,?,?,?)", (uuid.uuid4().hex, approval_id, sequence, ApprovalState.EXPIRED.value, "system", now, "{}", digest))
 
     def _require(self, approval_id: str, subject_id: str, project_id: str) -> sqlite3.Row:
         row = self._db.execute("SELECT * FROM approvals WHERE approval_id=?", (approval_id,)).fetchone()
@@ -253,22 +204,13 @@ class HumanApprovalService:
         approval_id = f"approval_{uuid.uuid4().hex}"
         fingerprint = _json({"approval_id": approval_id, "subject_id": subject_id, "project_id": project_id, "action": action, "gate": gate, "risk": payload.get("risk", "low"), "estimated_cost": estimated_cost})
         digest = hashlib.sha256(fingerprint.encode()).hexdigest()
-        values = (
-            approval_id, subject_id, project_id, kind, gate, action, summary, requested_by,
-            now, now + expires_in, ApprovalState.PENDING.value, str(payload.get("risk", "low")),
-            estimated_cost, int(bool(payload.get("external_egress", False))), int(bool(payload.get("destructive", False))),
-            int(bool(payload.get("security_sensitive", False))), int(bool(payload.get("deployment", False))),
-            payload.get("session_id"), payload.get("run_id"), 0, None, None, None, metadata_json, digest,
-        )
+        values = (approval_id, subject_id, project_id, kind, gate, action, summary, requested_by, now, now + expires_in, ApprovalState.PENDING.value, str(payload.get("risk", "low")), estimated_cost, int(bool(payload.get("external_egress", False))), int(bool(payload.get("destructive", False))), int(bool(payload.get("security_sensitive", False))), int(bool(payload.get("deployment", False))), payload.get("session_id"), payload.get("run_id"), 0, None, None, None, metadata_json, digest)
         with self._lock:
             count = self._db.execute("SELECT COUNT(*) FROM approvals WHERE project_id=? AND state=?", (project_id, ApprovalState.PENDING.value)).fetchone()[0]
             if count >= _MAX_QUEUE:
                 raise ValueError("approval queue limit reached")
             self._db.execute("INSERT INTO approvals VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values)
-            self._db.execute(
-                "INSERT INTO approval_events VALUES (?,?,?,?,?,?,?)",
-                (uuid.uuid4().hex, approval_id, 1, ApprovalState.PENDING.value, requested_by, now, '{"notification":"queued"}', digest),
-            )
+            self._db.execute("INSERT INTO approval_events VALUES (?,?,?,?,?,?,?,?)", (uuid.uuid4().hex, approval_id, 1, ApprovalState.PENDING.value, requested_by, now, '{"notification":"queued"}', digest))
             return self._row(self._db.execute("SELECT * FROM approvals WHERE approval_id=?", (approval_id,)).fetchone())
 
     def get(self, approval_id: str, *, subject_id: str, project_id: str) -> ApprovalRequest:
@@ -306,14 +248,8 @@ class HumanApprovalService:
             now = time.time()
             digest = hashlib.sha256(f"{row['evidence_digest']}|{decision.value}|{decision_by}|{reason}|{encoded}".encode()).hexdigest()
             revision = row["revision"] + 1
-            self._db.execute(
-                "UPDATE approvals SET state=?, decision_by=?, decision_at=?, decision_reason=?, decision_payload=?, revision=?, evidence_digest=? WHERE approval_id=?",
-                (decision.value, decision_by, now, reason, encoded, revision, digest, approval_id),
-            )
-            self._db.execute(
-                "INSERT INTO approval_events VALUES (?,?,?,?,?,?,?)",
-                (uuid.uuid4().hex, approval_id, revision + 1, decision.value, decision_by, now, encoded, digest),
-            )
+            self._db.execute("UPDATE approvals SET state=?, decision_by=?, decision_at=?, decision_reason=?, decision_payload=?, revision=?, evidence_digest=? WHERE approval_id=?", (decision.value, decision_by, now, reason, encoded, revision, digest, approval_id))
+            self._db.execute("INSERT INTO approval_events VALUES (?,?,?,?,?,?,?,?)", (uuid.uuid4().hex, approval_id, revision + 1, decision.value, decision_by, now, encoded, digest))
             return ApprovalDecision(approval_id, decision, decision_by, reason, dict(decision_payload), digest)
 
     def cancel(self, approval_id: str, *, subject_id: str, project_id: str, actor: str, reason: str = "cancelled") -> ApprovalDecision:
@@ -323,7 +259,4 @@ class HumanApprovalService:
         with self._lock:
             self._require(approval_id, subject_id, project_id)
             rows = self._db.execute("SELECT * FROM approval_events WHERE approval_id=? ORDER BY sequence", (approval_id,)).fetchall()
-            return [
-                {"event_id": row["event_id"], "approval_id": approval_id, "sequence": row["sequence"], "state": row["state"], "actor": row["actor"], "occurred_at": row["occurred_at"], "payload": json.loads(row["payload_json"]), "evidence_digest": row["evidence_digest"]}
-                for row in rows
-            ]
+            return [{"event_id": row["event_id"], "approval_id": approval_id, "sequence": row["sequence"], "state": row["state"], "actor": row["actor"], "occurred_at": row["occurred_at"], "payload": json.loads(row["payload_json"]), "evidence_digest": row["evidence_digest"]} for row in rows]
