@@ -2,29 +2,29 @@
 
 ## Current V4 baseline
 
-SI-Agents V4 has completed Phases **44–53**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 54 — Human-in-the-Loop is next.**
+SI-Agents V4 has completed Phases **44–54**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 55 — Durable Waiting + Scheduling is the active implementation phase.**
 
-See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The Phase 53 implementation record is `architecture/PHASE_53_PERSISTENT_SESSIONS.md`.
+See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The current Phase 55 implementation record is `architecture/PHASE_55_DURABLE_WAITING_SCHEDULING.md`.
 
-## Phase 52 closure
+## Phase 54 closure
 
-Phase 52 is fully closed on `main`. Final exact-tree mainline CI #1020 (`34673411916`) passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+Phase 54 is fully closed on `main`. It provides durable human approval/input/review gates, risk and deployment decisions, identity binding, expiry, fail-closed behavior, audit/evidence, and shared Control API semantics without granting execution authority.
 
-## Phase 53 closure
+Closure evidence: final synchronized-tree mainline CI #1051 (`34676632475`) passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 
-Phase 53 is fully closed on `main`. It provides durable SQLite-backed SI Core sessions with lifecycle/ownership isolation, harness binding, optimistic revisions, durable state/context/token-cost history, ordered events/replay, artifact evidence, expiration/archival, export/import, clone/branch lineage, bounded search, restart recovery, and persistent OpenCode/runtime continuity. Security tests cover ownership isolation, stale writes, secret leakage, schema/ownership validation, expiry/archive, artifact limits, replay, cloning, JSON safety, and harness mismatch.
+## Phase 55 — Durable Waiting + Scheduling
 
-Closure evidence: implementation merge commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), and final synchronized-tree mainline CI #1037 (`34675239106`). The final gate passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+The active Phase 55 implementation provides durable SQLite-backed waits, timer/delayed/recurring/cron scheduling, event/resource/human/external wake-up, deadlines and fail-closed expiry, restart-safe recovery, priority plus age-based fairness, explicit ready/claimed/completed lifecycle, optimistic revisions, bounded queue/payload limits, secret-like field rejection, ordered lifecycle events, and Control API routes with subject/project isolation.
 
-The final CI hardening also fixed a recurring Web oversized-body test/runtime race by boundedly draining rejected request bodies and safely handling client disconnects while preserving the 1 MiB request limit.
+The phase record defines the authority boundary: waiting state and scheduling belong to SI Core; the Control API is a transport surface; a wait claim never grants credentials, capabilities, provider authorization, or execution authority.
 
 ## V4 product surfaces
 
-Web, TUI, CLI, and OpenCode remain clients/adapters of one authoritative SI Core. No interface creates competing execution/session authority.
+Web, TUI, CLI, and OpenCode remain clients/adapters of one authoritative SI Core. No interface creates competing execution/session/wait authority.
 
-## Planned Phases 54–71
+## Planned Phases 56–71
 
-The roadmap remains unchanged after Phase 53: Human-in-the-Loop, Durable Waiting + Scheduling, Intelligent Routing + Economics, Security Platform, Workspace/Worktree Lifecycle, Observability, Evaluation + Benchmarking, Continuous Improvement, Cross-Runtime/Cross-Harness, Ecosystem/Marketplace, SDK/Developer Platform, Workflow + Automation, Advanced Web, Advanced TUI, Advanced CLI, npm Distribution + Setup, End-to-End Production Validation, and Final Production Hardening.
+The roadmap continues with Intelligent Routing + Economics, Security Platform, Workspace/Worktree Lifecycle, Observability, Evaluation + Benchmarking, Continuous Improvement, Cross-Runtime/Cross-Harness, Ecosystem/Marketplace, SDK/Developer Platform, Workflow + Automation, Advanced Web, Advanced TUI, Advanced CLI, npm Distribution + Setup, End-to-End Production Validation, and Final Production Hardening.
 
 ## Phase closure rule
 
