@@ -16,10 +16,11 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–62 are complete on `main`.**
+- **Phases 44–61 are complete on `main`.**
+- **Phase 62 — Cross-Runtime / Cross-Harness is implemented and merged; final synchronized-tree mainline CI closure is pending.**
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
 - Phase 61 merged as PR #75 / CI #1157 (`34692165853`).
-- Phase 62 merged as PR #76 / PR CI #1166 (`34692621358`); final mainline CI is the closure gate.
+- Phase 62 merged as PR #76 / PR CI #1166 (`34692621358`).
 
 ## Phase 62 — Cross-Runtime / Cross-Harness
 
@@ -51,7 +52,7 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 59 | Observability | Advanced hardened |
 | 60 | Evaluation + Benchmarking | Advanced hardened |
 | 61 | Continuous Improvement | Complete |
-| 62 | Cross-Runtime / Cross-Harness | Complete |
+| 62 | Cross-Runtime / Cross-Harness | In implementation — final CI pending |
 | 63 | Ecosystem / Marketplace | Next |
 | 64 | SDK / Developer Platform | Planned |
 | 65 | Workflow + Automation | Planned |
@@ -68,4 +69,4 @@ A phase is not complete until implementation, unit/integration tests, security/a
 
 ## Next phase
 
-**Phase 63 — Ecosystem / Marketplace**.
+**Phase 63 — Ecosystem / Marketplace after Phase 62 closure.**
