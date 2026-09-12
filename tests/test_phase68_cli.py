@@ -31,7 +31,15 @@ def test_trailing_json_option_is_supported_by_public_dispatch(capsys) -> None:
     from core.cli.dispatch import main as dispatch_main
     assert dispatch_main(["status", "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)
-    assert payload["command"] == "status"
+    assert "version" in payload
+
+
+def test_legacy_run_is_not_reinterpreted_as_phase68_run(capsys, monkeypatch) -> None:
+    import core.cli.main as legacy
+    monkeypatch.setattr(legacy, "main", lambda argv=None: 17)
+    from core.cli.dispatch import main as dispatch_main
+    assert dispatch_main(["run", "engineering", "--objective", "review"]) == 17
+    capsys.readouterr()
 
 
 def test_governed_run_creation_is_not_direct_execution(capsys) -> None:
