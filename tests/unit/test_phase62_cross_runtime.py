@@ -11,6 +11,7 @@ from core.runtime.models import (
     RuntimeEventType,
     RuntimeKind,
 )
+from core.runtime.portable import PortableAdapterDescriptor, PortableAdapterKind, PortableAdapterRegistry
 from core.runtime.protocol import HarnessMetadata
 from core.runtime.registry import HarnessRegistry
 from core.runtime.session import RuntimeSession, SessionRegistry, SessionStatus
@@ -160,3 +161,39 @@ def test_no_candidate_fails_closed_when_all_are_disabled() -> None:
         assert "no healthy enabled harness" in str(exc)
     else:
         raise AssertionError("expected fail-closed selection")
+
+
+class _Portable:
+    def __init__(self, descriptor):
+        self.descriptor = descriptor
+
+    def health(self) -> bool:
+        return True
+
+
+def test_portable_adapter_registry_covers_all_v4_resource_kinds() -> None:
+    registry = PortableAdapterRegistry()
+    for kind in PortableAdapterKind:
+        descriptor = PortableAdapterDescriptor(f"{kind.value}-adapter", kind, "1.0", ("read",))
+        registry.register(_Portable(descriptor), enabled=True)
+    assert {item.kind for item in registry.discover()} == set(PortableAdapterKind)
+    assert len(registry.enabled(kind=PortableAdapterKind.CONTEXT)) == 1
+
+
+def test_portable_adapter_rejects_duplicate_capabilities_and_registry_ids() -> None:
+    descriptor = PortableAdapterDescriptor("context", PortableAdapterKind.CONTEXT, "1.0", ("read", "read"))
+    try:
+        _Portable(descriptor)
+    except ValueError as exc:
+        assert "unique" in str(exc)
+    else:
+        raise AssertionError("expected duplicate capability rejection")
+
+
+def test_route_decision_fingerprint_does_not_include_request_input() -> None:
+    registry = HarnessRegistry()
+    registry.register(adapter("a"), enabled=True)
+    gateway = CrossRuntimeGateway(registry)
+    response = gateway.invoke(InvocationRequest("echo", {"secret": "do-not-store"}, "project"))
+    assert response.output == "a"
+    assert "do-not-store" not in gateway.decisions()[-1].decision_id
