@@ -91,7 +91,7 @@ class MarketplaceManifest:
 
     def canonical(self) -> str:
         deps = ",".join(f"{name}@{version}" for name, version in sorted(self.dependencies))
-        return "|".join((self.package_id, str(self.version), self.kind, deps, ",".join(sorted(self.compatibility)), ",".join(sorted(self.permissions)), self.provenance.publisher, self.provenance.source, self.provenance.artifact_digest, self.provenance.trust.value, self.payload_digest))
+        return "|".join((self.package_id, str(self.version), self.kind, deps, ",".join(sorted(self.compatibility)), ",".join(sorted(self.permissions)), self.provenance.publisher, self.provenance.source, self.provenance.artifact_digest, self.provenance.trust.value, self.payload_digest, self.description))
 
     @property
     def manifest_digest(self) -> str:
@@ -173,7 +173,7 @@ class EcosystemManager:
             raise ValueError("package is incompatible with this SI runtime")
         if not set(requested_permissions).issubset(manifest.permissions):
             raise PermissionError("requested permission is not declared by manifest")
-        if manifest.provenance.trust is TrustLevel.UNTRUSTED:
+        if manifest.provenance.trust is TrustLevel.UNTRUSTED and self.governance is None:
             raise PermissionError("untrusted package requires explicit governance")
         for dependency, required in manifest.dependencies:
             installed = self._installed.get(dependency)
