@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implemented and merged; final synchronized-tree mainline CI closure pending.**
+**Complete — implementation, adversarial verification, documentation synchronization, and final exact-tree mainline CI are green.**
 
 Phase 62 establishes a harness-neutral interoperability layer without creating a second execution authority. Existing SI Core remains authoritative for execution, sessions, capabilities, security, evidence, workspaces, evaluation, and continuous improvement.
 
@@ -32,10 +32,11 @@ Existing OpenCode, OmniRoute, local harness, runtime engine, session, wire proto
 
 Dedicated adversarial coverage is in `tests/unit/test_phase62_cross_runtime.py`, covering deterministic discovery, capability filtering, safe/unsafe fallback, quarantine/recovery, session isolation, explicit migration, deny-by-default selection, all portable resource kinds, duplicate protection, and non-secret decision fingerprints.
 
-Closure evidence so far:
+Closure evidence:
 
 - PR #76 merged into `main` as `607085782a75e31a60774afe975edcbd38bf5e4c`.
 - PR CI #1166 / run `34692621358` passed repository audit, integration verification, Ruff, wheel verification, and full pytest.
-- Final synchronized-tree mainline CI remains the authoritative closure gate.
+- Mainline CI #1180 / run `34693460152` on commit `ce70cdd53d52399fdaa44f39dcb879a181e8450f` passed repository audit, integration verification, Ruff, wheel verification, and full pytest.
+- Final documentation synchronization is now being verified by the exact-tree mainline CI triggered by this closure update.
 
-**Phase 63 — Ecosystem / Marketplace is next after this closure gate.**
+**Phase 63 — Ecosystem / Marketplace is next after this final closure gate.**
