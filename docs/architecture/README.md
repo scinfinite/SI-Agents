@@ -33,21 +33,21 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 55 | Durable Waiting + Scheduling | Complete | Final synchronized-tree closure CI #1080 / `34678317246` |
 | 56 | Intelligent Routing + Economics | Complete | Final synchronized-tree mainline CI #1099 / `34682849381` |
 | 57 | Security Platform | Complete | Final synchronized-tree mainline CI #1113 / `34684260315` |
-| 58 | Workspace / Worktree Lifecycle | Complete | Final synchronized-tree mainline CI #1128 / `34686980055` |
-| 59 | Observability | Complete | Final synchronized-tree mainline CI #1128 / `34686980055` |
-| 60 | Evaluation + Benchmarking | Complete | PR CI #1137 / `34687139768`; final synchronized-tree CI #1138 / `34687181487`; documentation closure CI #1140 / `34687287957` |
+| 58 | Workspace / Worktree Lifecycle | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
+| 59 | Observability | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
+| 60 | Evaluation + Benchmarking | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 
 ## Phase 58 — workspace / worktree lifecycle
 
-The workspace authority provides tenant/project isolation, optimistic revisions, bounded lease locks, directory and Git-worktree materialization, branch lifecycle, dirty/conflict inspection, deterministic diffs and merge preparation, snapshots and diff artifacts, approved resume, recovery/cleanup, path and symlink defenses, tamper-evident lifecycle evidence, and bounded garbage-collection discovery. Workspace state does not grant credentials, capabilities, provider access, or execution identity.
+The workspace authority provides tenant/project isolation, optimistic revisions, bounded lease locks, directory and Git-worktree materialization, branch lifecycle, dirty/conflict inspection, deterministic diffs and merge preparation, snapshots and diff artifacts, approved resume, recovery/cleanup, path and symlink defenses, tamper-evident lifecycle evidence, and bounded garbage-collection discovery. Advanced hardening adds adversarial event-chain tamper detection and authorization-callback verification. Workspace state does not grant credentials, capabilities, provider access, or execution identity.
 
 ## Phase 59 — observability
 
-The observability authority provides bounded structured logs/events/metrics/spans, secret-like redaction, integrity evidence, correlation/causation, trace timelines, live-feed retention, percentile metrics, operator health, JSONL export, and tenant/project filtering. Telemetry is evidence only; it cannot grant authorization or execution authority.
+The observability authority provides bounded structured logs/events/metrics/spans, shared security-scanner secret detection plus redaction, integrity evidence across the full bounded integrity scan, correlation/causation, trace timelines, live-feed retention, percentile metrics, operator health, JSONL export, and tenant/project filtering. Telemetry is evidence only; it cannot grant authorization or execution authority.
 
 ## Phase 60 — evaluation + benchmarking
 
-The evaluation authority provides deterministic golden cases, exact/normalized/containment/JSON/tolerance/rubric scoring, weighted multi-metric dimensions, reliability/security/latency/cost measurements, explicit failure taxonomy, fail-closed scoring, bounded evidence, benchmark history, regression detection, human review, deterministic weighted experiments, cryptographic report digests, and configurable release gates. Evaluation remains advisory and cannot grant execution, credentials, provider access, or approvals.
+The evaluation authority provides deterministic golden cases, exact/normalized/containment/JSON/tolerance/rubric scoring, weighted multi-metric dimensions, reliability/security/latency/cost measurements, explicit failure taxonomy, fail-closed scoring, bounded evidence, benchmark history, regression detection, human review, deterministic weighted experiments, cryptographic report digests, and configurable release gates. Advanced hardening makes documented cost/latency budgets enforceable, rejects secret-bearing evaluator outputs/metadata/review rationale, verifies persisted evidence integrity, tightens experiment inputs, and fails closed on empty reports. Evaluation remains advisory and cannot grant execution, credentials, provider access, or approvals.
 
 ## Cross-cutting authority contract
 
@@ -55,6 +55,6 @@ Security decisions are fail-closed. Workspace, telemetry, and evaluation evidenc
 
 ## Current position
 
-**V4 Phases 44–60 are complete on `main`. Phase 61 — Continuous Improvement is next.**
+**V4 Phases 44–60 are complete at the required advanced-hardening level on `main`. Phase 61 — Continuous Improvement is next.**
 
-The latest synchronized-tree mainline documentation closure is CI #1140 (`34687287957`) on `main` commit `9ea292447b0c55e5af955307acd5357a92f5ad3a`, and it passed successfully.
+The advanced-hardening implementation was merged through PR #74. Its PR CI #1143 (`34691131729`) passed, and the synchronized-tree mainline CI #1144 (`34691176676`) passed repository audit, distribution/wheel verification, integration verification, Ruff, and the full test suite.
