@@ -1,9 +1,7 @@
 """Durable, restart-safe waits and schedules owned by SI Core."""
 from __future__ import annotations
 
-import hashlib
 import json
-import math
 import sqlite3
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -20,6 +18,7 @@ _MAX_INTERVAL = 365 * 24 * 3600
 class WaitState(StrEnum):
     WAITING = "waiting"
     READY = "ready"
+    CLAIMED = "claimed"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
     EXPIRED = "expired"
@@ -47,7 +46,7 @@ class ScheduleSpec:
     max_occurrences: int | None = None
 
     def __post_init__(self) -> None:
-        if self.kind in {WaitKind.RECURRING, WaitKind.DELAYED}:
+        if self.kind is WaitKind.RECURRING:
             if self.interval_seconds is None or not 1 <= self.interval_seconds <= _MAX_INTERVAL:
                 raise ValueError("interval_seconds must be between 1 and one year")
         if self.kind is WaitKind.CRON:
@@ -95,9 +94,7 @@ class WaitRecord:
                 "interval_seconds": self.schedule.interval_seconds,
                 "cron": self.schedule.cron,
                 "max_occurrences": self.schedule.max_occurrences,
-            }
-            if self.schedule
-            else None,
+            } if self.schedule else None,
             "trigger": self.trigger,
             "payload": self.payload,
             "occurrences": self.occurrences,
@@ -106,11 +103,7 @@ class WaitRecord:
 
 
 class WaitingService:
-    """SQLite-backed wait ledger and fair due-item scheduler.
-
-    Waiting records never hold executor capacity. `claim_ready` only returns a bounded
-    execution token; completion is explicit and recurrence creates the next wait atomically.
-    """
+    """SQLite-backed wait ledger and fair due-item scheduler."""
 
     def __init__(self, path: str | Path) -> None:
         self.path = Path(path)
@@ -155,20 +148,10 @@ class WaitingService:
             """
         )
 
-    def create(
-        self,
-        *,
-        subject_id: str,
-        project_id: str,
-        kind: WaitKind,
-        wake_at: datetime,
-        deadline: datetime | None = None,
-        priority: int = 0,
-        schedule: ScheduleSpec | None = None,
-        trigger: str | None = None,
-        payload: dict[str, object] | None = None,
-        now: datetime | None = None,
-    ) -> WaitRecord:
+    def create(self, *, subject_id: str, project_id: str, kind: WaitKind, wake_at: datetime,
+               deadline: datetime | None = None, priority: int = 0, schedule: ScheduleSpec | None = None,
+               trigger: str | None = None, payload: dict[str, object] | None = None,
+               now: datetime | None = None) -> WaitRecord:
         subject_id = _identity(subject_id, "subject_id")
         project_id = _identity(project_id, "project_id")
         if not isinstance(kind, WaitKind):
@@ -188,7 +171,7 @@ class WaitingService:
         payload = _safe_payload(payload or {})
         now = _utc(now or datetime.now(UTC))
         with self._lock:
-            count = self._db.execute("SELECT COUNT(*) FROM waits WHERE state IN ('waiting','ready')").fetchone()[0]
+            count = self._db.execute("SELECT COUNT(*) FROM waits WHERE state IN ('waiting','ready','claimed')").fetchone()[0]
             if count >= _MAX_QUEUE:
                 raise RuntimeError("waiting queue capacity exceeded")
             sequence = self._db.execute("SELECT COALESCE(MAX(created_sequence), 0) + 1 FROM waits").fetchone()[0]
@@ -196,24 +179,9 @@ class WaitingService:
             stamp = now.isoformat()
             self._db.execute(
                 "INSERT INTO waits VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (
-                    wait_id,
-                    subject_id,
-                    project_id,
-                    kind.value,
-                    WaitState.WAITING.value,
-                    wake_at.isoformat(),
-                    stamp,
-                    stamp,
-                    deadline.isoformat() if deadline else None,
-                    priority,
-                    sequence,
-                    _schedule_json(schedule),
-                    _clean_trigger(trigger),
-                    json.dumps(payload, sort_keys=True, separators=(",", ":")),
-                    0,
-                    1,
-                ),
+                (wait_id, subject_id, project_id, kind.value, WaitState.WAITING.value, wake_at.isoformat(), stamp,
+                 stamp, deadline.isoformat() if deadline else None, priority, sequence, _schedule_json(schedule),
+                 _clean_trigger(trigger), json.dumps(payload, sort_keys=True, separators=(",", ":")), 0, 1),
             )
             self._event(wait_id, subject_id, project_id, "created", now, {"kind": kind.value})
             return self.get(wait_id, subject_id=subject_id, project_id=project_id)
@@ -224,14 +192,7 @@ class WaitingService:
             raise KeyError(wait_id)
         return _record(row)
 
-    def list(
-        self,
-        *,
-        subject_id: str,
-        project_id: str,
-        state: WaitState | None = None,
-        limit: int = 100,
-    ) -> list[WaitRecord]:
+    def list(self, *, subject_id: str, project_id: str, state: WaitState | None = None, limit: int = 100) -> list[WaitRecord]:
         _identity(subject_id, "subject_id")
         _identity(project_id, "project_id")
         if not 1 <= limit <= 500:
@@ -246,112 +207,82 @@ class WaitingService:
         return [_record(row) for row in self._db.execute(query, args)]
 
     def promote_due(self, *, now: datetime | None = None, limit: int = 500) -> int:
-        """Promote timers and expire deadlines after restart; no worker is involved."""
         now = _utc(now or datetime.now(UTC))
         if not 1 <= limit <= 1000:
             raise ValueError("limit must be between 1 and 1000")
         changed = 0
         with self._lock:
-            rows = self._db.execute(
-                "SELECT * FROM waits WHERE state='waiting' AND wake_at<=? ORDER BY wake_at LIMIT ?",
-                (now.isoformat(), limit),
-            ).fetchall()
+            rows = self._db.execute("SELECT * FROM waits WHERE state='waiting' AND wake_at<=? ORDER BY wake_at LIMIT ?", (now.isoformat(), limit)).fetchall()
             for row in rows:
-                if row["deadline"] and row["deadline"] <= now.isoformat():
-                    state = WaitState.EXPIRED
-                    event = "expired"
-                else:
-                    state = WaitState.READY
-                    event = "ready"
-                self._db.execute(
-                    "UPDATE waits SET state=?, updated_at=?, revision=revision+1 WHERE wait_id=? AND state='waiting'",
-                    (state.value, now.isoformat(), row["wait_id"]),
-                )
+                state, event = (WaitState.EXPIRED, "expired") if row["deadline"] and row["deadline"] <= now.isoformat() else (WaitState.READY, "ready")
+                self._db.execute("UPDATE waits SET state=?, updated_at=?, revision=revision+1 WHERE wait_id=? AND state='waiting'", (state.value, now.isoformat(), row["wait_id"]))
                 self._event(row["wait_id"], row["subject_id"], row["project_id"], event, now, {})
                 changed += 1
-            deadline_rows = self._db.execute(
-                "SELECT * FROM waits WHERE state='waiting' AND deadline IS NOT NULL AND deadline<=? LIMIT ?",
-                (now.isoformat(), limit),
-            ).fetchall()
+            deadline_rows = self._db.execute("SELECT * FROM waits WHERE state='waiting' AND deadline IS NOT NULL AND deadline<=? LIMIT ?", (now.isoformat(), limit)).fetchall()
             for row in deadline_rows:
                 if row["wake_at"] > now.isoformat():
-                    self._db.execute(
-                        "UPDATE waits SET state='expired', updated_at=?, revision=revision+1 WHERE wait_id=? AND state='waiting'",
-                        (now.isoformat(), row["wait_id"]),
-                    )
+                    self._db.execute("UPDATE waits SET state='expired', updated_at=?, revision=revision+1 WHERE wait_id=? AND state='waiting'", (now.isoformat(), row["wait_id"]))
                     self._event(row["wait_id"], row["subject_id"], row["project_id"], "expired", now, {})
                     changed += 1
         return changed
 
-    def claim_ready(
-        self,
-        *,
-        subject_id: str,
-        project_id: str,
-        limit: int = 1,
-        now: datetime | None = None,
-    ) -> list[WaitRecord]:
-        """Claim ready waits with priority plus bounded aging for starvation prevention."""
+    def claim_ready(self, *, subject_id: str, project_id: str, limit: int = 1, now: datetime | None = None) -> list[WaitRecord]:
         self.promote_due(now=now)
         now = _utc(now or datetime.now(UTC))
         if not 1 <= limit <= 100:
             raise ValueError("limit must be between 1 and 100")
         with self._lock:
-            rows = self._db.execute(
-                "SELECT * FROM waits WHERE subject_id=? AND project_id=? AND state='ready'",
-                (subject_id, project_id),
-            ).fetchall()
+            rows = self._db.execute("SELECT * FROM waits WHERE subject_id=? AND project_id=? AND state='ready'", (subject_id, project_id)).fetchall()
             def score(row: sqlite3.Row) -> tuple[float, int]:
                 age = max(0.0, (now - _parse(row["created_at"])).total_seconds())
                 return (row["priority"] + min(100.0, age / 60.0), -row["created_sequence"])
             rows = sorted(rows, key=score, reverse=True)[:limit]
             result: list[WaitRecord] = []
             for row in rows:
-                cursor = self._db.execute(
-                    "UPDATE waits SET state='completed', updated_at=?, revision=revision+1 WHERE wait_id=? AND state='ready'",
-                    (now.isoformat(), row["wait_id"]),
-                )
+                cursor = self._db.execute("UPDATE waits SET state='claimed', updated_at=?, revision=revision+1 WHERE wait_id=? AND state='ready'", (now.isoformat(), row["wait_id"]))
                 if cursor.rowcount != 1:
                     continue
                 self._event(row["wait_id"], subject_id, project_id, "claimed", now, {})
                 result.append(self.get(row["wait_id"], subject_id=subject_id, project_id=project_id))
             return result
 
-    def complete(
-        self,
-        wait_id: str,
-        *,
-        subject_id: str,
-        project_id: str,
-        expected_revision: int | None = None,
-        now: datetime | None = None,
-    ) -> WaitRecord:
-        """Finalize a claimed wait; recurrence schedules the next occurrence atomically."""
+    def complete(self, wait_id: str, *, subject_id: str, project_id: str, expected_revision: int | None = None, now: datetime | None = None) -> WaitRecord:
         record = self.get(wait_id, subject_id=subject_id, project_id=project_id)
-        if record.state is not WaitState.COMPLETED:
+        if record.state is not WaitState.CLAIMED:
             raise ValueError("only claimed waits can be completed")
         if expected_revision is not None and expected_revision != record.revision:
             raise ValueError("stale wait revision")
-        if not record.schedule:
-            return record
-        if record.schedule.max_occurrences and record.occurrences + 1 >= record.schedule.max_occurrences:
-            return record
         now = _utc(now or datetime.now(UTC))
+        if not record.schedule:
+            with self._lock:
+                cursor = self._db.execute("UPDATE waits SET state='completed', updated_at=?, revision=revision+1 WHERE wait_id=? AND state='claimed' AND revision=?", (now.isoformat(), wait_id, record.revision))
+                if cursor.rowcount != 1:
+                    raise ValueError("stale wait revision")
+                self._event(wait_id, subject_id, project_id, "completed", now, {})
+                return self.get(wait_id, subject_id=subject_id, project_id=project_id)
+        if record.schedule.max_occurrences and record.occurrences + 1 >= record.schedule.max_occurrences:
+            with self._lock:
+                cursor = self._db.execute("UPDATE waits SET state='completed', updated_at=?, revision=revision+1, occurrences=occurrences+1 WHERE wait_id=? AND state='claimed' AND revision=?", (now.isoformat(), wait_id, record.revision))
+                if cursor.rowcount != 1:
+                    raise ValueError("stale wait revision")
+                self._event(wait_id, subject_id, project_id, "completed", now, {"terminal": True})
+                return self.get(wait_id, subject_id=subject_id, project_id=project_id)
         next_wake = _next_wake(record, now)
         if record.deadline and next_wake >= record.deadline:
-            return record
+            with self._lock:
+                cursor = self._db.execute("UPDATE waits SET state='completed', updated_at=?, revision=revision+1, occurrences=occurrences+1 WHERE wait_id=? AND state='claimed' AND revision=?", (now.isoformat(), wait_id, record.revision))
+                if cursor.rowcount != 1:
+                    raise ValueError("stale wait revision")
+                self._event(wait_id, subject_id, project_id, "completed", now, {"terminal": True, "deadline": True})
+                return self.get(wait_id, subject_id=subject_id, project_id=project_id)
         with self._lock:
-            cursor = self._db.execute(
-                "UPDATE waits SET state='waiting', wake_at=?, updated_at=?, occurrences=occurrences+1, revision=revision+1 WHERE wait_id=? AND state='completed' AND revision=?",
-                (next_wake.isoformat(), now.isoformat(), wait_id, record.revision),
-            )
+            cursor = self._db.execute("UPDATE waits SET state='waiting', wake_at=?, updated_at=?, occurrences=occurrences+1, revision=revision+1 WHERE wait_id=? AND state='claimed' AND revision=?", (next_wake.isoformat(), now.isoformat(), wait_id, record.revision))
             if cursor.rowcount != 1:
                 raise ValueError("stale wait revision")
             self._event(wait_id, subject_id, project_id, "rescheduled", now, {"wake_at": next_wake.isoformat()})
             return self.get(wait_id, subject_id=subject_id, project_id=project_id)
 
     def wake(self, wait_id: str, *, subject_id: str, project_id: str, trigger: str, now: datetime | None = None) -> WaitRecord:
-        """Turn an event/resource/human wait into ready state exactly once."""
         trigger = _clean_trigger(trigger)
         if not trigger:
             raise ValueError("trigger is required")
@@ -362,16 +293,8 @@ class WaitingService:
                 raise KeyError(wait_id)
             if row["state"] != WaitState.WAITING.value:
                 return _record(row)
-            if row["deadline"] and row["deadline"] <= now.isoformat():
-                state = WaitState.EXPIRED
-                event = "expired"
-            else:
-                state = WaitState.READY
-                event = "woken"
-            self._db.execute(
-                "UPDATE waits SET state=?, trigger=?, updated_at=?, revision=revision+1 WHERE wait_id=? AND state='waiting'",
-                (state.value, trigger, now.isoformat(), wait_id),
-            )
+            state, event = (WaitState.EXPIRED, "expired") if row["deadline"] and row["deadline"] <= now.isoformat() else (WaitState.READY, "woken")
+            self._db.execute("UPDATE waits SET state=?, trigger=?, updated_at=?, revision=revision+1 WHERE wait_id=? AND state='waiting'", (state.value, trigger, now.isoformat(), wait_id))
             self._event(wait_id, subject_id, project_id, event, now, {"trigger": trigger})
             return self.get(wait_id, subject_id=subject_id, project_id=project_id)
 
@@ -384,52 +307,28 @@ class WaitingService:
                 raise KeyError(wait_id)
             if row["state"] in {WaitState.COMPLETED.value, WaitState.CANCELLED.value, WaitState.EXPIRED.value}:
                 return _record(row)
-            self._db.execute(
-                "UPDATE waits SET state='cancelled', updated_at=?, revision=revision+1 WHERE wait_id=? AND state IN ('waiting','ready')",
-                (now.isoformat(), wait_id),
-            )
+            self._db.execute("UPDATE waits SET state='cancelled', updated_at=?, revision=revision+1 WHERE wait_id=? AND state IN ('waiting','ready','claimed')", (now.isoformat(), wait_id))
             self._event(wait_id, subject_id, project_id, "cancelled", now, {"reason": reason})
             return self.get(wait_id, subject_id=subject_id, project_id=project_id)
 
     def events(self, wait_id: str, *, subject_id: str, project_id: str) -> list[dict[str, object]]:
         self.get(wait_id, subject_id=subject_id, project_id=project_id)
-        rows = self._db.execute(
-            "SELECT event_id,event,at,metadata_json FROM wait_events WHERE wait_id=? ORDER BY event_id",
-            (wait_id,),
-        )
+        rows = self._db.execute("SELECT event_id,event,at,metadata_json FROM wait_events WHERE wait_id=? ORDER BY event_id", (wait_id,))
         return [{"event_id": r["event_id"], "event": r["event"], "at": r["at"], "metadata": json.loads(r["metadata_json"])} for r in rows]
 
     def _scoped_row(self, wait_id: str, subject_id: str, project_id: str) -> sqlite3.Row | None:
-        return self._db.execute(
-            "SELECT * FROM waits WHERE wait_id=? AND subject_id=? AND project_id=?",
-            (wait_id, subject_id, project_id),
-        ).fetchone()
+        return self._db.execute("SELECT * FROM waits WHERE wait_id=? AND subject_id=? AND project_id=?", (wait_id, subject_id, project_id)).fetchone()
 
     def _event(self, wait_id: str, subject_id: str, project_id: str, event: str, at: datetime, metadata: dict[str, object]) -> None:
-        self._db.execute(
-            "INSERT INTO wait_events(wait_id,subject_id,project_id,event,at,metadata_json) VALUES(?,?,?,?,?,?)",
-            (wait_id, subject_id, project_id, event, at.isoformat(), json.dumps(metadata, sort_keys=True, separators=(",", ":"))),
-        )
+        self._db.execute("INSERT INTO wait_events(wait_id,subject_id,project_id,event,at,metadata_json) VALUES(?,?,?,?,?,?)", (wait_id, subject_id, project_id, event, at.isoformat(), json.dumps(metadata, sort_keys=True, separators=(",", ":"))))
 
 
 def _record(row: sqlite3.Row) -> WaitRecord:
     schedule = None
     if row["schedule_json"]:
         data = json.loads(row["schedule_json"])
-        schedule = ScheduleSpec(
-            kind=WaitKind(data["kind"]),
-            interval_seconds=data.get("interval_seconds"),
-            cron=data.get("cron"),
-            max_occurrences=data.get("max_occurrences"),
-        )
-    return WaitRecord(
-        wait_id=row["wait_id"], subject_id=row["subject_id"], project_id=row["project_id"],
-        kind=WaitKind(row["kind"]), state=WaitState(row["state"]), wake_at=_parse(row["wake_at"]),
-        created_at=_parse(row["created_at"]), updated_at=_parse(row["updated_at"]),
-        deadline=_parse(row["deadline"]) if row["deadline"] else None, priority=row["priority"],
-        created_sequence=row["created_sequence"], schedule=schedule, trigger=row["trigger"],
-        payload=json.loads(row["payload_json"]), occurrences=row["occurrences"], revision=row["revision"],
-    )
+        schedule = ScheduleSpec(kind=WaitKind(data["kind"]), interval_seconds=data.get("interval_seconds"), cron=data.get("cron"), max_occurrences=data.get("max_occurrences"))
+    return WaitRecord(wait_id=row["wait_id"], subject_id=row["subject_id"], project_id=row["project_id"], kind=WaitKind(row["kind"]), state=WaitState(row["state"]), wake_at=_parse(row["wake_at"]), created_at=_parse(row["created_at"]), updated_at=_parse(row["updated_at"]), deadline=_parse(row["deadline"]) if row["deadline"] else None, priority=row["priority"], created_sequence=row["created_sequence"], schedule=schedule, trigger=row["trigger"], payload=json.loads(row["payload_json"]), occurrences=row["occurrences"], revision=row["revision"])
 
 
 def _next_wake(record: WaitRecord, now: datetime) -> datetime:
@@ -470,14 +369,14 @@ def _validate_cron(expression: str) -> None:
 def _cron_matches(expression: str, value: datetime) -> bool:
     fields = expression.split()
     values = [value.minute, value.hour, value.day, value.month, (value.weekday() + 1) % 7]
-    for field, current in zip(fields, values):
+    bounds = [(0, 59), (0, 23), (1, 31), (1, 12), (0, 6)]
+    for field, current, bound in zip(fields, values, bounds):
         allowed: set[int] = set()
         for token in field.split(","):
             if token == "*":
-                allowed.update(range(0, 60))
+                allowed.update(range(bound[0], bound[1] + 1))
             elif token.startswith("*/"):
-                step = int(token[2:])
-                allowed.update(range(0, 60, step))
+                allowed.update(range(bound[0], bound[1] + 1, int(token[2:])))
             elif "-" in token:
                 left, right = map(int, token.split("-", 1))
                 allowed.update(range(left, right + 1))
@@ -495,9 +394,6 @@ def _schedule_json(schedule: ScheduleSpec | None) -> str | None:
 
 
 def _safe_payload(payload: dict[str, object]) -> dict[str, object]:
-    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"))
-    if len(encoded.encode("utf-8")) > _MAX_PAYLOAD:
-        raise ValueError("wait payload exceeds 16 KiB")
     secret_terms = ("password", "passwd", "secret", "api_key", "private_key", "credential", "access_token", "refresh_token", "bearer")
     def clean(value: object, key: str = "") -> object:
         if any(term in key.lower() for term in secret_terms):
@@ -509,7 +405,11 @@ def _safe_payload(payload: dict[str, object]) -> dict[str, object]:
         if isinstance(value, (str, int, float, bool)) or value is None:
             return value
         raise TypeError("wait payload must be JSON-safe")
-    return clean(payload)  # type: ignore[return-value]
+    cleaned = clean(payload)
+    encoded = json.dumps(cleaned, sort_keys=True, separators=(",", ":"))
+    if len(encoded.encode("utf-8")) > _MAX_PAYLOAD:
+        raise ValueError("wait payload exceeds 16 KiB")
+    return cleaned  # type: ignore[return-value]
 
 
 def _identity(value: str, name: str) -> str:
