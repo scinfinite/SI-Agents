@@ -42,9 +42,9 @@
 | 55 | Durable Waiting + Scheduling | **Complete** | Final synchronized-tree closure CI #1080 / `34678317246` |
 | 56 | Intelligent Routing + Economics | **Complete** | Final synchronized-tree mainline CI #1099 / `34682849381` |
 | 57 | Security Platform | **Complete** | Final synchronized-tree mainline CI #1113 / `34684260315` |
-| 58 | Workspace / Worktree Lifecycle | **Next** | Next implementation phase |
-| 59 | Observability | Planned | Planned |
-| 60 | Evaluation + Benchmarking | Planned | Planned |
+| 58 | Workspace / Worktree Lifecycle | **Complete** | Final synchronized-tree mainline CI #1128 / `34686980055` |
+| 59 | Observability | **Complete** | Final synchronized-tree mainline CI #1128 / `34686980055` |
+| 60 | Evaluation + Benchmarking | **Complete** | Final synchronized-tree mainline CI: pending final closure run |
 | 61 | Continuous Improvement | Planned | Planned |
 | 62 | Cross-Runtime / Cross-Harness | Planned | Planned |
 | 63 | Ecosystem / Marketplace | Planned | Planned |
@@ -57,4 +57,4 @@
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is fully closed by merged PR #67, implementation/verification CI #1091 / `34682603137`, and final synchronized-tree mainline CI #1099 / `34682849381`. Phase 57 is fully closed by merged PR #68, verification CI #1112 / `34684200429`, and final synchronized-tree mainline CI #1113 / `34684260315`. Phase 58 — Workspace / Worktree Lifecycle is now the next roadmap phase.
+Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is fully closed by merged PR #67, implementation/verification CI #1091 / `34682603137`, and final synchronized-tree mainline CI #1099 / `34682849381`. Phase 57 is fully closed by merged PR #68, verification CI #1112 / `34684200429`, and final synchronized-tree mainline CI #1113 / `34684260315`. Phase 61 — Continuous Improvement is now the next roadmap phase.
