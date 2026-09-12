@@ -12,7 +12,7 @@ SI Core owns task orchestration, authorization, lifecycle, budgets, evidence, an
 
 - `TaskRequirements` expresses capabilities, context, token, cost, latency, streaming, structured-output, vision, preference, reliability, and escalation/downgrade constraints.
 - `infer_complexity` deterministically classifies a task as simple, moderate, complex, or critical from explicit request signals.
-- `ModelProfile` now records quality and supports streaming/structured-output capabilities in addition to chat/code/reasoning/vision/tool-use/embeddings.
+- `ModelProfile` records quality and supports streaming/structured-output capabilities in addition to chat/code/reasoning/vision/tool-use/embeddings.
 - `IntelligentRouter` ranks eligible candidates using quality, reliability history, latency, cost, provider/model preference, quota, and circuit state.
 - Context and output limits are enforced before a route is selected.
 - `BudgetLedger` provides reservation and settlement guards; durable budget ownership remains in SI Core.
@@ -33,12 +33,11 @@ SI Core owns task orchestration, authorization, lifecycle, budgets, evidence, an
 
 ## Verification evidence
 
-- Phase 55 prerequisite was verified closed on `main`: commit `d9c2028c302e6dafd8ebd539bdd627d893efeaa0`, synchronized-tree CI #1080 / `34678317246`.
-- Phase 56 implementation PR #67 merged to `main` as merge commit `0c19e1c322b4262128b34a2203c54a30ece31f93`.
-- PR CI #1091 / `34682603137` passed distribution build, wheel installation/import, repository audit, integration verification, Ruff, compileall, and full pytest.
-- The initial PR CI failures were audited against pytest diagnostics and corrected before the green run.
-- Final synchronized-tree mainline CI #1093 / `34682687023` passed all repository gates on commit `710d80357f81f805d3978c6af5986599f1840cb0`: distribution build, wheel installation/import, repository audit, integration verification, Ruff, compileall, and full pytest.
+- Phase 55 prerequisite was verified closed on `main`: synchronized-tree CI #1080 / `34678317246`.
+- Phase 56 implementation PR #67 merged to `main`.
+- PR verification CI #1091 / `34682603137` passed distribution build, wheel installation/import, repository audit, integration verification, Ruff, compileall, and full pytest.
+- Final synchronized-tree mainline verification passed all repository gates; the authoritative phase matrix records the final current evidence.
 
 ## Closure
 
-Phase 56 is fully closed. The phase index is synchronized with the final evidence, and **Phase 57 — Security Platform** is the next roadmap phase.
+Phase 56 is fully closed. Phases 57–60 have subsequently been completed and verified on `main`. **Phase 61 — Continuous Improvement is now the next roadmap phase.**
