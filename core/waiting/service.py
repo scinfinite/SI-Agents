@@ -77,29 +77,7 @@ class WaitRecord:
     revision: int
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "wait_id": self.wait_id,
-            "subject_id": self.subject_id,
-            "project_id": self.project_id,
-            "kind": self.kind.value,
-            "state": self.state.value,
-            "wake_at": self.wake_at.isoformat(),
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat(),
-            "deadline": self.deadline.isoformat() if self.deadline else None,
-            "priority": self.priority,
-            "created_sequence": self.created_sequence,
-            "schedule": {
-                "kind": self.schedule.kind.value,
-                "interval_seconds": self.schedule.interval_seconds,
-                "cron": self.schedule.cron,
-                "max_occurrences": self.schedule.max_occurrences,
-            } if self.schedule else None,
-            "trigger": self.trigger,
-            "payload": self.payload,
-            "occurrences": self.occurrences,
-            "revision": self.revision,
-        }
+        return {"wait_id": self.wait_id, "subject_id": self.subject_id, "project_id": self.project_id, "kind": self.kind.value, "state": self.state.value, "wake_at": self.wake_at.isoformat(), "created_at": self.created_at.isoformat(), "updated_at": self.updated_at.isoformat(), "deadline": self.deadline.isoformat() if self.deadline else None, "priority": self.priority, "created_sequence": self.created_sequence, "schedule": {"kind": self.schedule.kind.value, "interval_seconds": self.schedule.interval_seconds, "cron": self.schedule.cron, "max_occurrences": self.schedule.max_occurrences} if self.schedule else None, "trigger": self.trigger, "payload": self.payload, "occurrences": self.occurrences, "revision": self.revision}
 
 
 class WaitingService:
@@ -113,45 +91,26 @@ class WaitingService:
         self._db.row_factory = sqlite3.Row
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA busy_timeout=5000")
-        self._db.executescript(
-            """
+        self._db.executescript("""
             CREATE TABLE IF NOT EXISTS waits (
-                wait_id TEXT PRIMARY KEY,
-                subject_id TEXT NOT NULL,
-                project_id TEXT NOT NULL,
-                kind TEXT NOT NULL,
-                state TEXT NOT NULL,
-                wake_at TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL,
-                deadline TEXT,
-                priority INTEGER NOT NULL,
-                created_sequence INTEGER NOT NULL,
-                schedule_json TEXT,
-                trigger TEXT,
-                payload_json TEXT NOT NULL,
-                occurrences INTEGER NOT NULL DEFAULT 0,
+                wait_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, project_id TEXT NOT NULL,
+                kind TEXT NOT NULL, state TEXT NOT NULL, wake_at TEXT NOT NULL, created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL, deadline TEXT, priority INTEGER NOT NULL,
+                created_sequence INTEGER NOT NULL, schedule_json TEXT, trigger TEXT,
+                payload_json TEXT NOT NULL, occurrences INTEGER NOT NULL DEFAULT 0,
                 revision INTEGER NOT NULL DEFAULT 1
             );
             CREATE INDEX IF NOT EXISTS waits_due ON waits(state, wake_at, priority, created_sequence);
             CREATE INDEX IF NOT EXISTS waits_scope ON waits(subject_id, project_id, state, wake_at);
             CREATE TABLE IF NOT EXISTS wait_events (
-                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                wait_id TEXT NOT NULL,
-                subject_id TEXT NOT NULL,
-                project_id TEXT NOT NULL,
-                event TEXT NOT NULL,
-                at TEXT NOT NULL,
-                metadata_json TEXT NOT NULL
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT, wait_id TEXT NOT NULL,
+                subject_id TEXT NOT NULL, project_id TEXT NOT NULL, event TEXT NOT NULL,
+                at TEXT NOT NULL, metadata_json TEXT NOT NULL
             );
             CREATE INDEX IF NOT EXISTS wait_events_wait ON wait_events(wait_id, event_id);
-            """
-        )
+        """)
 
-    def create(self, *, subject_id: str, project_id: str, kind: WaitKind, wake_at: datetime,
-               deadline: datetime | None = None, priority: int = 0, schedule: ScheduleSpec | None = None,
-               trigger: str | None = None, payload: dict[str, object] | None = None,
-               now: datetime | None = None) -> WaitRecord:
+    def create(self, *, subject_id: str, project_id: str, kind: WaitKind, wake_at: datetime, deadline: datetime | None = None, priority: int = 0, schedule: ScheduleSpec | None = None, trigger: str | None = None, payload: dict[str, object] | None = None, now: datetime | None = None) -> WaitRecord:
         subject_id = _identity(subject_id, "subject_id")
         project_id = _identity(project_id, "project_id")
         if not isinstance(kind, WaitKind):
@@ -177,12 +136,7 @@ class WaitingService:
             sequence = self._db.execute("SELECT COALESCE(MAX(created_sequence), 0) + 1 FROM waits").fetchone()[0]
             wait_id = uuid4().hex
             stamp = now.isoformat()
-            self._db.execute(
-                "INSERT INTO waits VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (wait_id, subject_id, project_id, kind.value, WaitState.WAITING.value, wake_at.isoformat(), stamp,
-                 stamp, deadline.isoformat() if deadline else None, priority, sequence, _schedule_json(schedule),
-                 _clean_trigger(trigger), json.dumps(payload, sort_keys=True, separators=(",", ":")), 0, 1),
-            )
+            self._db.execute("INSERT INTO waits VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (wait_id, subject_id, project_id, kind.value, WaitState.WAITING.value, wake_at.isoformat(), stamp, stamp, deadline.isoformat() if deadline else None, priority, sequence, _schedule_json(schedule), _clean_trigger(trigger), json.dumps(payload, sort_keys=True, separators=(",", ":")), 0, 1))
             self._event(wait_id, subject_id, project_id, "created", now, {"kind": kind.value})
             return self.get(wait_id, subject_id=subject_id, project_id=project_id)
 
