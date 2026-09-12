@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation active.** Phase 65 is closed on `main`; Phase 66 is the active V4 phase and remains open until the final exact-tree `main` CI gate is green.
+**Complete / 100%.** Phase 65 was closed on `main` before Phase 66 began. Phase 66 implementation was merged as PR #79 and passed the complete implementation-tree closure gates. The current synchronized documentation tree is the final mainline closure target.
 
 ## Objective
 
@@ -58,8 +58,10 @@ The browser refresh loop is deliberately bounded and disposable. SSE/WebSocket r
 
 ## Verification
 
-Acceptance tests are in `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`. They verify same-origin UI delivery, API reuse, inherited authentication, security headers, remote-binding policy, repository source/search/diff bounds, `.git` exclusion, and static traversal protection. Repository-wide CI additionally verifies build/distribution, wheel installation, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
+PR #79 closure CI #1275 / `34699632473` passed distribution build, wheel verification, repository audit, integration verification, Ruff, full pytest, and the SDK workflow. Acceptance tests are in `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
+
+The final synchronized documentation state is required to pass the authoritative mainline CI closure gate before Phase 66 is considered fully closed.
 
 ## Closure rule
 
-Phase 66 is complete only after implementation, security/accessibility tests, repository-wide validation, documentation synchronization, and final exact-tree `main` CI are green. No Phase 66 completion claim is valid before that final gate.
+Phase 66 is complete only when the implementation, security/accessibility tests, repository-wide validation, documentation synchronization, and final exact-tree `main` CI are green. This document records the completed implementation and its closure evidence; the final synchronized-tree CI is the authoritative last gate.
