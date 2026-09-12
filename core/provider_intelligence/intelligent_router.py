@@ -6,13 +6,13 @@ capabilities, resolves credentials, or becomes an OmniRoute business authority.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from typing import Iterable
 
 from core.provider_intelligence.circuit import CircuitBreaker
-from core.provider_intelligence.health import HealthTracker
+from core.provider_intelligence.health import HealthObservation, HealthTracker
 from core.provider_intelligence.models import Capability, ModelProfile, ProviderProfile
 from core.provider_intelligence.quota import QuotaTracker
 from core.provider_intelligence.registry import ProviderRegistry
@@ -31,6 +31,28 @@ class TaskComplexity(str, Enum):
     MODERATE = "moderate"
     COMPLEX = "complex"
     CRITICAL = "critical"
+
+
+class FailureClass(str, Enum):
+    RATE_LIMIT = "rate_limit"
+    TRANSIENT = "transient"
+    AUTHORIZATION = "authorization"
+    INVALID_REQUEST = "invalid_request"
+    UNKNOWN = "unknown"
+
+
+def classify_failure(status: int | None = None, message: str = "") -> FailureClass:
+    """Classify provider failures without inspecting credentials or response secrets."""
+    lowered = message.lower()
+    if status == 429 or any(token in lowered for token in ("rate limit", "too many requests")):
+        return FailureClass.RATE_LIMIT
+    if status in {408, 409, 425} or (status is not None and status >= 500):
+        return FailureClass.TRANSIENT
+    if status in {401, 403}:
+        return FailureClass.AUTHORIZATION
+    if status in {400, 404, 422}:
+        return FailureClass.INVALID_REQUEST
+    return FailureClass.UNKNOWN
 
 
 @dataclass(frozen=True)
@@ -126,6 +148,8 @@ class BudgetLedger:
     def __post_init__(self) -> None:
         if self.budget is not None and self.budget < 0:
             raise ValueError("budget must be non-negative")
+        if self.spent < 0 or self.reservations < 0:
+            raise ValueError("budget state must be non-negative")
 
     @property
     def remaining(self) -> float | None:
@@ -149,7 +173,6 @@ class BudgetLedger:
 
 def infer_complexity(requirements: TaskRequirements) -> TaskComplexity:
     """Infer complexity from explicit signals without model calls or hidden state."""
-
     text = requirements.prompt.lower()
     score = 0
     if requirements.estimated_input_tokens + requirements.estimated_output_tokens > 4_000:
@@ -217,8 +240,7 @@ class IntelligentRouter:
                 continue
             if req.max_latency_ms is not None and model.latency_ms > req.max_latency_ms:
                 continue
-            quality = model.quality
-            score = self.policy.quality_weight * quality + self.policy.reliability_weight * reliability
+            score = self.policy.quality_weight * model.quality + self.policy.reliability_weight * reliability
             score -= self.policy.latency_weight * (model.latency_ms / 1000.0)
             score -= self.policy.cost_weight * cost
             reasons = ["capabilities satisfied", f"complexity={complexity.value}"]
@@ -230,7 +252,19 @@ class IntelligentRouter:
                 reasons.append("preferred model")
             raw.append((score, provider, model, cost, tuple(reasons)))
         raw.sort(key=lambda item: (-item[0], item[1].priority, item[1].provider_id, item[2].model_id))
-        return tuple(RouteCandidate(p.provider_id, m.model_id, score, cost, m.latency_ms, min(m.reliability, self.health.success_rate(p.provider_id)), rank + 1, reasons) for rank, (score, p, m, cost, reasons) in enumerate(raw))
+        return tuple(
+            RouteCandidate(
+                p.provider_id,
+                m.model_id,
+                score,
+                cost,
+                m.latency_ms,
+                min(m.reliability, self.health.success_rate(p.provider_id)),
+                rank + 1,
+                reasons,
+            )
+            for rank, (score, p, m, cost, reasons) in enumerate(raw)
+        )
 
     def route(self, req: TaskRequirements, ledger: BudgetLedger | None = None) -> RouteEvidence:
         candidates = self.candidates(req)
@@ -244,6 +278,9 @@ class IntelligentRouter:
         return RouteEvidence(infer_complexity(req), selected, len(candidates), 0, 1, None, selected.estimated_cost, worst)
 
     def fallback(self, evidence: RouteEvidence, req: TaskRequirements, *, retryable_failure: str) -> RouteEvidence:
+        failure_class = classify_failure(message=retryable_failure)
+        if failure_class not in {FailureClass.RATE_LIMIT, FailureClass.TRANSIENT}:
+            raise RoutingError("fallback requires a rate-limit or transient failure")
         candidates = self.candidates(req)
         remaining = [candidate for candidate in candidates if (candidate.provider_id, candidate.model_id) != (evidence.selected.provider_id, evidence.selected.model_id)]
         if not remaining:
@@ -252,20 +289,34 @@ class IntelligentRouter:
         escalation = evidence.escalation_level
         if next_candidate.score < evidence.selected.score and req.allow_downgrade:
             escalation -= 1
-        elif next_candidate.score > evidence.selected.score and req.allow_escalation:
+        elif next_candidate.score > evidence.selected.score + self.policy.escalation_margin and req.allow_escalation:
             escalation += 1
         attempt = evidence.attempt + 1
         if attempt > self.policy.max_attempts:
             raise RoutingError("retry budget exhausted")
-        return RouteEvidence(infer_complexity(req), next_candidate, len(candidates), escalation, attempt, retryable_failure, next_candidate.estimated_cost, next_candidate.estimated_cost * sum(self.policy.retry_multiplier ** i for i in range(self.policy.max_attempts - attempt + 1)))
+        remaining_attempts = self.policy.max_attempts - attempt + 1
+        worst = next_candidate.estimated_cost * sum(self.policy.retry_multiplier ** i for i in range(remaining_attempts))
+        return RouteEvidence(
+            infer_complexity(req),
+            next_candidate,
+            len(candidates),
+            escalation,
+            attempt,
+            failure_class.value,
+            next_candidate.estimated_cost,
+            worst,
+        )
 
     def record_outcome(self, provider_id: str, *, success: bool, latency_ms: float, rate_limited: bool = False) -> None:
-        from core.provider_intelligence.health import HealthObservation
         self.health.record(HealthObservation(provider_id, success, latency_ms))
         if rate_limited or not success:
             self.circuit(provider_id).record_failure()
         else:
             self.circuit(provider_id).record_success()
+
+    def recover(self, provider_id: str) -> None:
+        """Record an explicit successful recovery probe and close the provider circuit."""
+        self.circuit(provider_id).record_success()
 
     def estimate(self, req: TaskRequirements, attempts: int | None = None) -> float:
         candidates = self.candidates(req)
