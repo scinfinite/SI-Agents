@@ -27,31 +27,22 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
-| 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1037 / `34675239106` |
-
-## Phase 52 context / memory economics
-
-`core/context_economics` is a deterministic policy layer between already-authorized context retrieval and model invocation. It provides scoped token/cost budgets, model capacity awareness, deterministic relevance/importance selection, deduplication, sensitive-context isolation, secret handling, compaction/summarization, accounting, stable decision IDs, evidence, and atomic snapshots.
+| 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
+| 54 | Human-in-the-Loop | **Implementation complete; CI pending** | Phase branch / final mainline gate pending |
 
 ## Phase 53 persistent sessions
 
-`core/sessions` is the durable session authority. `SessionStore` persists session identity, ownership, lifecycle, state/context, token/cost history, ordered events, artifacts, expiry, archival, and lineage. `PersistentSessionAdapter` binds durable sessions to an authorized runtime/harness identity.
+`core/sessions` is the durable session authority. `SessionStore` persists session identity, ownership, lifecycle, state/context, token/cost history, ordered events, artifacts, expiry, archival, and lineage. `PersistentSessionAdapter` binds durable sessions to an authorized runtime/harness identity. Session persistence never restores credentials, capabilities, grants, provider authorization, or identity.
 
-Key invariants:
+## Phase 54 human-in-the-loop
 
-- session operations require subject and project ownership;
-- OpenCode/other harness operations additionally require the expected harness binding;
-- optimistic revisions prevent stale concurrent writes;
-- secret-like fields are rejected instead of persisted;
-- state/events/artifacts/search inputs are bounded;
-- replay is read-only;
-- export/import requires schema and owner validation;
-- clones receive a new identity and explicit parent lineage;
-- session persistence never restores credentials, capabilities, grants, provider authorization, or identity.
+`core/hitl` is the durable human-gate authority. `HumanApprovalService` supports approval, human-input, and review gates; risk/cost/egress/destructive/security/deployment gate classification; identity/project binding; bounded metadata; expiry; optimistic revision checks; immutable terminal decisions; audited evidence digests; and controlled outcomes for approve, reject, modify, retry, reassign, and authorized alternatives.
 
-The session layer is persistence/lifecycle infrastructure, not a competing execution or authorization authority.
+The Control API exposes the outstanding approval queue, individual approval records, audit events, and decision endpoint. Identity is supplied explicitly by the control surface and checked against the persisted project/subject boundary. Missing identity fails closed. Approval decisions are governance evidence only: downstream execution must re-authorize and may not treat a stored decision as a credential or capability grant.
 
-See `PHASE_53_PERSISTENT_SESSIONS.md` and `SI_AGENTS_V4_PLAN.md` for the full contract.
+Web, TUI, and CLI remain clients of this shared Control API. Notifications are represented as an auditable queued notification fact; delivery infrastructure is intentionally not made a second authority. Approval expiry is fail-closed and restart-safe through SQLite persistence.
+
+See `PHASE_54_HUMAN_IN_THE_LOOP.md` and `SI_AGENTS_V4_PLAN.md` for the full contract.
 
 ## Advanced hardening status
 
@@ -80,4 +71,4 @@ All surfaces operate on the same SI Core authority.
 
 ## Next
 
-**Phase 54 — Human-in-the-Loop** is the next implementation phase.
+**Phase 55 — Durable Waiting + Scheduling** is next after Phase 54 final closure.

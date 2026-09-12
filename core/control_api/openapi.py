@@ -20,12 +20,16 @@ def document() -> dict[str, object]:
         "/api/v1/harnesses": "Registered adapter families", "/api/v1/deployments": "Harness targets and deployment plans",
         "/api/v1/settings": "Effective control-center settings", "/api/v1/visualization": "Organization/workflow graph",
         "/api/v1/control-center": "Control Center aggregate", "/api/v1/agent-builder": "Agent drafts", "/api/v1/events": "API events",
-        "/api/v1/runs": "Run records",
+        "/api/v1/runs": "Run records", "/api/v1/approvals": "Identity-bound outstanding approval queue",
     }
     paths: dict[str, object] = {path: _get(description) for path, description in descriptions.items()}
     paths["/api/v1/evidence"] = {**_get("Control-plane evidence summary"), **_post("Evidence record")}
     paths["/api/v1/deployments"] = {**_get("Harness targets and deployment plans"), **_post("Deployment plan created")}
     paths["/api/v1/runs"] = {**_get("Run records"), "post": {"responses": {"202": {"description": "Governed run accepted"}, "400": {"description": "Invalid request"}, "403": {"description": "Governance denied"}}}}
+    paths["/api/v1/approvals"] = {"get": {"responses": {"200": {"description": "Pending identity-bound approvals"}}}, "post": {"responses": {"201": {"description": "Approval/input/review gate created"}, "400": {"description": "Invalid request"}, "403": {"description": "Identity denied"}}}}
+    paths["/api/v1/approvals/{approval_id}"] = _get("Approval request")
+    paths["/api/v1/approvals/{approval_id}/events"] = _get("Approval audit events")
+    paths["/api/v1/approvals/{approval_id}/decide"] = {"post": {"responses": {"200": {"description": "Recorded human decision"}, "400": {"description": "Invalid decision"}, "403": {"description": "Identity denied"}}}}
     paths["/api/v1/evidence/{evidence_id}"] = _get("Evidence record")
     paths["/api/v1/evidence/{evidence_id}/verify"] = {"post": {"responses": {"200": {"description": "Updated verification state"}, "400": {"description": "Invalid verification state"}}}}
     paths["/api/v1/runs/{run_id}"] = _get("Run record")
