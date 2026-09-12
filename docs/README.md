@@ -2,9 +2,9 @@
 
 ## Current V4 baseline
 
-SI-Agents V4 has completed Phases **44–54**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 55 — Durable Waiting + Scheduling is the active implementation phase.**
+SI-Agents V4 has completed Phases **44–55**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 56 — Intelligent Routing + Economics is next.**
 
-See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The current Phase 55 implementation record is `architecture/PHASE_55_DURABLE_WAITING_SCHEDULING.md`.
+See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The Phase 55 implementation record is `architecture/PHASE_55_DURABLE_WAITING_SCHEDULING.md`.
 
 ## Phase 54 closure
 
@@ -12,11 +12,13 @@ Phase 54 is fully closed on `main`. It provides durable human approval/input/rev
 
 Closure evidence: final synchronized-tree mainline CI #1051 (`34676632475`) passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 
-## Phase 55 — Durable Waiting + Scheduling
+## Phase 55 closure
 
-The active Phase 55 implementation provides durable SQLite-backed waits, timer/delayed/recurring/cron scheduling, event/resource/human/external wake-up, deadlines and fail-closed expiry, restart-safe recovery, priority plus age-based fairness, explicit ready/claimed/completed lifecycle, optimistic revisions, bounded queue/payload limits, secret-like field rejection, ordered lifecycle events, and Control API routes with subject/project isolation.
+Phase 55 is implemented and verified. It provides durable SQLite-backed waits, timer/delayed/recurring/cron scheduling, event/resource/human/external wake-up, deadlines and fail-closed expiry, restart-safe recovery, priority plus age-based starvation resistance, explicit `waiting → ready → claimed → completed` lifecycle, optimistic revisions, bounded queue/payload limits, secret-like field rejection, ordered lifecycle events, and Control API routes with subject/project isolation.
 
-The phase record defines the authority boundary: waiting state and scheduling belong to SI Core; the Control API is a transport surface; a wait claim never grants credentials, capabilities, provider authorization, or execution authority.
+Implementation CI #1074 (`34678184341`) passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The final synchronized-tree mainline CI is the closure gate after this documentation synchronization.
+
+The authority boundary is explicit: waiting state and scheduling belong to SI Core; the Control API is a transport surface; a wait claim never grants credentials, capabilities, provider authorization, or execution authority.
 
 ## V4 product surfaces
 
