@@ -5,7 +5,7 @@ import json
 import re
 from typing import Any
 
-from .models import GoldenCase, MetricKind, MetricScore
+from .models import CaseResult, EvaluationSample, GoldenCase, MetricKind, MetricScore
 
 
 def _normalized(value: Any) -> str:
@@ -55,7 +55,7 @@ def score_metric(case: GoldenCase, metric_id: str, actual: Any) -> MetricScore:
 
 
 def score_case(case: GoldenCase, *, sample: "EvaluationSample") -> "CaseResult":
-    from .models import CaseResult, EvaluationFailure
+    from .models import EvaluationFailure
 
     scores = tuple(score_metric(case, metric.metric_id, sample.actual) for metric in case.metrics)
     total_weight = sum(metric.weight for metric in case.metrics)
