@@ -16,9 +16,9 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–57** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 58 — Workspace / Worktree Lifecycle is next.**
+V3 is closed. V4 has completed Phases **44–60** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 61 — Continuous Improvement is next.**
 
-Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, and Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
+Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, and Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)**, Phase 58 final synchronized-tree mainline CI **#1122 (`34686808527`)**, and Phase 59 final synchronized-tree mainline CI **#1128 (`34686980055`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
 
 ### Phase 44 — Execution Runtime Foundation
 
