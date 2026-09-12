@@ -12,47 +12,29 @@ OpenCode / Web / TUI / CLI → SI Core / Control API
                           → Models / Providers / APIs
                           → Results / Artifacts / Evidence
                           → Observability → Evaluation → Continuous Improvement
-                          → Release Gates / Canaries / Rollback → Clients
+                          → Cross-Runtime Gateway → Clients / Harnesses
 ```
 
-OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, waiting, workspaces, observability, evaluation, and continuous-improvement governance.
+OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, waiting, workspaces, observability, evaluation, continuous improvement, and cross-runtime governance.
 
 ## Verified V4 phases
 
-| Phase | Capability | Status |
-|---:|---|---|
-| 44 | Execution Runtime Foundation | Complete |
-| 45 | Event Bus + State Architecture | Complete |
-| 46 | Parallel Scheduler + Executor | Advanced hardened |
-| 47 | OpenCode Bridge | Advanced hardened |
-| 48 | OmniRoute Integration | Complete |
-| 49 | Agent + Team Builder | Advanced hardened |
-| 50 | Capability Authorization | Advanced hardened |
-| 51 | Checkpoints + Resume | Complete |
-| 52 | Context / Memory Economics | Complete |
-| 53 | Persistent Sessions | Complete |
-| 54 | Human-in-the-Loop | Complete |
-| 55 | Durable Waiting + Scheduling | Complete |
-| 56 | Intelligent Routing + Economics | Complete |
-| 57 | Security Platform | Complete |
-| 58 | Workspace / Worktree Lifecycle | Advanced hardened |
-| 59 | Observability | Advanced hardened |
-| 60 | Evaluation + Benchmarking | Advanced hardened |
-| 61 | Continuous Improvement | Complete |
-| 62 | Cross-Runtime / Cross-Harness | **Implemented; pending closure** |
+Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
 
 ## Phase 62 architecture
 
 Phase 62 provides a common portable adapter contract for runtime, session, tool, model, event, capability, context, checkpoint, and artifact resources. `PortableAdapterRegistry` is deny-by-default and discovery-only; it grants no permissions.
 
-`CrossRuntimeGateway` is the harness interoperability authority. It provides deterministic discovery, streaming capability filtering, preferred selection, health probes, bounded degradation/quarantine/recovery, project+harness session binding, explicit session migration, and safe fallback. Fallback is allowed only for retryable failures that occur before execution-start events. Routing evidence excludes request payloads and is bounded.
+`CrossRuntimeGateway` provides deterministic harness discovery, streaming capability filtering, preferred selection, health probes, bounded degradation/quarantine/recovery, project+harness session binding, explicit session migration, and safe pre-start fallback. Fallback is allowed only for retryable failures before execution-start signals. Routing evidence excludes request payloads and is bounded.
 
-OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same stable `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants, execution state, or authorization.
+OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants, execution state, or authorization.
 
-## Cross-cutting invariants
+## Phase 62 closure evidence
 
-Security decisions are fail-closed. Workspace, telemetry, evaluation, and improvement evidence are scoped and bounded. Human decisions and evaluation/improvement outcomes do not become capability grants. Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority.
+- PR #76 merged into `main` as `607085782a75e31a60774afe975edcbd38bf5e4c`.
+- PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- Final synchronized-tree mainline CI is the authoritative post-merge gate.
 
 ## Current position
 
-**V4 Phases 44–62 are implemented; Phase 62 is pending final repository CI closure. Phase 63 — Ecosystem / Marketplace is next.**
+**V4 Phases 44–62 are closed; Phase 63 — Ecosystem / Marketplace is next.**
