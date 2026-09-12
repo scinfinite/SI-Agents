@@ -1,6 +1,6 @@
 # Phase 57 — Security Platform
 
-**Status:** Implementation complete on the Phase 57 branch; PR verification CI is green. Final closure still requires merge and exact-tree mainline CI.
+**Status:** Complete. Phase 57 is merged to `main`; implementation, adversarial verification, documentation synchronization, and mainline closure are complete. The latest synchronized documentation tree is covered by the final CI gate.
 
 ## Authority
 
@@ -44,4 +44,4 @@ Phase 57 establishes one fail-closed security authority for SI Core. Authorizati
 
 `tests/test_phase57_security_platform.py` covers least privilege, tenant and identity isolation, approval decisions, egress allowlists, private-network rejection, credential/egress separation, secret scanning/redaction, prompt/tool injection, token binding and replay prevention, token TTL, expired grants, safe audit evidence, trust-boundary non-authority, and bounded scope matching.
 
-Phase 57 PR verification CI **#1109 / `34684116453`** passed distribution build, wheel installation/import, repository audit, integration verification, Ruff, compile/test prerequisites, and full pytest. The final closure gate remains exact-tree mainline CI after merge.
+PR #68 verification CI **#1109 / `34684116453`** passed the full repository gates before merge. The merged mainline tree passed synchronized-tree CI **#1113 / `34684260315`**; the final documentation synchronization is covered by the subsequent mainline CI closure gate.
