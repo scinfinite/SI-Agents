@@ -16,9 +16,9 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–55** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 56 — Intelligent Routing + Economics is next.**
+V3 is closed. V4 has completed Phases **44–56** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 57 — Security Platform is next.**
 
-Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, and Phase 55 implementation CI **#1074 (`34678184341`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest gates. The final synchronized-tree CI for Phase 55 is the last closure gate after the documentation synchronization represented by the final Phase 55 closure commit.
+Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, and Phase 56 final synchronized-tree mainline CI **#1095 (`34682748193`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -98,11 +98,15 @@ Durable WAIT records, timer/delayed waits, recurring schedules, five-field UTC c
 
 Implemented in `core/waiting` with SQLite persistence, explicit `waiting → ready → claimed → completed` lifecycle, terminal cancellation/expiry, ordered lifecycle events, optimistic revisions, bounded queue/payload limits, secret-like payload rejection, interval recurrence, bounded cron calculation, restart recovery, identity/project isolation, and Control API create/list/get/events/wake/claim/complete/cancel routes. A wait claim is an execution handoff only; downstream authorization remains mandatory.
 
-Adversarial tests cover restart recovery, deadline expiry, wake-up, recurrence, cron validation, fairness/starvation, isolation, stale revisions, secret rejection, oversized payloads, idempotent cancellation, explicit claim lifecycle, JSON safety, and Control API round trips. Implementation CI #1074 (`34678184341`) passed all required gates.
+Adversarial tests cover restart recovery, deadline expiry, wake-up, recurrence, cron validation, fairness/starvation, isolation, stale revisions, secret rejection, oversized payloads, idempotent cancellation, explicit claim lifecycle, JSON safety, and Control API round trips. Implementation CI #1074 (`34678184341`) and final synchronized-tree closure CI #1080 (`34678317246`) passed all required gates.
 
-## Phase 56 — Intelligent Routing + Economics — next
+## Phase 56 — Intelligent Routing + Economics — complete
 
 Task complexity/capability analysis; task/agent/model matching; capability/quality/latency/reliability/context-window/streaming/structured-output/vision/coding/reasoning/tool routing; cost-aware routing; preferred/fallback models/providers; health/history; escalation/downgrade; rate-limit/transient-failure handling; budgets; estimation/forecasting; retry economics; route evidence; circuit breakers/provider recovery. SI owns orchestration while OmniRoute owns model/provider/API routing.
+
+Delivered through `core/provider_intelligence/intelligent_router.py`, with deterministic complexity inference, explicit task requirements, quality/reliability/latency/cost scoring, capability/context/output checks, provider/model preference, quota and circuit gating, budget reservations/settlement, retry forecasting, bounded transient/rate-limit fallback, escalation/downgrade controls, non-secret route evidence, health outcomes, recovery probes, and adversarial coverage. `ModelProfile` now includes quality plus streaming and structured-output capability declarations.
+
+Evidence: PR #67 merged as `0c19e1c322b4262128b34a2203c54a30ece31f93`; PR verification CI #1091 (`34682603137`) passed; final synchronized-tree mainline CI #1095 (`34682748193`) passed all repository gates on final main commit `a22a9f86bcfa03620c972b285f0df57b79ec80f0`.
 
 ## Phase 57 — Security Platform
 
