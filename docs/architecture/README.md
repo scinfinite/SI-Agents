@@ -12,30 +12,27 @@ OpenCode / Web / TUI / CLI → SI Core / Control API
                           → Models / Providers / APIs
                           → Results / Artifacts / Evidence
                           → Observability → Evaluation → Continuous Improvement
-                          → Cross-Runtime Gateway → Clients / Harnesses
+                          → Cross-Runtime Gateway → Ecosystem / Marketplace → Clients / Harnesses
 ```
 
 OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, waiting, workspaces, observability, evaluation, continuous improvement, and cross-runtime governance.
 
 ## Verified V4 phases
 
-Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+Phases 44–63 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
 
-## Phase 62 architecture
+## Phase 63 architecture
 
-Phase 62 provides a common portable adapter contract for runtime, session, tool, model, event, capability, context, checkpoint, and artifact resources. `PortableAdapterRegistry` is deny-by-default and discovery-only; it grants no permissions.
+Phase 63 provides governed ecosystem metadata and lifecycle contracts through `MarketplaceManifest`, `MarketplaceRegistry`, and `EcosystemManager`. Manifests cover strict versions, dependencies, compatibility, declared permissions, provenance/trust, payload identity, and deterministic manifest identity. Registry support covers deterministic package versions and templates; lifecycle support covers install, update, uninstall, rollback, bounded history, and drift detection.
 
-`CrossRuntimeGateway` provides deterministic harness discovery, streaming capability filtering, preferred selection, health probes, bounded degradation/quarantine/recovery, project+harness session binding, explicit session migration, and safe pre-start fallback. Fallback is allowed only for retryable failures before execution-start signals. Routing evidence excludes request payloads and is bounded.
+Governance is deny-by-default for untrusted packages and requested permissions. Governance approval is bound to the exact manifest digest. Marketplace operations never grant execution authority or bypass SI Core authorization.
 
-OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants execution state, or replaces authorization.
+## Phase 63 closure evidence
 
-## Phase 62 closure evidence
-
-- PR #76 merged into `main` as `607085782a75e31a60774afe975edcbd38bf5e4c`.
-- PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Mainline CI #1180 / `34693460152` passed the repository closure suite after the integration-marker correction.
-- The final documentation-synchronized mainline CI is the authoritative exact-tree closure gate.
+- PR #77 merged into `main` as `19be0c14774e7073871a21fde42132a73c2a77d4`.
+- PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- Final documentation-synchronized mainline CI is the authoritative exact-tree closure gate.
 
 ## Current position
 
-**Phase 62 is complete. Phase 63 — Ecosystem / Marketplace follows.**
+**Phase 63 is complete. Phase 64 — SDK / Developer Platform follows.**
