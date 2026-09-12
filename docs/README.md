@@ -2,16 +2,22 @@
 
 ## Current V4 baseline
 
-SI-Agents V4 has completed Phases **44–60**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 61 — Continuous Improvement is next.**
+SI-Agents V4 has completed Phases **44–60** at the required advanced-hardening level. Phases **46, 47, 49, and 50** were previously advanced-hardened; Phases **58, 59, and 60** have now also passed a dedicated advanced-hardening audit and final mainline CI. **Phase 61 — Continuous Improvement is next.**
 
 See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap, `architecture/README.md` for the current architecture summary, and `architecture/PHASES.md` for phase status/evidence.
 
 ## Recent V4 closure records
 
 - **Phase 57 — Security Platform:** complete; final synchronized-tree mainline CI #1113 (`34684260315`).
-- **Phase 58 — Workspace / Worktree Lifecycle:** complete; final synchronized-tree mainline CI #1128 (`34686980055`).
-- **Phase 59 — Observability:** complete; final synchronized-tree mainline CI #1128 (`34686980055`).
-- **Phase 60 — Evaluation + Benchmarking:** complete; PR CI #1137 (`34687139768`), final synchronized-tree mainline CI #1138 (`34687181487`), and documentation closure CI #1140 (`34687287957`).
+- **Phase 58 — Workspace / Worktree Lifecycle:** advanced hardened; PR #74 / CI #1143 (`34691131729`), final mainline CI #1144 (`34691176676`).
+- **Phase 59 — Observability:** advanced hardened; PR #74 / CI #1143 (`34691131729`), final mainline CI #1144 (`34691176676`).
+- **Phase 60 — Evaluation + Benchmarking:** advanced hardened; PR #74 / CI #1143 (`34691131729`), final mainline CI #1144 (`34691176676`).
+
+## Advanced-hardening outcomes
+
+- **Phase 58:** adversarial event-chain tamper detection and sensitive-operation authorization callback coverage were added to the existing isolation, lock, revision, filesystem, Git, cleanup, and recovery contracts.
+- **Phase 59:** shared security-scanner credential detection, stricter resource bounds, and complete bounded integrity scanning were added; tampering beyond the first query page is now covered by tests.
+- **Phase 60:** documented cost/latency budgets are now enforceable release gates; secret-bearing evaluator outputs, metadata, and review rationale are rejected; persisted evidence can be integrity-verified; experiment inputs are tightened; empty reporting fails closed.
 
 ## Phase 56 closure
 
