@@ -4,8 +4,6 @@ SI-Agents is the governed execution and agent platform for Project-SI. V4 is bei
 
 ## V4 product direction
 
-The target user flow is:
-
 ```text
 User prompt → OpenCode → SI Core → Scheduler/Orchestrator
 → Agents/Teams/Workflows → Authorization → OmniRoute
@@ -17,15 +15,17 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–52 are complete on main.**
+- **Phases 44–53 are complete on main.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
-- **Phase 53 — Persistent Sessions is in implementation on the Phase 53 branch/PR and is not yet closed.**
+- **Phase 54 — Human-in-the-Loop is next.**
 - Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Phase 52 final synchronized-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- Phase 53 implementation merge commit: `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`.
+- Phase 53 mainline verification: CI **#1021 / `34674234547`**.
 
 ## Phase 53 — Persistent Sessions
 
-The implementation adds a durable SQLite-backed `SessionStore` and `PersistentSessionAdapter` for SI Core session continuity.
+Phase 53 adds durable SQLite-backed `SessionStore` and `PersistentSessionAdapter` for SI Core session continuity.
 
 Covered contracts:
 

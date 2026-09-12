@@ -27,7 +27,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
-| 53 | Persistent Sessions | **In implementation** | Phase 53 PR/CI pending final closure |
+| 53 | Persistent Sessions | **Complete** | Mainline CI #1021 / `34674234547`; final synchronized-tree gate pending |
 
 ## Phase 52 context / memory economics
 
@@ -80,4 +80,4 @@ All surfaces operate on the same SI Core authority.
 
 ## Next
 
-Phase 53 is active until its final exact-tree mainline CI closes the phase. Phase 54 remains the next roadmap phase after Phase 53 closure.
+**Phase 54 — Human-in-the-Loop** is next after the final documentation-synchronized mainline CI gate.

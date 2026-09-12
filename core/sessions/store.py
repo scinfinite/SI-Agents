@@ -15,7 +15,7 @@ from typing import Any, Mapping
 
 _MAX_JSON_BYTES = 512 * 1024
 _MAX_ARTIFACT_BYTES = 256 * 1024
-_SECRET_KEY = re.compile(r"(?:password|passwd|secret|token|api[_-]?key|private[_-]?key|credential)", re.I)
+_SECRET_KEY = re.compile(r"(?:password|passwd|secret|api[_-]?key|private[_-]?key|credential|access[_-]?token|auth[_-]?token|refresh[_-]?token|bearer)", re.I)
 
 
 class SessionState(StrEnum):
@@ -165,10 +165,7 @@ class SessionStore:
         with self._lock:
             try:
                 self._db.execute("BEGIN IMMEDIATE")
-                self._db.execute("INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (
-                    session.session_id, session.owner.subject_id, session.owner.project_id, session.owner.workspace_id,
-                    session.harness_id, session.state.value, session.created_at, session.updated_at,
-                    session.expires_at, session.parent_session_id, session.branch_name, session.revision))
+                self._db.execute("INSERT INTO sessions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (session.session_id, session.owner.subject_id, session.owner.project_id, session.owner.workspace_id, session.harness_id, session.state.value, session.created_at, session.updated_at, session.expires_at, session.parent_session_id, session.branch_name, session.revision))
                 self._db.execute("INSERT INTO session_state VALUES (?, ?, ?)", (session.session_id, encoded, "{}"))
                 self._db.execute("COMMIT")
             except Exception:
@@ -271,12 +268,16 @@ class SessionStore:
     def list(self, *, subject_id: str, project_id: str, state: SessionState | None = None, harness_id: str | None = None, limit: int = 100) -> tuple[PersistentSession, ...]:
         if not 1 <= limit <= 1000:
             raise ValueError("invalid session limit")
-        query, params = "SELECT * FROM sessions WHERE subject_id=? AND project_id=?", [subject_id, project_id]
+        query = "SELECT * FROM sessions WHERE subject_id=? AND project_id=?"
+        params: list[Any] = [subject_id, project_id]
         if state is not None:
-            query += " AND state=?"; params.append(state.value)
+            query += " AND state=?"
+            params.append(state.value)
         if harness_id is not None:
-            query += " AND harness_id=?"; params.append(harness_id)
-        query += " ORDER BY updated_at DESC, session_id LIMIT ?"; params.append(limit)
+            query += " AND harness_id=?"
+            params.append(harness_id)
+        query += " ORDER BY updated_at DESC, session_id LIMIT ?"
+        params.append(limit)
         with self._lock:
             rows = self._db.execute(query, params).fetchall()
         return tuple(self._from_row(r) for r in rows)
@@ -305,12 +306,11 @@ class SessionStore:
         if bundle.session.owner.subject_id != subject_id or bundle.session.owner.project_id != project_id:
             raise PermissionError("session import ownership mismatch")
         sid = new_session_id or uuid.uuid4().hex
-        session = PersistentSession(sid, bundle.session.owner, bundle.session.harness_id, SessionState.ACTIVE, time.time(), time.time(), bundle.session.expires_at, bundle.session.parent_session_id, bundle.session.branch_name, 0)
+        session = PersistentSession(sid, bundle.session.owner, bundle.session.harness_id, SessionState.ACTIVE, time.time(), time.time(), bundle.session.expires_at, None, bundle.session.branch_name, 0)
         self.create(session, state=bundle.state.get("state", {}))
         for event in bundle.events:
             self.append_event(sid, subject_id=subject_id, project_id=project_id, kind=event.kind, payload=event.payload)
         for artifact in bundle.artifacts:
-            # Content is intentionally not exported; digest/metadata are evidence only.
             self._reject_secrets(artifact.metadata, "artifact.metadata")
             with self._lock:
                 self._db.execute("INSERT INTO session_artifacts VALUES (?, ?, ?, ?, ?, ?, ?)", (uuid.uuid4().hex, sid, artifact.kind, artifact.name, artifact.digest, self._json(artifact.metadata), time.time()))

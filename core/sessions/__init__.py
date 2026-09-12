@@ -1,5 +1,6 @@
 """Durable, isolated SI Core session authority."""
 
+# Session persistence is state/lifecycle infrastructure and never restores authority.
 from .runtime import PersistentSessionAdapter
 from .store import (
     PersistentSession,

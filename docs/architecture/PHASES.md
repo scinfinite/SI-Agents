@@ -37,8 +37,8 @@
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
-| 53 | Persistent Sessions | **In implementation** | Phase 53 PR/CI pending final closure |
-| 54 | Human-in-the-Loop | Planned | Planned |
+| 53 | Persistent Sessions | **Complete** | Mainline CI #1021 / `34674234547`; final synchronized-tree gate pending |
+| 54 | Human-in-the-Loop | **Next** | Next phase |
 | 55 | Durable Waiting + Scheduling | Planned | Planned |
 | 56 | Intelligent Routing + Economics | Planned | Planned |
 | 57 | Security Platform | Planned | Planned |
@@ -81,11 +81,9 @@ Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verifi
 
 Phase 52 implementation and adversarial coverage passed PR CI #1014, mainline CI #1015 (`34673115687`), final synchronized-tree CI #1018 (`34673281826`), and final exact-tree mainline CI #1020 (`34673411916`).
 
-## Phase 53 implementation evidence
+## Phase 53 closure evidence
 
-The current Phase 53 branch implements durable SQLite-backed sessions, lifecycle/ownership isolation, optimistic revisions, durable state/context/token-cost history, ordered events and replay, artifact evidence digests, expiry/archival, export/import, clone/branch lineage, bounded search, restart recovery, and an OpenCode/runtime-facing persistent session adapter. Adversarial tests cover ownership isolation, stale revisions, secret leakage, bounds, export schema/ownership, expiry/archive behavior, artifacts, replay, cloning, JSON safety, and harness mismatch.
-
-Final exact-tree mainline CI and merge are still required before Phase 53 is marked complete.
+Phase 53 implementation is merged into `main` as `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`. The durable session store, runtime adapter, lifecycle/history/replay/artifact/export/import/branching/recovery contracts and adversarial tests are present. Mainline CI #1021 (`34674234547`) passed the Phase 53 implementation tree. The final documentation-synchronized exact-tree mainline CI remains the last release gate for this documentation closure commit.
 
 ## Detailed planned scope — Phases 52–71
 

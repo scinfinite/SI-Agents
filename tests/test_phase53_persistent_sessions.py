@@ -25,7 +25,7 @@ def test_durable_lifecycle_and_restart(tmp_path):
 def test_owner_and_project_isolation_is_fail_closed(tmp_path):
     store = SessionStore(tmp_path / "sessions.db")
     store.create(make_session())
-    with pytest.raises(KeyError):
+    with pytest.raises(PermissionError):
         store.get("s1", subject_id="other", project_id="project-1")
     with pytest.raises(PermissionError):
         store.update_state("s1", subject_id="other", project_id="project-1", state=SessionState.PAUSED)
@@ -55,7 +55,16 @@ def test_secret_like_session_state_is_rejected(tmp_path):
         store.create(make_session(), state={"api_key": "do-not-store"})
     store.create(make_session())
     with pytest.raises(ValueError, match="secret-like"):
-        store.set_context("s1", subject_id="user-1", project_id="project-1", context={"nested": {"token": "x"}})
+        store.set_context("s1", subject_id="user-1", project_id="project-1", context={"nested": {"auth_token": "x"}})
+
+
+def test_token_usage_metrics_are_allowed(tmp_path):
+    store = SessionStore(tmp_path / "sessions.db")
+    store.create(make_session())
+    store.set_context("s1", subject_id="user-1", project_id="project-1", context={"usage": {"input_tokens": 12, "output_tokens": 8}}, token_usage={"input_tokens": 12, "output_tokens": 8, "cost": 0.02})
+    state = store.read_state("s1", subject_id="user-1", project_id="project-1")
+    assert state["state"]["usage"]["input_tokens"] == 12
+    assert state["token_cost"]["cost"] == 0.02
 
 
 def test_export_import_is_schema_checked_and_owner_bound(tmp_path):
