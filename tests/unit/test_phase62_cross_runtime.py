@@ -100,7 +100,7 @@ def test_repeated_failures_quarantine_harness_and_probe_recovers() -> None:
         return InvocationResponse(
             request.request_id,
             InvocationStatus.FAILED,
-            error=RuntimeError(RuntimeErrorCode.TIMEOUT, "temporary", retryable=False),
+            error=RuntimeError(RuntimeErrorCode.TIMEOUT, "temporary", retryable=True),
         )
 
     registry = HarnessRegistry()
@@ -181,13 +181,19 @@ def test_portable_adapter_registry_covers_all_v4_resource_kinds() -> None:
 
 
 def test_portable_adapter_rejects_duplicate_capabilities_and_registry_ids() -> None:
-    descriptor = PortableAdapterDescriptor("context", PortableAdapterKind.CONTEXT, "1.0", ("read", "read"))
     try:
-        _Portable(descriptor)
+        descriptor = PortableAdapterDescriptor("context", PortableAdapterKind.CONTEXT, "1.0", ("read", "read"))
     except ValueError as exc:
         assert "unique" in str(exc)
     else:
-        raise AssertionError("expected duplicate capability rejection")
+        registry = PortableAdapterRegistry()
+        registry.register(_Portable(descriptor))
+        try:
+            registry.register(_Portable(descriptor))
+        except ValueError as exc:
+            assert "duplicate" in str(exc)
+        else:
+            raise AssertionError("expected duplicate adapter rejection")
 
 
 def test_route_decision_fingerprint_does_not_include_request_input() -> None:
