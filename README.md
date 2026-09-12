@@ -15,12 +15,12 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–54 are complete on main.**
-- **Phase 55 — Durable Waiting + Scheduling is the active implementation phase.**
+- **Phases 44–55 are complete on main.**
+- **Phase 56 — Intelligent Routing + Economics is next.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
 - Phase 54 final synchronized-tree mainline CI **#1051 (`34676632475`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Phase 53 final synchronized-tree mainline CI **#1041 (`34675322458`)** passed the same required gates.
+- Phase 55 implementation CI **#1074 (`34678184341`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- The final synchronized-tree CI after this documentation synchronization is the Phase 55 closure gate.
 
 ## Phase 55 — Durable Waiting + Scheduling
 
@@ -34,7 +34,7 @@ Covered contracts:
 - approval, human, dependency, resource, and external wake conditions;
 - deadlines and fail-closed expiry;
 - restart-safe state and ordered lifecycle events;
-- priority plus bounded age-based fairness to prevent starvation;
+- priority plus bounded age-based starvation resistance;
 - optimistic revisions and concurrency-safe claiming/completion;
 - bounded queue and payload sizes;
 - secret-like payload rejection and JSON-safe state;
