@@ -4,6 +4,7 @@ from core.provider_intelligence.circuit import CircuitBreaker
 from core.provider_intelligence.intelligent_router import (
     BudgetExceededError,
     BudgetLedger,
+    FailureClass,
     IntelligentRouter,
     RouteCandidate,
     RouteEvidence,
@@ -11,6 +12,7 @@ from core.provider_intelligence.intelligent_router import (
     RoutingError,
     TaskComplexity,
     TaskRequirements,
+    classify_failure,
     infer_complexity,
 )
 from core.provider_intelligence.models import (
@@ -42,6 +44,7 @@ __all__ = [
     "BudgetLedger",
     "Capability",
     "CircuitBreaker",
+    "FailureClass",
     "IntelligentRouter",
     "ModelProfile",
     "ModelRouter",
@@ -65,5 +68,6 @@ __all__ = [
     "RoutingRequest",
     "TaskComplexity",
     "TaskRequirements",
+    "classify_failure",
     "infer_complexity",
 ]
