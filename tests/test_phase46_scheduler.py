@@ -170,7 +170,7 @@ def test_dependency_graph_defense_never_mutates_existing_schedule(tmp_path: Path
         scheduler.submit(AuthorizedTask("first", {}, execution_id=first.execution_id), depends_on=(second.execution_id,))
     assert scheduler.get(first.schedule_id).dependencies == ()
     assert scheduler.get(second.schedule_id).dependencies == (first.execution_id,)
-    assert runtime.store.get(first.execution_id).state == State.ACCEPTED
+    assert runtime.store.get(first.execution_id).state == State.QUEUED
     scheduler.close()
     store.close()
 
