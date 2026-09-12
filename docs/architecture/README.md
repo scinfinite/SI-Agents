@@ -28,7 +28,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
 | 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
-| 54 | Human-in-the-Loop | **Implementation complete; CI pending** | Phase branch / final mainline gate pending |
+| 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI pending |
 
 ## Phase 53 persistent sessions
 
