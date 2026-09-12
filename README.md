@@ -13,17 +13,35 @@ User prompt → OpenCode → SI Core → Scheduler/Orchestrator
 → OpenCode / Web / TUI / CLI
 ```
 
-OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, and recovery.
+OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, and recovery.
 
 ## Current V4 status
 
 - **Phases 44–52 are complete on main.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
-- Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite.
-- Phase 52 mainline merge verification CI **#1015** passed distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
-- Final synchronized-tree mainline CI **#1018 (`34673281826`)** passed on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`, including distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Advanced hardening closed scheduler idempotency/DAG safety, OpenCode timeout/SSE safety, team topology/schema safety, and request-bound authorization/metadata safety gaps.
-- **Phase 53 — Persistent Sessions is next.**
+- **Phase 53 — Persistent Sessions is in implementation on the Phase 53 branch/PR and is not yet closed.**
+- Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- Phase 52 final synchronized-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+
+## Phase 53 — Persistent Sessions
+
+The implementation adds a durable SQLite-backed `SessionStore` and `PersistentSessionAdapter` for SI Core session continuity.
+
+Covered contracts:
+
+- durable session IDs and lifecycle: active, paused, archived, expired, closed;
+- subject/project/workspace ownership and isolation;
+- harness binding for OpenCode and other clients;
+- optimistic revisions for concurrent updates;
+- durable state, context, token/cost history and ordered events;
+- replay and bounded search/filtering;
+- artifact evidence with SHA-256 digests;
+- expiration, archival and restart recovery;
+- schema-checked export/import;
+- clone/branch lineage;
+- cross-interface runtime continuity without restoring authority.
+
+Security invariants reject secret-like persisted fields, enforce bounds, fail closed on ownership/harness mismatch, prevent stale revision writes, and keep replay read-only. Credentials, capabilities, grants, provider authorization, and identity are never restored by session persistence.
 
 ## Advanced-hardened phases
 
@@ -43,10 +61,6 @@ Advanced hardening covers schema-versioned deterministic catalogs/manifests, str
 
 Advanced hardening covers request-fingerprint-bound high/critical approvals, approval replay prevention, secret-like metadata rejection, bounded governance inputs, explicit/fail-closed egress semantics, declared-capability enforcement, scope checks, cost/risk controls, and deterministic evidence.
 
-## Phase 52 — Context / Memory Economics
-
-Complete. Added deterministic context budgets, model-aware input capacity, relevance/importance selection, deduplication, compaction/summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic decision snapshots. Security/adversarial tests cover budget failures, duplicate amplification, sensitive data isolation, secret handling, overflow/compaction, cost ceilings, summarization, and snapshot schema rejection. Final synchronized-tree mainline CI #1018 is green.
-
 ## V4 roadmap — detailed scope
 
 The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.md`.
@@ -62,7 +76,7 @@ The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.
 | 50 | Capability Authorization | Scoped grants, risk, approvals, egress, fail-closed policy |
 | 51 | Checkpoints + Resume | Durable checkpoints, lineage, integrity, safe resume |
 | 52 | Context / Memory Economics | Context budgets, memory, compaction, relevance, token/cost economics |
-| 53 | Persistent Sessions | Durable sessions, history, memory, replay, cross-interface continuity |
+| 53 | Persistent Sessions | Durable sessions, history, memory, replay, export/import, branching, cross-interface continuity |
 | 54 | Human-in-the-Loop | Approvals, human input, review/escalation, controlled resume |
 | 55 | Durable Waiting + Scheduling | Durable waits, timers, schedules, triggers, long-running work |
 | 56 | Intelligent Routing + Economics | Capability/quality/cost/latency routing and provider economics |
@@ -91,4 +105,4 @@ The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.
 
 ## Engineering gate
 
-A phase is not complete until implementation, security/adversarial tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and the final exact-tree CI run are green. After every phase and cross-phase hardening audit, README, docs/index, architecture/index, V4 plan, phase index, phase records, and affected cross-cutting documents must be synchronized.
+A phase is not complete until implementation, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and the final exact-tree CI run are green. After every phase and cross-phase hardening audit, README, docs/index, architecture/index, V4 plan, phase index, phase records, and affected cross-cutting documents must be synchronized.
