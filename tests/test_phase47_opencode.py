@@ -8,7 +8,7 @@ from core.runtime.opencode import OpenCodeBridge, OpenCodeTransportError
 
 class FakeTransport:
     def __init__(self):
-        self.calls: list[tuple[str, str, dict | None, dict | None]] = []
+        self.calls: list[tuple[str, str, dict | None, dict | None, float | None]] = []
         self.responses = {
             ("GET", "/global/health"): {"healthy": True, "version": "1.2.3"},
             ("POST", "/session"): {"id": "ses_test"},
@@ -17,17 +17,19 @@ class FakeTransport:
             ("POST", "/session/ses_test/abort"): True,
         }
         self.events: list[dict] = []
+        self.stream_timeouts: list[float | None] = []
 
-    def request(self, method, path, *, query=None, body=None):
-        self.calls.append((method, path, dict(query) if query else None, dict(body) if body else None))
+    def request(self, method, path, *, query=None, body=None, timeout=None):
+        self.calls.append((method, path, dict(query) if query else None, dict(body) if body else None, timeout))
         return self.responses.get((method, path))
 
-    def stream(self, path, *, query=None):
+    def stream(self, path, *, query=None, timeout=None):
+        self.stream_timeouts.append(timeout)
         yield from self.events
 
 
-def request(*, streaming=False, session_id=None):
-    return InvocationRequest("opencode", "hello", "project", session_id=session_id, request_id="req_1", streaming=streaming)
+def request(*, streaming=False, session_id=None, timeout_seconds=None):
+    return InvocationRequest("opencode", "hello", "project", session_id=session_id, request_id="req_1", streaming=streaming, timeout_seconds=timeout_seconds)
 
 
 def test_loopback_default_and_health_and_session_creation():
@@ -54,6 +56,14 @@ def test_sync_invoke_normalizes_response_and_preserves_request_identity():
     assert response.output == "hello"
     assert response.events[-1].type == RuntimeEventType.COMPLETED
     assert transport.calls[1][1] == "/session/ses_test/message"
+
+
+def test_request_timeout_is_forwarded_to_downstream_transport():
+    transport = FakeTransport()
+    bridge = OpenCodeBridge(transport=transport)
+    response = bridge.invoke(request(timeout_seconds=7.5))
+    assert response.status == InvocationStatus.COMPLETED
+    assert transport.calls[-1][4] == 7.5
 
 
 def test_existing_session_and_model_metadata_are_forwarded_without_authority_fields():
@@ -85,9 +95,10 @@ def test_streaming_filters_events_by_session_and_maps_deltas_and_terminal_event(
         {"type": "session.idle", "properties": {"sessionID": "ses_stream"}},
     ]
     bridge = OpenCodeBridge(transport=transport)
-    response = bridge.invoke(request(streaming=True))
+    response = bridge.invoke(request(streaming=True, timeout_seconds=12.0))
     assert response.status == InvocationStatus.COMPLETED
     assert response.output == "Hello"
+    assert transport.stream_timeouts == [12.0]
     assert [event.type for event in response.events] == [RuntimeEventType.DELTA, RuntimeEventType.DELTA, RuntimeEventType.COMPLETED]
 
 
@@ -104,7 +115,7 @@ def test_streaming_session_error_is_terminal_failure():
 
 def test_transport_errors_are_normalized_without_leaking_body():
     class Failing(FakeTransport):
-        def request(self, method, path, *, query=None, body=None):
+        def request(self, method, path, *, query=None, body=None, timeout=None):
             raise OpenCodeTransportError(503, "http_error")
 
     bridge = OpenCodeBridge(transport=Failing())
