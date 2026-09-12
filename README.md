@@ -1,35 +1,34 @@
 # SI-Agents
 
-SI-Agents is the governed execution and agent platform for Project-SI. V4 is being built as one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, and runtime/integration adapters.
+SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, and runtime/integration adapters.
 
 ## V4 product direction
 
 ```text
-User prompt → OpenCode → SI Core → Scheduler/Orchestrator
+User prompt → OpenCode / Web / TUI / CLI → SI Core → Scheduler/Orchestrator
 → Agents/Teams/Workflows → Authorization → OmniRoute
 → Models/Providers/APIs → Results/Evidence → SI Core
 → Observability → Evaluation → Continuous Improvement
-→ Release Gates / Canaries / Rollback → OpenCode / Web / TUI / CLI
+→ Release Gates / Canaries / Rollback → Clients
 ```
 
-OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, workspace lifecycle, observability, evaluation, and continuous-improvement governance.
+OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, workspace lifecycle, observability, evaluation, continuous improvement, and cross-runtime governance.
 
 ## Current V4 status
 
 - **Phases 44–61 are complete on `main`.**
-- **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
-- **Phase 61 — Continuous Improvement:** merged PR #75; PR CI #1157 (`34692165853`) green.
-- Phase 58–60 hardening PR #74 passed PR CI #1143 (`34691131729`) and final synchronized-tree mainline CI #1144 (`34691176676`).
+- **Phase 62 — Cross-Runtime / Cross-Harness is implemented on the Phase 62 branch and pending final CI/merge closure.**
+- Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.
 
-## Phase 61 — Continuous Improvement
+## Phase 62 — Cross-Runtime / Cross-Harness
 
-Phase 61 converts evaluation evidence into bounded, explainable improvement proposals across agents, teams, models, routing, and workflows. It provides failure clustering, regression signals, recommendation risk/confidence, deterministic weighted experiments, fail-closed canary gates, human approval binding for consequential changes, rollback plans, and tamper-evident improvement history.
+Phase 62 adds portable adapter contracts for runtime, session, tool, model, event, capability, context, checkpoint, and artifact resources. The cross-runtime gateway provides deterministic harness discovery, capability filtering, health probing, bounded quarantine/recovery, preferred selection, project+harness session isolation, explicit migration, and safe pre-start fallback.
 
-The authority rejects secret-like content before persistence and deliberately does **not** mutate runtime state directly. Approved execution remains under SI Core scheduler, capability authorization, deployment/workspace, and runtime authorities.
+Fallback is prohibited after execution-start signals. Routing decisions exclude request payloads. Registration/discovery never grants permissions, and the gateway never becomes an execution authority. OpenCode remains a supported harness rather than the definition of the runtime protocol.
 
 ## V4 roadmap
 
-The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.md`.
+See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASE_62_CROSS_RUNTIME_CROSS_HARNESS.md` for the Phase 62 contract.
 
 | Phase | Name | Status |
 |---:|---|---|
@@ -51,8 +50,8 @@ The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.
 | 59 | Observability | Advanced hardened |
 | 60 | Evaluation + Benchmarking | Advanced hardened |
 | 61 | Continuous Improvement | Complete |
-| 62 | Cross-Runtime / Cross-Harness | Next |
-| 63 | Ecosystem / Marketplace | Planned |
+| 62 | Cross-Runtime / Cross-Harness | In implementation |
+| 63 | Ecosystem / Marketplace | Next |
 | 64 | SDK / Developer Platform | Planned |
 | 65 | Workflow + Automation | Planned |
 | 66 | Advanced Web Control Plane | Planned |
@@ -64,8 +63,8 @@ The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.
 
 ## Engineering gate
 
-A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. After every phase and cross-phase hardening audit, README, docs/index, architecture/index, V4 plan, phase index, phase records, and affected cross-cutting documents must be synchronized.
+A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
 
 ## Next phase
 
-**Phase 62 — Cross-Runtime / Cross-Harness**.
+**Phase 63 — Ecosystem / Marketplace** after Phase 62 closure.
