@@ -1,11 +1,11 @@
 # SI-Agents
 
-SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, and runtime/integration adapters.
+SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, SDKs, and runtime/integration adapters.
 
 ## V4 product direction
 
 ```text
-User prompt → OpenCode / Web / TUI / CLI → SI Core → Scheduler/Orchestrator
+User prompt → OpenCode / Web / TUI / CLI / SDK → SI Core → Scheduler/Orchestrator
 → Agents/Teams/Workflows → Authorization → OmniRoute
 → Models/Providers/APIs → Results/Evidence → SI Core
 → Observability → Evaluation → Continuous Improvement
@@ -18,21 +18,19 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 - **Phases 44–63 are complete on `main`.**
 - **Phase 62 — Cross-Runtime / Cross-Harness is fully implemented, audited, documented, merged, and verified by mainline CI.**
-- **Phase 63 — Ecosystem / Marketplace is fully implemented, audited, documented, merged, and verified by its final mainline CI closure gate.**
+- **Phase 63 — Ecosystem / Marketplace is fully implemented, audited, documented, merged, and verified by final mainline CI #1198 (`34694418960`).**
+- **Phase 64 — SDK / Developer Platform is in implementation pending final exact-tree mainline CI.**
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
-- Phase 61 merged as PR #75 / CI #1157 (`34692165853`).
-- Phase 62 merged as PR #76 / final mainline CI #1186 (`34693756693`).
-- Phase 63 merged as PR #77 / PR CI #1189 (`34694186010`) and final synchronized-tree mainline CI is the authoritative closure gate.
 
-## Phase 63 — Ecosystem / Marketplace
+## Phase 64 — SDK / Developer Platform
 
-Phase 63 provides strict versioned marketplace manifests, dependency and compatibility declarations, explicit permission declarations, provenance/trust, exact manifest identity, deterministic package/template registries, governed install/update/uninstall/rollback lifecycle, bounded history, and drift detection.
+Phase 64 adds typed Python and TypeScript SDKs over the versioned Control API, stable errors, optional bearer authentication, header-bound identity, filter-bound cursor pagination, idempotent run creation, bounded concurrency, SSE/WebSocket event transports, explicit subscriptions, signed webhook delivery primitives, OpenAPI updates, examples, and a dedicated SDK CI gate.
 
-Marketplace lifecycle is metadata/state management only. Installation never grants execution authority; untrusted packages require explicit governance, and governance approval is bound to the exact manifest digest. SI Core remains authoritative for authorization and execution.
+SDKs remain clients/adapters. They do not create execution or governance authority outside SI Core.
 
 ## V4 roadmap
 
-See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASE_63_ECOSYSTEM_MARKETPLACE.md` for the Phase 63 contract.
+See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the current Phase 64 contract.
 
 | Phase | Name | Status |
 |---:|---|---|
@@ -56,7 +54,7 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 61 | Continuous Improvement | Complete |
 | 62 | Cross-Runtime / Cross-Harness | Complete |
 | 63 | Ecosystem / Marketplace | Complete |
-| 64 | SDK / Developer Platform | Next |
+| 64 | SDK / Developer Platform | In implementation |
 | 65 | Workflow + Automation | Planned |
 | 66 | Advanced Web Control Plane | Planned |
 | 67 | Advanced TUI Control Center | Planned |
@@ -69,6 +67,6 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 
 A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
 
-## Next phase
+## Current phase
 
 **Phase 64 — SDK / Developer Platform.**
