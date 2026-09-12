@@ -45,7 +45,7 @@
 | 58 | Workspace / Worktree Lifecycle | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 59 | Observability | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
-| 61 | Continuous Improvement | **Next** | Planned |
+| 61 | Continuous Improvement | **Complete** | PR #75; PR CI #1157 / `34692165853` |
 | 62 | Cross-Runtime / Cross-Harness | Planned | Planned |
 | 63 | Ecosystem / Marketplace | Planned | Planned |
 | 64 | SDK / Developer Platform | Planned | Planned |
@@ -61,4 +61,6 @@ Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`
 
 Phase 58 is fully closed at advanced-hardening level by PR #74, PR CI #1143 / `34691131729`, and final synchronized-tree mainline CI #1144 / `34691176676`. Phase 59 is fully closed at advanced-hardening level by the same hardening PR and final mainline CI, including deep redaction/resource-bound and integrity-scan coverage. Phase 60 is fully closed at advanced-hardening level by the same hardening PR and final mainline CI, including enforceable cost/latency release budgets, persisted evidence verification, and expanded secret/failure guards.
 
-**Phase 61 — Continuous Improvement is now the next roadmap phase.**
+Phase 61 is fully closed by merged PR #75 and green PR CI #1157 / `34692165853`. The implementation adds governed failure clustering, regression detection, explainable recommendations, deterministic experiments, fail-closed canary gates, approval binding, rollback planning, secret rejection, and tamper-evident improvement history.
+
+**Phase 62 — Cross-Runtime / Cross-Harness is now the next roadmap phase.**
