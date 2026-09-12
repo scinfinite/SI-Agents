@@ -6,23 +6,14 @@ from pathlib import Path
 
 import pytest
 
-from core.cli.platform import (
-    EXIT_AUTH,
-    MAX_ATTACHMENT,
-    PlatformClient,
-    _segment,
-    build_parser,
-    main,
-)
+from core.cli.platform import EXIT_AUTH, MAX_ATTACHMENT, PlatformClient, _segment, build_parser, main
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_parser_exposes_advanced_platform_surface() -> None:
     parser = build_parser()
-    for command in ("run", "task", "agent", "team", "workflow", "session", "approval", "resume", "stream", "pipeline", "attachment", "auth", "config", "models", "providers"):
-        if command in {"agent", "team", "workflow"}:
-            continue
+    for command in ("run", "task", "session", "approval", "resume", "stream", "pipeline", "attachment", "auth", "config", "models", "providers"):
         assert any(action.dest == "command" for action in parser._actions)
     assert parser.parse_args(["run", "create", "inspect", "agent"]).run_command == "create"
     assert parser.parse_args(["approval", "decide", "a1", "approved", "--subject", "alice", "--project", "p1"]).approval_command == "decide"
@@ -34,6 +25,13 @@ def test_local_status_is_stable_json(capsys) -> None:
     assert payload["ok"] is True
     assert payload["command"] == "status"
     assert payload["data"]["transport"] == "local"
+
+
+def test_trailing_json_option_is_supported_by_public_dispatch(capsys) -> None:
+    from core.cli.dispatch import main as dispatch_main
+    assert dispatch_main(["status", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["command"] == "status"
 
 
 def test_governed_run_creation_is_not_direct_execution(capsys) -> None:
