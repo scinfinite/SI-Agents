@@ -5,11 +5,11 @@ import subprocess
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+from core.control_api.service import ControlApiService
+
 from .audit import AuditLogger
 from .models import WebConfig
 from .server import WebRequestHandler, WebServer
-from core.control_api.service import ControlApiService
-
 
 _ROOT = Path(__file__).resolve().parents[2]
 _UI = _ROOT / "web" / "control"
@@ -42,7 +42,10 @@ class AdvancedWebRequestHandler(WebRequestHandler):
             raise ValueError("path is required and bounded")
         root = Path(self.web_server.service.root).resolve()
         path = (root / raw).resolve()
-        relative = path.relative_to(root)
+        try:
+            relative = path.relative_to(root)
+        except ValueError as exc:
+            raise ValueError("path escapes repository root") from exc
         if ".git" in relative.parts or path.suffix.lower() not in _TEXT_SUFFIXES:
             raise ValueError("path is not available in the repository viewer")
         return path
@@ -109,13 +112,17 @@ class AdvancedWebRequestHandler(WebRequestHandler):
                 self._inspection(path, query)
                 self._audit(200, {"surface": "phase66_inspection"})
             except PermissionError:
-                self._error(403, "governance_denied"); self._audit(403)
+                self._error(403, "governance_denied")
+                self._audit(403)
             except (TypeError, ValueError):
-                self._error(400, "invalid_request"); self._audit(400)
+                self._error(400, "invalid_request")
+                self._audit(400)
             except (KeyError, IndexError):
-                self._error(404, "not_found"); self._audit(404)
+                self._error(404, "not_found")
+                self._audit(404)
             except Exception:
-                self._error(500, "internal_error"); self._audit(500)
+                self._error(500, "internal_error")
+                self._audit(500)
             return
         super().do_GET()
 
