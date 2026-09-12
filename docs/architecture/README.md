@@ -12,7 +12,7 @@ OpenCode → SI OpenCode Bridge → SI Core / Control API
         → OpenCode / Web / TUI / CLI
 ```
 
-OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, and durable waiting state.
+OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, and durable waiting state. Phase 56 adds SI-side routing intelligence without taking over OmniRoute authority.
 
 ## Verified V4 phases
 
@@ -29,7 +29,14 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
 | 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
 | 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI #1051 / `34676632475` |
-| 55 | Durable Waiting + Scheduling | **Complete** | Implementation CI #1074 / `34678184341`; final synchronized-tree closure CI pending |
+| 55 | Durable Waiting + Scheduling | **Complete** | Final synchronized-tree closure CI #1080 / `34678317246` |
+| 56 | Intelligent Routing + Economics | **Complete** | Final synchronized-tree mainline CI #1095 / `34682748193` |
+
+## Phase 56 intelligent routing
+
+`core/provider_intelligence/intelligent_router.py` provides deterministic SI-side routing intelligence over explicit task requirements and existing provider/model profiles. It matches capabilities, context, output limits, streaming, structured output, vision, coding, reasoning, and tool use; ranks by quality, reliability history, latency, cost, and preference; gates on provider/model enablement, quota, and circuit state; and produces non-secret route evidence.
+
+Economics are guarded through `BudgetLedger` reservations/settlement, cost estimation, retry forecasting, bounded retry attempts, and transient/rate-limit fallback. Escalation and downgrade are explicit policy decisions. Provider outcomes update health/circuit state, and recovery probes can restore eligibility. Routing never grants authorization or credentials.
 
 ## Phase 55 durable waiting
 
@@ -49,4 +56,4 @@ Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority. No inter
 
 ## Next
 
-**Phase 56 — Intelligent Routing + Economics** follows Phase 55 final synchronized-tree CI closure.
+**Phase 57 — Security Platform** follows Phase 56 final synchronized-tree mainline CI closure.
