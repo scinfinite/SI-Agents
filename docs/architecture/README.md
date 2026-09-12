@@ -38,9 +38,9 @@ See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and 
 ## Closure evidence
 
 - Phase 63: PR #77 merged; final exact-tree mainline CI #1198 / `34694418960` passed on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
-- Phase 64: PR #78 merged and the SDK implementation-tree gate passed; synchronized documentation closure is included in the current Phase 65 final gate.
-- Phase 65: implementation-tree CI #1239 / `34697885027` passed distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest. The current documentation commit is the final synchronized-tree target.
+- Phase 64: PR #78 merged; implementation-tree closure CI #1239 / `34697885027` passed the repository closure suite.
+- Phase 65: final synchronized-tree CI #1249 / `34698187600` completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
 
 ## Current position
 
-**Phase 65 — Workflow + Automation is complete. Phase 66 — Advanced Web Control Plane is next, after the final synchronized-tree CI for this documentation state is green.**
+**Phase 65 — Workflow + Automation is 100% complete. Phase 66 — Advanced Web Control Plane is next.**
