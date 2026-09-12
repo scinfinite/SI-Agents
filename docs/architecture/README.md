@@ -9,11 +9,11 @@ OpenCode → SI OpenCode Bridge → SI Core / Control API
         → Scheduler / Orchestrator → Tasks / Agents / Teams / Workflows
         → Capability Authorization → OmniRoute → Models / Providers / APIs
         → Results / Artifacts / Evidence → SI Core
-        → Observability → Evaluation / Release Gates
-        → OpenCode / Web / TUI / CLI
+        → Observability → Evaluation / Continuous Improvement
+        → Release Gates / Canaries / Rollback → OpenCode / Web / TUI / CLI
 ```
 
-OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, durable waiting, workspaces, observability, and evaluation. Evaluation and telemetry remain advisory/governance evidence and never become execution authority.
+OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, durable waiting, workspaces, observability, evaluation, and continuous-improvement governance. Evaluation and telemetry remain advisory/governance evidence and never become execution authority.
 
 ## Verified V4 phases
 
@@ -36,25 +36,20 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 58 | Workspace / Worktree Lifecycle | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 59 | Observability | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
+| 61 | Continuous Improvement | **Implemented; closure pending CI** | Phase 61 branch |
 
-## Phase 58 — workspace / worktree lifecycle
+## Phase 61 — continuous improvement
 
-The workspace authority provides tenant/project isolation, optimistic revisions, bounded lease locks, directory and Git-worktree materialization, branch lifecycle, dirty/conflict inspection, deterministic diffs and merge preparation, snapshots and diff artifacts, approved resume, recovery/cleanup, path and symlink defenses, tamper-evident lifecycle evidence, and bounded garbage-collection discovery. Advanced hardening adds adversarial event-chain tamper detection and authorization-callback verification. Workspace state does not grant credentials, capabilities, provider access, or execution identity.
+The continuous-improvement authority analyzes evaluation runs into stable failure clusters and regression signals, then creates explainable optimization recommendations for agents, teams, models, routing, and workflows. Recommendations carry expected benefit, confidence, risk, and prerequisites rather than silently mutating runtime state.
 
-## Phase 59 — observability
+Experiments use deterministic subject assignment and bounded variants. Canary promotion is fail-closed on sample size, error rate, cost, latency, and quality. Consequential model/routing/workflow changes require a matching human approval record. Rollback plans retain the previous version and explicit trigger and are only valid for active canary/promoted recommendations.
 
-The observability authority provides bounded structured logs/events/metrics/spans, shared security-scanner secret detection plus redaction, integrity evidence across the full bounded integrity scan, correlation/causation, trace timelines, live-feed retention, percentile metrics, operator health, JSONL export, and tenant/project filtering. Telemetry is evidence only; it cannot grant authorization or execution authority.
-
-## Phase 60 — evaluation + benchmarking
-
-The evaluation authority provides deterministic golden cases, exact/normalized/containment/JSON/tolerance/rubric scoring, weighted multi-metric dimensions, reliability/security/latency/cost measurements, explicit failure taxonomy, fail-closed scoring, bounded evidence, benchmark history, regression detection, human review, deterministic weighted experiments, cryptographic report digests, and configurable release gates. Advanced hardening makes documented cost/latency budgets enforceable, rejects secret-bearing evaluator outputs/metadata/review rationale, verifies persisted evidence integrity, tightens experiment inputs, and fails closed on empty reports. Evaluation remains advisory and cannot grant execution, credentials, provider access, or approvals.
+Improvement history is durable and tamper-evident through a SHA-256 chain. Secret-like data is rejected before persistence. Continuous Improvement is a governance/planning authority only: actual execution continues through the existing SI Core scheduler, capability authorization, deployment/workspace, and runtime authorities.
 
 ## Cross-cutting authority contract
 
-Security decisions are fail-closed. Workspace, telemetry, and evaluation evidence are scoped and bounded. Human decisions and evaluation outcomes do not become capability grants. Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority. No interface creates competing execution, session, approval, waiting, workspace, observability, or evaluation state ownership.
+Security decisions are fail-closed. Workspace, telemetry, evaluation, and improvement evidence are scoped and bounded. Human decisions and evaluation/improvement outcomes do not become capability grants. Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority. No interface creates competing execution, session, approval, waiting, workspace, observability, evaluation, or improvement state ownership.
 
 ## Current position
 
-**V4 Phases 44–60 are complete at the required advanced-hardening level on `main`. Phase 61 — Continuous Improvement is next.**
-
-The advanced-hardening implementation was merged through PR #74. Its PR CI #1143 (`34691131729`) passed, and the synchronized-tree mainline CI #1144 (`34691176676`) passed repository audit, distribution/wheel verification, integration verification, Ruff, and the full test suite.
+**V4 Phases 44–60 are closed at advanced-hardening level on `main`; Phase 61 is implemented on the Phase 61 branch and requires final CI/merge verification before closure.**
