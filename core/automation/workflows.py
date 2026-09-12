@@ -193,6 +193,8 @@ class WorkflowEngine:
             base = self._templates.get(template)
             if base is None:
                 raise KeyError(template)
+            if (workflow_id, version) in self._definitions:
+                raise ValueError("workflow version already registered")
             definition = WorkflowDefinition(workflow_id, version, base.name, base.steps, base.triggers, base.max_runtime_seconds, template)
             self._definitions[(workflow_id, version)] = definition
             self._persist()
@@ -255,16 +257,17 @@ class WorkflowEngine:
             if run.status is WorkflowRunStatus.WAITING:
                 if run.wait_until and _parse(run.wait_until) > current:
                     return run
-                for step in definition.steps:
-                    if run.step_states[step.id] != "waiting":
-                        continue
+                waiting_steps = [s for s in definition.steps if run.step_states[s.id] == "waiting"]
+                for step in waiting_steps:
                     if step.kind is WorkflowStepKind.WAIT:
                         run.step_states[step.id] = "succeeded"
-                        run.completed_steps.append(step.id)
+                        if step.id not in run.completed_steps:
+                            run.completed_steps.append(step.id)
                         run.wait_until = None
                     elif step.kind is WorkflowStepKind.HUMAN and run.variables.get(step.approval_key or "") is True:
                         run.step_states[step.id] = "succeeded"
-                        run.completed_steps.append(step.id)
+                        if step.id not in run.completed_steps:
+                            run.completed_steps.append(step.id)
                 if any(state == "waiting" for state in run.step_states.values()):
                     return run
                 run.status = WorkflowRunStatus.RUNNING
@@ -281,7 +284,8 @@ class WorkflowEngine:
                         continue
                     if not all(state == "succeeded" for state in dependency_states):
                         continue
-                    if step.condition:
+                    # LOOP uses condition as its post-action termination predicate.
+                    if step.condition and step.kind is not WorkflowStepKind.LOOP:
                         condition = self._conditions.get(step.condition)
                         if condition is None:
                             return self._fail(run, f"condition is not registered: {step.condition}")
@@ -364,15 +368,15 @@ class WorkflowEngine:
         safe_payload = _safe_json(payload)
         with self._lock:
             definitions = tuple(self._definitions.values())
-        result = []
-        for definition in definitions:
-            if any(t.kind is kind and t.name == name for t in definition.triggers):
-                result.append(self.start(definition.workflow_id, version=definition.version, subject=subject, variables={"trigger": safe_payload}, trigger=name))
-        if now:
-            stamp = _utc(now).isoformat()
-            for run in result:
-                run.updated_at = stamp
-        return tuple(result)
+            result = []
+            for definition in definitions:
+                if any(t.kind is kind and t.name == name for t in definition.triggers):
+                    result.append(self.start(definition.workflow_id, version=definition.version, subject=subject, variables={"trigger": safe_payload}, trigger=name))
+            if now:
+                stamp = _utc(now).isoformat()
+                for run in result:
+                    run.updated_at = stamp
+            return tuple(result)
 
     def _execute_step(self, run: WorkflowRun, step: WorkflowStep, now: datetime) -> bool:
         if step.kind is WorkflowStepKind.CONDITION:
@@ -403,36 +407,43 @@ class WorkflowEngine:
             items = run.variables.get(step.items_key or "", [])
             action = self._actions.get(step.action or "")
             if not isinstance(items, list) or len(items) > _MAX_FANOUT or action is None:
-                return self._fail(run, "fan-out input/action is invalid") is run
+                self._fail(run, "fan-out input/action is invalid")
+                return True
             try:
                 run.step_results[step.id] = _safe_json([action(item) for item in items])
             except Exception as exc:  # noqa: BLE001
-                return self._fail(run, f"{type(exc).__name__}: {exc}") is run
+                self._fail(run, f"{type(exc).__name__}: {exc}")
+                return True
         elif step.kind is WorkflowStepKind.LOOP:
             action = self._actions.get(step.action or "")
             predicate = self._conditions.get(step.condition or "")
             if action is None or predicate is None:
-                return self._fail(run, "loop action/condition is not registered") is run
+                self._fail(run, "loop action/condition is not registered")
+                return True
             results = []
             for _ in range(step.max_iterations):
                 results.append(action(run.variables))
                 if predicate(run.variables):
                     break
             else:
-                return self._fail(run, "loop iteration limit reached") is run
+                self._fail(run, "loop iteration limit reached")
+                return True
             run.step_results[step.id] = _safe_json(results)
         elif step.kind is WorkflowStepKind.DELEGATE:
             delegate = self._delegates.get(step.delegate_to or "")
             if delegate is None:
-                return self._fail(run, "delegate is not registered") is run
+                self._fail(run, "delegate is not registered")
+                return True
             try:
                 run.step_results[step.id] = _safe_json(delegate(run.variables))
             except Exception as exc:  # noqa: BLE001
-                return self._fail(run, f"{type(exc).__name__}: {exc}") is run
+                self._fail(run, f"{type(exc).__name__}: {exc}")
+                return True
         else:
             action = self._actions.get(step.action or "")
             if action is None:
-                return self._fail(run, f"action is not registered: {step.action}") is run
+                self._fail(run, f"action is not registered: {step.action}")
+                return True
             for attempt in range(run.attempts.get(step.id, 0) + 1, step.retry_attempts + 1):
                 run.attempts[step.id] = attempt
                 try:
@@ -441,9 +452,11 @@ class WorkflowEngine:
                 except Exception as exc:  # noqa: BLE001
                     run.error = f"{type(exc).__name__}: {exc}"
             else:
-                return self._fail(run, run.error or "step failed") is run
+                self._fail(run, run.error or "step failed")
+                return True
         run.step_states[step.id] = "succeeded"
-        run.completed_steps.append(step.id)
+        if step.id not in run.completed_steps:
+            run.completed_steps.append(step.id)
         return True
 
     def _fail(self, run: WorkflowRun, error: str) -> WorkflowRun:
@@ -497,15 +510,24 @@ class WorkflowEngine:
             definition = _definition_from_dict(raw)
             self._templates[definition.template or definition.workflow_id] = definition
         for raw in payload.get("runs", []):
+            if not isinstance(raw, dict):
+                raise ValueError("invalid workflow run")
             run = WorkflowRun(**raw)
             run.status = WorkflowRunStatus(run.status)
             self._runs[run.run_id] = run
-        for key, value in payload.get("idempotency", {}).items():
+        idem = payload.get("idempotency", {})
+        if not isinstance(idem, dict):
+            raise ValueError("invalid workflow idempotency state")
+        for key, value in idem.items():
             if isinstance(value, list) and len(value) == 2:
                 self._idempotency[str(key)] = (str(value[0]), str(value[1]))
+            else:
+                raise ValueError("invalid workflow idempotency entry")
 
 
 def _definition_from_dict(raw: dict[str, object]) -> WorkflowDefinition:
+    if not isinstance(raw, dict) or not isinstance(raw.get("steps"), list):
+        raise ValueError("invalid workflow definition")
     steps = tuple(WorkflowStep(**{**step, "kind": WorkflowStepKind(step["kind"]), "depends_on": tuple(step.get("depends_on", ()))}) for step in raw["steps"])  # type: ignore[arg-type]
     triggers = tuple(WorkflowTrigger(**{**trigger, "kind": TriggerKind(trigger["kind"])}) for trigger in raw.get("triggers", ()))  # type: ignore[arg-type]
     return WorkflowDefinition(str(raw["workflow_id"]), int(raw["version"]), str(raw["name"]), steps, triggers, int(raw.get("max_runtime_seconds", 86_400)), raw.get("template"))
