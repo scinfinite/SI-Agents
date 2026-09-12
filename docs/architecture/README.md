@@ -19,7 +19,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+Phases 44–61 are closed. Phase 62 is implemented and merged; final synchronized-tree mainline CI is pending. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
 
 ## Phase 62 architecture
 
@@ -27,14 +27,14 @@ Phase 62 provides a common portable adapter contract for runtime, session, tool,
 
 `CrossRuntimeGateway` provides deterministic harness discovery, streaming capability filtering, preferred selection, health probes, bounded degradation/quarantine/recovery, project+harness session binding, explicit session migration, and safe pre-start fallback. Fallback is allowed only for retryable failures before execution-start signals. Routing evidence excludes request payloads and is bounded.
 
-OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants, execution state, or authorization.
+OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants execution state, or replaces authorization.
 
-## Phase 62 closure evidence
+## Phase 62 closure evidence so far
 
 - PR #76 merged into `main` as `607085782a75e31a60774afe975edcbd38bf5e4c`.
 - PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Final synchronized-tree mainline CI is the authoritative post-merge gate.
+- Final synchronized-tree mainline CI is the authoritative closure gate.
 
 ## Current position
 
-**V4 Phases 44–62 are closed; Phase 63 — Ecosystem / Marketplace is next.**
+**Phase 62 is pending final mainline closure CI; Phase 63 — Ecosystem / Marketplace follows.**
