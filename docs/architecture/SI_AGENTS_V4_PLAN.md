@@ -17,11 +17,11 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–65**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 66 — Advanced Web Control Plane is active.**
+V3 is closed. V4 has completed Phases **44–66**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 67 — Advanced TUI Control Center is next.**
 
 ## Closed phases
 
-Phases 44–65 are closed under their recorded implementation, merge, documentation, and CI evidence.
+Phases 44–66 are closed under their recorded implementation, merge, documentation, and CI evidence.
 
 ### Phase 65 — Workflow + Automation
 
@@ -33,13 +33,15 @@ Verification: `tests/unit/test_phase65_workflows.py` and repository-wide CI. Fin
 
 ## Phase 66 — Advanced Web Control Plane
 
-**Active.** Phase 66 provides a secure, accessible, same-origin operational web client over the existing Control API. It covers dashboard/health, live activity, workflows and DAG topology, timelines/events/dependencies, evidence, identity-bound approval visibility, resource/settings views, and code/Markdown/JSON/diff-oriented repository inspection with bounded search/filtering.
+**Complete / 100%.** Phase 66 provides a secure, accessible, same-origin operational web client over the existing WebServer and Control API. It covers dashboard/health, live activity, workflows and DAG topology, timelines/events/dependencies, evidence, identity-bound approval visibility, governed run-request controls, resource/settings views, and code/Markdown/JSON/diff-oriented repository inspection with bounded search/filtering.
 
 Implementation: `core/web/advanced.py`, `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css`. The advanced handler is installed on the existing `WebServer` rather than creating a competing web authority.
 
-The UI is a client of SI Core rather than a second authority. It inherits the established WebServer authentication/audit boundary, uses restrictive CSP and safe static/repository path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh.
+The UI is a client of SI Core rather than a second authority. It inherits the established WebServer authentication/audit boundary, uses restrictive CSP and safe static/repository path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh. Governed run requests remain ordinary Control API requests and cannot bypass SI Core authorization.
 
-Repository inspection is read-only, excludes `.git`, bounds source/diff payloads and search traversal, and uses a timeout-bounded argument-vector Git diff.
+Repository inspection is read-only, excludes `.git`, bounds source/diff payloads and search traversal, and uses a timeout-bounded argument-vector Git inspection.
+
+PR #79 merged successfully. Closure CI #1275 / `34699632473` passed distribution build, wheel verification, repository audit, integration verification, Ruff, full pytest, and the SDK workflow. The current synchronized documentation tree is the final mainline closure target.
 
 Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
 
@@ -47,7 +49,7 @@ Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
 
 ## Phase 67 — Advanced TUI Control Center
 
-Terminal-native cockpit for executions, tasks, agents, teams, workflows, models, providers, approvals, events, logs, evidence, artifacts, automation, health, live streams, trees, DAG/progress/timeline views, search/filtering, controls, reconnect, and degraded awareness.
+**Next.** Terminal-native cockpit for executions, tasks, agents, teams, workflows, models, providers, approvals, events, logs, evidence, artifacts, automation, health, live streams, trees, DAG/progress/timeline views, search/filtering, controls, reconnect, and degraded awareness.
 
 ## Phase 68 — Advanced CLI Platform
 
@@ -67,4 +69,4 @@ Final architecture, authority, state-machine, lifecycle, concurrency, idempotenc
 
 ## Closure gate
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate; Phase 66 does not yet.**
+Phase 66 implementation and PR closure gates are green. The final synchronized-tree mainline CI for this documentation state is the authoritative last gate before the phase is fully closed.
