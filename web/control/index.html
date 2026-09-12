@@ -22,6 +22,7 @@
       <button data-view="topology">Topology</button>
       <button data-view="evidence">Evidence</button>
       <button data-view="approvals">Approvals</button>
+      <button data-view="repository">Repository</button>
       <button data-view="resources">Resources</button>
       <button data-view="settings">Settings</button>
     </nav>
@@ -36,6 +37,7 @@
       <section id="topology" class="view hidden"><h1>Topology & DAG</h1><p class="muted">Accessible text representation of the same graph state; no canvas-only dependency.</p><div id="topologyList" class="list"></div></section>
       <section id="evidence" class="view hidden"><h1>Evidence & artifacts</h1><div id="evidenceView" class="panel"></div></section>
       <section id="approvals" class="view hidden"><h1>Human approvals</h1><p class="muted">Decisions are identity-bound and remain governed by SI Core.</p><div id="approvalsList" class="list"></div></section>
+      <section id="repository" class="view hidden"><h1>Repository inspection</h1><p class="muted">Bounded text search, source, Markdown/JSON/code viewing, and latest-commit diffs.</p><div class="toolbar"><label>Search repository <input id="repoSearch" type="search" placeholder="workflow, ControlApiService…"></label><button id="repoSearchButton">Search</button></div><div id="repoResults" class="list"></div><div class="toolbar"><label>Open path <input id="sourcePath" type="text" placeholder="README.md"></label><button id="sourceButton">Open</button><button id="diffButton">Latest diff</button></div><pre id="sourceView" class="panel">Select a file to inspect.</pre></section>
       <section id="resources" class="view hidden"><h1>Resources & health</h1><div id="resourcesView" class="cards"></div></section>
       <section id="settings" class="view hidden"><h1>Control-plane settings</h1><div id="settingsView" class="panel"></div></section>
     </main>
