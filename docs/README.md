@@ -2,7 +2,7 @@
 
 ## Current V4 baseline
 
-SI-Agents V4 has completed Phases **44–56**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 57 — Security Platform is next.**
+SI-Agents V4 has completed Phases **44–60**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 61 — Continuous Improvement is next after Phase 60 mainline closure.**
 
 See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The Phase 56 implementation record is `architecture/PHASE_56_INTELLIGENT_ROUTING_ECONOMICS.md`.
 
