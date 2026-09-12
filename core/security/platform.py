@@ -19,10 +19,6 @@ class SecurityError(ValueError):
     """Base error for security contract violations."""
 
 
-class TokenError(SecurityError):
-    """Raised for invalid or expired capability tokens."""
-
-
 class Decision(str, Enum):
     ALLOW = "allow"
     DENY = "deny"
@@ -126,7 +122,10 @@ class EgressPolicy:
         except ValueError:
             address = None
         if address is not None and not self.allow_private_addresses and (
-            address.is_private or address.is_loopback or address.is_link_local or address.is_reserved
+            address.is_private
+            or address.is_loopback
+            or address.is_link_local
+            or address.is_reserved
         ):
             return False
         return host in {item.lower().rstrip(".") for item in self.allowed_hosts}
@@ -175,7 +174,9 @@ class SecretScanner:
     _PATTERNS = (
         re.compile(r"(?i)bearer\s+[A-Za-z0-9._~+/=-]{12,}"),
         re.compile(r"(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*[^\s,;]+"),
-        re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]+?-----END [A-Z ]*PRIVATE KEY-----"),
+        re.compile(
+            r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]+?-----END [A-Z ]*PRIVATE KEY-----"
+        ),
         re.compile(r"\b(?:sk|rk)-[A-Za-z0-9_-]{16,}\b"),
     )
 
@@ -196,7 +197,9 @@ class InjectionScanner:
 
     _PATTERNS = (
         re.compile(r"(?i)ignore\s+(?:all|any|the)\s+(?:previous|prior|above)\s+instructions"),
-        re.compile(r"(?i)(?:reveal|print|show|dump)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|instructions)"),
+        re.compile(
+            r"(?i)(?:reveal|print|show|dump)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|instructions)"
+        ),
         re.compile(r"(?i)disable\s+(?:security|safety|authorization|policy)"),
         re.compile(r"(?i)you\s+are\s+now\s+(?:the\s+)?(?:system|developer|admin)"),
         re.compile(r"(?i)override\s+(?:policy|permission|approval|security)"),
@@ -220,7 +223,10 @@ class SecurityPolicy:
         approval_risks: Iterable[str] = ("high", "critical"),
     ) -> None:
         self._grants = tuple(grants)
-        self.version = PolicyVersion(policy_version, hashlib.sha256(policy_version.encode()).hexdigest())
+        self.version = PolicyVersion(
+            policy_version,
+            hashlib.sha256(policy_version.encode()).hexdigest(),
+        )
         self.egress = egress or EgressPolicy()
         self._boundaries = tuple(boundaries)
         self._approval_risks = frozenset(approval_risks)
@@ -233,7 +239,8 @@ class SecurityPolicy:
 
     def _grant(self, request: AuthorizationRequest) -> PermissionGrant | None:
         candidates = [
-            grant for grant in self._grants
+            grant
+            for grant in self._grants
             if grant.active()
             and grant.subject == request.identity.subject
             and grant.action == request.action
@@ -244,6 +251,8 @@ class SecurityPolicy:
 
     def evaluate(self, request: AuthorizationRequest) -> tuple[Decision, tuple[str, ...]]:
         reasons: list[str] = []
+        if not self.version.active:
+            reasons.append("security policy version is inactive")
         if not request.identity.authenticated:
             reasons.append("unauthenticated identity")
         if not request.identity.tenant.strip():
@@ -263,7 +272,9 @@ class SecurityPolicy:
         if request.external_egress and request.credential_access:
             reasons.append("credential-bearing external egress is denied")
         if not any(
-            boundary.source == request.identity.tenant and boundary.destination == request.resource and boundary.allowed
+            boundary.source == request.identity.tenant
+            and boundary.destination == request.resource
+            and boundary.allowed
             for boundary in self._boundaries
         ) and request.resource.startswith("external:"):
             reasons.append("trust boundary is not explicitly allowed")
@@ -272,7 +283,16 @@ class SecurityPolicy:
             reasons.append("no active least-privilege grant")
         elif grant.require_approval and request.approval is None:
             reasons.append("grant requires approval")
-        deny_markers = ("denied", "rejected", "no active", "not allowlisted", "not explicitly", "unauthenticated", "missing tenant")
+        deny_markers = (
+            "denied",
+            "rejected",
+            "no active",
+            "not allowlisted",
+            "not explicitly",
+            "unauthenticated",
+            "missing tenant",
+            "inactive",
+        )
         if any(any(marker in reason for marker in deny_markers) for reason in reasons):
             return Decision.DENY, tuple(reasons)
         if reasons:
@@ -293,7 +313,16 @@ class SecurityPlatform:
 
     @staticmethod
     def _evidence_id(request: AuthorizationRequest, decision: Decision, version: str) -> str:
-        material = "|".join((request.identity.subject, request.action, request.resource, request.scope, decision.value, version))
+        material = "|".join(
+            (
+                request.identity.subject,
+                request.action,
+                request.resource,
+                request.scope,
+                decision.value,
+                version,
+            )
+        )
         return hashlib.sha256(material.encode()).hexdigest()[:24]
 
     def authorize(self, request: AuthorizationRequest) -> AuthorizationResult:
@@ -301,9 +330,22 @@ class SecurityPlatform:
         evidence_id = self._evidence_id(request, decision, self.policy.version.version)
         safe_reasons = tuple(SecretScanner.redact(reason) for reason in reasons)
         self._audit.append(
-            AuditEvent(evidence_id, request.identity.subject, request.action, request.resource, decision, self.policy.version.version, safe_reasons)
+            AuditEvent(
+                evidence_id,
+                request.identity.subject,
+                request.action,
+                request.resource,
+                decision,
+                self.policy.version.version,
+                safe_reasons,
+            )
         )
-        return AuthorizationResult(decision, safe_reasons, self.policy.version.version, evidence_id)
+        return AuthorizationResult(
+            decision,
+            safe_reasons,
+            self.policy.version.version,
+            evidence_id,
+        )
 
     def issue_token(self, request: AuthorizationRequest, ttl_seconds: int = 300) -> SecurityToken:
         if ttl_seconds <= 0 or ttl_seconds > 3600:
@@ -320,10 +362,20 @@ class SecurityPlatform:
             "exp": expires,
             "pol": self.policy.version.version,
         }
-        encoded = base64.urlsafe_b64encode(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()).decode().rstrip("=")
+        encoded = base64.urlsafe_b64encode(
+            json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
+        ).decode().rstrip("=")
         signature = hmac.new(self._signing_key, encoded.encode(), hashlib.sha256).hexdigest()
         token = f"{encoded}.{signature}"
-        return SecurityToken(token, request.identity.subject, request.action, request.resource, request.scope, datetime.fromtimestamp(expires, UTC), self.policy.version.version)
+        return SecurityToken(
+            token,
+            request.identity.subject,
+            request.action,
+            request.resource,
+            request.scope,
+            datetime.fromtimestamp(expires, UTC),
+            self.policy.version.version,
+        )
 
     def consume_token(self, token: str, request: AuthorizationRequest) -> bool:
         if not token or token in self._used_tokens or "." not in token:
@@ -337,9 +389,21 @@ class SecurityPlatform:
             payload = json.loads(base64.urlsafe_b64decode(encoded + padding))
         except (ValueError, json.JSONDecodeError, UnicodeDecodeError):
             return False
-        if payload.get("pol") != self.policy.version.version or int(payload.get("exp", 0)) <= int(datetime.now(UTC).timestamp()):
+        if not self.policy.version.active:
             return False
-        if any(payload.get(key) != value for key, value in (("sub", request.identity.subject), ("act", request.action), ("res", request.resource), ("scope", request.scope))):
+        if payload.get("pol") != self.policy.version.version:
+            return False
+        if int(payload.get("exp", 0)) <= int(datetime.now(UTC).timestamp()):
+            return False
+        if any(
+            payload.get(key) != value
+            for key, value in (
+                ("sub", request.identity.subject),
+                ("act", request.action),
+                ("res", request.resource),
+                ("scope", request.scope),
+            )
+        ):
             return False
         self._used_tokens.add(token)
         return True
