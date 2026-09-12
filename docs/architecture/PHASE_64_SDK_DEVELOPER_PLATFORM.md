@@ -1,5 +1,9 @@
 # Phase 64 — SDK / Developer Platform
 
+## Status
+
+**Complete.** Phase 64 is merged through PR #78 and its implementation was validated by the repository SDK and mainline gates. Its synchronized documentation is now maintained as part of the V4 documentation baseline.
+
 ## Purpose
 
 Phase 64 turns the versioned Control API into a stable developer surface without moving authority out of SI Core. Python and TypeScript/JavaScript clients are adapters: governance, execution, authorization, persistence, and evidence remain owned by SI Core.
@@ -63,4 +67,5 @@ Current ECC emphasizes security-first, research-first agent tooling and broad mu
 
 - Phase 63 was verified merged into `main` before Phase 64 began.
 - PR #78 was merged into `main` after the implementation gate.
-- The synchronized documentation tree is now the exact-tree target for final mainline CI; Phase 65 is blocked until that gate is green.
+- The Phase 64 implementation-tree closure was validated during the Phase 65 cycle by CI #1239 / `34697885027`, which passed distribution build, wheel installation, repository audit, integration verification, Ruff, and full pytest on the resulting `main` tree.
+- Phase 65 is now the completed workflow/automation layer and Phase 66 is the next roadmap phase.
