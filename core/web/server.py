@@ -22,6 +22,10 @@ from .audit import AuditLogger
 from .models import WebConfig
 
 
+_MAX_REQUEST_BODY = 1_048_576
+_MAX_REJECT_DRAIN = 2 * 1_048_576
+
+
 class WebRequestHandler(BaseHTTPRequestHandler):
     server_version = "SI-Agents-Web/1"
     protocol_version = "HTTP/1.1"
@@ -74,13 +78,24 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         self._headers(content_type=content_type, length=len(body))
         self.send_header("X-Request-ID", self._request_id())
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError):
+            self.close_connection = True
 
     def _error(self, status: int, code: str) -> None:
         self._send(status, {"error": code, "message": "request could not be completed", "request_id": self._request_id()})
 
     def _audit(self, status: int, metadata: dict[str, object] | None = None) -> None:
         self.web_server.audit.record(request_id=self._request_id(), method=self.command, path=urlparse(self.path).path, status=status, metadata=metadata)
+
+    def _drain_rejected_body(self, length: int) -> None:
+        remaining = min(length, _MAX_REJECT_DRAIN)
+        while remaining:
+            chunk = self.rfile.read(min(64 * 1024, remaining))
+            if not chunk:
+                break
+            remaining -= len(chunk)
 
     def _read_json(self) -> dict[str, object]:
         content_type = self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
@@ -89,8 +104,14 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         raw_length = self.headers.get("Content-Length")
         if raw_length is None:
             raise ValueError("missing content length")
-        length = int(raw_length)
-        if length < 0 or length > 1_048_576:
+        try:
+            length = int(raw_length)
+        except ValueError as exc:
+            raise ValueError("invalid content length") from exc
+        if length < 0:
+            raise ValueError("invalid content length")
+        if length > _MAX_REQUEST_BODY:
+            self._drain_rejected_body(length)
             raise ValueError("request too large")
         payload = json.loads(self.rfile.read(length).decode("utf-8"))
         if not isinstance(payload, dict):
