@@ -1,18 +1,27 @@
+from datetime import UTC, datetime
+
 import pytest
 
-from core.provider_intelligence import Capability, ModelProfile, ProviderProfile, ProviderRegistry, QuotaSnapshot
+from core.provider_intelligence import (
+    Capability,
+    ModelProfile,
+    ProviderProfile,
+    ProviderRegistry,
+    QuotaSnapshot,
+)
 from core.provider_intelligence.health import HealthObservation, HealthTracker
 from core.provider_intelligence.intelligent_router import (
     BudgetExceededError,
     BudgetLedger,
+    FailureClass,
     IntelligentRouter,
     RoutePolicy,
     RoutingError,
     TaskComplexity,
     TaskRequirements,
+    classify_failure,
     infer_complexity,
 )
-from datetime import UTC, datetime
 
 
 def model(name, *, caps=None, cost=1.0, latency=100, quality=0.8, reliability=0.9):
@@ -31,33 +40,66 @@ def model(name, *, caps=None, cost=1.0, latency=100, quality=0.8, reliability=0.
 
 def router():
     registry = ProviderRegistry()
-    registry.register(ProviderProfile("cheap", (model("cheap-model", cost=0.1, quality=0.6),), priority=20))
-    registry.register(ProviderProfile("best", (model("best-model", cost=2.0, quality=1.0, latency=300),), priority=10))
+    registry.register(
+        ProviderProfile("cheap", (model("cheap-model", cost=0.1, quality=0.6),), priority=20)
+    )
+    registry.register(
+        ProviderProfile("best", (model("best-model", cost=2.0, quality=1.0, latency=300),), priority=10)
+    )
     return registry, IntelligentRouter(registry, policy=RoutePolicy(cost_weight=0.7))
 
 
 def test_complexity_is_deterministic_and_capability_driven():
     assert infer_complexity(TaskRequirements(prompt="hello")) is TaskComplexity.SIMPLE
-    req = TaskRequirements(prompt="debug architecture", capabilities=frozenset({Capability.CODE, Capability.REASONING}), estimated_input_tokens=5000)
+    req = TaskRequirements(
+        prompt="debug architecture",
+        capabilities=frozenset({Capability.CODE, Capability.REASONING}),
+        estimated_input_tokens=5000,
+    )
     assert infer_complexity(req) in {TaskComplexity.COMPLEX, TaskComplexity.CRITICAL}
 
 
-def test_capability_and_context_matching():
+def test_capability_context_streaming_and_structured_matching():
     registry = ProviderRegistry()
-    registry.register(ProviderProfile("vision", (model("v", caps={Capability.CHAT, Capability.VISION}),)))
+    registry.register(
+        ProviderProfile(
+            "rich",
+            (
+                model(
+                    "rich-model",
+                    caps={Capability.CHAT, Capability.VISION, Capability.STREAMING, Capability.STRUCTURED_OUTPUT},
+                ),
+            ),
+        )
+    )
     engine = IntelligentRouter(registry)
-    evidence = engine.route(TaskRequirements(require_vision=True, estimated_output_tokens=10))
-    assert evidence.selected.model_id == "v"
+    evidence = engine.route(
+        TaskRequirements(
+            require_vision=True,
+            require_streaming=True,
+            require_structured_output=True,
+            context_tokens=10_000,
+            estimated_output_tokens=10,
+        )
+    )
+    assert evidence.selected.model_id == "rich-model"
 
 
 def test_cost_and_budget_reservation():
     _, engine = router()
     ledger = BudgetLedger(0.001)
-    evidence = engine.route(TaskRequirements(estimated_input_tokens=100, estimated_output_tokens=100), ledger)
+    evidence = engine.route(
+        TaskRequirements(estimated_input_tokens=100, estimated_output_tokens=100), ledger
+    )
     assert evidence.selected.provider_id == "cheap"
     assert ledger.reservations > 0
+    ledger.settle(evidence.estimated_attempt_cost, actual=evidence.estimated_attempt_cost)
+    assert ledger.reservations == 0
     with pytest.raises(BudgetExceededError):
-        engine.route(TaskRequirements(estimated_input_tokens=100_000, estimated_output_tokens=100_000), BudgetLedger(0.001))
+        engine.route(
+            TaskRequirements(estimated_input_tokens=100_000, estimated_output_tokens=100_000),
+            BudgetLedger(0.001),
+        )
 
 
 def test_preference_can_override_small_economic_difference():
@@ -81,6 +123,8 @@ def test_quota_health_and_circuit_are_fail_closed_for_unusable_provider():
         engine.record_outcome("good", success=False, latency_ms=500)
     with pytest.raises(RoutingError):
         engine.route(TaskRequirements(excluded_providers=frozenset({"bad"})))
+    engine.recover("good")
+    assert engine.route(TaskRequirements(excluded_providers=frozenset({"bad"}))).selected.provider_id == "good"
 
 
 def test_health_history_reduces_reliability():
@@ -94,6 +138,15 @@ def test_health_history_reduces_reliability():
         engine.route(TaskRequirements(minimum_reliability=0.5))
 
 
+def test_failure_classification_is_safe_and_deterministic():
+    assert classify_failure(429) is FailureClass.RATE_LIMIT
+    assert classify_failure(503) is FailureClass.TRANSIENT
+    assert classify_failure(401) is FailureClass.AUTHORIZATION
+    assert classify_failure(422) is FailureClass.INVALID_REQUEST
+    assert classify_failure(message="too many requests") is FailureClass.RATE_LIMIT
+    assert classify_failure(message="provider disappeared") is FailureClass.UNKNOWN
+
+
 def test_retry_economics_and_fallback_are_bounded():
     registry = ProviderRegistry()
     registry.register(ProviderProfile("a", (model("a", cost=1.0, quality=0.9),)))
@@ -104,14 +157,17 @@ def test_retry_economics_and_fallback_are_bounded():
     assert first.estimated_worst_case_cost == pytest.approx(first.selected.estimated_cost * 3)
     second = engine.fallback(first, req, retryable_failure="429 rate limited")
     assert second.attempt == 2
+    assert second.retryable_failure == "rate_limit"
     with pytest.raises(RoutingError):
         engine.fallback(second, req, retryable_failure="503")
+    with pytest.raises(RoutingError):
+        engine.fallback(first, req, retryable_failure="401 unauthorized")
 
 
 def test_escalation_and_downgrade_controls():
     registry = ProviderRegistry()
     registry.register(ProviderProfile("a", (model("a", quality=0.9),)))
-    registry.register(ProviderProfile("b", (model("b", quality=0.95),)))
+    registry.register(ProviderProfile("b", (model("b", quality=1.0, cost=0.5),)))
     engine = IntelligentRouter(registry)
     first = engine.route(TaskRequirements())
     second = engine.fallback(first, TaskRequirements(), retryable_failure="transient")
@@ -130,8 +186,11 @@ def test_stale_quota_observation_does_not_replace_newer_state():
     registry = ProviderRegistry()
     registry.register(ProviderProfile("p", (model("m"),)))
     from core.provider_intelligence.quota import QuotaTracker
+
     quota = QuotaTracker()
     newer = datetime(2026, 1, 1, 0, 0, 1, tzinfo=UTC)
     quota.observe(QuotaSnapshot("p", remaining_requests=0, observed_at=newer))
-    quota.observe(QuotaSnapshot("p", remaining_requests=10, observed_at=datetime(2026, 1, 1, tzinfo=UTC)))
+    quota.observe(
+        QuotaSnapshot("p", remaining_requests=10, observed_at=datetime(2026, 1, 1, tzinfo=UTC))
+    )
     assert not quota.available("p")
