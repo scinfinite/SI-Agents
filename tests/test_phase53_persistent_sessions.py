@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from core.sessions import PersistentSession, SessionOwner, SessionState, SessionStore
+from core.sessions import PersistentSession, PersistentSessionAdapter, SessionOwner, SessionState, SessionStore
 
 
 def make_session(sid="s1", subject="user-1", project="project-1", harness="opencode", **kwargs):
@@ -15,7 +15,6 @@ def test_durable_lifecycle_and_restart(tmp_path):
     session = store.create(make_session("s1"), state={"task_ids": ["t1"], "agent_ids": ["a1"]})
     store.append_event("s1", subject_id="user-1", project_id="project-1", kind="task.started", payload={"task_id": "t1"})
     store.close()
-
     reopened = SessionStore(db)
     loaded = reopened.get("s1", subject_id="user-1", project_id="project-1")
     assert loaded.session_id == session.session_id
@@ -34,7 +33,7 @@ def test_owner_and_project_isolation_is_fail_closed(tmp_path):
 
 def test_revision_prevents_lost_updates(tmp_path):
     store = SessionStore(tmp_path / "sessions.db")
-    session = store.create(make_session())
+    store.create(make_session())
     current = store.update_state("s1", subject_id="user-1", project_id="project-1", state=SessionState.PAUSED, expected_revision=0)
     assert current.revision == 1
     with pytest.raises(ValueError, match="revision conflict"):
@@ -62,10 +61,13 @@ def test_secret_like_session_state_is_rejected(tmp_path):
 def test_export_import_is_schema_checked_and_owner_bound(tmp_path):
     store = SessionStore(tmp_path / "sessions.db")
     store.create(make_session(), state={"workflow_ids": ["w1"]})
+    artifact = store.add_artifact("s1", subject_id="user-1", project_id="project-1", kind="evidence", name="proof", content=b"proof")
     bundle = store.export("s1", subject_id="user-1", project_id="project-1")
     assert bundle.schema_version == "si.session.v1"
+    assert bundle.artifacts[0].digest == artifact.digest
     restored = store.import_session(bundle, subject_id="user-1", project_id="project-1", new_session_id="s2")
     assert restored.session_id == "s2"
+    assert store.artifacts("s2", subject_id="user-1", project_id="project-1")[0].digest == artifact.digest
     with pytest.raises(PermissionError):
         store.import_session(bundle, subject_id="attacker", project_id="project-1", new_session_id="s3")
     tampered = type(bundle)("other.v1", bundle.session, bundle.state, bundle.events, bundle.artifacts)
@@ -89,6 +91,7 @@ def test_expiry_is_durable_and_archived_sessions_are_immutable(tmp_path):
     store.create(make_session(expires_at=10.0))
     expired = store.expire_due(now=20.0)
     assert expired[0].state is SessionState.EXPIRED
+    assert store.get("s1", subject_id="user-1", project_id="project-1").state is SessionState.EXPIRED
     store.create(make_session("s2"))
     archived = store.archive("s2", subject_id="user-1", project_id="project-1")
     assert archived.state is SessionState.ARCHIVED
@@ -123,3 +126,17 @@ def test_session_state_is_json_safe(tmp_path):
     state = store.read_state("s1", subject_id="user-1", project_id="project-1")
     json.dumps(state)
     assert state["token_cost"]["cost"] == 0.02
+
+
+def test_persistent_runtime_adapter_enforces_harness_and_continuity(tmp_path):
+    store = SessionStore(tmp_path / "sessions.db")
+    adapter = PersistentSessionAdapter(store)
+    adapter.create(session_id="s1", subject_id="user-1", project_id="project-1", harness_id="opencode")
+    assert adapter.require("s1", subject_id="user-1", project_id="project-1", harness_id="opencode").state is SessionState.ACTIVE
+    with pytest.raises(PermissionError):
+        adapter.require("s1", subject_id="user-1", project_id="project-1", harness_id="cli")
+    paused = adapter.pause("s1", subject_id="user-1", project_id="project-1", expected_revision=0)
+    assert paused.state is SessionState.PAUSED
+    assert adapter.require("s1", subject_id="user-1", project_id="project-1", harness_id="opencode").state is SessionState.PAUSED
+    resumed = adapter.resume("s1", subject_id="user-1", project_id="project-1", expected_revision=1)
+    assert resumed.state is SessionState.ACTIVE
