@@ -9,13 +9,10 @@ from core.hardening.cli import main as verify_main
 from core.tui.cli import main as tui_main
 from core.web.cli import main as web_main
 
-# Commands that do not collide with the established setup/catalog CLI remain on
-# the Phase 68 platform. Legacy commands such as `run`, `status`, `agents`,
-# `teams`, and `skills` continue to use their historical contracts.
 ADVANCED_COMMANDS = {
     "workflows", "organization", "memory", "governance", "evidence", "environments",
     "harnesses", "settings", "visualization", "events", "logs", "task", "execution",
-    "approval", "session", "attachment", "auth", "config", "profile", "models", "providers",
+    "approval", "attachment", "auth", "config", "profile", "models", "providers",
     "stream", "resume", "pipeline", "agent", "team", "workflow",
 }
 GLOBAL_VALUE_OPTIONS = {"--root", "--transport", "--base-url", "--token-env", "--timeout"}
@@ -70,6 +67,9 @@ def main(argv: list[str] | None = None) -> int:
     if arguments and arguments[0] == "profile":
         from core.cli.profile import main as profile_main
         return profile_main(arguments[1:])
+    if arguments and arguments[0] == "session":
+        from core.cli.session import main as session_main
+        return session_main(_normalize_global_options(arguments[1:]))
     if arguments and arguments[0] in ADVANCED_COMMANDS:
         from core.cli.platform import main as platform_main
         return platform_main(_normalize_global_options(arguments))
