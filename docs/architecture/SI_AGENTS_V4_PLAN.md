@@ -12,13 +12,13 @@ User → OpenCode → SI Core / Control API
      → OpenCode / Web / TUI / CLI
 ```
 
-OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core owns execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, durable sessions, human gates, and durable waiting. Integrations are adapters and never become competing business authorities.
+OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core owns execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, durable sessions, human gates, durable waiting, workspace lifecycle, observability, and evaluation. Integrations are adapters and never become competing business authorities.
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–60** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 61 — Continuous Improvement is next.**
+V3 is closed. V4 has completed Phases **44–60** in sequence at the required advanced-hardening level. Phases **46, 47, 49, and 50** were previously advanced-hardened; Phases **58, 59, and 60** have now received a dedicated advanced-hardening pass. **Phase 61 — Continuous Improvement is next.**
 
-Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, and Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)**, Phase 58 final synchronized-tree mainline CI **#1122 (`34686808527`)**, and Phase 59 final synchronized-tree mainline CI **#1128 (`34686980055`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
+Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)**, and the Phase 58–60 advanced-hardening closure PR #74 / PR CI #1143 (`34691131729`) / final mainline CI #1144 (`34691176676`) all passed the repository distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest gates.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -114,17 +114,23 @@ Established the single fail-closed security authority for SI Core: authenticated
 
 Implemented in `core/security/platform.py` and exported through `core/security`. Verification covers identity/tenant isolation, least privilege, bounded scopes, approvals, egress/private-network controls, credential/egress separation, secret scanning, injection rejection, HMAC token binding/replay prevention/TTL/policy invalidation, expired grants, trust-boundary non-authority, and safe audit evidence. PR #68 merged as `26e001bc3756fb28ecbc9773db8df6a46d26dba7`; final synchronized-tree mainline CI #1113 (`34684260315`) passed all repository gates on final `main`.
 
-## Phase 58 — Workspace / Worktree Lifecycle
+## Phase 58 — Workspace / Worktree Lifecycle — advanced hardened
 
-Workspace/Git worktree/branch lifecycle, isolation, ownership/locking, dirty/conflict detection, diff/patch/merge preparation, artifacts, snapshots/checkpoints, cleanup/recovery, authorized resume, permissions/audit history, and garbage collection.
+Workspace/Git worktree/branch lifecycle, isolation, ownership/locking, dirty/conflict detection, diff/patch/merge preparation, artifacts, snapshots/checkpoints, cleanup/recovery, authorized resume, permissions/audit history, and garbage collection. Advanced hardening added adversarial lifecycle-event tamper detection and sensitive-operation authorization callback coverage.
 
-## Phase 59 — Observability
+Evidence: PR #74 / CI #1143 (`34691131729`); final mainline CI #1144 (`34691176676`).
 
-Live state, queues, waiting/approval/retry/checkpoint/failure status, token/cost/latency/throughput/resource metrics, handoffs/dependencies/DAG progress, structured logs/metrics/traces, correlation/causation, timelines, tool/model calls, artifacts/diffs, search/filter/debug/audit, telemetry export, and operator health.
+## Phase 59 — Observability — advanced hardened
 
-## Phase 60 — Evaluation + Benchmarking
+Durable structured logs/events/metrics/spans, tenant/project scope, secret redaction and shared scanner detection, bounded payload/resource limits, correlation/causation, trace timelines, live-feed retention, percentile metrics, operator health, JSONL export, and integrity evidence. Advanced hardening verifies tampering beyond the first query page and tightens resource/severity contracts.
 
-Agent/team/workflow/model/provider/routing/tool evaluation; security/reliability/cost/latency/quality benchmarks; scenarios; golden tasks/outputs; automated/human evaluation; scoring/failure classification; datasets/reports; historical/version comparisons; A/B experiments; regression detection; release gates; evidence-backed results.
+Evidence: PR #74 / CI #1143 (`34691131729`); final mainline CI #1144 (`34691176676`).
+
+## Phase 60 — Evaluation + Benchmarking — advanced hardened
+
+Deterministic golden cases and multi-mode scoring, reliability/security/latency/cost dimensions, failure classification, benchmark history, regression detection, human review, weighted experiments, evidence digests, and release gating. Advanced hardening makes cost/latency budgets enforceable, rejects secret-bearing evaluator outputs/metadata/review rationale, verifies persisted evidence integrity, tightens experiment inputs, and fails closed on empty reports.
+
+Evidence: PR #74 / CI #1143 (`34691131729`); final mainline CI #1144 (`34691176676`).
 
 ## Phase 61 — Continuous Improvement
 
@@ -177,7 +183,3 @@ External engineering reference systems are used for pattern research only. Usefu
 ## Interface contract
 
 Web, TUI, CLI, and OpenCode operate against the same SI Core authority. No interface creates competing execution, session, approval, or waiting state ownership.
-
-## Closure rules
-
-Every phase must include implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation and current/index synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI. If CI fails, inspect diagnostics/artifacts, fix the root cause, rerun, and only then declare the phase complete.
