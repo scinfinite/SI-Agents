@@ -180,8 +180,10 @@ def test_cancel_and_invalid_persistence_fail_closed(tmp_path) -> None:
     engine.register_action("work", lambda value: None)
     engine.register(definition(WorkflowStep("work", WorkflowStepKind.TASK, action="work")))
     run = engine.start("wf")
-    assert engine.cancel(run.run_id, "operator stop").status is WorkflowRunStatus.CANCELLED
-    assert engine.resume(run.run_id) if False else run.status is WorkflowRunStatus.CANCELLED
+    cancelled = engine.cancel(run.run_id, "operator stop")
+    assert cancelled.status is WorkflowRunStatus.CANCELLED
+    with pytest.raises(ValueError):
+        engine.resume(run.run_id)
 
 
 def test_versioning_templates_and_cycle_rejection() -> None:
