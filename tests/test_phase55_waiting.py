@@ -33,8 +33,8 @@ def test_restart_recovers_wait_and_events(tmp_path):
 
 def test_event_wake_and_deadline_fail_closed(tmp_path):
     db = service(tmp_path)
-    wait = db.create(subject_id="u1", project_id="p1", kind=WaitKind.HUMAN, wake_at=BASE + timedelta(hours=1), deadline=BASE + timedelta(minutes=1))
-    result = db.wake(wait.wait_id, subject_id="u1", project_id="p1", trigger="human-response", now=BASE + timedelta(minutes=1))
+    wait = db.create(subject_id="u1", project_id="p1", kind=WaitKind.HUMAN, wake_at=BASE + timedelta(hours=1), deadline=BASE + timedelta(hours=1, seconds=1))
+    result = db.wake(wait.wait_id, subject_id="u1", project_id="p1", trigger="human-response", now=BASE + timedelta(hours=2))
     assert result.state is WaitState.EXPIRED
     assert db.wake(wait.wait_id, subject_id="u1", project_id="p1", trigger="late").state is WaitState.EXPIRED
 
