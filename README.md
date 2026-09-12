@@ -21,7 +21,7 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
 - Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite.
 - Phase 52 mainline merge verification CI **#1015** passed distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
-- The synchronized Phase 52 documentation closure is now on main; **the CI run triggered by this exact documentation tree is the final Phase 52 exact-tree closure gate.**
+- Final synchronized-tree mainline CI **#1018 (`34673281826`)** passed on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`, including distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 - Advanced hardening closed scheduler idempotency/DAG safety, OpenCode timeout/SSE safety, team topology/schema safety, and request-bound authorization/metadata safety gaps.
 - **Phase 53 — Persistent Sessions is next.**
 
@@ -45,7 +45,7 @@ Advanced hardening covers request-fingerprint-bound high/critical approvals, app
 
 ## Phase 52 — Context / Memory Economics
 
-Complete. Added deterministic context budgets, model-aware input capacity, relevance/importance selection, deduplication, compaction/summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic decision snapshots. Security/adversarial tests cover budget failures, duplicate amplification, sensitive data isolation, secret handling, overflow/compaction, cost ceilings, summarization, and snapshot schema rejection.
+Complete. Added deterministic context budgets, model-aware input capacity, relevance/importance selection, deduplication, compaction/summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic decision snapshots. Security/adversarial tests cover budget failures, duplicate amplification, sensitive data isolation, secret handling, overflow/compaction, cost ceilings, summarization, and snapshot schema rejection. Final synchronized-tree mainline CI #1018 is green.
 
 ## V4 roadmap — detailed scope
 
