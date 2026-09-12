@@ -15,8 +15,8 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–60 are complete on main (awaiting final Phase 60 mainline CI closure).**
-- **Phase 61 — Continuous Improvement is next after Phase 60 mainline closure.**
+- **Phases 44–60 are complete on main.**
+- **Phase 61 — Continuous Improvement is next.**
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
 - Phase 54 final synchronized-tree mainline CI **#1051 (`34676632475`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
 - Phase 55 final synchronized-tree closure CI **#1080 (`34678317246`)** passed all required repository gates.
