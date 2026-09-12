@@ -12,7 +12,7 @@ from core.marketplace.registry import (
 )
 
 
-def manifest(package="demo", version="1.0.0", *, deps=(), permissions=("read",), trust=TrustLevel.CURATED, compatibility=("si.v4",), digest=None):
+def manifest(package="demo", version="1.0.0", *, deps=(), permissions=("read",), trust=TrustLevel.CURATED, compatibility=("si.v4",), digest=None, description=""):
     return MarketplaceManifest(
         package,
         Version.parse(version),
@@ -22,6 +22,7 @@ def manifest(package="demo", version="1.0.0", *, deps=(), permissions=("read",),
         permissions,
         Provenance("publisher", "registry", "sha256:" + "1" * 64, trust),
         digest or "sha256:" + "2" * 64,
+        description,
     )
 
 
@@ -107,7 +108,7 @@ def test_update_uninstall_and_rollback_preserve_bounded_history():
     assert len(rolled.history) <= 32
     removed = manager.uninstall("demo")
     assert removed.lifecycle is Lifecycle.REMOVED
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         manager.rollback("demo")
 
 
