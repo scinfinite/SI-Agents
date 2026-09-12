@@ -1,6 +1,7 @@
 # Phase 59 — Observability
 
-**Status:** In implementation; final closure is gated on synchronized-tree mainline CI.
+**Status:** Complete; final synchronized-tree mainline CI #1128 (`34686980055`) passed all required gates.
+
 
 ## Advanced scope
 
