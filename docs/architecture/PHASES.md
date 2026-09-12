@@ -39,8 +39,8 @@
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
 | 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
 | 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI #1051 / `34676632475` |
-| 55 | Durable Waiting + Scheduling | **Complete** | Implementation CI #1074 / `34678184341`; final synchronized-tree closure CI pending |
-| 56 | Intelligent Routing + Economics | **Next** | Next after Phase 55 |
+| 55 | Durable Waiting + Scheduling | **Complete** | Final synchronized-tree closure CI #1080 / `34678317246` |
+| 56 | Intelligent Routing + Economics | **In implementation** | PR #67 / CI #1081 pending |
 | 57 | Security Platform | Planned | Planned |
 | 58 | Workspace / Worktree Lifecycle | Planned | Planned |
 | 59 | Observability | Planned | Planned |
@@ -57,4 +57,4 @@
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-Phase 55 implementation and verification are complete; the final synchronized-tree CI is the remaining closure gate before Phase 56 starts.
+Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is actively in implementation; completion requires implementation, adversarial/security coverage, documentation synchronization, repository/distribution/integration checks, and final synchronized-tree mainline CI.
