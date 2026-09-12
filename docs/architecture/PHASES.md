@@ -38,8 +38,8 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 59 | Observability | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
-| 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; mainline #1186 / `34693756693` |
-| 63 | Ecosystem / Marketplace | **Complete** | PR #77 / CI #1189 / `34694186010`; final synchronized-tree mainline CI pending |
+| 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; final mainline #1186 / `34693756693` |
+| 63 | Ecosystem / Marketplace | **Complete** | PR #77 / CI #1189 / `34694186010`; final mainline #1196 / `34694300408` |
 | 64 | SDK / Developer Platform | Next | Planned |
 | 65 | Workflow + Automation | Planned | Planned |
 | 66 | Advanced Web Control Plane | Planned | Planned |
@@ -59,4 +59,4 @@ Merged PR #76 as `607085782a75e31a60774afe975edcbd38bf5e4c`. PR CI #1166 / `3469
 
 Phase 63 provides governed ecosystem metadata and lifecycle contracts through `MarketplaceManifest`, `MarketplaceRegistry`, and `EcosystemManager`: strict semver, dependencies, compatibility, declared permissions, provenance/trust, exact manifest identity, templates, install/update/uninstall/rollback, bounded history, and drift detection. Marketplace lifecycle never grants execution authority; SI Core remains authoritative for authorization and execution.
 
-Merged PR #77 as `19be0c14774e7073871a21fde42132a73c2a77d4`. PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final documentation-synchronized mainline CI is the remaining closure gate.
+Merged PR #77 as `19be0c14774e7073871a21fde42132a73c2a77d4`. PR CI #1189 / `34694186010` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final exact-tree mainline CI #1196 / `34694300408` on `4b260cecbc503ea7d405918b12a3ba80b2588685` passed the complete repository closure suite.
