@@ -174,11 +174,13 @@ class ExperimentSpec:
             or not self.variants
             or len(self.variants) > 16
             or len(set(self.variants)) != len(self.variants)
+            or any(not variant.strip() for variant in self.variants)
         ):
             raise ValueError("invalid variants")
         if self.weights is not None and (
             len(self.weights) != len(self.variants)
             or any(weight <= 0 for weight in self.weights)
+            or sum(self.weights) > 1_000_000
         ):
             raise ValueError("invalid experiment weights")
 
@@ -188,12 +190,18 @@ class ReleaseGatePolicy:
     minimum_score: float = 0.8
     minimum_dimensions: Mapping[str, float] = field(default_factory=dict)
     max_regressions: int = 0
+    maximum_cost: float | None = None
+    maximum_latency_ms: float | None = None
 
     def __post_init__(self) -> None:
         if not 0 <= self.minimum_score <= 1 or self.max_regressions < 0:
             raise ValueError("invalid gate policy")
         if any(not 0 <= float(value) <= 1 for value in self.minimum_dimensions.values()):
             raise ValueError("dimension thresholds must be between zero and one")
+        if self.maximum_cost is not None and self.maximum_cost < 0:
+            raise ValueError("maximum cost must be non-negative")
+        if self.maximum_latency_ms is not None and self.maximum_latency_ms < 0:
+            raise ValueError("maximum latency must be non-negative")
 
 
 @dataclass(frozen=True, slots=True)

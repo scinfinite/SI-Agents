@@ -34,6 +34,18 @@ class EvaluationError(ValueError):
     """Evaluation contract violation."""
 
 
+def _serialized(value: object) -> str:
+    try:
+        return json.dumps(value, default=str, ensure_ascii=False)
+    except (TypeError, ValueError) as exc:
+        raise EvaluationError("evaluation data is not serializable") from exc
+
+
+def _reject_secrets(value: object, context: str) -> None:
+    if SecretScanner.contains_secret(_serialized(value)):
+        raise EvaluationError(f"secret-like evaluation data in {context}")
+
+
 class EvaluationStore:
     def __init__(self, path: str | Path = ":memory:") -> None:
         self.db = sqlite3.connect(
@@ -59,6 +71,7 @@ class EvaluationStore:
         self.db.close()
 
     def save(self, run: EvaluationRun) -> str:
+        _reject_secrets(run.metadata, "run metadata")
         payload = {
             "metadata": dict(run.metadata),
             "results": [
@@ -84,15 +97,10 @@ class EvaluationStore:
                 for result in run.results
             ],
         }
-        encoded = json.dumps(
-            payload,
-            sort_keys=True,
-            separators=(",", ":"),
-            ensure_ascii=False,
-        )
-        if len(encoded.encode()) > MAX_PAYLOAD_BYTES:
+        encoded = _serialized(payload)
+        if len(encoded.encode("utf-8")) > MAX_PAYLOAD_BYTES:
             raise EvaluationError("evaluation payload exceeds limit")
-        digest = hashlib.sha256(encoded.encode()).hexdigest()
+        digest = hashlib.sha256(encoded.encode("utf-8")).hexdigest()
         self.db.execute(
             "INSERT INTO evaluation_runs VALUES(?,?,?,?,?,?,?,?,?)",
             (
@@ -109,6 +117,16 @@ class EvaluationStore:
         )
         return digest
 
+    def verify_run(self, run_id: str) -> bool:
+        row = self.db.execute(
+            "SELECT payload_json,evidence_digest FROM evaluation_runs WHERE run_id=?",
+            (run_id,),
+        ).fetchone()
+        if row is None:
+            return False
+        payload = row["payload_json"]
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest() == row["evidence_digest"]
+
     def recent(self, suite_id: str, limit: int = 20) -> tuple[sqlite3.Row, ...]:
         bounded = max(1, min(limit, 100))
         return tuple(
@@ -120,6 +138,7 @@ class EvaluationStore:
         )
 
     def record_review(self, review: HumanReview) -> None:
+        _reject_secrets(review.rationale, "human review rationale")
         self.db.execute(
             "INSERT INTO human_reviews VALUES(?,?,?,?,?,?,?)",
             (
@@ -154,6 +173,8 @@ class BenchmarkEngine:
         evaluator: Callable[[object], EvaluationSample],
         metadata: Mapping[str, object] | None = None,
     ) -> EvaluationRun:
+        if not suite_id.strip() or not version.strip():
+            raise EvaluationError("suite id and version are required")
         selected = tuple(cases)
         if not 0 < len(selected) <= MAX_SUITE_CASES:
             raise EvaluationError("invalid suite size")
@@ -163,11 +184,9 @@ class BenchmarkEngine:
                 raise EvaluationError("duplicate case id")
             seen.add(case.case_id)
             for value in (case.input, case.expected, case.metadata):
-                serialized = json.dumps(value, default=str, ensure_ascii=False)
-                if SecretScanner.contains_secret(serialized):
-                    raise EvaluationError(
-                        f"secret-like evaluation data in {case.case_id}"
-                    )
+                _reject_secrets(value, f"case {case.case_id}")
+        run_metadata = dict(metadata or {})
+        _reject_secrets(run_metadata, "run metadata")
         started = time.time()
         results = []
         for case in selected:
@@ -196,6 +215,8 @@ class BenchmarkEngine:
                 )
             if sample.case_id != case.case_id:
                 raise EvaluationError("evaluator returned wrong case")
+            _reject_secrets(sample.actual, f"sample {case.case_id} actual")
+            _reject_secrets(sample.metadata, f"sample {case.case_id} metadata")
             results.append(score_case(case, sample=sample))
         run = EvaluationRun(
             f"eval_{uuid.uuid4().hex}",
@@ -204,7 +225,7 @@ class BenchmarkEngine:
             started,
             time.time(),
             tuple(results),
-            dict(metadata or {}),
+            run_metadata,
         )
         self.store.save(run)
         return run
@@ -245,16 +266,12 @@ class BenchmarkEngine:
         dimensions: Mapping[str, float] | None = None,
     ) -> EvaluationReport:
         count = len(run.results)
+        if count == 0:
+            raise EvaluationError("cannot report an empty evaluation run")
         pass_rate = sum(result.passed for result in run.results) / count
-        security_rate = sum(
-            result.security_passed for result in run.results
-        ) / count
-        reliability_rate = sum(
-            result.reliable for result in run.results
-        ) / count
-        mean_latency = (
-            sum(result.duration_ms for result in run.results) / count
-        )
+        security_rate = sum(result.security_passed for result in run.results) / count
+        reliability_rate = sum(result.reliable for result in run.results) / count
+        mean_latency = sum(result.duration_ms for result in run.results) / count
         total_cost = sum(result.cost for result in run.results)
         derived = {
             "quality": run.score,
@@ -264,11 +281,7 @@ class BenchmarkEngine:
             "latency": 1.0 / (1.0 + mean_latency / 1000.0),
         }
         dims = dict(dimensions or derived)
-        regressions = self.regressions(
-            dims,
-            baseline or {},
-            thresholds or {},
-        )
+        regressions = self.regressions(dims, baseline or {}, thresholds or {})
         summary = {
             "pass_rate": pass_rate,
             "security_rate": security_rate,
@@ -276,9 +289,7 @@ class BenchmarkEngine:
             "cost_total": total_cost,
             "latency_mean_ms": mean_latency,
             "failure_counts": {
-                failure.value: sum(
-                    result.failure is failure for result in run.results
-                )
+                failure.value: sum(result.failure is failure for result in run.results)
                 for failure in EvaluationFailure
             },
         }
@@ -301,15 +312,9 @@ class BenchmarkEngine:
             ],
         }
         digest = hashlib.sha256(
-            json.dumps(
-                envelope,
-                sort_keys=True,
-                separators=(",", ":"),
-            ).encode()
+            json.dumps(envelope, sort_keys=True, separators=(",", ":")).encode("utf-8")
         ).hexdigest()
-        passed = run.passed and not any(
-            regression.detected for regression in regressions
-        )
+        passed = run.passed and not any(regression.detected for regression in regressions)
         return EvaluationReport(
             run.run_id,
             run.suite_id,
@@ -332,9 +337,9 @@ class BenchmarkEngine:
     ) -> ExperimentAssignment:
         if not subject.strip():
             raise EvaluationError("experiment subject is required")
-        digest = hashlib.sha256(
-            f"{spec.experiment_id}|{subject}|{salt}".encode()
-        ).digest()
+        if len(subject) > 512 or len(salt) > 512:
+            raise EvaluationError("experiment subject/salt exceeds limit")
+        digest = hashlib.sha256(f"{spec.experiment_id}|{subject}|{salt}".encode("utf-8")).digest()
         bucket = int.from_bytes(digest[:4], "big") % 10_000
         weights = spec.weights or tuple(1 for _ in spec.variants)
         target = bucket * sum(weights) // 10_000
@@ -342,12 +347,7 @@ class BenchmarkEngine:
         for index, weight in enumerate(weights):
             cursor += weight
             if target < cursor:
-                return ExperimentAssignment(
-                    spec.experiment_id,
-                    subject,
-                    spec.variants[index],
-                    bucket,
-                )
+                return ExperimentAssignment(spec.experiment_id, subject, spec.variants[index], bucket)
         raise EvaluationError("variant selection failed")
 
     @staticmethod
@@ -364,6 +364,12 @@ class BenchmarkEngine:
                 reasons.append(f"minimum dimension not met: {dimension}")
         if sum(regression.detected for regression in report.regressions) > policy.max_regressions:
             reasons.append("regression budget exceeded")
+        cost_total = float(report.summary.get("cost_total", 0.0))
+        latency_mean_ms = float(report.summary.get("latency_mean_ms", 0.0))
+        if policy.maximum_cost is not None and cost_total > policy.maximum_cost:
+            reasons.append("maximum cost exceeded")
+        if policy.maximum_latency_ms is not None and latency_mean_ms > policy.maximum_latency_ms:
+            reasons.append("maximum latency exceeded")
         if report.case_count == 0:
             reasons.append("empty evaluation suite")
         return not reasons, tuple(reasons)

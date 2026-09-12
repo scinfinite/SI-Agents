@@ -3,22 +3,13 @@ from __future__ import annotations
 import json
 import pytest
 
-from core.observability import (
-    LiveFeed,
-    ObservabilityService,
-    Severity,
-    TelemetryStore,
-    TraceContext,
-)
+from core.observability import LiveFeed, ObservabilityService, Severity, TelemetryStore, TraceContext
 
 
 def test_telemetry_redacts_secrets_and_enforces_tenant_scope() -> None:
     store = TelemetryStore()
     record = store.append(
-        kind="log",
-        name="auth",
-        tenant_id="t1",
-        project_id="p1",
+        kind="log", name="auth", tenant_id="t1", project_id="p1",
         payload={"token": "supersecret", "nested": {"password": "pw"}, "message": "safe"},
     )
     assert record.payload["token"] == "[REDACTED]"
@@ -34,6 +25,23 @@ def test_integrity_detects_tampering() -> None:
     record = store.append(kind="event", name="x", payload={"v": 1})
     store.db.execute("UPDATE telemetry SET payload_json=? WHERE record_id=?", (json.dumps({"v": 2}), record.record_id))
     assert not store.integrity()
+
+
+def test_integrity_scans_beyond_query_page() -> None:
+    store = TelemetryStore()
+    for index in range(1001):
+        store.append(kind="event", name=f"e-{index}", payload={"v": index})
+    target = store.query(limit=1, offset=1000)[0]
+    store.db.execute("UPDATE telemetry SET payload_json=? WHERE record_id=?", (json.dumps({"tampered": True}), target.record_id))
+    assert not store.integrity()
+
+
+def test_deep_redaction_and_resource_bounds() -> None:
+    store = TelemetryStore()
+    record = store.append(kind="event", name="nested", payload={"value": "Authorization: Bearer secret-value"})
+    assert record.payload["value"] == "[REDACTED]"
+    with pytest.raises(ValueError):
+        store.append(kind="event", name="wide", payload={str(i): i for i in range(257)})
 
 
 def test_trace_live_feed_metrics_and_health() -> None:
@@ -64,10 +72,6 @@ def test_span_correlation_and_causation_are_preserved() -> None:
     first = service.start_span("root", correlation_id="c1")
     record = first.finish()
     assert record.correlation_id == "c1"
-    second = service.start_span(
-        "child",
-        trace=TraceContext(record.payload["trace_id"], record.payload["span_id"]),
-        causation_id=record.record_id,
-    )
+    second = service.start_span("child", trace=TraceContext(record.payload["trace_id"], record.payload["span_id"]), causation_id=record.record_id)
     child = second.finish()
     assert child.causation_id == record.record_id
