@@ -70,7 +70,7 @@ def test_session_storage_is_bounded_and_does_not_store_auth_tokens(tmp_path, mon
     monkeypatch.setenv("SI_SESSIONS", str(tmp_path / "sessions.json"))
     monkeypatch.setenv("SI_AUTH_TOKEN", "super-secret")
     from core.cli.dispatch import main as dispatch_main
-    assert dispatch_main(["--json", "session", "start", "test-session"]) == 0
+    assert dispatch_main(["session", "start", "test-session", "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)
     stored = json.loads((tmp_path / "sessions.json").read_text())
     assert payload["data"]["id"] == stored[0]["id"]
