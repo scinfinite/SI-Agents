@@ -49,7 +49,7 @@
 - Phase 49: schema-versioned catalogs/manifests, stronger definition validation, acyclic handoff topology, deterministic execution layers.
 - Phase 50: request-fingerprint-bound approvals, replay prevention, secret-like metadata rejection, bounded governance inputs, fail-closed egress.
 
-Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The documentation-synchronized branch must pass its own final exact-tree CI before these hardening changes are merged to `main`.
+Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. The final mainline CI after merge is the authoritative exact-tree closure gate for these hardening changes.
 
 ## Phase 51 integration markers
 
