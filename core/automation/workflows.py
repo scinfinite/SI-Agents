@@ -1,12 +1,12 @@
 """Governed workflow automation for Phase 65.
 
-This module is deliberately transport-neutral. Workflow definitions are declarative;
-registered Python callables are execution adapters. Persistence stores only workflow
-state and JSON-safe values, never callable objects or credentials.
+Definitions are declarative; registered callables are execution adapters. Persisted
+state contains only JSON-safe workflow data and never callable objects or secrets.
 """
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
@@ -58,9 +58,10 @@ class WorkflowTrigger:
     def __post_init__(self) -> None:
         if not self.name.strip() or len(self.name) > 128:
             raise ValueError("trigger name is required and bounded")
-        if self.kind is TriggerKind.INTERVAL and not 1 <= (self.interval_seconds or 0) <= 31_536_000:
-            raise ValueError("interval trigger must be between one second and one year")
-        if self.kind is not TriggerKind.EVENT and self.interval_seconds is not None:
+        if self.kind is TriggerKind.INTERVAL:
+            if not 1 <= (self.interval_seconds or 0) <= 31_536_000:
+                raise ValueError("interval trigger must be between one second and one year")
+        elif self.interval_seconds is not None:
             raise ValueError("only interval triggers accept interval_seconds")
 
 
@@ -115,7 +116,7 @@ class WorkflowDefinition:
     def __post_init__(self) -> None:
         if not self.workflow_id.strip() or not self.name.strip():
             raise ValueError("workflow_id and name are required")
-        if self.version < 1 or len(self.steps) == 0 or len(self.steps) > _MAX_STEPS:
+        if self.version < 1 or not self.steps or len(self.steps) > _MAX_STEPS:
             raise ValueError("workflow version/step count is invalid")
         if not 1 <= self.max_runtime_seconds <= 31_536_000:
             raise ValueError("max_runtime_seconds is out of bounds")
@@ -128,11 +129,11 @@ class WorkflowDefinition:
         _topological(self.steps)
 
     def fingerprint(self) -> str:
-        raw = json.dumps(_jsonable(asdict(self)), sort_keys=True, separators=(",", ":"))
+        raw = json.dumps(self.as_dict(), sort_keys=True, separators=(",", ":"))
         return "sha256:" + sha256(raw.encode()).hexdigest()
 
     def as_dict(self) -> dict[str, object]:
-        return _jsonable(asdict(self))
+        return _jsonable(asdict(self))  # type: ignore[return-value]
 
 
 @dataclass
@@ -155,14 +156,14 @@ class WorkflowRun:
     trigger: str = "manual"
 
     def as_dict(self) -> dict[str, object]:
-        return _jsonable(asdict(self))
+        return _jsonable(asdict(self))  # type: ignore[return-value]
 
 
-Action = callable
+Adapter = Callable[[object], object]
 
 
 class WorkflowEngine:
-    """Deterministic workflow engine with durable checkpoints and bounded fan-out."""
+    """Durable, bounded workflow state machine with explicit adapter registration."""
 
     def __init__(self, *, state_path: str | Path | None = None) -> None:
         self.state_path = Path(state_path) if state_path else None
@@ -170,10 +171,10 @@ class WorkflowEngine:
         self._definitions: dict[tuple[str, int], WorkflowDefinition] = {}
         self._templates: dict[str, WorkflowDefinition] = {}
         self._runs: dict[str, WorkflowRun] = {}
-        self._idempotency: dict[str, str] = {}
-        self._actions: dict[str, callable] = {}
-        self._conditions: dict[str, callable] = {}
-        self._delegates: dict[str, callable] = {}
+        self._idempotency: dict[str, tuple[str, str]] = {}
+        self._actions: dict[str, Adapter] = {}
+        self._conditions: dict[str, Callable[[dict[str, object]], bool]] = {}
+        self._delegates: dict[str, Callable[[dict[str, object]], object]] = {}
         self._load()
 
     def register(self, definition: WorkflowDefinition) -> None:
@@ -185,8 +186,7 @@ class WorkflowEngine:
             self._persist()
 
     def register_template(self, name: str, definition: WorkflowDefinition) -> None:
-        if not name.strip() or len(name) > 128:
-            raise ValueError("template name is invalid")
+        name = _name(name)
         with self._lock:
             if name in self._templates:
                 raise ValueError("template already registered")
@@ -194,56 +194,57 @@ class WorkflowEngine:
             self._persist()
 
     def instantiate(self, template: str, workflow_id: str, version: int = 1) -> WorkflowDefinition:
-        base = self._templates.get(template)
+        with self._lock:
+            base = self._templates.get(template)
         if base is None:
             raise KeyError(template)
         definition = WorkflowDefinition(workflow_id, version, base.name, base.steps, base.triggers, base.max_runtime_seconds, template)
         self.register(definition)
         return definition
 
-    def register_action(self, name: str, action: callable) -> None:
-        _name(name)
-        self._actions[name] = action
+    def register_action(self, name: str, action: Adapter) -> None:
+        self._actions[_name(name)] = action
 
-    def register_condition(self, name: str, condition: callable) -> None:
-        _name(name)
-        self._conditions[name] = condition
+    def register_condition(self, name: str, condition: Callable[[dict[str, object]], bool]) -> None:
+        self._conditions[_name(name)] = condition
 
-    def register_delegate(self, name: str, delegate: callable) -> None:
-        _name(name)
-        self._delegates[name] = delegate
+    def register_delegate(self, name: str, delegate: Callable[[dict[str, object]], object]) -> None:
+        self._delegates[_name(name)] = delegate
 
     def start(self, workflow_id: str, *, version: int | None = None, subject: str = "", variables: dict[str, object] | None = None, idempotency_key: str | None = None, trigger: str = "manual") -> WorkflowRun:
         definition = self.definition(workflow_id, version)
         subject = _bounded_text(subject, "subject", 512)
         variables = _safe_json(variables or {})
-        if idempotency_key:
-            if len(idempotency_key) > 256 or not idempotency_key.strip():
-                raise ValueError("invalid idempotency key")
-            with self._lock:
-                existing = self._idempotency.get(idempotency_key)
-                if existing:
-                    return self._runs[existing]
-        run = WorkflowRun(uuid4().hex, definition.workflow_id, definition.version, definition.fingerprint(), WorkflowRunStatus.RUNNING, subject, variables, {step.id: "pending" for step in definition.steps}, trigger=trigger)
+        key = _bounded_text(idempotency_key, "idempotency key", 256) if idempotency_key is not None else None
+        request_fingerprint = sha256(json.dumps({"workflow": definition.workflow_id, "version": definition.version, "subject": subject, "variables": variables, "trigger": trigger}, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         with self._lock:
+            if key:
+                existing = self._idempotency.get(key)
+                if existing:
+                    run_id, fingerprint = existing
+                    if fingerprint != request_fingerprint:
+                        raise ValueError("idempotency key was already used for a different request")
+                    return self._runs[run_id]
             if len(self._runs) >= _MAX_RUNS:
                 self._compact_runs()
+            run = WorkflowRun(uuid4().hex, definition.workflow_id, definition.version, definition.fingerprint(), WorkflowRunStatus.RUNNING, subject, variables, {step.id: "pending" for step in definition.steps}, trigger=trigger)
             self._runs[run.run_id] = run
-            if idempotency_key:
-                self._idempotency[idempotency_key] = run.run_id
+            if key:
+                self._idempotency[key] = (run.run_id, request_fingerprint)
             self._persist()
-        return run
+            return run
 
     def definition(self, workflow_id: str, version: int | None = None) -> WorkflowDefinition:
-        if version is None:
-            candidates = [item for (wid, _), item in self._definitions.items() if wid == workflow_id]
-            if not candidates:
-                raise KeyError(workflow_id)
-            return max(candidates, key=lambda item: item.version)
-        try:
-            return self._definitions[(workflow_id, version)]
-        except KeyError:
-            raise KeyError(f"{workflow_id}@{version}") from None
+        with self._lock:
+            if version is None:
+                candidates = [item for (wid, _), item in self._definitions.items() if wid == workflow_id]
+                if not candidates:
+                    raise KeyError(workflow_id)
+                return max(candidates, key=lambda item: item.version)
+            try:
+                return self._definitions[(workflow_id, version)]
+            except KeyError:
+                raise KeyError(f"{workflow_id}@{version}") from None
 
     def tick(self, run_id: str, *, now: datetime | None = None) -> WorkflowRun:
         now = _utc(now or datetime.now(UTC))
@@ -257,19 +258,45 @@ class WorkflowEngine:
             if run.status is WorkflowRunStatus.WAITING:
                 if run.wait_until and _parse(run.wait_until) > now:
                     return run
+                waiting_step = next((s for s in definition.steps if run.step_states[s.id] == "waiting" and s.kind is WorkflowStepKind.WAIT), None)
+                if waiting_step:
+                    run.step_states[waiting_step.id] = "pending"
+                    run.wait_until = None
+                elif any(s.kind is WorkflowStepKind.HUMAN and run.step_states[s.id] == "waiting" for s in definition.steps):
+                    for step in definition.steps:
+                        if step.kind is WorkflowStepKind.HUMAN and run.step_states[step.id] == "waiting" and run.variables.get(step.approval_key or "") is True:
+                            run.step_states[step.id] = "pending"
+                    if not any(s.kind is WorkflowStepKind.HUMAN and run.step_states[s.id] == "waiting" for s in definition.steps):
+                        run.wait_until = None
+                    else:
+                        return run
                 run.status = WorkflowRunStatus.RUNNING
-                run.wait_until = None
             progressed = True
             while progressed and run.status is WorkflowRunStatus.RUNNING:
                 progressed = False
                 for step in definition.steps:
-                    if run.step_states[step.id] != "pending" or not all(run.step_states[d] == "succeeded" for d in step.depends_on):
+                    if run.step_states[step.id] != "pending":
                         continue
-                    outcome = self._execute_step(run, step, now)
-                    progressed = progressed or outcome
+                    dep_states = [run.step_states[d] for d in step.depends_on]
+                    if any(state == "skipped" for state in dep_states):
+                        run.step_states[step.id] = "skipped"
+                        progressed = True
+                        continue
+                    if not all(state == "succeeded" for state in dep_states):
+                        continue
+                    if step.condition:
+                        condition = self._conditions.get(step.condition)
+                        if condition is None:
+                            return self._fail(run, f"condition is not registered: {step.condition}")
+                        if not bool(condition(run.variables)):
+                            run.step_states[step.id] = "skipped"
+                            progressed = True
+                            continue
+                    changed = self._execute_step(run, step, now)
+                    progressed = progressed or changed
                     if run.status is not WorkflowRunStatus.RUNNING:
                         break
-            if all(state == "succeeded" for state in run.step_states.values()):
+            if all(state in {"succeeded", "skipped"} for state in run.step_states.values()):
                 run.status = WorkflowRunStatus.SUCCEEDED
             run.updated_at = now.isoformat()
             self._persist()
@@ -295,34 +322,64 @@ class WorkflowEngine:
         return self.tick(run_id, now=now)
 
     def event(self, event_name: str, payload: dict[str, object], *, subject: str = "", now: datetime | None = None) -> tuple[WorkflowRun, ...]:
-        payload = _safe_json(payload)
-        started: list[WorkflowRun] = []
-        for definition in tuple(self._definitions.values()):
-            if any(trigger.kind is TriggerKind.EVENT and trigger.name == event_name for trigger in definition.triggers):
-                started.append(self.start(definition.workflow_id, version=definition.version, subject=subject, variables={"event": payload}, trigger=event_name))
-        return tuple(started)
+        return self._triggered(TriggerKind.EVENT, event_name, payload, subject=subject, now=now)
+
+    def webhook(self, hook_name: str, payload: dict[str, object], *, subject: str = "", now: datetime | None = None) -> tuple[WorkflowRun, ...]:
+        return self._triggered(TriggerKind.WEBHOOK, hook_name, payload, subject=subject, now=now)
 
     def due_intervals(self, *, now: datetime | None = None) -> tuple[WorkflowDefinition, ...]:
         now = _utc(now or datetime.now(UTC))
-        return tuple(definition for definition in self._definitions.values() if any(trigger.kind is TriggerKind.INTERVAL and trigger.interval_seconds for trigger in definition.triggers) and self._last_trigger(definition, now) is None)
+        due: list[WorkflowDefinition] = []
+        for definition in self._definitions.values():
+            intervals = [t.interval_seconds for t in definition.triggers if t.kind is TriggerKind.INTERVAL and t.interval_seconds]
+            if not intervals:
+                continue
+            latest = max((r for r in self._runs.values() if r.workflow_id == definition.workflow_id and r.version == definition.version), key=lambda r: r.created_at, default=None)
+            if latest is None or any(now - _parse(latest.created_at) >= timedelta(seconds=interval) for interval in intervals):
+                due.append(definition)
+        return tuple(due)
+
+    def trigger_intervals(self, *, now: datetime | None = None) -> tuple[WorkflowRun, ...]:
+        now = _utc(now or datetime.now(UTC))
+        started = []
+        for definition in self.due_intervals(now=now):
+            started.append(self.start(definition.workflow_id, version=definition.version, variables={"trigger": {"kind": "interval", "at": now.isoformat()}}, trigger="interval"))
+        return tuple(started)
 
     def run(self, run_id: str) -> WorkflowRun:
-        return self._runs[run_id]
+        with self._lock:
+            return self._runs[run_id]
 
     def list_runs(self, *, status: WorkflowRunStatus | None = None, limit: int = 100) -> tuple[WorkflowRun, ...]:
         if not 1 <= limit <= 500:
             raise ValueError("limit must be between 1 and 500")
-        runs = tuple(self._runs.values())
+        with self._lock:
+            runs = tuple(self._runs.values())
         if status is not None:
             runs = tuple(item for item in runs if item.status is status)
         return tuple(sorted(runs, key=lambda item: item.created_at, reverse=True)[:limit])
 
+    def _triggered(self, kind: TriggerKind, name: str, payload: dict[str, object], *, subject: str, now: datetime | None) -> tuple[WorkflowRun, ...]:
+        payload = _safe_json(payload)
+        started = []
+        for definition in tuple(self._definitions.values()):
+            if any(t.kind is kind and t.name == name for t in definition.triggers):
+                started.append(self.start(definition.workflow_id, version=definition.version, subject=subject, variables={"trigger": payload}, trigger=name))
+        if now is not None:
+            for run in started:
+                run.updated_at = _utc(now).isoformat()
+        return tuple(started)
+
     def _execute_step(self, run: WorkflowRun, step: WorkflowStep, now: datetime) -> bool:
         if step.kind is WorkflowStepKind.CONDITION:
-            result = bool(self._conditions[step.condition](run.variables)) if step.condition in self._conditions else False
+            condition = self._conditions.get(step.condition or "")
+            if condition is None:
+                return self._fail(run, f"condition is not registered: {step.condition}") is run
+            result = bool(condition(run.variables))
             run.step_states[step.id] = "succeeded" if result else "skipped"
-            if not result:
-                run.variables[f"condition:{step.id}"] = False
+            run.variables[f"condition:{step.id}"] = result
+            if result:
+                run.completed_steps.append(step.id)
             return True
         if step.kind is WorkflowStepKind.WAIT:
             run.step_states[step.id] = "waiting"
@@ -332,6 +389,7 @@ class WorkflowEngine:
         if step.kind is WorkflowStepKind.HUMAN:
             if run.variables.get(step.approval_key or "") is True:
                 run.step_states[step.id] = "succeeded"
+                run.completed_steps.append(step.id)
                 return True
             run.step_states[step.id] = "waiting"
             run.status = WorkflowRunStatus.WAITING
@@ -343,10 +401,11 @@ class WorkflowEngine:
             action = self._actions.get(step.action or "")
             if action is None:
                 return self._fail(run, f"action is not registered: {step.action}") is run
-            results = []
-            for item in items:
-                results.append(action(item))
-            run.step_results[step.id] = _safe_json(results)
+            try:
+                results = [action(item) for item in items]
+                run.step_results[step.id] = _safe_json(results)
+            except Exception as exc:  # noqa: BLE001
+                return self._fail(run, f"{type(exc).__name__}: {exc}") is run
             run.step_states[step.id] = "succeeded"
             run.completed_steps.append(step.id)
             return True
@@ -370,25 +429,26 @@ class WorkflowEngine:
             delegate = self._delegates.get(step.delegate_to or "")
             if delegate is None:
                 return self._fail(run, "delegate is not registered") is run
-            result = delegate(run.variables)
-            run.step_results[step.id] = _safe_json(result)
+            try:
+                result = delegate(run.variables)
+                run.step_results[step.id] = _safe_json(result)
+            except Exception as exc:  # noqa: BLE001
+                return self._fail(run, f"{type(exc).__name__}: {exc}") is run
             run.step_states[step.id] = "succeeded"
             run.completed_steps.append(step.id)
             return True
         action = self._actions.get(step.action or "")
         if action is None:
             return self._fail(run, f"action is not registered: {step.action}") is run
-        attempts = run.attempts.get(step.id, 0)
-        while attempts < step.retry_attempts:
-            attempts += 1
-            run.attempts[step.id] = attempts
+        for attempt in range(run.attempts.get(step.id, 0) + 1, step.retry_attempts + 1):
+            run.attempts[step.id] = attempt
             try:
                 result = action(run.variables)
                 run.step_results[step.id] = _safe_json(result)
                 run.step_states[step.id] = "succeeded"
                 run.completed_steps.append(step.id)
                 return True
-            except Exception as exc:  # noqa: BLE001 — workflow state must record adapter failure.
+            except Exception as exc:  # noqa: BLE001
                 run.error = f"{type(exc).__name__}: {exc}"
         return self._fail(run, run.error or "step failed") is run
 
@@ -401,39 +461,39 @@ class WorkflowEngine:
             if step.compensation_action and step.compensation_action in self._actions:
                 try:
                     self._actions[step.compensation_action](run.step_results.get(step_id))
-                except Exception:  # noqa: BLE001 — compensation is best-effort but never hidden.
+                except Exception:  # noqa: BLE001
                     run.error = f"{run.error}; compensation failed for {step_id}"
+        self._persist()
         return run
-
-    def _last_trigger(self, definition: WorkflowDefinition, now: datetime) -> WorkflowRun | None:
-        candidates = [r for r in self._runs.values() if r.workflow_id == definition.workflow_id and r.version == definition.version]
-        return max(candidates, key=lambda item: item.created_at) if candidates else None
 
     def _compact_runs(self) -> None:
         finished = sorted((r for r in self._runs.values() if r.status in {WorkflowRunStatus.SUCCEEDED, WorkflowRunStatus.FAILED, WorkflowRunStatus.CANCELLED}), key=lambda item: item.created_at)
         while len(self._runs) >= _MAX_RUNS and finished:
             old = finished.pop(0)
             self._runs.pop(old.run_id, None)
-            for key, run_id in list(self._idempotency.items()):
-                if run_id == old.run_id:
+            for key, value in list(self._idempotency.items()):
+                if value[0] == old.run_id:
                     self._idempotency.pop(key, None)
 
     def _persist(self) -> None:
         if self.state_path is None:
             return
-        payload = {"definitions": [item.as_dict() for item in self._definitions.values()], "templates": [item.as_dict() for item in self._templates.values()], "runs": [item.as_dict() for item in self._runs.values()], "idempotency": dict(self._idempotency)}
+        payload = {"definitions": [item.as_dict() for item in self._definitions.values()], "templates": [item.as_dict() for item in self._templates.values()], "runs": [item.as_dict() for item in self._runs.values()], "idempotency": self._idempotency}
         encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"))
         if len(encoded.encode()) > _MAX_PAYLOAD_BYTES * 4:
             raise ValueError("workflow state exceeds persistence limit")
-        temporary = self.state_path.with_suffix(self.state_path.suffix + ".tmp")
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.state_path.with_suffix(self.state_path.suffix + ".tmp")
         temporary.write_text(encoded, encoding="utf-8")
         temporary.replace(self.state_path)
 
     def _load(self) -> None:
         if self.state_path is None or not self.state_path.exists():
             return
-        payload = json.loads(self.state_path.read_text(encoding="utf-8"))
+        try:
+            payload = json.loads(self.state_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ValueError("invalid workflow state") from exc
         if not isinstance(payload, dict) or not isinstance(payload.get("definitions", []), list) or not isinstance(payload.get("runs", []), list):
             raise ValueError("invalid workflow state")
         for raw in payload.get("definitions", []):
@@ -446,17 +506,20 @@ class WorkflowEngine:
             run = WorkflowRun(**raw)
             run.status = WorkflowRunStatus(run.status)
             self._runs[run.run_id] = run
-        self._idempotency = {str(k): str(v) for k, v in payload.get("idempotency", {}).items()}
+        for key, value in payload.get("idempotency", {}).items():
+            if isinstance(value, list) and len(value) == 2:
+                self._idempotency[str(key)] = (str(value[0]), str(value[1]))
+            elif isinstance(value, str) and value in self._runs:
+                self._idempotency[str(key)] = (value, "legacy")
 
 
 def _definition_from_dict(raw: dict[str, object]) -> WorkflowDefinition:
-    steps = tuple(WorkflowStep(**{**step, "kind": WorkflowStepKind(step["kind"]), "depends_on": tuple(step.get("depends_on", ()))}) for step in raw["steps"])
-    triggers = tuple(WorkflowTrigger(**{**trigger, "kind": TriggerKind(trigger["kind"])}) for trigger in raw.get("triggers", ()))
+    steps = tuple(WorkflowStep(**{**step, "kind": WorkflowStepKind(step["kind"]), "depends_on": tuple(step.get("depends_on", ()))}) for step in raw["steps"])  # type: ignore[arg-type]
+    triggers = tuple(WorkflowTrigger(**{**trigger, "kind": TriggerKind(trigger["kind"])}) for trigger in raw.get("triggers", ()))  # type: ignore[arg-type]
     return WorkflowDefinition(str(raw["workflow_id"]), int(raw["version"]), str(raw["name"]), steps, triggers, int(raw.get("max_runtime_seconds", 86_400)), raw.get("template"))
 
 
 def _topological(steps: tuple[WorkflowStep, ...]) -> tuple[str, ...]:
-    by_id = {step.id: step for step in steps}
     indegree = {step.id: len(step.depends_on) for step in steps}
     children = {step.id: [] for step in steps}
     for step in steps:
@@ -494,8 +557,8 @@ def _jsonable(value: object) -> object:
     return value
 
 
-def _bounded_text(value: str, name: str, maximum: int) -> str:
-    if not isinstance(value, str) or len(value) > maximum:
+def _bounded_text(value: str | None, name: str, maximum: int) -> str:
+    if value is None or not isinstance(value, str) or len(value) > maximum:
         raise ValueError(f"{name} is invalid or too long")
     return value.strip()
 
