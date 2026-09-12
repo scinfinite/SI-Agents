@@ -59,6 +59,7 @@ for session state or governance.
 - Phase 52 final exact-tree mainline CI #1020 (`34673411916`) was verified before Phase 53 started.
 - Phase 53 implementation was merged into `main` as commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`.
 - Mainline Phase 53 verification CI: **#1021 / `34674234547`**.
-- Final documentation-synchronized mainline verification is the mandatory final gate for this record.
+- Final documentation-synchronized mainline CI: **#1037 / `34675239106`** — passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- The final hardening also corrected the recurring Web oversized-request client race by boundedly draining rejected bodies and handling disconnects safely while retaining the 1 MiB request limit.
 
-The phase is not reopened by subsequent roadmap work; Phase 54 is the next phase.
+Phase 53 is closed. The phase is not reopened by subsequent roadmap work; **Phase 54 — Human-in-the-Loop** is the next phase.
