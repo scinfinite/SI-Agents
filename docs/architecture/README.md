@@ -36,7 +36,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 58 | Workspace / Worktree Lifecycle | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 59 | Observability | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
-| 61 | Continuous Improvement | **Implemented; closure pending CI** | Phase 61 branch |
+| 61 | Continuous Improvement | **Complete** | PR #75; PR CI #1157 / `34692165853` |
 
 ## Phase 61 — continuous improvement
 
@@ -52,4 +52,4 @@ Security decisions are fail-closed. Workspace, telemetry, evaluation, and improv
 
 ## Current position
 
-**V4 Phases 44–60 are closed at advanced-hardening level on `main`; Phase 61 is implemented on the Phase 61 branch and requires final CI/merge verification before closure.**
+**V4 Phases 44–61 are closed on `main`; Phase 62 — Cross-Runtime / Cross-Harness is next.**
