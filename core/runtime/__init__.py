@@ -12,6 +12,7 @@ from core.runtime.local import LocalHarnessAdapter
 from core.runtime.models import InvocationRequest, InvocationResponse, InvocationStatus, RuntimeCapabilities, RuntimeError, RuntimeErrorCode, RuntimeEvent, RuntimeEventType, RuntimeKind
 from core.runtime.omniroute import OmniRouteBridge, OmniRouteCredentialRef, OmniRouteModel, OmniRoutePolicy, OmniRouteTransportError
 from core.runtime.opencode import OpenCodeBridge, OpenCodeSession, OpenCodeTransportError
+from core.runtime.portable import PortableAdapter, PortableAdapterDescriptor, PortableAdapterKind, PortableAdapterRegistry
 from core.runtime.protocol import HarnessAdapter, HarnessMetadata, normalize_metadata
 from core.runtime.registry import HarnessRegistry
 from core.runtime.scheduler import ParallelScheduler, ScheduledItem, ScheduleState
@@ -23,8 +24,9 @@ __all__ = [
     "CheckpointStore", "ConformanceFailure", "CrossRuntimeGateway", "EventBus", "Execution", "ExecutionRuntime", "ExecutionStore",
     "HarnessAdapter", "HarnessDeploymentManifest", "HarnessDescriptor", "HarnessHealth", "HarnessMetadata", "HarnessRegistry", "InvocationRequest",
     "InvocationResponse", "InvocationStatus", "LocalHarnessAdapter", "OmniRouteBridge", "OmniRouteCredentialRef", "OmniRouteModel", "OmniRoutePolicy",
-    "OmniRouteTransportError", "OpenCodeBridge", "OpenCodeSession", "OpenCodeTransportError", "ParallelScheduler", "ResumePlan", "RouteDecision",
-    "RuntimeAdapter", "RuntimeCapabilities", "RuntimeEngine", "RuntimeError", "RuntimeErrorCode", "RuntimeEvent", "RuntimeEventRecord", "RuntimeEventType",
-    "RuntimeFailure", "RuntimeKind", "RuntimeSession", "ScheduleState", "ScheduledItem", "SessionRegistry", "SessionStatus", "State", "adapter_metadata",
-    "build_manifest", "capabilities_to_dict", "is_harness_adapter", "normalize_metadata", "request_to_dict", "response_to_dict", "run_conformance",
+    "OmniRouteTransportError", "OpenCodeBridge", "OpenCodeSession", "OpenCodeTransportError", "ParallelScheduler", "PortableAdapter",
+    "PortableAdapterDescriptor", "PortableAdapterKind", "PortableAdapterRegistry", "ResumePlan", "RouteDecision", "RuntimeAdapter", "RuntimeCapabilities",
+    "RuntimeEngine", "RuntimeError", "RuntimeErrorCode", "RuntimeEvent", "RuntimeEventRecord", "RuntimeEventType", "RuntimeFailure", "RuntimeKind",
+    "RuntimeSession", "ScheduleState", "ScheduledItem", "SessionRegistry", "SessionStatus", "State", "adapter_metadata", "build_manifest",
+    "capabilities_to_dict", "is_harness_adapter", "normalize_metadata", "request_to_dict", "response_to_dict", "run_conformance",
 ]
