@@ -46,14 +46,12 @@ into a model request rather than silently promoting or mutating durable memory.
 
 ## External reference synthesis
 
-Current ECC emphasizes optimizing the context window, durable inspectable memory, scoped
-recall, handoffs, and treating recalled memory as untrusted context. Agency Agents emphasizes
-structured shared state, summaries/checkpoints, external memory, explicit context ownership,
-and cost/latency governance. n8n separates recent-message memory from longer-lived
-observational memory and persists operational plans. OmniRoute demonstrates that memory
-injection has direct token cost and must be explicitly scoped/opt-out capable. SI-Agents
-adopts these patterns while keeping SI Core authority, capability authorization, and
-provenance boundaries intact.
+Current external engineering references consistently emphasize bounded context windows,
+inspectable memory, scoped recall, explicit handoffs, shared state, durable summaries,
+separation of recent and persistent memory, and token/cost-aware context injection.
+SI-Agents generalizes these patterns while keeping SI Core authority, capability
+authorization, and provenance boundaries intact; external systems are references only and
+are not runtime dependencies or governance authorities.
 
 ## Security and adversarial coverage
 
