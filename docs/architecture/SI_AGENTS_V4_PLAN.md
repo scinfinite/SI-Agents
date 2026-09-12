@@ -17,43 +17,31 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–65**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 66 — Advanced Web Control Plane is next.**
+V3 is closed. V4 has completed Phases **44–65**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 66 — Advanced Web Control Plane is active.**
 
 ## Closed phases
 
 Phases 44–65 are closed under their recorded implementation, merge, documentation, and CI evidence.
 
-### Phase 63 — Ecosystem / Marketplace
-
-Phase 63 establishes governed ecosystem metadata and lifecycle contracts for future agents, skills, tools, teams, workflows, model/provider profiles, and MCP extensions. `MarketplaceManifest` provides strict semver, dependencies, compatibility declarations, permission declarations, provenance/trust, payload identity, and exact manifest identity. `MarketplaceRegistry` provides deterministic package/version lookup and templates. `EcosystemManager` provides governed install/update/uninstall/rollback, bounded lifecycle history, and drift detection.
-
-The lifecycle layer is governance-neutral and does not execute package payloads or grant capabilities. Untrusted packages require an explicit governance hook, requested permissions must be declared, and governance approval is bound to the exact manifest digest. SI Core remains authoritative for authorization and execution.
-
-Implementation: `core/marketplace/registry.py` and `core/marketplace/__init__.py`.
-
-Verification: PR #77 / CI #1189 (`34694186010`), and final exact-tree mainline CI #1198 (`34694418960`) on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
-
-## Phase 64 — SDK / Developer Platform
-
-Phase 64 delivers Python and TypeScript SDKs, versioned REST/WebSocket/SSE access, typed schemas and stable errors, optional bearer authentication, header-bound identity, idempotent run creation, bounded concurrency, cursor pagination/filtering, event subscriptions, signed webhook delivery primitives, OpenAPI updates, package metadata, examples, and adversarial tests. SDKs remain clients and do not gain governance or execution authority.
-
-Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagination.py`, `core/control_api/subscriptions.py`, and SDK transport extensions in `core/control_api/server.py` / `openapi.py`.
-
-Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
-
-PR #78 is merged into `main`. Phase 64 is closed under the verified V4 documentation baseline.
-
-## Phase 65 — Workflow + Automation
+### Phase 65 — Workflow + Automation
 
 Phase 65 delivers a transport-neutral declarative workflow engine with versioned DAG definitions, conditional branching, bounded loops and fan-out, delegation, human approval gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates/importable definitions, restart validation, and reverse-order compensation.
 
 Implementation: `core/automation/workflows.py`.
 
-Verification: `tests/unit/test_phase65_workflows.py` and repository-wide CI. The synchronized-tree closure run **CI #1249 / `34698187600`** completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
+Verification: `tests/unit/test_phase65_workflows.py` and repository-wide CI. Final synchronized-tree CI #1249 / `34698187600` completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
 
 ## Phase 66 — Advanced Web Control Plane
 
-**Next.** Dashboards, live activity, routing/health/cost/resources, DAGs, timelines/events/dependencies, logs/evidence/artifacts, code/Markdown/JSON/diff viewers, search, authorized controls, accessibility, and degraded-state UX.
+**Active.** Phase 66 provides a secure, accessible, same-origin operational web client over the versioned Control API. It covers dashboards and health, live activity, routing/health/cost/resource read models, workflows and DAG topology, timelines/events/dependencies, evidence, code/Markdown/JSON/diff-oriented inspection surfaces, search/filtering, identity-bound authorized controls, accessibility, and degraded-state UX.
+
+Implementation: `core/control_api/web.py`, `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css`.
+
+The UI is a client of SI Core rather than a second authority. It inherits the API's localhost-first and authentication boundaries, uses restrictive CSP and safe static-path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh.
+
+Acceptance tests: `tests/unit/test_phase66_web_control.py`.
+
+Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
 
 ## Phase 67 — Advanced TUI Control Center
 
@@ -77,4 +65,4 @@ Final architecture, authority, state-machine, lifecycle, concurrency, idempotenc
 
 ## Closure gate
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate.**
+A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate; Phase 66 does not yet.**
