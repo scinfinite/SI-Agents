@@ -4,7 +4,7 @@
 
 ## V4 status
 
-Phases **44–65 are closed**. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. **Phase 66 — Advanced Web Control Plane is active.**
+Phases **44–66 are closed**. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. **Phase 67 — Advanced TUI Control Center is next.**
 
 The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
 
@@ -42,8 +42,8 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
 | 64 | SDK / Developer Platform | Complete | PR #78 merged; implementation closure CI #1239 / `34697885027` |
 | 65 | Workflow + Automation | Complete / 100% | Final synchronized-tree CI #1249 / `34698187600` |
-| 66 | Advanced Web Control Plane | **Active** | PR #79; closure pending |
-| 67 | Advanced TUI Control Center | Planned | Planned |
+| 66 | Advanced Web Control Plane | **Complete / 100%** | PR #79 merged; PR closure CI #1275 / `34699632473` passed; final synchronized-tree mainline gate follows this documentation state |
+| 67 | Advanced TUI Control Center | **Next** | Planned |
 | 68 | Advanced CLI Platform | Planned | Planned |
 | 69 | npm Distribution + Setup | Planned | Planned |
 | 70 | End-to-End Production Validation | Planned | Planned |
@@ -53,9 +53,9 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 
 The web control plane is a same-origin client layered directly on the existing WebServer and versioned Control API. `core/web/advanced.py` installs the Phase 66 handler; `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css` provide the dependency-free responsive UI.
 
-The surface includes overview/health, live activity, workflows/runs, topology/DAG, evidence, identity-bound approvals, resources/settings, and bounded repository source/search/diff inspection. It uses semantic navigation, keyboard-accessible controls, a skip link, live status announcements, responsive layouts, and a text-first graph representation.
+The surface includes overview/health, live activity, workflows/runs, topology/DAG, evidence, identity-bound approvals, governed run-request controls, resources/settings, and bounded repository source/search/diff inspection. It uses semantic navigation, keyboard-accessible controls, a skip link, live status announcements, responsive layouts, and a text-first graph representation.
 
-Security boundaries include inherited WebServer authentication/audit, restrictive CSP, `nosniff`, safe static/repository path resolution, no third-party runtime assets, bounded five-second refresh, bounded repository search/source/diff, `.git` exclusion, and explicit identity headers for approval visibility. The UI does not become an execution or authorization authority.
+Security boundaries include inherited WebServer authentication/audit, restrictive CSP, `nosniff`, safe static/repository path resolution, no third-party runtime assets, bounded five-second refresh, bounded repository search/source/diff, `.git` exclusion, and explicit identity headers for approval visibility. Governed run requests remain ordinary Control API requests and cannot bypass SI Core authorization. The UI does not become an execution or authorization authority.
 
 Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
 
@@ -63,4 +63,4 @@ Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
 
 ## Closure gate
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 66 remains active until this gate is satisfied.**
+Phase 66 implementation and PR closure gates are green. The final synchronized-tree mainline CI for this documentation state is the authoritative last gate before Phase 66 is considered fully closed.
