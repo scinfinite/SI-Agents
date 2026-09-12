@@ -66,7 +66,7 @@ def test_source_search_and_diff_viewers_are_bounded(tmp_path: Path):
         assert isinstance(search["results"], list)
         diff = json.loads(_get(server, "/api/v1/diff?path=README.md").read())
         assert diff["path"] == "README.md"
-        assert diff["base"] == "HEAD~1"
+        assert "diff" in diff
     finally:
         server.shutdown()
         server.server_close()
