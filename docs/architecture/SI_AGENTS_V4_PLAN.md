@@ -16,9 +16,9 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–56** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 57 — Security Platform is next.**
+V3 is closed. V4 has completed Phases **44–56** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 57 — Security Platform is the active implementation phase.**
 
-Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, and Phase 56 final synchronized-tree mainline CI **#1095 (`34682748193`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
+Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, and Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -106,11 +106,13 @@ Task complexity/capability analysis; task/agent/model matching; capability/quali
 
 Delivered through `core/provider_intelligence/intelligent_router.py`, with deterministic complexity inference, explicit task requirements, quality/reliability/latency/cost scoring, capability/context/output checks, provider/model preference, quota and circuit gating, budget reservations/settlement, retry forecasting, bounded transient/rate-limit fallback, escalation/downgrade controls, non-secret route evidence, health outcomes, recovery probes, and adversarial coverage. `ModelProfile` now includes quality plus streaming and structured-output capability declarations.
 
-Evidence: PR #67 merged as `0c19e1c322b4262128b34a2203c54a30ece31f93`; PR verification CI #1091 (`34682603137`) passed; final synchronized-tree mainline CI #1095 (`34682748193`) passed all repository gates on final main commit `a22a9f86bcfa03620c972b285f0df57b79ec80f0`.
+Evidence: PR #67 merged as `0c19e1c322b4262128b34a2203c54a30ece31f93`; PR verification CI #1091 (`34682603137`) passed; final synchronized-tree mainline CI #1099 (`34682849381`) passed all repository gates on final main tree.
 
-## Phase 57 — Security Platform
+## Phase 57 — Security Platform — in implementation
 
-Least privilege, identities, scoped permissions/capability tokens, tool/MCP/model/provider/filesystem/command/process/network authorization, secret isolation/redaction, workspace/project isolation, egress controls, destructive-operation controls, approval enforcement, audit/evidence, injection defenses, trust boundaries, scanning, adversarial tests, policy versioning, and fail-closed defaults.
+Establish the single fail-closed security authority for SI Core: authenticated tenant identities; tenant-bound least-privilege subject/action/resource/scope grants; short-lived request-bound single-use capability tokens; tool/MCP/model/provider/filesystem/command/process/network authorization through explicit grants; secret isolation and redaction; workspace/project isolation; HTTPS egress allowlists with private-network protection; destructive/high-risk/credential approval enforcement; prompt/tool injection defenses; explicit trust boundaries; policy versioning; non-secret audit evidence; and adversarial tests. Security decisions are `ALLOW`, `DENY`, or `APPROVAL_REQUIRED`; approvals never become execution authority.
+
+Implemented in `core/security/platform.py` and exported through `core/security`. Verification covers identity/tenant isolation, least privilege, bounded scopes, approvals, egress/private-network controls, credential/egress separation, secret scanning, injection rejection, HMAC token binding/replay prevention/TTL/policy invalidation, expired grants, trust-boundary non-authority, and safe audit evidence. PR #68 verification CI #1109 (`34684116453`) is green; final closure still requires merge and exact-tree mainline CI.
 
 ## Phase 58 — Workspace / Worktree Lifecycle
 
