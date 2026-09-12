@@ -18,6 +18,7 @@ The Phase 66 web surface provides:
 - accessible text topology/DAG representation;
 - evidence and control-plane evidence views;
 - identity-bound human approval queue visibility;
+- governed run-request controls that submit through the existing Control API with explicit action, subject, capabilities, and idempotency key;
 - environment/resource and settings views;
 - repository code/Markdown/JSON inspection, bounded search, and latest-commit diff viewing;
 - same-origin API reuse rather than an independent backend;
@@ -36,7 +37,7 @@ The Phase 66 web surface provides:
 
 ## Authority and security
 
-The UI never directly executes agents, tools, workflows, or provider calls. Mutations go through the versioned Control API and therefore remain subject to SI Core governance. Identity-bound approval routes require the existing identity headers; the browser does not invent an identity. Remote exposure remains governed by the existing WebServer configuration and authentication boundary.
+The UI never directly executes agents, tools, workflows, or provider calls. Governed run requests are ordinary Control API requests and therefore remain subject to SI Core authorization; the browser cannot bypass capability checks. Identity-bound approval routes require the existing identity headers; the browser does not invent an identity. Remote exposure remains governed by the existing WebServer configuration and authentication boundary.
 
 Repository inspection is read-only. It rejects `.git` paths, traversal outside the repository root, unsupported file types, oversized source/diff responses, and oversized search queries. Repository search stops after a fixed file budget. Git diff uses an argument-vector subprocess with a two-second timeout and no shell.
 
@@ -50,9 +51,10 @@ The browser refresh loop is deliberately bounded and disposable. SSE/WebSocket r
 4. **Topology** — nodes/edges and dependency relationships with an accessible textual fallback.
 5. **Evidence** — control-plane evidence summary.
 6. **Approvals** — identity-bound human approval queue.
-7. **Repository** — bounded code/Markdown/JSON source, search, and diff inspection.
-8. **Resources** — runtime/environment information.
-9. **Settings** — API/security/execution posture.
+7. **Controls** — governed run-request submission through the Control API.
+8. **Repository** — bounded code/Markdown/JSON source, search, and diff inspection.
+9. **Resources** — runtime/environment information.
+10. **Settings** — API/security/execution posture.
 
 ## Verification
 
