@@ -4,12 +4,13 @@
 
 ## V4 status
 
-Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 63 is next.
+Phases 44–61 are closed. Phase 62 is implemented and merged, with final synchronized-tree mainline CI pending. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 63 is next after Phase 62 closure.
 
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
+- **In implementation** — implementation is merged but final closure CI is pending.
 - **Next** — next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -35,7 +36,7 @@ Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanc
 | 59 | Observability | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 60 | Evaluation + Benchmarking | Advanced hardened | PR #74 / CI #1144 / `34691176676` |
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
-| 62 | Cross-Runtime / Cross-Harness | **Complete** | PR #76 / CI #1166 / `34692621358` + final mainline closure pending |
+| 62 | Cross-Runtime / Cross-Harness | **In implementation** | PR #76 / CI #1166 / `34692621358`; final mainline CI pending |
 | 63 | Ecosystem / Marketplace | Next | Planned |
 | 64 | SDK / Developer Platform | Planned | Planned |
 | 65 | Workflow + Automation | Planned | Planned |
@@ -50,4 +51,4 @@ Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanc
 
 Phase 62 provides portable resource adapter contracts for runtime/session/tool/model/event/capability/context/checkpoint/artifact families; deterministic harness discovery/capability filtering; health probing with bounded quarantine/recovery; project+harness session isolation; explicit migration; and safe pre-start fallback. Post-start side-effect signals prevent unsafe fallback. The gateway never grants permissions or replaces SI Core execution authority.
 
-Merged PR #76 as `607085782a75e31a60774afe975edcbd38bf5e4c`. PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final synchronized-tree mainline CI is the remaining and authoritative closure gate.
+Merged PR #76 as `607085782a75e31a60774afe975edcbd38bf5e4c`. PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest. Final synchronized-tree mainline CI is the remaining authoritative closure gate.
