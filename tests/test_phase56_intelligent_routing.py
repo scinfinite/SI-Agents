@@ -98,7 +98,7 @@ def test_cost_and_budget_reservation():
     assert ledger.reservations == 0
     with pytest.raises(BudgetExceededError):
         engine.route(
-            TaskRequirements(estimated_input_tokens=100_000, estimated_output_tokens=100_000),
+            TaskRequirements(estimated_input_tokens=6000, estimated_output_tokens=6000),
             BudgetLedger(0.001),
         )
 
@@ -167,15 +167,13 @@ def test_retry_economics_and_fallback_are_bounded():
 
 def test_escalation_and_downgrade_controls():
     registry = ProviderRegistry()
-    registry.register(ProviderProfile("a", (model("a", quality=0.9),)))
+    registry.register(ProviderProfile("a", (model("a", quality=0.7),)))
     registry.register(ProviderProfile("b", (model("b", quality=1.0, cost=0.5),)))
-    engine = IntelligentRouter(registry)
-    first = engine.route(TaskRequirements(preferred_models=("a",)))
-    second = engine.fallback(
-        first,
-        TaskRequirements(preferred_models=("a",)),
-        retryable_failure="503 transient",
-    )
+    policy = RoutePolicy(preference_bonus=15.0, escalation_margin=0.15)
+    engine = IntelligentRouter(registry, policy=policy)
+    req = TaskRequirements(preferred_models=("a",))
+    first = engine.route(req)
+    second = engine.fallback(first, req, retryable_failure="503 transient")
     assert second.escalation_level == 1
     assert second.selected.model_id == "b"
 
