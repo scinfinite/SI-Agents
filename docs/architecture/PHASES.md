@@ -40,8 +40,8 @@
 | 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
 | 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI #1051 / `34676632475` |
 | 55 | Durable Waiting + Scheduling | **Complete** | Final synchronized-tree closure CI #1080 / `34678317246` |
-| 56 | Intelligent Routing + Economics | **Complete** | Final synchronized-tree mainline CI #1093 / `34682687023` |
-| 57 | Security Platform | **Next** | Next after Phase 56 |
+| 56 | Intelligent Routing + Economics | **Complete** | Final synchronized-tree mainline CI #1099 / `34682849381` |
+| 57 | Security Platform | **In implementation** | PR #68; verification CI #1109 / `34684116453`; final mainline closure pending |
 | 58 | Workspace / Worktree Lifecycle | Planned | Planned |
 | 59 | Observability | Planned | Planned |
 | 60 | Evaluation + Benchmarking | Planned | Planned |
@@ -57,4 +57,4 @@
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is fully closed by merged PR #67, implementation/verification CI #1091 / `34682603137`, and final synchronized-tree mainline CI #1093 / `34682687023`. Phase 57 — Security Platform is now the next roadmap phase.
+Phase 55 is fully closed on `main` by synchronized-tree CI #1080 / `34678317246`. Phase 56 is fully closed by merged PR #67, implementation/verification CI #1091 / `34682603137`, and final synchronized-tree mainline CI #1099 / `34682849381`. Phase 57 — Security Platform is the active implementation phase; closure requires merge plus final synchronized-tree mainline CI.
