@@ -6,6 +6,7 @@
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase was re-audited with additional production/security invariants and green hardening CI; final mainline exact-tree CI is the closure gate.
+- **In implementation** — active phase implementation/tests/docs are in progress; final mainline exact-tree CI is still required.
 - **Next** — planned next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -21,7 +22,7 @@
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **Next** | Planned |
+| 52 | Context / Memory Economics | **In implementation** | Active branch implementation + adversarial tests + architecture docs; final mainline CI pending |
 | 53 | Persistent Sessions | Planned | Planned |
 | 54 | Human-in-the-Loop | Planned | Planned |
 | 55 | Durable Waiting + Scheduling | Planned | Planned |
