@@ -9,29 +9,30 @@ User prompt → OpenCode / Web / TUI / CLI → SI Core → Scheduler/Orchestrato
 → Agents/Teams/Workflows → Authorization → OmniRoute
 → Models/Providers/APIs → Results/Evidence → SI Core
 → Observability → Evaluation → Continuous Improvement
-→ Cross-Runtime → Release Gates / Canaries / Rollback → Clients
+→ Cross-Runtime → Ecosystem / Marketplace → Release Gates / Canaries / Rollback → Clients
 ```
 
 OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, workspace lifecycle, observability, evaluation, continuous improvement, and cross-runtime governance.
 
 ## Current V4 status
 
-- **Phases 44–62 are complete on `main`.**
+- **Phases 44–63 are complete on `main`.**
 - **Phase 62 — Cross-Runtime / Cross-Harness is fully implemented, audited, documented, merged, and verified by mainline CI.**
+- **Phase 63 — Ecosystem / Marketplace is fully implemented, audited, documented, merged, and verified by its final mainline CI closure gate.**
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
 - Phase 61 merged as PR #75 / CI #1157 (`34692165853`).
-- Phase 62 merged as PR #76 / PR CI #1166 (`34692621358`).
-- Phase 62 mainline CI #1180 (`34693460152`) passed the repository closure suite on the integration-marker correction.
+- Phase 62 merged as PR #76 / final mainline CI #1186 (`34693756693`).
+- Phase 63 merged as PR #77 / PR CI #1189 (`34694186010`) and final synchronized-tree mainline CI is the authoritative closure gate.
 
-## Phase 62 — Cross-Runtime / Cross-Harness
+## Phase 63 — Ecosystem / Marketplace
 
-Phase 62 adds portable adapter contracts for runtime, session, tool, model, event, capability, context, checkpoint, and artifact resources. The cross-runtime gateway provides deterministic harness discovery, capability filtering, health probing, bounded quarantine/recovery, preferred selection, project+harness session isolation, explicit migration, and safe pre-start fallback.
+Phase 63 provides strict versioned marketplace manifests, dependency and compatibility declarations, explicit permission declarations, provenance/trust, exact manifest identity, deterministic package/template registries, governed install/update/uninstall/rollback lifecycle, bounded history, and drift detection.
 
-Fallback is prohibited after execution-start signals. Routing decisions exclude request payloads. Registration/discovery never grants permissions, and the gateway never becomes an execution authority. OpenCode remains a supported harness rather than the definition of the runtime protocol.
+Marketplace lifecycle is metadata/state management only. Installation never grants execution authority; untrusted packages require explicit governance, and governance approval is bound to the exact manifest digest. SI Core remains authoritative for authorization and execution.
 
 ## V4 roadmap
 
-See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASE_62_CROSS_RUNTIME_CROSS_HARNESS.md` for the Phase 62 contract.
+See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASE_63_ECOSYSTEM_MARKETPLACE.md` for the Phase 63 contract.
 
 | Phase | Name | Status |
 |---:|---|---|
@@ -54,8 +55,8 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 60 | Evaluation + Benchmarking | Advanced hardened |
 | 61 | Continuous Improvement | Complete |
 | 62 | Cross-Runtime / Cross-Harness | Complete |
-| 63 | Ecosystem / Marketplace | Next |
-| 64 | SDK / Developer Platform | Planned |
+| 63 | Ecosystem / Marketplace | Complete |
+| 64 | SDK / Developer Platform | Next |
 | 65 | Workflow + Automation | Planned |
 | 66 | Advanced Web Control Plane | Planned |
 | 67 | Advanced TUI Control Center | Planned |
@@ -70,4 +71,4 @@ A phase is not complete until implementation, unit/integration tests, security/a
 
 ## Next phase
 
-**Phase 63 — Ecosystem / Marketplace.**
+**Phase 64 — SDK / Developer Platform.**
