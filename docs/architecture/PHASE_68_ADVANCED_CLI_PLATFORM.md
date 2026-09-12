@@ -25,16 +25,16 @@ User / automation
 Phase 68 adds a deterministic, machine-friendly platform surface:
 
 - `run create/list/get` — governed run creation and inspection;
-- `task` — task-oriented aliases over governed run records;
+- `task create/list/get` — task-oriented aliases over governed run records;
 - `agent`, `team`, `workflow` — canonical resource navigation;
 - `execution` — execution-state inspection without claiming downstream authority;
 - `approval list/get/decide` — identity-bound human approval controls;
 - `session start/list/get` — bounded client session metadata;
 - `resume` — fail-closed handoff to downstream resume authority;
-- `events`, `stream` — bounded event/state observation;
+- `events`, `logs`, `stream` — bounded event/state observation;
 - `models`, `providers` — discovery delegated to OmniRoute;
 - `attachment inspect` — bounded metadata/hash inspection without arbitrary upload execution;
-- `config`, `auth` — non-secret client configuration and environment-token status;
+- `config`, `profile`, `auth` — non-secret client configuration, transport profiles, and environment-token status;
 - `pipeline run` — bounded declarative submission with per-step SI Core governance;
 - `status`, `organization`, `skills`, `memory`, `governance`, `evidence`, `environments`, `harnesses`, `settings`, and `visualization` read surfaces.
 
@@ -75,6 +75,7 @@ Human-readable output remains available when `--json` is omitted.
 - attachment inspection is bounded to 10 MiB;
 - pipeline files are bounded to 256 KiB and 100 steps;
 - session metadata is bounded to 100 records;
+- profile count is bounded to 32 and profile data is non-secret transport metadata only;
 - remote request/response payloads are bounded to 1 MiB;
 - run streaming is bounded by timeout/event count;
 - resume is fail-closed when downstream execution owns the resume transition;
