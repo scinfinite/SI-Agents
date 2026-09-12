@@ -19,19 +19,27 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-**Phases 44–65 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened. **Phase 66 — Advanced Web Control Plane is next.**
+**Phases 44–65 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened. **Phase 66 — Advanced Web Control Plane is active.**
+
+## Phase 66 architecture
+
+Phase 66 adds a same-origin, dependency-free web control client layered over the versioned Control API. It exposes operational overview/health, live activity, workflow/run inspection, topology/DAG relationships, evidence, identity-bound approvals, resources/settings, and bounded repository source/search/diff inspection. It does not create a second state or authorization authority.
+
+`core/control_api/web.py` supplies the static web adapter and reuses `ControlApiHandler` for API routes, authentication, SSE/WebSocket, governance and evidence behavior. `web/control/` contains the browser surface. Static resources use a restrictive CSP, `nosniff`, safe path resolution, and no third-party runtime assets. Repository viewers enforce file-type and size bounds and never expose `.git` paths.
+
+See `PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md` for the detailed contract and closure requirements.
 
 ## Phase 65 architecture
 
 Phase 65 adds a transport-neutral workflow state machine for versioned declarative DAGs. It supports conditional branching, bounded fan-out/loops, delegation, human gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates, restart validation, and reverse-order compensation.
 
-Workflow definitions and persisted runs contain only JSON-safe data. Action/condition/delegate callables are explicit process-local adapters and never become persisted authority. Loop termination predicates are evaluated after each bounded iteration, while ordinary step predicates control branch eligibility. SI Core remains the authorization and execution authority.
+Workflow definitions and persisted runs contain only JSON-safe data. Action/condition/delegate callables are explicit process-local adapters and never become persisted authority. SI Core remains the authorization and execution authority.
 
 See `PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract and security invariants.
 
 ## Phase 64 architecture
 
-Phase 64 adds typed Python and TypeScript SDK adapters over the versioned Control API. REST, SSE, and WebSocket transports remain observational/client surfaces; governance and execution authority stay inside SI Core. Cursor pagination is filter-bound, authentication is header-only, idempotency is bounded, and event subscriptions have explicit lifecycle.
+Phase 64 adds typed Python and TypeScript SDK adapters over the versioned Control API. REST, SSE, and WebSocket transports remain observational/client surfaces; governance and execution authority stay inside SI Core.
 
 See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and security invariants.
 
@@ -43,4 +51,4 @@ See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and 
 
 ## Current position
 
-**Phase 65 — Workflow + Automation is 100% complete. Phase 66 — Advanced Web Control Plane is next.**
+**Phase 65 — Workflow + Automation is closed. Phase 66 — Advanced Web Control Plane is active.**
