@@ -15,7 +15,7 @@ from typing import Any, Mapping
 
 _MAX_JSON_BYTES = 512 * 1024
 _MAX_ARTIFACT_BYTES = 256 * 1024
-_SECRET_KEY = re.compile(r"(?:password|passwd|secret|token|api[_-]?key|private[_-]?key|credential)", re.I)
+_SECRET_KEY = re.compile(r"(?:password|passwd|secret|api[_-]?key|private[_-]?key|credential|access[_-]?token|auth[_-]?token|refresh[_-]?token|bearer)", re.I)
 
 
 class SessionState(StrEnum):
