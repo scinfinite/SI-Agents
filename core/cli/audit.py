@@ -18,17 +18,11 @@ FORBIDDEN_BRANDING = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
 # Explicit architecture/phase research records may name external systems. Executable,
 # package, and operational surfaces remain free of external branding.
 ALLOWED_REFERENCE_DOCS = frozenset({
-    "README.md",
-    "docs/README.md",
-    "docs/architecture/README.md",
-    "docs/architecture/SI_AGENTS_V4_PLAN.md",
-    "docs/architecture/MODEL_ROUTING.md",
-    "docs/architecture/PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
-    "docs/architecture/PHASE_44_EXECUTION_RUNTIME.md",
-    "docs/architecture/PHASE_45_EVENT_BUS_STATE.md",
-    "docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md",
-    "docs/architecture/PHASE_47_OPENCODE_BRIDGE.md",
-    "docs/architecture/PHASE_48_OMNIROUTE_INTEGRATION.md",
+    "README.md", "docs/README.md", "docs/architecture/README.md", "docs/architecture/SI_AGENTS_V4_PLAN.md",
+    "docs/architecture/MODEL_ROUTING.md", "docs/architecture/PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
+    "docs/architecture/PHASE_44_EXECUTION_RUNTIME.md", "docs/architecture/PHASE_45_EVENT_BUS_STATE.md",
+    "docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md", "docs/architecture/PHASE_47_OPENCODE_BRIDGE.md",
+    "docs/architecture/PHASE_48_OMNIROUTE_INTEGRATION.md", "docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md",
 })
 TRANSIENT_NAMES = {"persona_parity_build.py", "phase29_unique_names.py", "phase29_heading_fix.py", "phase29_list_fix.py", "phase29-test-debug.txt"}
 
