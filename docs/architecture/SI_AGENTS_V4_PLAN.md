@@ -17,9 +17,9 @@ User prompt → OpenCode → SI OpenCode Bridge → SI Core / Control API
 
 ## Current verified position
 
-V3 is closed. V4 implementation has completed Phases 44–52 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics is complete on main. Phase 53 — Persistent Sessions is now in implementation on the Phase 53 branch/PR.**
+V3 is closed. V4 implementation has completed Phases 44–53 in sequence. Phases 46, 47, 49, and 50 subsequently passed advanced-level hardening without reopening the phase sequence. **Phase 52 — Context / Memory Economics and Phase 53 — Persistent Sessions are complete on main. Phase 54 — Human-in-the-Loop is next.**
 
-Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite. Phase 52 final exact-tree mainline CI **#1020 (`34673411916`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest. Phase 53 implementation mainline CI **#1021 (`34674234547`)** passed before documentation closure.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -81,13 +81,13 @@ Evidence: PR CI #1014, mainline CI #1015 (`34673115687`), final synchronized-tre
 
 Feature lists are planning scope, not claims of implementation. A phase becomes complete only after implementation, unit/integration tests, security/adversarial coverage, documentation synchronization, and final CI verification.
 
-## Phase 53 — Persistent Sessions — in implementation
+## Phase 53 — Persistent Sessions — complete
 
 Durable session IDs/lifecycle/ownership; history/state; tasks/agents/teams/workflows/models/providers; artifacts/logs/evidence; token/cost history; context/memory; permissions/isolation; recovery/restart; expiration/archival; export/import; cloning/branching; replay; search/filtering; persistent OpenCode relationship; cross-interface continuity.
 
-Current implementation: SQLite-backed `SessionStore` and `PersistentSessionAdapter`. Contracts cover active/paused/archived/expired/closed lifecycle, subject/project/workspace isolation, harness binding, optimistic revisions, state/context/token-cost history, ordered events/replay, artifact digests, expiry/archive, export/import, cloning/branch lineage, bounded search, restart recovery, and runtime/harness continuity. Secret-like persisted fields are rejected; replay never restores authority; credentials, grants, capabilities, provider authorization, and identity are never restored from session state.
+Delivered through SQLite-backed `SessionStore` and `PersistentSessionAdapter`: active/paused/archived/expired/closed lifecycle, subject/project/workspace isolation, harness binding, optimistic revisions, state/context/token-cost history, ordered events/replay, artifact digests, expiry/archive, export/import, cloning/branch lineage, bounded search, restart recovery, and runtime/harness continuity. Secret-like persisted fields are rejected; replay never restores authority; credentials, grants, capabilities, provider authorization, and identity are never restored from session state.
 
-Current evidence: implementation/adversarial tests and documentation are present on the Phase 53 branch/PR. Final exact-tree mainline CI and merge remain required before closure.
+Evidence: implementation/adversarial tests, merged mainline commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), and final documentation-synchronized exact-tree CI gate.
 
 ## Phase 54 — Human-in-the-Loop
 
