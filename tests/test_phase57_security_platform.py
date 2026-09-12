@@ -24,7 +24,7 @@ def platform() -> SecurityPlatform:
             PermissionGrant("agent-1", "call", "tool", "safe", require_approval=False),
         ],
         egress=EgressPolicy(("api.example.com",)),
-        boundaries=(TrustBoundary("project-1", "project-1", "external:api", True, "approved adapter"),),
+        boundaries=(TrustBoundary("project-1", "external:api", True, "approved adapter"),),
     )
     return SecurityPlatform(policy, b"test-signing-key")
 
