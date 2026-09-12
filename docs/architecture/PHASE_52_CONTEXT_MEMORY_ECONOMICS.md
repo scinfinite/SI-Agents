@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete on main.** Implementation, adversarial coverage, documentation synchronization, and mainline CI #1015 passed. The documentation-closure updates on this branch require one final exact-tree mainline CI after merge.
+**Complete on main.** Implementation, adversarial coverage, documentation synchronization, and mainline CI #1015 passed. Final synchronized-tree mainline CI #1018 (`34673281826`) also passed on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`.
 
 ## Architecture
 
@@ -65,4 +65,5 @@ Ruff, and the full test suite.
 
 - PR CI #1014 passed the final Phase 52 branch.
 - Mainline CI #1015 (`34673115687`) passed on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
-- Documentation closure is complete in the dedicated closure branch; final exact-tree mainline CI after that merge is the final release gate for Phase 52 closure.
+- Final synchronized-tree mainline CI #1018 (`34673281826`) passed on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`.
+- The exact current main tree is verified green after documentation closure.
