@@ -73,7 +73,7 @@ def test_duplicate_content_is_not_double_counted() -> None:
     engine = ContextEconomics()
     result = engine.select((item("a", "same words"), item("b", "same words")), MODEL)
     assert len(result.selected) == 1
-    assert len(result.dropped) == 1
+    assert result.total_tokens == result.selected[0].token_estimate()
 
 
 def test_sensitive_context_is_excluded_without_permission() -> None:
