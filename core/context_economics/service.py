@@ -6,7 +6,13 @@ from typing import Callable
 
 from core.hardening.redaction import redact
 
-from .models import ContextBudget, ContextItem, ContextScope, ContextSelection, ModelContextProfile
+from .models import (
+    ContextBudget,
+    ContextItem,
+    ContextScope,
+    ContextSelection,
+    ModelContextProfile,
+)
 
 
 class ContextEconomics:
@@ -34,11 +40,15 @@ class ContextEconomics:
         self.max_compacted_chars = max_compacted_chars
 
     @staticmethod
-    def _decision_id(items: tuple[ContextItem, ...], model: ModelContextProfile, reason: str) -> str:
+    def _decision_id(
+        items: tuple[ContextItem, ...], model: ModelContextProfile, reason: str
+    ) -> str:
         material = "|".join(f"{item.item_id}:{item.fingerprint}" for item in items)
         return sha256(f"{model.model_id}|{reason}|{material}".encode()).hexdigest()
 
-    def _effective_budget(self, scopes: tuple[ContextScope, ...], model: ModelContextProfile) -> tuple[int, float | None]:
+    def _effective_budget(
+        self, scopes: tuple[ContextScope, ...], model: ModelContextProfile
+    ) -> tuple[int, float | None]:
         token_limit = model.input_capacity
         cost_limit: float | None = None
         for scope in scopes:
@@ -46,7 +56,11 @@ class ContextEconomics:
             if budget is not None:
                 token_limit = min(token_limit, budget.limit_tokens)
                 if budget.limit_cost is not None:
-                    cost_limit = budget.limit_cost if cost_limit is None else min(cost_limit, budget.limit_cost)
+                    cost_limit = (
+                        budget.limit_cost
+                        if cost_limit is None
+                        else min(cost_limit, budget.limit_cost)
+                    )
         return token_limit, cost_limit
 
     @staticmethod
@@ -60,7 +74,12 @@ class ContextEconomics:
         head = int(self.max_compacted_chars * 0.7)
         tail = self.max_compacted_chars - head - 24
         content = f"{item.content[:head]}\n[…compacted…]\n{item.content[-tail:]}"
-        return replace(item, content=content, estimated_tokens=max(1, (len(content) + 3) // 4), tags=item.tags + ("compacted",))
+        return replace(
+            item,
+            content=content,
+            estimated_tokens=max(1, (len(content) + 3) // 4),
+            tags=item.tags + ("compacted",),
+        )
 
     def deduplicate(self, items: tuple[ContextItem, ...]) -> tuple[ContextItem, ...]:
         seen: set[str] = set()
@@ -88,7 +107,11 @@ class ContextEconomics:
         unique = self.deduplicate(items)
         token_limit, cost_limit = self._effective_budget(active_scopes, model)
         if cost_limit_override is not None:
-            cost_limit = cost_limit_override if cost_limit is None else min(cost_limit, cost_limit_override)
+            cost_limit = (
+                cost_limit_override
+                if cost_limit is None
+                else min(cost_limit, cost_limit_override)
+            )
         eligible: list[ContextItem] = []
         dropped: list[ContextItem] = []
         redacted = False
@@ -103,25 +126,45 @@ class ContextEconomics:
                 safe = redact({"content": item.content})["content"]
                 if safe != item.content:
                     redacted = True
-                    item = replace(item, content=str(safe), estimated_tokens=max(1, (len(str(safe)) + 3) // 4))
+                    item = replace(
+                        item,
+                        content=str(safe),
+                        estimated_tokens=max(1, (len(str(safe)) + 3) // 4),
+                    )
             eligible.append(item)
 
-        ranked = sorted(eligible, key=lambda x: (-self._score(x), -x.importance, x.item_id))
+        ranked = sorted(
+            eligible,
+            key=lambda x: (-self._score(x), -x.importance, x.item_id),
+        )
         selected: list[ContextItem] = []
         total_tokens = 0
         total_cost = 0.0
         for item in ranked:
             candidate = item
-            if total_tokens + candidate.token_estimate() > int(token_limit * self.compression_threshold):
+            if total_tokens + candidate.token_estimate() > int(
+                token_limit * self.compression_threshold
+            ):
                 if summarizer is not None and len(candidate.content) > self.max_compacted_chars:
                     summary = summarizer(candidate.content).strip()
                     if summary:
-                        candidate = replace(candidate, content=summary, estimated_tokens=max(1, (len(summary) + 3) // 4), tags=item.tags + ("summarized",))
+                        candidate = replace(
+                            candidate,
+                            content=summary,
+                            estimated_tokens=max(1, (len(summary) + 3) // 4),
+                            tags=item.tags + ("summarized",),
+                        )
                 elif len(candidate.content) > self.max_compacted_chars:
                     candidate = self.compact(candidate)
             tokens = candidate.token_estimate()
-            cost = candidate.estimated_cost if candidate.estimated_cost is not None else tokens * model.input_token_cost
-            if total_tokens + tokens > token_limit or (cost_limit is not None and total_cost + cost > cost_limit):
+            cost = (
+                candidate.estimated_cost
+                if candidate.estimated_cost is not None
+                else tokens * model.input_token_cost
+            )
+            if total_tokens + tokens > token_limit or (
+                cost_limit is not None and total_cost + cost > cost_limit
+            ):
                 dropped.append(candidate)
                 continue
             selected.append(candidate)
@@ -129,7 +172,11 @@ class ContextEconomics:
             total_cost += cost
 
         selected_ids = {item.item_id for item in selected}
-        dropped.extend(item for item in eligible if item.item_id not in selected_ids and item not in dropped)
+        dropped.extend(
+            item
+            for item in eligible
+            if item.item_id not in selected_ids and item not in dropped
+        )
         selected_tuple = tuple(sorted(selected, key=lambda x: x.item_id))
         dropped_tuple = tuple(sorted(dropped, key=lambda x: x.item_id))
         reason = "deterministic relevance/importance selection under model and scope budgets"
