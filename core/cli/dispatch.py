@@ -12,8 +12,8 @@ from core.web.cli import main as web_main
 ADVANCED_COMMANDS = {
     "status", "agents", "teams", "workflows", "organization", "skills", "memory",
     "governance", "evidence", "environments", "harnesses", "settings", "visualization",
-    "events", "run", "task", "execution", "approval", "session", "attachment", "auth",
-    "config", "models", "providers", "stream", "resume", "pipeline", "agent", "team", "workflow",
+    "events", "logs", "run", "task", "execution", "approval", "session", "attachment", "auth",
+    "config", "profile", "models", "providers", "stream", "resume", "pipeline", "agent", "team", "workflow",
 }
 GLOBAL_VALUE_OPTIONS = {"--root", "--transport", "--base-url", "--token-env", "--timeout"}
 GLOBAL_FLAGS = {"--json", "--pretty"}
@@ -42,6 +42,12 @@ def _normalize_global_options(arguments: list[str]) -> list[str]:
     return prefix + body
 
 
+def _task_alias(arguments: list[str]) -> list[str]:
+    if len(arguments) >= 2 and arguments[0] == "task" and arguments[1] == "create":
+        return ["run", "create", *arguments[2:]]
+    return arguments
+
+
 def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if arguments and arguments[0] == "web":
@@ -55,6 +61,12 @@ def main(argv: list[str] | None = None) -> int:
     if arguments and arguments[0] in {"agent", "team", "workflow"}:
         from core.cli.aliases import main as alias_main
         return alias_main(arguments[0], _normalize_global_options(arguments[1:]))
+    arguments = _task_alias(arguments)
+    if arguments and arguments[0] == "logs":
+        arguments = ["events", *arguments[1:]]
+    if arguments and arguments[0] == "profile":
+        from core.cli.profile import main as profile_main
+        return profile_main(arguments[1:])
     if arguments and arguments[0] in ADVANCED_COMMANDS:
         from core.cli.platform import main as platform_main
         return platform_main(_normalize_global_options(arguments))
