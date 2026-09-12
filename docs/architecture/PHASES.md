@@ -4,13 +4,12 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–66 are closed**. Phase 67 is the active implementation phase. **Phase 67 — Advanced TUI Control Center is implemented and undergoing final closure verification.** Phase 71 is the final production-hardening gate.
+Phases **44–67 are closed**. **Phase 68 — Advanced CLI Platform is next.** Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
-- **Active** — current implementation phase; closure gate is still pending.
 - **Next** — next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -41,8 +40,8 @@ Phases **44–66 are closed**. Phase 67 is the active implementation phase. **Ph
 | 64 | SDK / Developer Platform | Complete | PR #78 / closure CI #1239 / `34697885027` |
 | 65 | Workflow + Automation | Complete / 100% | final synchronized-tree CI #1249 / `34698187600` |
 | 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
-| 67 | Advanced TUI Control Center | **Active — implementation complete, closure pending** | Branch `phase-67-advanced-tui` |
-| 68 | Advanced CLI Platform | Planned | Planned |
+| 67 | Advanced TUI Control Center | **Complete / 100%** | PR #80 / final PR CI #1288 / `34702115990` |
+| 68 | Advanced CLI Platform | **Next** | Planned |
 | 69 | npm Distribution + Setup | Planned | Planned |
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
@@ -59,4 +58,4 @@ Detailed contract: `docs/architecture/PHASE_67_ADVANCED_TUI_CONTROL_CENTER.md`.
 
 ## Closure gate
 
-Phase 67 may be marked complete only after implementation review, adversarial/regression tests, Ruff, compileall, full pytest, distribution/wheel verification, repository audit, integration verification, synchronized documentation, and final exact-tree mainline CI are green.
+Phase 67 implementation, adversarial/regression tests, Ruff, compileall, full pytest, distribution/wheel verification, repository audit, integration verification, documentation synchronization, and final PR CI #1288 are green. Final post-merge mainline CI must remain green for the synchronized documentation tree.
