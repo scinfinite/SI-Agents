@@ -42,7 +42,7 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
 | 64 | SDK / Developer Platform | Complete | PR #78 merged; implementation closure CI #1239 / `34697885027` |
 | 65 | Workflow + Automation | Complete / 100% | Final synchronized-tree CI #1249 / `34698187600` |
-| 66 | Advanced Web Control Plane | **Active** | Implementation underway |
+| 66 | Advanced Web Control Plane | **Active** | PR #79; closure pending |
 | 67 | Advanced TUI Control Center | Planned | Planned |
 | 68 | Advanced CLI Platform | Planned | Planned |
 | 69 | npm Distribution + Setup | Planned | Planned |
@@ -51,13 +51,13 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 
 ## Phase 66 implementation
 
-The web control plane is a same-origin client layered directly on the versioned Control API. `core/control_api/web.py` provides the server adapter; `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css` provide the dependency-free responsive UI.
+The web control plane is a same-origin client layered directly on the existing WebServer and versioned Control API. `core/web/advanced.py` installs the Phase 66 handler; `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css` provide the dependency-free responsive UI.
 
-The surface includes overview/health, live activity, workflows/runs, topology/DAG, evidence, identity-bound approvals, resources, and settings. It uses semantic navigation, keyboard-accessible controls, a skip link, live status announcements, responsive layouts, and a text-first graph representation.
+The surface includes overview/health, live activity, workflows/runs, topology/DAG, evidence, identity-bound approvals, resources/settings, and bounded repository source/search/diff inspection. It uses semantic navigation, keyboard-accessible controls, a skip link, live status announcements, responsive layouts, and a text-first graph representation.
 
-Security boundaries include localhost-first binding, inherited bearer authentication, restrictive CSP, `nosniff`, safe static path resolution, no third-party runtime assets, bounded five-second refresh, and explicit identity headers for approval visibility. The UI does not become an execution or authorization authority.
+Security boundaries include inherited WebServer authentication/audit, restrictive CSP, `nosniff`, safe static/repository path resolution, no third-party runtime assets, bounded five-second refresh, bounded repository search/source/diff, `.git` exclusion, and explicit identity headers for approval visibility. The UI does not become an execution or authorization authority.
 
-Acceptance tests: `tests/unit/test_phase66_web_control.py`.
+Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
 
 Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
 
