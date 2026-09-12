@@ -14,7 +14,9 @@ Phase 52 is fully closed on `main`. Final exact-tree mainline CI #1020 (`3467341
 
 Phase 53 is fully closed on `main`. It provides durable SQLite-backed SI Core sessions with lifecycle/ownership isolation, harness binding, optimistic revisions, durable state/context/token-cost history, ordered events/replay, artifact evidence, expiration/archival, export/import, clone/branch lineage, bounded search, restart recovery, and persistent OpenCode/runtime continuity. Security tests cover ownership isolation, stale writes, secret leakage, schema/ownership validation, expiry/archive, artifact limits, replay, cloning, JSON safety, and harness mismatch.
 
-Closure evidence: implementation merge commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), followed by the final documentation-synchronized mainline CI gate.
+Closure evidence: implementation merge commit `671458a47dc6a3ce6ff79dfdc5acb4ffdb32fc09`, mainline CI #1021 (`34674234547`), and final synchronized-tree mainline CI #1037 (`34675239106`). The final gate passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+
+The final CI hardening also fixed a recurring Web oversized-body test/runtime race by boundedly draining rejected request bodies and safely handling client disconnects while preserving the 1 MiB request limit.
 
 ## V4 product surfaces
 
