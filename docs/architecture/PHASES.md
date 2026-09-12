@@ -2,6 +2,20 @@
 
 43. Final v3 Integration & Hardening — historical V3 close
 
+## V4 roadmap markers
+
+- **Phase 44 — Execution Runtime Foundation**
+- **Phase 45 — Event Bus + State Architecture**
+- **Phase 46 — Parallel Scheduler + Executor**
+- **Phase 47 — OpenCode Bridge**
+- **Phase 48 — OmniRoute Integration**
+- **Phase 49 — Agent + Team Builder**
+- **Phase 50 — Capability Authorization**
+- **Phase 51 — Checkpoints + Resume**
+- **Phase 52 — Context / Memory Economics**
+- **Phase 53 — Persistent Sessions** through **Phase 70 — End-to-End Production Validation**
+- **Phase 71 — Final Production Hardening**
+
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
