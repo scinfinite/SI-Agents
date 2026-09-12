@@ -21,6 +21,16 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 **Phases 44–68 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
 
+## Production Web Control Center
+
+The approved Web Control Center visual system is implemented on `main`. It is the reference visual language for SI-Agents browser operations: compact operator typography, dark navy/light neutral surfaces, restrained semantic accents, responsive navigation, dense but readable cards/tables, status badges, and accessible controls.
+
+The web supports **dark and light modes**, with local theme persistence and operating-system preference fallback. The production navigation preserves the full Control Center read surface: Overview, Runs, Agents, Teams, Workflows, Topology, Skills, Memory, Knowledge, Evidence, Organization, Governance, Environments, Harnesses, and Settings.
+
+Overview hydrates live snapshot/health/runs/events data; collection screens support filtering; global search can query supported resource surfaces; refresh rehydrates the current view; and Topology provides organization/workflow/capability graph modes with node filtering, keyboard inspection, pan, zoom, and reset. Mobile navigation, visible keyboard focus, reduced-motion behavior, and semantic labels are included.
+
+The browser remains an adapter of the existing versioned Control API. It does not execute agents, workflows, shell commands, tools, or providers directly. Detailed design contract: `WEB_CONTROL_CENTER_DESIGN.md`.
+
 ## Phase 68 architecture
 
 Phase 68 adds an advanced CLI adapter over the existing Control API. Local CLI calls use `ControlApiService`; remote CLI calls use authenticated HTTP. The platform exposes governed runs/tasks/executions, agent/team/workflow resources, identity-bound approvals, bounded client sessions, events and bounded run streaming, model/provider delegation, attachment inspection, non-secret configuration/auth status, transport profiles, and bounded declarative pipelines.
@@ -55,7 +65,8 @@ Phase 65 adds a transport-neutral workflow state machine for versioned declarati
 - Phase 66: PR #79 merged; final synchronized-tree mainline CI #1284 / `34701494501` completed successfully.
 - Phase 67: PR #80 merged; final synchronized-tree mainline CI #1295 / `34702226193` completed successfully.
 - Phase 68: PR #81 merged; final PR CI #1319 / `34703142494`, SDK CI #111 / `34703142515`, and merged-tree mainline CI #1320 / `34703212232` completed successfully.
+- Web Control Center design: PR #82 merged; final synchronized-tree CI is the release gate for the design/documentation commit.
 
 ## Current position
 
-**Phase 68 — Advanced CLI Platform is 100% complete and closed. Phase 69 — npm Distribution + Setup is next.**
+**Phase 68 — Advanced CLI Platform is 100% complete and closed. The approved Web Control Center design is implemented. Phase 69 — npm Distribution + Setup is next.**
