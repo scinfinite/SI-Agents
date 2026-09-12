@@ -11,16 +11,27 @@ User prompt → OpenCode → SI Core → Scheduler/Orchestrator
 → OpenCode / Web / TUI / CLI
 ```
 
-OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, and recovery.
+OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core remains authoritative for execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, workspace lifecycle, observability, and evaluation.
 
 ## Current V4 status
 
-- **Phases 44–60 are complete on main.**
+- **Phases 44–60 are complete at the required advanced-hardening level on main.**
 - **Phase 61 — Continuous Improvement is next.**
-- **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
-- Phase 54 final synchronized-tree mainline CI **#1051 (`34676632475`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Phase 55 final synchronized-tree closure CI **#1080 (`34678317246`)** passed all required repository gates.
-- Phase 56 final synchronized-tree mainline CI **#1095 (`34682748193`)** passed all required repository gates on the synchronized Phase 56 tree.
+- **Phases 46, 47, 49, 50, 58, 59, and 60 have passed dedicated advanced hardening.**
+- Phase 58–60 hardening PR #74 passed PR CI #1143 (`34691131729`) and final synchronized-tree mainline CI #1144 (`34691176676`).
+- The final mainline gate passed distribution/wheel verification, repository audit, integration verification, Ruff, and full pytest.
+
+## Phase 58 — Workspace / Worktree Lifecycle — advanced hardened
+
+The workspace authority provides tenant/project isolation, optimistic revisions, bounded lease locks, directory and Git-worktree materialization, branch lifecycle, dirty/conflict inspection, deterministic diffs and merge preparation, snapshots and diff artifacts, approved resume, recovery/cleanup, path and symlink defenses, tamper-evident lifecycle evidence, and bounded garbage-collection discovery. Advanced hardening adds adversarial event-chain tamper detection and sensitive-operation authorization callback coverage.
+
+## Phase 59 — Observability — advanced hardened
+
+The observability authority provides bounded structured logs/events/metrics/spans, shared security-scanner secret detection and redaction, correlation/causation, trace timelines, live-feed retention, percentile metrics, operator health, JSONL export, tenant/project filtering, and SHA-256 integrity evidence. Advanced hardening verifies tampering beyond the first query page and tightens resource/severity contracts.
+
+## Phase 60 — Evaluation + Benchmarking — advanced hardened
+
+The evaluation authority provides deterministic golden cases, multi-mode scoring, weighted dimensions, reliability/security/latency/cost measurements, failure classification, benchmark history, regression detection, human review, deterministic weighted experiments, cryptographic report digests, and release gates. Advanced hardening makes cost/latency budgets enforceable, rejects secret-bearing evaluator outputs/metadata/review rationale, verifies persisted evidence integrity, tightens experiment inputs, and fails closed on empty reports.
 
 ## Phase 56 — Intelligent Routing + Economics
 
@@ -40,89 +51,51 @@ Covered contracts:
 - non-secret route evidence and failure classification;
 - health outcome recording and recovery probes.
 
-The implementation lives in `core/provider_intelligence/intelligent_router.py`, with adversarial/unit coverage in `tests/test_phase56_intelligent_routing.py`.
-
 ## Phase 55 — Durable Waiting + Scheduling
 
 Phase 55 adds durable SQLite-backed SI Core waiting and scheduling with an explicit `waiting → ready → claimed → completed` lifecycle.
 
-Covered contracts:
+Covered contracts include timer/delayed waits, recurrence/cron, approval/human/dependency/resource/external wake-up, deadlines/expiry, restart recovery, starvation resistance, optimistic revisions, bounded queue/payload limits, secret rejection, identity/project isolation, and Control API lifecycle routes. Claims never grant credentials, capabilities, provider authorization, or identity.
 
-- timer and delayed waits without occupying execution workers;
-- recurring interval schedules with bounded occurrence counts;
-- validated five-field UTC cron schedules;
-- approval, human, dependency, resource, and external wake conditions;
-- deadlines and fail-closed expiry;
-- restart-safe state and ordered lifecycle events;
-- priority plus bounded age-based starvation resistance;
-- optimistic revisions and concurrency-safe claiming/completion;
-- bounded queue and payload sizes;
-- secret-like payload rejection and JSON-safe state;
-- identity/project isolation;
-- Control API create/list/get/events/wake/claim/complete/cancel routes.
+## Previously advanced-hardened phases
 
-A wait is scheduling state, not an authorization grant. Claims never restore or grant credentials, capabilities, provider authorization, or identity; downstream execution must authorize independently.
+Phases 46, 47, 49, and 50 remain advanced-hardened under hardening CI #984 (`34671292491`).
 
-## Advanced-hardened phases
-
-### Phase 46 — Parallel Scheduler + Executor
-
-Advanced hardening covers explicit execution identity conflicts, scheduler/runtime idempotency, dependency graph cycle defense, bounded concurrency, durable recovery, cancellation finalization, dependency failure propagation, EventBus integration, and authority boundaries.
-
-### Phase 47 — OpenCode Bridge
-
-Advanced hardening covers per-request transport timeout propagation, bounded 1 MiB SSE frames, strict terminal events, session filtering, cancellation, error normalization, loopback-default endpoint security, and the SI/OpenCode authority boundary.
-
-### Phase 49 — Agent + Team Builder
-
-Advanced hardening covers schema-versioned deterministic catalogs/manifests, stronger definition and metadata validation, acyclic handoff graphs, deterministic execution layers, bounded team composition, capability declarations, and separation of declarations from runtime authority.
-
-### Phase 50 — Capability Authorization
-
-Advanced hardening covers request-fingerprint-bound high/critical approvals, approval replay prevention, secret-like metadata rejection, bounded governance inputs, explicit/fail-closed egress semantics, declared-capability enforcement, scope checks, cost/risk controls, and deterministic evidence.
-
-## V4 roadmap — detailed scope
+## V4 roadmap
 
 The full detailed roadmap is maintained in `docs/architecture/SI_AGENTS_V4_PLAN.md`.
 
-| Phase | Name | Scope focus |
+| Phase | Name | Status |
 |---:|---|---|
-| 44 | Execution Runtime Foundation | Durable execution, attempts, lifecycle, cancellation, recovery |
-| 45 | Event Bus + State Architecture | Durable events, ordering, replay, projections |
-| 46 | Parallel Scheduler + Executor | DAGs, bounded parallelism, fan-out/fan-in, recovery |
-| 47 | OpenCode Bridge | Sessions, message/prompt transport, SSE, cancellation |
-| 48 | OmniRoute Integration | Models/providers, routing, streaming, fallbacks |
-| 49 | Agent + Team Builder | Agent/team definitions, handoffs, deterministic topology |
-| 50 | Capability Authorization | Scoped grants, risk, approvals, egress, fail-closed policy |
-| 51 | Checkpoints + Resume | Durable checkpoints, lineage, integrity, safe resume |
-| 52 | Context / Memory Economics | Context budgets, memory, compaction, relevance, token/cost economics |
-| 53 | Persistent Sessions | Durable sessions, history, memory, replay, export/import, branching, cross-interface continuity |
-| 54 | Human-in-the-Loop | Approvals, human input, review/escalation, controlled resume |
-| 55 | Durable Waiting + Scheduling | Durable waits, timers, schedules, triggers, long-running work |
-| 56 | Intelligent Routing + Economics | Capability/quality/cost/latency routing and provider economics |
-| 57 | Security Platform | Least privilege, secrets, tools/MCP, egress, injection defense, audit |
-| 58 | Workspace / Worktree Lifecycle | Isolated workspaces, Git worktrees, branches, diffs, cleanup/recovery |
-| 59 | Observability | Live status, logs, metrics, traces, timelines, evidence |
-| 60 | Evaluation + Benchmarking | Golden tasks, benchmarks, scoring, regression and A/B evaluation |
-| 61 | Continuous Improvement | Failure analysis, optimization, experiments, rollback, improvement loop |
-| 62 | Cross-Runtime / Cross-Harness | Common contracts and adapters beyond one runtime/harness |
-| 63 | Ecosystem / Marketplace | Governed agents, skills, tools, teams, workflows, integrations |
-| 64 | SDK / Developer Platform | Python/TypeScript SDKs, REST, streaming, webhooks, stable schemas |
-| 65 | Workflow + Automation | Durable DAG automation, triggers, branches, compensation, integrations |
-| 66 | Advanced Web Control Plane | Full localhost operational control, DAG, live status, artifacts, approvals |
-| 67 | Advanced TUI Control Center | Terminal-native live operator cockpit and control |
-| 68 | Advanced CLI Platform | Human + machine CLI, JSON, exit codes, streaming, CI automation |
-| 69 | npm Distribution + Setup | One-command installation, setup, OpenCode/OmniRoute configuration |
-| 70 | End-to-End Production Validation | Full real-user path, failure/recovery/security/UI/install scenarios |
-| 71 | Final Production Hardening | Final architecture, security, reliability, UX, packaging and release gate |
-
-## V4 interface contract
-
-- **Web:** localhost-first and richest control plane; live executions, agents, tasks, teams, workflows, DAGs, logs, events, artifacts, diffs, routing, cost, approvals, health, search, command palette, responsive/accessibility support.
-- **TUI:** terminal-native operator cockpit with live refresh/streams, split panes, trees, DAG/progress views, search/filtering, inspection, approvals, pause/resume/stop/retry/cancel/reconnect.
-- **CLI:** stable human and machine interface with normal commands, JSON schemas, exit codes, streaming, CI/non-interactive operation, profiles, and scripting.
-- **Shared authority:** all surfaces inspect/control the same SI Core state; none creates a competing business authority.
+| 44 | Execution Runtime Foundation | Complete |
+| 45 | Event Bus + State Architecture | Complete |
+| 46 | Parallel Scheduler + Executor | Advanced hardened |
+| 47 | OpenCode Bridge | Advanced hardened |
+| 48 | OmniRoute Integration | Complete |
+| 49 | Agent + Team Builder | Advanced hardened |
+| 50 | Capability Authorization | Advanced hardened |
+| 51 | Checkpoints + Resume | Complete |
+| 52 | Context / Memory Economics | Complete |
+| 53 | Persistent Sessions | Complete |
+| 54 | Human-in-the-Loop | Complete |
+| 55 | Durable Waiting + Scheduling | Complete |
+| 56 | Intelligent Routing + Economics | Complete |
+| 57 | Security Platform | Complete |
+| 58 | Workspace / Worktree Lifecycle | Advanced hardened |
+| 59 | Observability | Advanced hardened |
+| 60 | Evaluation + Benchmarking | Advanced hardened |
+| 61 | Continuous Improvement | Next |
+| 62 | Cross-Runtime / Cross-Harness | Planned |
+| 63 | Ecosystem / Marketplace | Planned |
+| 64 | SDK / Developer Platform | Planned |
+| 65 | Workflow + Automation | Planned |
+| 66 | Advanced Web Control Plane | Planned |
+| 67 | Advanced TUI Control Center | Planned |
+| 68 | Advanced CLI Platform | Planned |
+| 69 | npm Distribution + Setup | Planned |
+| 70 | End-to-End Production Validation | Planned |
+| 71 | Final Production Hardening | Planned |
 
 ## Engineering gate
 
-A phase is not complete until implementation, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and the final exact-tree CI run are green. After every phase and cross-phase hardening audit, README, docs/index, architecture/index, V4 plan, phase index, phase records, and affected cross-cutting documents must be synchronized.
+A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. After every phase and cross-phase hardening audit, README, docs/index, architecture/index, V4 plan, phase index, phase records, and affected cross-cutting documents must be synchronized.
