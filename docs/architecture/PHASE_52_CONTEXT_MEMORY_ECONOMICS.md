@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented on the Phase 52 branch; mainline closure is gated by the final exact-tree CI.
+**Complete on main.** Implementation, adversarial coverage, documentation synchronization, and mainline CI #1015 passed. The documentation-closure updates on this branch require one final exact-tree mainline CI after merge.
 
 ## Architecture
 
@@ -57,10 +57,12 @@ are not runtime dependencies or governance authorities.
 
 Tests cover invalid budgets, deterministic ordering, duplicate-context amplification,
 sensitive-context isolation, secret redaction/fail-closed handling, oversized-context
-compaction, cost ceilings, custom summarizer behavior, and snapshot schema rejection.
+compaction, cost ceilings, custom summarizer behavior, snapshot schema rejection, and
+snapshot enum serialization. Final branch CI exercised repository audit, integration,
+Ruff, and the full test suite.
 
 ## Closure evidence
 
-Final completion requires repository audit, distribution/wheel verification, integration
-verification, Ruff, compileall, full pytest, documentation synchronization, and a green
-mainline exact-tree CI run.
+- PR CI #1014 passed the final Phase 52 branch.
+- Mainline CI #1015 (`34673115687`) passed on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`.
+- Documentation closure is complete in the dedicated closure branch; final exact-tree mainline CI after that merge is the final release gate for Phase 52 closure.
