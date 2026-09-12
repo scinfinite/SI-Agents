@@ -37,10 +37,10 @@
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
-| 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1037 / `34675239106` |
+| 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
 | 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI #1051 / `34676632475` |
-| 55 | Durable Waiting + Scheduling | **In implementation** | Final mainline exact-tree CI pending |
-| 56 | Intelligent Routing + Economics | Planned | Planned |
+| 55 | Durable Waiting + Scheduling | **Complete** | Implementation CI #1074 / `34678184341`; final synchronized-tree closure CI pending |
+| 56 | Intelligent Routing + Economics | **Next** | Next after Phase 55 |
 | 57 | Security Platform | Planned | Planned |
 | 58 | Workspace / Worktree Lifecycle | Planned | Planned |
 | 59 | Observability | Planned | Planned |
@@ -57,4 +57,4 @@
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-Phase 55 is the active implementation phase after Phase 54 closure.
+Phase 55 implementation and verification are complete; the final synchronized-tree CI is the remaining closure gate before Phase 56 starts.
