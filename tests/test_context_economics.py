@@ -12,11 +12,33 @@ from core.context_economics import (
 )
 
 
-MODEL = ModelContextProfile("test-model", context_window_tokens=100, reserved_output_tokens=20, input_token_cost=0.01)
+MODEL = ModelContextProfile(
+    "test-model",
+    context_window_tokens=100,
+    reserved_output_tokens=20,
+    input_token_cost=0.01,
+)
 
 
-def item(item_id: str, content: str, *, importance: float = 0.5, relevance: float = 0.5, sensitive: bool = False, secret_like: bool = False) -> ContextItem:
-    return ContextItem(item_id, content, ContextScope.TASK, importance, relevance, provenance=("test",), sensitive=sensitive, secret_like=secret_like)
+def item(
+    item_id: str,
+    content: str,
+    *,
+    importance: float = 0.5,
+    relevance: float = 0.5,
+    sensitive: bool = False,
+    secret_like: bool = False,
+) -> ContextItem:
+    return ContextItem(
+        item_id,
+        content,
+        ContextScope.TASK,
+        importance,
+        relevance,
+        provenance=("test",),
+        sensitive=sensitive,
+        secret_like=secret_like,
+    )
 
 
 def test_model_capacity_and_budget_are_fail_closed() -> None:
@@ -25,12 +47,21 @@ def test_model_capacity_and_budget_are_fail_closed() -> None:
     with pytest.raises(ValueError):
         ContextBudget(ContextScope.TASK, 0)
     with pytest.raises(ValueError):
-        ContextEconomics((ContextBudget(ContextScope.TASK, 10), ContextBudget(ContextScope.TASK, 20)))
+        ContextEconomics(
+            (
+                ContextBudget(ContextScope.TASK, 10),
+                ContextBudget(ContextScope.TASK, 20),
+            )
+        )
 
 
 def test_selection_is_deterministic_and_budgeted() -> None:
     engine = ContextEconomics((ContextBudget(ContextScope.TASK, 12),))
-    inputs = (item("low", "low", importance=.1), item("high", "high", importance=.9), item("mid", "mid", importance=.5))
+    inputs = (
+        item("low", "low", importance=0.1),
+        item("high", "high", importance=0.9),
+        item("mid", "mid", importance=0.5),
+    )
     first = engine.select(inputs, MODEL, active_scopes=(ContextScope.TASK,))
     second = engine.select(tuple(reversed(inputs)), MODEL, active_scopes=(ContextScope.TASK,))
     assert first.decision_id == second.decision_id
@@ -81,17 +112,29 @@ def test_compaction_preserves_lineage_and_bounds_size() -> None:
 
 
 def test_cost_budget_and_override_are_enforced() -> None:
-    engine = ContextEconomics((ContextBudget(ContextScope.TASK, 80, limit_cost=.01),))
-    result = engine.select((item("a", "a" * 40), item("b", "b" * 40)), MODEL, active_scopes=(ContextScope.TASK,))
-    assert result.estimated_cost <= .01
+    engine = ContextEconomics((ContextBudget(ContextScope.TASK, 80, limit_cost=0.01),))
+    result = engine.select(
+        (item("a", "a" * 40), item("b", "b" * 40)),
+        MODEL,
+        active_scopes=(ContextScope.TASK,),
+    )
+    assert result.estimated_cost <= 0.01
     with pytest.raises(ValueError):
         engine.select((), MODEL, cost_limit_override=-1)
 
 
 def test_custom_summarizer_is_used_when_compaction_is_needed() -> None:
-    engine = ContextEconomics((ContextBudget(ContextScope.TASK, 10),), max_compacted_chars=64)
+    engine = ContextEconomics(
+        (ContextBudget(ContextScope.TASK, 10),),
+        max_compacted_chars=64,
+    )
     source = item("long", "original " * 100)
-    result = engine.select((source,), MODEL, active_scopes=(ContextScope.TASK,), summarizer=lambda _: "short summary")
+    result = engine.select(
+        (source,),
+        MODEL,
+        active_scopes=(ContextScope.TASK,),
+        summarizer=lambda _: "short summary",
+    )
     assert result.selected[0].content == "short summary"
     assert "summarized" in result.selected[0].tags
 
