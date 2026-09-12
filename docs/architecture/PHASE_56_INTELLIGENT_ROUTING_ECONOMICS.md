@@ -2,7 +2,7 @@
 
 ## Status
 
-**In implementation.** The implementation is on `phase-56-intelligent-routing`; final synchronized-tree mainline CI is required before closure.
+**Complete on `main` after final synchronized-tree mainline CI verification.**
 
 ## Authority boundary
 
@@ -31,12 +31,14 @@ SI Core owns task orchestration, authorization, lifecycle, budgets, evidence, an
 - Stable tie-breaking makes decisions reproducible for equal scores.
 - Unknown health is neutral; observed degradation lowers eligibility quality rather than silently changing authorization.
 
-## Verification plan
+## Verification evidence
 
-The Phase 56 test suite covers complexity inference, capability/context matching, vision/streaming/structured-output constraints, economic scoring, preferences, quota exhaustion, health degradation, circuit opening, budget reservation, retry economics, bounded fallback, escalation/downgrade, forecasting, and stale quota observations.
+- Phase 55 prerequisite was verified closed on `main`: commit `d9c2028c302e6dafd8ebd539bdd627d893efeaa0`, synchronized-tree CI #1080 / `34678317246`.
+- Phase 56 implementation PR #67 merged to `main` as merge commit `0c19e1c322b4262128b34a2203c54a30ece31f93`.
+- PR CI #1091 / `34682603137` passed distribution build, wheel installation/import, repository audit, integration verification, Ruff, compileall, and full pytest.
+- The initial PR CI failures were audited against pytest diagnostics and corrected before the green run.
+- Final synchronized-tree mainline CI #1093 / `34682687023` passed all repository gates on commit `710d80357f81f805d3978c6af5986599f1840cb0`: distribution build, wheel installation/import, repository audit, integration verification, Ruff, compileall, and full pytest.
 
-Closure requires the repository's standard gates: distribution build and wheel verification, repository audit, integration verification, Ruff, compileall, full pytest, documentation/index synchronization, and final exact-tree mainline CI.
+## Closure
 
-## Phase 55 prerequisite
-
-Phase 55 was verified fully closed before this phase began. `main` points to `d9c2028c302e6dafd8ebd539bdd627d893efeaa0`, and synchronized-tree CI #1080 / run `34678317246` completed successfully. The Phase 55 record and index now identify that run as the final closure gate.
+Phase 56 is fully closed. The phase index is synchronized with the final evidence, and **Phase 57 — Security Platform** is the next roadmap phase.
