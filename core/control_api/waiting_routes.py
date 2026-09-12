@@ -33,7 +33,7 @@ def install_waiting_routes(handler_cls):
     def get(handler):
         path = urlparse(handler.path).path.rstrip("/")
         if not path.startswith("/api/v1/waits"):
-            return original_get()
+            return original_get(handler)
         subject, project = identity(handler)
         service = waiting_service(handler)
         if path == "/api/v1/waits":
@@ -53,7 +53,7 @@ def install_waiting_routes(handler_cls):
     def post(handler):
         path = urlparse(handler.path).path.rstrip("/")
         if not path.startswith("/api/v1/waits"):
-            return original_post()
+            return original_post(handler)
         subject, project = identity(handler)
         service = waiting_service(handler)
         payload = handler._read_json()
@@ -70,17 +70,9 @@ def install_waiting_routes(handler_cls):
                     cron=schedule_payload.get("cron"),
                     max_occurrences=schedule_payload.get("max_occurrences"),
                 )
-            record = service.create(
-                subject_id=subject,
-                project_id=project,
-                kind=kind,
-                wake_at=wake_at,
-                deadline=deadline,
-                priority=int(payload.get("priority", 0)),
-                schedule=schedule,
-                trigger=payload.get("trigger"),
-                payload=payload.get("payload", {}),
-            )
+            record = service.create(subject_id=subject, project_id=project, kind=kind, wake_at=wake_at, deadline=deadline,
+                                    priority=int(payload.get("priority", 0)), schedule=schedule,
+                                    trigger=payload.get("trigger"), payload=payload.get("payload", {}))
             handler._send(201, record.as_dict())
             return
         suffix = path.removeprefix("/api/v1/waits/")
