@@ -4,13 +4,20 @@
 
 SI-Agents V4 has completed Phases **44–60**. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 61 — Continuous Improvement is next.**
 
-See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap and `architecture/PHASES.md` for phase status/evidence. The Phase 56 implementation record is `architecture/PHASE_56_INTELLIGENT_ROUTING_ECONOMICS.md`.
+See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative V4 roadmap, `architecture/README.md` for the current architecture summary, and `architecture/PHASES.md` for phase status/evidence.
+
+## Recent V4 closure records
+
+- **Phase 57 — Security Platform:** complete; final synchronized-tree mainline CI #1113 (`34684260315`).
+- **Phase 58 — Workspace / Worktree Lifecycle:** complete; final synchronized-tree mainline CI #1128 (`34686980055`).
+- **Phase 59 — Observability:** complete; final synchronized-tree mainline CI #1128 (`34686980055`).
+- **Phase 60 — Evaluation + Benchmarking:** complete; PR CI #1137 (`34687139768`), final synchronized-tree mainline CI #1138 (`34687181487`), and documentation closure CI #1140 (`34687287957`).
 
 ## Phase 56 closure
 
 Phase 56 is fully closed. It provides deterministic SI-side intelligent routing over capability, context, streaming, structured output, vision, coding, reasoning, tool use, quality, reliability, latency, cost, provider/model preference, quota, health, circuit state, budgets, retry economics, fallback, escalation/downgrade, failure classification, and non-secret route evidence while preserving OmniRoute as the model/provider/API routing boundary.
 
-PR #67 merged the implementation. Verification CI #1091 (`34682603137`) passed the repository gates, and final synchronized-tree mainline CI #1095 (`34682748193`) passed distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest.
+PR #67 merged the implementation. Verification CI #1091 (`34682603137`) passed the repository gates, and the final synchronized-tree mainline evidence is recorded in the Phase 56 architecture document.
 
 ## Phase 55 closure
 
@@ -24,9 +31,9 @@ The authority boundary is explicit: waiting state and scheduling belong to SI Co
 
 Web, TUI, CLI, and OpenCode remain clients/adapters of one authoritative SI Core. No interface creates competing execution/session/wait authority.
 
-## Planned Phases 57–71
+## Planned Phases 61–71
 
-The roadmap continues with Security Platform, Workspace/Worktree Lifecycle, Observability, Evaluation + Benchmarking, Continuous Improvement, Cross-Runtime/Cross-Harness, Ecosystem/Marketplace, SDK/Developer Platform, Workflow + Automation, Advanced Web, Advanced TUI, Advanced CLI, npm Distribution + Setup, End-to-End Production Validation, and Final Production Hardening.
+The next roadmap phase is **Phase 61 — Continuous Improvement**. Planned follow-on phases are Cross-Runtime/Cross-Harness, Ecosystem/Marketplace, SDK/Developer Platform, Workflow + Automation, Advanced Web Control Plane, Advanced TUI Control Center, Advanced CLI Platform, npm Distribution + Setup, End-to-End Production Validation, and Final Production Hardening.
 
 ## Phase closure rule
 
