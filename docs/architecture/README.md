@@ -19,7 +19,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-Phases 44–63 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+Phases 44–64 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
 
 ## Phase 64 architecture
 
@@ -35,4 +35,4 @@ See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and 
 
 ## Current position
 
-**Phase 64 — SDK / Developer Platform is in implementation pending final exact-tree mainline CI.**
+**Phase 64 — SDK / Developer Platform is implemented and merged; the synchronized-tree final mainline CI is the closure gate. Phase 65 is blocked until that gate is green.**
