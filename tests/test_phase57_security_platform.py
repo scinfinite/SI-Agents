@@ -18,7 +18,6 @@ from core.security import (
 
 @pytest.fixture
 def platform() -> SecurityPlatform:
-    identity = Identity("agent-1", "project-1")
     policy = SecurityPolicy(
         [
             PermissionGrant("agent-1", "read", "filesystem", "project-1/*"),
@@ -31,7 +30,12 @@ def platform() -> SecurityPlatform:
 
 
 def req(**changes: object) -> AuthorizationRequest:
-    base = dict(identity=Identity("agent-1", "project-1"), action="read", resource="filesystem", scope="project-1/file.txt")
+    base = dict(
+        identity=Identity("agent-1", "project-1"),
+        action="read",
+        resource="filesystem",
+        scope="project-1/file.txt",
+    )
     base.update(changes)
     return AuthorizationRequest(**base)
 
