@@ -87,9 +87,10 @@ def test_capability_context_streaming_and_structured_matching():
 
 def test_cost_and_budget_reservation():
     _, engine = router()
-    ledger = BudgetLedger(0.0001)
+    ledger = BudgetLedger(0.001)
     evidence = engine.route(
-        TaskRequirements(estimated_input_tokens=100, estimated_output_tokens=100), ledger
+        TaskRequirements(estimated_input_tokens=100, estimated_output_tokens=100, max_cost=0.0001),
+        ledger,
     )
     assert evidence.selected.provider_id == "cheap"
     assert ledger.reservations > 0
@@ -170,7 +171,11 @@ def test_escalation_and_downgrade_controls():
     registry.register(ProviderProfile("b", (model("b", quality=1.0, cost=0.5),)))
     engine = IntelligentRouter(registry)
     first = engine.route(TaskRequirements(preferred_models=("a",)))
-    second = engine.fallback(first, TaskRequirements(preferred_models=("a",)), retryable_failure="503 transient")
+    second = engine.fallback(
+        first,
+        TaskRequirements(preferred_models=("a",)),
+        retryable_failure="503 transient",
+    )
     assert second.escalation_level == 1
     assert second.selected.model_id == "b"
 
