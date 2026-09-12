@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete.** Phase 65 is implemented, audited, tested, documented, and verified on `main` by the repository-wide CI gate. The final synchronized documentation tree is subject to the same exact-tree mainline CI rule.
+**100% complete.** Phase 65 is implemented, audited, tested, documented, and merged on `main`. The exact synchronized documentation tree was validated by **CI #1249 / run `34698187600`**, which passed distribution build, wheel verification, repository audit, integration verification, Ruff, and the full pytest suite.
 
 ## Scope
 
@@ -38,7 +38,7 @@ A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps
 
 ### Scheduling and events
 
-`due_intervals()` exposes interval definitions that are due according to the latest run timestamp. `trigger_intervals()` atomically creates the due runs. `event()` and `webhook()` provide separate trigger namespaces so an event cannot accidentally activate a webhook definition.
+`due_intervals()` exposes interval definitions that are due according to the latest run timestamp. `trigger_intervals()` creates due runs using interval-bucket idempotency. `event()` and `webhook()` provide separate trigger namespaces so an event cannot accidentally activate a webhook definition.
 
 ## Security and reliability invariants
 
@@ -55,7 +55,7 @@ A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps
 
 `tests/unit/test_phase65_workflows.py` provides acceptance and adversarial coverage for DAG branching, durable waits, human gates, fan-out/loops, event/webhook/interval triggers, retry behavior, runtime expiry, concurrent idempotency, cancellation, persistence corruption, templates/versioning, payload limits, and compensation.
 
-The implementation-tree closure run **CI #1239 / `34697885027`** passed distribution build, wheel installation, repository audit, integration verification, Ruff, and the full pytest suite. The subsequent synchronized documentation tree is validated by the final exact-tree mainline CI gate.
+**Final synchronized-tree closure:** CI #1249 / run `34698187600` passed all required repository gates on the synchronized documentation and audit tree. The CI job completed successfully with distribution build, wheel installation, repository audit, integration verification, Ruff, and pytest all green.
 
 ## References
 
@@ -63,4 +63,4 @@ The implementation follows the repository's standing engineering-reference polic
 
 ## Closure rule
 
-Phase 65 is complete only when implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
+Phase 65 is complete only when implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **This gate is satisfied.**
