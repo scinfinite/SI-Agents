@@ -16,6 +16,7 @@ ALLOWED_REFERENCE_DOCS = {
     ROOT / "docs" / "architecture" / "PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md",
     ROOT / "docs" / "architecture" / "PHASE_47_OPENCODE_BRIDGE.md",
     ROOT / "docs" / "architecture" / "PHASE_48_OMNIROUTE_INTEGRATION.md",
+    ROOT / "docs" / "architecture" / "PHASE_64_SDK_DEVELOPER_PLATFORM.md",
 }
 
 
