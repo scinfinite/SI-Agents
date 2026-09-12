@@ -17,7 +17,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–67**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 67 — Advanced TUI Control Center is closed at 100%. Phase 68 — Advanced CLI Platform is next.**
+V3 is closed. V4 has completed Phases **44–67**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 67 — Advanced TUI Control Center is closed at 100%. Phase 68 — Advanced CLI Platform is implementation-complete and is in its final CI/documentation closure gate.**
 
 ## Closed phases
 
@@ -45,7 +45,13 @@ PR #80 merged successfully. Final PR CI **#1288** / run **34702115990** on commi
 
 ## Phase 68 — Advanced CLI Platform
 
-Run/task/agent/team/workflow/session/execution/approval/resume commands, logs/events/models/providers/status, profiles/config/auth, local/remote control, attachments, streaming, stable JSON/exit codes, CI/non-interactive operation, pipelines, and machine-readable errors/events.
+**Implementation complete; final CI closure pending.** The Phase 68 platform is a transport-neutral command adapter over SI Core. It provides governed `run create/list/get`, task/execution inspection, agent/team/workflow resource navigation, identity-bound approval list/get/decide, bounded client sessions, event/state observation and bounded run streaming, model/provider discovery delegation, attachment inspection, non-secret config/auth status, and bounded declarative pipelines. Local mode calls `ControlApiService`; remote mode uses authenticated HTTP against the Control API.
+
+The output contract supports deterministic JSON envelopes and exit classes for success, operational/validation failure, authentication failure, and governance/authority rejection. Safety bounds include 1 MiB remote request/response payloads, 10 MiB attachment inspection, 256 KiB pipeline files, 100 pipeline steps, 100 retained session records, bounded streaming, path-safe identifiers, and no arbitrary shell execution. Resume is explicitly fail-closed when the downstream execution engine owns the transition. Secrets are environment-only and never persisted by the CLI.
+
+Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/dispatch.py`.
+
+Acceptance coverage: `tests/test_phase68_cli.py` plus the complete repository suite. Detailed contract: `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 ## Phase 69 — npm Distribution + Setup
 
@@ -61,4 +67,4 @@ Final architecture, authority, state-machine, lifecycle, concurrency, idempotenc
 
 ## Closure gate
 
-A phase is closed only after implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 67 has passed the implementation/PR gate; its post-merge synchronized documentation tree must also pass mainline CI before release closure is declared.**
+A phase is closed only after implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 68 is not declared closed until its merged documentation tree passes the final mainline CI gate.**

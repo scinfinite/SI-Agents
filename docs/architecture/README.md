@@ -19,7 +19,17 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-**Phases 44–67 are closed. Phase 68 is next.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+**Phases 44–67 are closed. Phase 68 is implementation-complete and in its final closure gate.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+
+## Phase 68 architecture
+
+Phase 68 adds an advanced CLI adapter over the existing Control API. Local CLI calls use `ControlApiService`; remote CLI calls use authenticated HTTP. The platform exposes governed runs/tasks/executions, agent/team/workflow resources, identity-bound approvals, client sessions, events and bounded run streaming, model/provider delegation, attachment inspection, non-secret configuration/auth status, and bounded declarative pipelines.
+
+The CLI owns no execution state authority. Run creation is always submitted through SI Core governance. Resume explicitly fails closed when downstream execution owns the transition. Model/provider discovery remains delegated to OmniRoute. Client metadata is bounded and stored separately from SI Core lifecycle state. Authentication tokens are environment-only and never printed or persisted by the CLI.
+
+Machine operation is a first-class contract: JSON envelopes are deterministic, exit classes distinguish success/operational/auth/governance failure, remote payloads are bounded, identifiers are path-safe, and streaming/pipeline/attachment/session surfaces have explicit resource limits. No command performs arbitrary shell execution.
+
+Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/dispatch.py`. Detailed contract: `PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 ## Phase 67 architecture
 
@@ -43,8 +53,8 @@ Phase 65 adds a transport-neutral workflow state machine for versioned declarati
 - Phase 64: PR #78 merged; implementation closure CI #1239 / `34697885027` passed.
 - Phase 65: final synchronized-tree CI #1249 / `34698187600` completed successfully.
 - Phase 66: PR #79 merged; final synchronized-tree mainline CI #1284 / `34701494501` completed successfully.
-- Phase 67: PR #80 merged; final PR CI #1288 / `34702115990` completed successfully.
+- Phase 67: PR #80 merged; final synchronized-tree mainline CI #1295 / `34702226193` completed successfully.
 
 ## Current position
 
-**Phase 67 — Advanced TUI Control Center is complete at 100%. Phase 68 — Advanced CLI Platform is next.**
+**Phase 68 — Advanced CLI Platform is implementation-complete and undergoing final CI closure. Phase 69 — npm Distribution + Setup follows only after Phase 68 is closed.**

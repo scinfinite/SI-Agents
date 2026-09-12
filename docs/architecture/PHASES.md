@@ -4,12 +4,13 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–67 are closed**. **Phase 68 — Advanced CLI Platform is next.** Phase 71 is the final production-hardening gate.
+Phases **44–67 are closed**. **Phase 68 — Advanced CLI Platform is implementation-complete pending its final synchronized-tree closure gate.** Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
+- **In progress / closure gate** — implementation is complete but final CI/documentation closure is still pending.
 - **Next** — next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -41,21 +42,21 @@ Phases **44–67 are closed**. **Phase 68 — Advanced CLI Platform is next.** P
 | 65 | Workflow + Automation | Complete / 100% | final synchronized-tree CI #1249 / `34698187600` |
 | 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
 | 67 | Advanced TUI Control Center | **Complete / 100%** | PR #80 / final PR CI #1288 / `34702115990` |
-| 68 | Advanced CLI Platform | **Next** | Planned |
+| 68 | Advanced CLI Platform | **Implementation complete / closure gate** | PR #81 / CI pending final green |
 | 69 | npm Distribution + Setup | Planned | Planned |
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-## Phase 67 implementation
+## Phase 68 implementation
 
-The advanced TUI is a dependency-free, keyboard-first operator cockpit over the existing Control API. It retains the 14 historical views while adding bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct view navigation, JSON export status, non-interactive rendering, governed run requests, and identity-bound approval controls. Unknown input is inert; the TUI never invokes a shell or bypasses SI Core.
+Phase 68 introduces the advanced transport-neutral `si` CLI platform over SI Core's Control API. The surface covers governed run/task/execution operations, agent/team/workflow navigation, identity-bound approvals, sessions, events/streaming, models/providers delegation, attachment inspection, non-secret configuration/auth status, and bounded declarative pipelines. Local mode calls `ControlApiService`; remote mode uses authenticated HTTP. The CLI remains an adapter and cannot become a second execution or governance authority.
 
-Implementation: `core/tui/app.py`, `core/tui/cli.py`.
+Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, and `core/cli/dispatch.py`.
 
-Acceptance coverage: `tests/test_phase67_tui.py` plus the Phase 41 regression suite `tests/test_phase41_tui.py`.
+Acceptance coverage: `tests/test_phase68_cli.py` plus the full existing repository suite.
 
-Detailed contract: `docs/architecture/PHASE_67_ADVANCED_TUI_CONTROL_CENTER.md`.
+Detailed contract: `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 ## Closure gate
 
-Phase 67 implementation, adversarial/regression tests, Ruff, compileall, full pytest, distribution/wheel verification, repository audit, integration verification, documentation synchronization, and final PR CI #1288 are green. Final post-merge mainline CI must remain green for the synchronized documentation tree.
+Phase 68 closes only after PR CI passes wheel installation, repository audit, integration verification, Ruff, compileall, full pytest, SDK verification, security/adversarial coverage, documentation synchronization, merge, and a final exact-tree mainline CI run on the merged documentation state.
