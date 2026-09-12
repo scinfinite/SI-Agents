@@ -2,9 +2,9 @@
 
 43. Final v3 Integration & Hardening — historical V3 close
 
-## V4 status
+## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–66 are closed**. Phase 67 is the active implementation phase. **Phase 67 — Advanced TUI Control Center is implemented and undergoing final closure verification.**
+Phases **44–66 are closed**. Phase 67 is the active implementation phase. **Phase 67 — Advanced TUI Control Center is implemented and undergoing final closure verification.** Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
