@@ -25,14 +25,14 @@ from .models import (
     WorkspaceSnapshot,
     WorkspaceState,
 )
-from .runner import GitError, GitRunner, CallableGitRunner
+from .runner import GitError, GitRunner
 
 MAX_SNAPSHOT_FILES = 20_000
 MAX_SNAPSHOT_BYTES = 32 * 1024 * 1024
 MAX_PATCH_BYTES = 512 * 1024
 LOCK_TTL_SECONDS = 120.0
 MAX_GC_BATCH = 1000
-_SECRET_KEYS = {"authorization", "api_key", "credential", "password", "private_key", "secret", "token"}
+_SECRET_KEYS = {\n    "authorization", "api_key", "credential", "password",\n    "private_key", "secret", "token",\n}
 
 
 def _canonical(value: Any) -> str:
