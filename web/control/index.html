@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="SI-Agents advanced web control plane">
+  <title>SI-Agents Control Plane</title>
+  <link rel="stylesheet" href="/web/control/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar"><div><strong>SI-Agents</strong><span class="muted"> / Control Plane</span></div><div id="health" class="status" role="status" aria-live="polite">Connecting…</div></header>
+  <div class="layout">
+    <nav class="nav" aria-label="Primary">
+      <button data-view="overview" class="active">Overview</button><button data-view="activity">Live activity</button><button data-view="workflows">Workflows</button><button data-view="topology">Topology</button><button data-view="evidence">Evidence</button><button data-view="approvals">Approvals</button><button data-view="controls">Controls</button><button data-view="repository">Repository</button><button data-view="resources">Resources</button><button data-view="settings">Settings</button>
+    </nav>
+    <main id="main" tabindex="-1">
+      <section id="overview" class="view"><div class="hero"><div><p class="eyebrow">Advanced Web Control Plane</p><h1>Operational cockpit</h1><p class="muted">Observe SI Core state without creating a second authority.</p></div><button id="refresh">Refresh</button></div><div id="cards" class="cards" aria-live="polite"></div><div class="panel"><h2>System snapshot</h2><pre id="snapshot">Loading…</pre></div></section>
+      <section id="activity" class="view hidden"><h1>Live activity</h1><div class="toolbar"><label>Search <input id="eventSearch" type="search" placeholder="event type, subject"></label></div><div id="events" class="list"></div></section>
+      <section id="workflows" class="view hidden"><h1>Workflows & runs</h1><div id="workflowsList" class="list"></div><h2>Runs</h2><div id="runsList" class="list"></div></section>
+      <section id="topology" class="view hidden"><h1>Topology & DAG</h1><p class="muted">Accessible text representation of the same graph state; no canvas-only dependency.</p><div id="topologyList" class="list"></div></section>
+      <section id="evidence" class="view hidden"><h1>Evidence & artifacts</h1><div id="evidenceView" class="panel"></div></section>
+      <section id="approvals" class="view hidden"><h1>Human approvals</h1><p class="muted">Decisions are identity-bound and remain governed by SI Core.</p><div id="approvalsList" class="list"></div></section>
+      <section id="controls" class="view hidden"><h1>Governed controls</h1><p class="muted">Actions below are requests to the existing Control API. The browser cannot bypass governance.</p><div class="panel form"><label>Action <input id="runAction" type="text" value="inspect" maxlength="128"></label><label>Subject <input id="runSubject" type="text" maxlength="256" placeholder="agent.demo"></label><label>Capabilities <input id="runCapabilities" type="text" placeholder="read,write"></label><label>Idempotency key <input id="runIdempotency" type="text" maxlength="256"></label><button id="runButton">Request governed run</button><pre id="controlResult" aria-live="polite"></pre></div></section>
+      <section id="repository" class="view hidden"><h1>Repository inspection</h1><p class="muted">Bounded text search, source, Markdown/JSON/code viewing, and latest-commit diffs.</p><div class="toolbar"><label>Search repository <input id="repoSearch" type="search" placeholder="workflow, ControlApiService…"></label><button id="repoSearchButton">Search</button></div><div id="repoResults" class="list"></div><div class="toolbar"><label>Open path <input id="sourcePath" type="text" placeholder="README.md"></label><button id="sourceButton">Open</button><button id="diffButton">Latest diff</button></div><pre id="sourceView" class="panel">Select a file to inspect.</pre></section>
+      <section id="resources" class="view hidden"><h1>Resources & health</h1><div id="resourcesView" class="cards"></div></section>
+      <section id="settings" class="view hidden"><h1>Control-plane settings</h1><div id="settingsView" class="panel"></div></section>
+    </main>
+  </div>
+  <div id="error" class="toast hidden" role="alert"></div><script src="/web/control/app.js" defer></script>
+</body>
+</html>

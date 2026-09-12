@@ -22,6 +22,9 @@ def document() -> dict[str, object]:
         "/api/v1/control-center": "Control Center aggregate", "/api/v1/agent-builder": "Agent drafts", "/api/v1/events": "API events",
         "/api/v1/runs": "Run records", "/api/v1/approvals": "Identity-bound outstanding approval queue", "/api/v1/subscriptions": "Event subscriptions",
         "/api/v1/events/stream": "Server-sent event stream", "/api/v1/events/ws": "WebSocket event stream",
+        "/api/v1/source": "Bounded repository text source viewer for code, Markdown, and JSON",
+        "/api/v1/search": "Bounded repository text search",
+        "/api/v1/diff": "Bounded latest-commit repository diff viewer",
     }
     paths: dict[str, object] = {path: _get(description) for path, description in descriptions.items()}
     paths["/api/v1/evidence"] = {**_get("Control-plane evidence summary"), **_post("Evidence record")}
