@@ -21,7 +21,7 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 - **Phases 46, 47, 49, and 50 have additionally passed advanced-level hardening.**
 - Advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite.
 - Advanced hardening closed scheduler idempotency/DAG safety, OpenCode timeout/SSE safety, team topology/schema safety, and request-bound authorization/metadata safety gaps.
-- **Next:** Phase 52 — Context / Memory Economics.
+- **Phase 52 — Context / Memory Economics is now under implementation.** It adds deterministic context budgets, model-aware input capacity, relevance/importance selection, deduplication, compaction/summarization hooks, token/cost accounting, sensitive-context isolation, secret redaction/fail-closed handling, provenance/evidence, and atomic decision snapshots.
 
 ## Advanced-hardened phases
 

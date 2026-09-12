@@ -26,6 +26,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
+| 52 | Context / Memory Economics | **In implementation** | Deterministic context contracts, economics service, adversarial tests, snapshots, and architecture docs on the active branch; final mainline CI remains the closure gate. |
 
 ## Advanced hardening status
 
@@ -40,11 +41,25 @@ Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verifi
 
 Checkpoints are progress evidence, not authority. Their snapshots cannot restore credentials, capabilities, grants, provider authorization, or identity. Resume is performed through `ExecutionStore.new_attempt()` after checkpoint integrity, lineage, execution identity, and terminal-state checks.
 
-## Planned V4 architecture layers — Phases 52–71
+## Phase 52 context / memory economics
+
+`core/context_economics` is a deterministic policy layer between already-authorized context retrieval and model invocation. It does not become an execution authority, grant permissions, or select providers.
+
+- Per-scope token/cost budgets across user/project/session/workflow/team/task/agent contexts.
+- Model context-window awareness with reserved output capacity.
+- Deterministic importance/relevance ranking and stable tie-breaking.
+- Deduplication by normalized-content fingerprint.
+- Sensitive-context isolation and default secret redaction/fail-closed behavior.
+- Deterministic compaction plus an explicit summarizer hook.
+- Token/cost accounting and stable decision IDs with evidence.
+- Atomic JSON snapshots for recovery/provenance.
+
+See `CONTEXT_MEMORY.md` and `PHASE_52_CONTEXT_MEMORY_ECONOMICS.md` for the contract and evidence.
+
+## Planned V4 architecture layers — Phases 53–71
 
 | Phase | Architectural layer | Key outcome |
 |---:|---|---|
-| 52 | Context / Memory Economics | Efficient, permission-aware context and memory with token/cost controls |
 | 53 | Persistent Sessions | Durable sessions spanning tasks, agents, workflows, models and interfaces |
 | 54 | Human-in-the-Loop | First-class approvals, human input, review and escalation |
 | 55 | Durable Waiting + Scheduling | Durable waits, timers, triggers and long-running scheduling |
@@ -83,6 +98,6 @@ All surfaces operate on the same SI Core authority.
 
 ## Next
 
-**Phase 52 — Context / Memory Economics.**
+**Phase 53 — Persistent Sessions** after Phase 52 receives its final mainline exact-tree CI closure.
 
 See `SI_AGENTS_V4_PLAN.md` for the complete detailed feature specification and `PHASES.md` for status/evidence and closure rules.

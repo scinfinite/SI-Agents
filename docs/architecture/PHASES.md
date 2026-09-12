@@ -2,10 +2,25 @@
 
 43. Final v3 Integration & Hardening — historical V3 close
 
+## V4 roadmap markers
+
+- **Phase 44 — Execution Runtime Foundation**
+- **Phase 45 — Event Bus + State Architecture**
+- **Phase 46 — Parallel Scheduler + Executor**
+- **Phase 47 — OpenCode Bridge**
+- **Phase 48 — OmniRoute Integration**
+- **Phase 49 — Agent + Team Builder**
+- **Phase 50 — Capability Authorization**
+- **Phase 51 — Checkpoints + Resume**
+- **Phase 52 — Context / Memory Economics**
+- **Phase 53 — Persistent Sessions** through **Phase 70 — End-to-End Production Validation**
+- **Phase 71 — Final Production Hardening**
+
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase was re-audited with additional production/security invariants and green hardening CI; final mainline exact-tree CI is the closure gate.
+- **In implementation** — active phase implementation/tests/docs are in progress; final mainline exact-tree CI is still required.
 - **Next** — planned next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -21,7 +36,7 @@
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **Next** | Planned |
+| 52 | Context / Memory Economics | **In implementation** | Active branch implementation + adversarial tests + architecture docs; final mainline CI pending |
 | 53 | Persistent Sessions | Planned | Planned |
 | 54 | Human-in-the-Loop | Planned | Planned |
 | 55 | Durable Waiting + Scheduling | Planned | Planned |
