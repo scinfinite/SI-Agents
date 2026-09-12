@@ -121,6 +121,7 @@ class RouteCandidate:
     estimated_cost: float
     expected_latency_ms: float
     reliability: float
+    quality: float
     rank: int
     reasons: tuple[str, ...]
 
@@ -262,6 +263,7 @@ class IntelligentRouter:
                 cost,
                 m.latency_ms,
                 min(m.reliability, self.health.success_rate(p.provider_id)),
+                m.quality,
                 rank + 1,
                 reasons,
             )
@@ -289,16 +291,25 @@ class IntelligentRouter:
             raise RoutingError("no fallback route remains")
         next_candidate = remaining[0]
         escalation = evidence.escalation_level
-        if next_candidate.score < evidence.selected.score and req.allow_downgrade:
-            escalation -= 1
-        elif next_candidate.score > evidence.selected.score + self.policy.escalation_margin and req.allow_escalation:
+        if next_candidate.quality > evidence.selected.quality + self.policy.escalation_margin and req.allow_escalation:
             escalation += 1
+        elif next_candidate.score < evidence.selected.score and req.allow_downgrade:
+            escalation -= 1
         attempt = evidence.attempt + 1
         if attempt > self.policy.max_attempts:
             raise RoutingError("retry budget exhausted")
         remaining_attempts = self.policy.max_attempts - attempt + 1
         worst = next_candidate.estimated_cost * sum(self.policy.retry_multiplier ** i for i in range(remaining_attempts))
-        return RouteEvidence(infer_complexity(req), next_candidate, len(candidates), escalation, attempt, failure_class.value, next_candidate.estimated_cost, worst)
+        return RouteEvidence(
+            infer_complexity(req),
+            next_candidate,
+            len(candidates),
+            escalation,
+            attempt,
+            failure_class.value,
+            next_candidate.estimated_cost,
+            worst,
+        )
 
     def record_outcome(self, provider_id: str, *, success: bool, latency_ms: float, rate_limited: bool = False) -> None:
         self.health.record(HealthObservation(provider_id, success, latency_ms))
