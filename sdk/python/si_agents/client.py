@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import threading
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Any, Callable, Iterator, Mapping
@@ -63,11 +62,7 @@ class Subscription:
 
 
 class SIClient:
-    """Thread-safe client for REST plus SSE/WebSocket subscription URLs.
-
-    The client never puts credentials in URLs. Bearer authentication and the
-    Control API subject/project identity are sent only as headers.
-    """
+    """Thread-safe client for REST plus SSE/WebSocket subscription URLs."""
 
     def __init__(
         self,
@@ -85,7 +80,6 @@ class SIClient:
         self.project = project
         self.timeout = timeout
         self._opener = opener
-        self._lock = threading.RLock()
 
     def _url(self, path: str, params: Mapping[str, object] | None = None) -> str:
         path = path.lstrip("/")
@@ -93,7 +87,7 @@ class SIClient:
         if params:
             clean = {k: str(v) for k, v in params.items() if v is not None}
             if clean:
-                url += "?" + urlencode(clean)
+                url += ("&" if "?" in url else "?") + urlencode(clean)
         return url
 
     def _headers(self, *, idempotency_key: str | None = None) -> dict[str, str]:
@@ -144,9 +138,8 @@ class SIClient:
                 if not key or key.startswith("_"):
                     raise ValueError("filter names must be non-empty and public")
                 params[f"filter.{key}"] = value
-        result = self.request("GET", f"/api/{API_VERSION}/{resource}", None)
+        result = self.request("GET", self._url(f"/api/{API_VERSION}/{resource}", params).removeprefix(self.base_url), None)
         if not isinstance(result, dict) or "items" not in result:
-            # Compatibility with older unpaginated servers.
             items = result if isinstance(result, list) else []
             return Page(tuple(items), None, len(items))
         return Page(tuple(result["items"]), result.get("next_cursor"), int(result.get("limit", limit)))
@@ -154,17 +147,9 @@ class SIClient:
     def paginate(self, resource: str, *, page_size: int = 100, query: str | None = None, filters: Mapping[str, str] | None = None) -> Iterator[Mapping[str, Any]]:
         cursor = None
         while True:
-            params: dict[str, object] = {"limit": page_size, "cursor": cursor, "q": query}
-            if filters:
-                params.update({f"filter.{k}": v for k, v in filters.items()})
-            result = self.request("GET", f"/api/{API_VERSION}/{resource}?{urlencode({k: str(v) for k, v in params.items() if v is not None})}")
-            if isinstance(result, list):
-                yield from result
-                return
-            if not isinstance(result, dict):
-                return
-            yield from result.get("items", [])
-            cursor = result.get("next_cursor")
+            page = self.list(resource, limit=page_size, cursor=cursor, query=query, filters=filters)
+            yield from page.items
+            cursor = page.next_cursor
             if not cursor:
                 return
 
@@ -182,8 +167,8 @@ class SIClient:
 
     def iter_sse(self, *, after: int = 0) -> Iterator[Event]:
         request = Request(self.subscribe_sse_url(after=after), headers=self._headers(), method="GET")
+        response = self._opener(request, timeout=self.timeout)
         try:
-            response = self._opener(request, timeout=self.timeout)
             current: dict[str, str] = {}
             while True:
                 line = response.readline().decode("utf-8").rstrip("\r\n")
@@ -201,10 +186,10 @@ class SIClient:
         finally:
             response.close()
 
-    def subscribe(self, *, event_types: tuple[str, ...] = (), subject: str | None = None, transport: str = "sse") -> Mapping[str, Any]:
+    def subscribe(self, *, event_types: tuple[str, ...] = (), subject: str | None = None, transport: str = "sse", target: str | None = None) -> Mapping[str, Any]:
         if transport not in {"sse", "webhook"}:
             raise ValueError("transport must be sse or webhook")
-        return self.request("POST", f"/api/{API_VERSION}/subscriptions", {"event_types": list(event_types), "subject": subject, "transport": transport})
+        return self.request("POST", f"/api/{API_VERSION}/subscriptions", {"event_types": list(event_types), "subject": subject, "transport": transport, "target": target})
 
     def map_concurrent(self, calls: list[Callable[[], Any]], *, max_concurrency: int = 8) -> list[Any]:
         if not 1 <= max_concurrency <= 32:
