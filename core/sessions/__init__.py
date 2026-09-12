@@ -1,5 +1,6 @@
 """Durable, isolated SI Core session authority."""
 
+from .runtime import PersistentSessionAdapter
 from .store import (
     PersistentSession,
     SessionArtifact,
@@ -12,6 +13,7 @@ from .store import (
 
 __all__ = [
     "PersistentSession",
+    "PersistentSessionAdapter",
     "SessionArtifact",
     "SessionEvent",
     "SessionExport",
