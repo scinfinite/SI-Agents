@@ -1,6 +1,7 @@
 # Phase 60 — Evaluation + Benchmarking
 
-**Status:** In implementation; final closure is gated on synchronized-tree mainline CI.
+**Status:** Implementation verified by PR CI #1130 (`34687068901`). Final synchronized-tree mainline CI is the remaining closure gate.
+
 
 ## Advanced scope
 
