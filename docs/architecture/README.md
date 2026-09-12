@@ -5,51 +5,54 @@ SI-Agents V4 uses a single authoritative SI Core. Web, TUI, CLI, OpenCode, runti
 ## V4 target architecture
 
 ```text
-OpenCode → SI OpenCode Bridge → SI Core / Control API
-        → Scheduler / Orchestrator → Tasks / Agents / Teams / Workflows
-        → Capability Authorization → OmniRoute → Models / Providers / APIs
-        → Results / Artifacts / Evidence → SI Core
-        → Observability → Evaluation / Continuous Improvement
-        → Release Gates / Canaries / Rollback → OpenCode / Web / TUI / CLI
+OpenCode / Web / TUI / CLI → SI Core / Control API
+                          → Scheduler / Orchestrator
+                          → Tasks / Agents / Teams / Workflows
+                          → Capability Authorization → OmniRoute
+                          → Models / Providers / APIs
+                          → Results / Artifacts / Evidence
+                          → Observability → Evaluation → Continuous Improvement
+                          → Release Gates / Canaries / Rollback → Clients
 ```
 
-OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, durable waiting, workspaces, observability, evaluation, and continuous-improvement governance. Evaluation and telemetry remain advisory/governance evidence and never become execution authority.
+OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration, governance, evidence, lifecycle, persistence, recovery, waiting, workspaces, observability, evaluation, and continuous-improvement governance.
 
 ## Verified V4 phases
 
-| Phase | Capability | Status | Evidence |
-|---:|---|---|---|
-| 44 | Execution Runtime Foundation | Complete | CI #919 / `34610448789` |
-| 45 | Event Bus + State Architecture | Complete | CI #935 / `34612616978` |
-| 46 | Parallel Scheduler + Executor | **Advanced hardened** | Hardening CI #984 / `34671292491` |
-| 47 | OpenCode Bridge | **Advanced hardened** | Hardening CI #984 / `34671292491` |
-| 48 | OmniRoute Integration | Complete | CI #949 / `34623762921` |
-| 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
-| 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
-| 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | Complete | Final exact-tree CI #1020 / `34673411916` |
-| 53 | Persistent Sessions | Complete | Final synchronized-tree mainline CI #1041 / `34675322458` |
-| 54 | Human-in-the-Loop | Complete | Final synchronized-tree mainline CI #1051 / `34676632475` |
-| 55 | Durable Waiting + Scheduling | Complete | Final synchronized-tree closure CI #1080 / `34678317246` |
-| 56 | Intelligent Routing + Economics | Complete | Final synchronized-tree mainline CI #1099 / `34682849381` |
-| 57 | Security Platform | Complete | Final synchronized-tree mainline CI #1113 / `34684260315` |
-| 58 | Workspace / Worktree Lifecycle | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
-| 59 | Observability | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
-| 60 | Evaluation + Benchmarking | **Advanced hardened** | PR #74; final mainline CI #1144 / `34691176676` |
-| 61 | Continuous Improvement | **Complete** | PR #75; PR CI #1157 / `34692165853` |
+| Phase | Capability | Status |
+|---:|---|---|
+| 44 | Execution Runtime Foundation | Complete |
+| 45 | Event Bus + State Architecture | Complete |
+| 46 | Parallel Scheduler + Executor | Advanced hardened |
+| 47 | OpenCode Bridge | Advanced hardened |
+| 48 | OmniRoute Integration | Complete |
+| 49 | Agent + Team Builder | Advanced hardened |
+| 50 | Capability Authorization | Advanced hardened |
+| 51 | Checkpoints + Resume | Complete |
+| 52 | Context / Memory Economics | Complete |
+| 53 | Persistent Sessions | Complete |
+| 54 | Human-in-the-Loop | Complete |
+| 55 | Durable Waiting + Scheduling | Complete |
+| 56 | Intelligent Routing + Economics | Complete |
+| 57 | Security Platform | Complete |
+| 58 | Workspace / Worktree Lifecycle | Advanced hardened |
+| 59 | Observability | Advanced hardened |
+| 60 | Evaluation + Benchmarking | Advanced hardened |
+| 61 | Continuous Improvement | Complete |
+| 62 | Cross-Runtime / Cross-Harness | **Implemented; pending closure** |
 
-## Phase 61 — continuous improvement
+## Phase 62 architecture
 
-The continuous-improvement authority analyzes evaluation runs into stable failure clusters and regression signals, then creates explainable optimization recommendations for agents, teams, models, routing, and workflows. Recommendations carry expected benefit, confidence, risk, and prerequisites rather than silently mutating runtime state.
+Phase 62 provides a common portable adapter contract for runtime, session, tool, model, event, capability, context, checkpoint, and artifact resources. `PortableAdapterRegistry` is deny-by-default and discovery-only; it grants no permissions.
 
-Experiments use deterministic subject assignment and bounded variants. Canary promotion is fail-closed on sample size, error rate, cost, latency, and quality. Consequential model/routing/workflow changes require a matching human approval record. Rollback plans retain the previous version and explicit trigger and are only valid for active canary/promoted recommendations.
+`CrossRuntimeGateway` is the harness interoperability authority. It provides deterministic discovery, streaming capability filtering, preferred selection, health probes, bounded degradation/quarantine/recovery, project+harness session binding, explicit session migration, and safe fallback. Fallback is allowed only for retryable failures that occur before execution-start events. Routing evidence excludes request payloads and is bounded.
 
-Improvement history is durable and tamper-evident through a SHA-256 chain. Secret-like data is rejected before persistence. Continuous Improvement is a governance/planning authority only: actual execution continues through the existing SI Core scheduler, capability authorization, deployment/workspace, and runtime authorities.
+OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same stable `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants, execution state, or authorization.
 
-## Cross-cutting authority contract
+## Cross-cutting invariants
 
-Security decisions are fail-closed. Workspace, telemetry, evaluation, and improvement evidence are scoped and bounded. Human decisions and evaluation/improvement outcomes do not become capability grants. Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority. No interface creates competing execution, session, approval, waiting, workspace, observability, evaluation, or improvement state ownership.
+Security decisions are fail-closed. Workspace, telemetry, evaluation, and improvement evidence are scoped and bounded. Human decisions and evaluation/improvement outcomes do not become capability grants. Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority.
 
 ## Current position
 
-**V4 Phases 44–61 are closed on `main`; Phase 62 — Cross-Runtime / Cross-Harness is next.**
+**V4 Phases 44–62 are implemented; Phase 62 is pending final repository CI closure. Phase 63 — Ecosystem / Marketplace is next.**
