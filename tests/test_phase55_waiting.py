@@ -42,7 +42,7 @@ def test_event_wake_and_deadline_fail_closed(tmp_path):
 def test_recurring_reschedules_and_bounds_occurrences(tmp_path):
     db = service(tmp_path)
     spec = ScheduleSpec(kind=WaitKind.RECURRING, interval_seconds=60, max_occurrences=2)
-    wait = db.create(subject_id="u1", project_id="p1", kind=WaitKind.RECURRING, wake_at=BASE, schedule=spec)
+    db.create(subject_id="u1", project_id="p1", kind=WaitKind.RECURRING, wake_at=BASE, schedule=spec)
     db.promote_due(now=BASE)
     claimed = db.claim_ready(subject_id="u1", project_id="p1", now=BASE)[0]
     assert claimed.state is WaitState.CLAIMED
@@ -87,7 +87,7 @@ def test_secret_and_oversized_payloads_rejected(tmp_path):
 def test_cron_and_validation(tmp_path):
     db = service(tmp_path)
     spec = ScheduleSpec(kind=WaitKind.CRON, cron="*/5 * * * *", max_occurrences=3)
-    wait = db.create(subject_id="u1", project_id="p1", kind=WaitKind.CRON, wake_at=BASE.replace(minute=5), schedule=spec)
+    db.create(subject_id="u1", project_id="p1", kind=WaitKind.CRON, wake_at=BASE.replace(minute=5), schedule=spec)
     db.promote_due(now=BASE.replace(minute=5))
     claimed = db.claim_ready(subject_id="u1", project_id="p1", now=BASE.replace(minute=5))[0]
     next_wait = db.complete(claimed.wait_id, subject_id="u1", project_id="p1", expected_revision=claimed.revision, now=BASE.replace(minute=5))
