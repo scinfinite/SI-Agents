@@ -17,11 +17,11 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–61**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness is implemented and merged; final synchronized-tree mainline CI is pending. Phase 63 — Ecosystem / Marketplace follows Phase 62 closure.**
+V3 is closed. V4 has completed Phases **44–62**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness is complete: implementation, adversarial verification, documentation synchronization, merge, and mainline CI closure are green. Phase 63 — Ecosystem / Marketplace follows.**
 
 ## Closed phases
 
-Phases 44–61 remain closed under their recorded CI evidence. Phase 62 implementation is merged as PR #76 (`607085782a75e31a60774afe975edcbd38bf5e4c`) with PR CI #1166 (`34692621358`) green; the final synchronized-tree mainline run is the remaining closure gate.
+Phases 44–62 are closed under their recorded CI evidence. Phase 62 merged as PR #76 (`607085782a75e31a60774afe975edcbd38bf5e4c`) with PR CI #1166 (`34692621358`) green and mainline CI #1180 (`34693460152`) green on the integration-marker correction.
 
 ### Phase 62 — Cross-Runtime / Cross-Harness
 
@@ -31,7 +31,7 @@ The gateway refuses fallback after execution-start signals, keeps routing eviden
 
 Implementation: `core/runtime/cross_runtime.py` and `core/runtime/portable.py`.
 
-Verification: `tests/unit/test_phase62_cross_runtime.py`, PR CI #1166, and the final synchronized-tree mainline closure suite.
+Verification: `tests/unit/test_phase62_cross_runtime.py`, PR CI #1166, and mainline CI #1180. The final documentation-synchronized exact-tree mainline CI is the last closure gate for this documentation update.
 
 ## Phase 63 — Ecosystem / Marketplace — next
 
