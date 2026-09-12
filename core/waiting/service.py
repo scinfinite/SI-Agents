@@ -189,7 +189,7 @@ class WaitingService:
             rows = self._db.execute("SELECT * FROM waits WHERE subject_id=? AND project_id=? AND state='ready'", (subject_id, project_id)).fetchall()
             def score(row: sqlite3.Row) -> tuple[float, int]:
                 age = max(0.0, (now - _parse(row["created_at"])).total_seconds())
-                return (row["priority"] + min(100.0, age / 60.0), -row["created_sequence"])
+                return (row["priority"] + min(200.0, age / 60.0), -row["created_sequence"])
             rows = sorted(rows, key=score, reverse=True)[:limit]
             result: list[WaitRecord] = []
             for row in rows:
