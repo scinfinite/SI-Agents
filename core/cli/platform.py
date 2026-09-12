@@ -1,3 +1,4 @@
+# ruff: noqa: E702
 """Advanced transport-neutral CLI platform for SI-Agents.
 
 The CLI is an adapter over the Control API. It never becomes an execution,
@@ -393,35 +394,29 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="si", description="SI-Agents Phase 68 advanced CLI platform")
     _common(parser)
     sub = parser.add_subparsers(dest="command", required=True)
-
     status = sub.add_parser("status"); status.set_defaults(handler=cmd_status)
     for name in ("agents", "teams", "workflows"):
         item = sub.add_parser(name); item.add_argument("--search"); item.set_defaults(handler=lambda c, a, n=name: _cmd_catalog(c, a, n))
     for name in ("organization", "skills", "memory", "governance", "evidence", "environments", "harnesses", "settings", "visualization", "events"):
         item = sub.add_parser(name); item.set_defaults(handler=lambda c, a, n=name: _cmd_catalog(c, a, n))
-
     run = sub.add_parser("run"); run_sub = run.add_subparsers(dest="run_command", required=True)
     create = run_sub.add_parser("create"); create.add_argument("action"); create.add_argument("subject"); create.add_argument("--risk", default="low"); create.add_argument("--data-class", default="public"); create.add_argument("--capability", action="append", default=[]); create.add_argument("--provenance", action="append", default=[]); create.add_argument("--estimated-cost", type=float, default=0.0); create.add_argument("--external-egress", action="store_true"); create.add_argument("--paid-resource", action="store_true"); create.add_argument("--destructive", action="store_true"); create.add_argument("--production", action="store_true"); create.add_argument("--credential", action="store_true"); create.add_argument("--publication", action="store_true"); create.set_defaults(handler=cmd_run_create)
     listed = run_sub.add_parser("list"); listed.set_defaults(handler=cmd_run_list)
     got = run_sub.add_parser("get"); got.add_argument("run_id"); got.set_defaults(handler=cmd_run_get)
-
     for name, source in (("task", "run"), ("execution", "run")):
         item = sub.add_parser(name); item_sub = item.add_subparsers(dest="item_command", required=True)
         li = item_sub.add_parser("list"); li.set_defaults(handler=cmd_run_list)
         ge = item_sub.add_parser("get"); ge.add_argument("run_id"); ge.set_defaults(handler=cmd_run_get)
         if name == "task":
             cr = item_sub.add_parser("create"); cr.add_argument("action"); cr.add_argument("subject"); cr.add_argument("--risk", default="low"); cr.add_argument("--data-class", default="public"); cr.add_argument("--estimated-cost", type=float, default=0.0); cr.add_argument("--external-egress", action="store_true"); cr.add_argument("--destructive", action="store_true"); cr.set_defaults(handler=cmd_run_create)
-
     approval = sub.add_parser("approval"); approval_sub = approval.add_subparsers(dest="approval_command", required=True)
     al = approval_sub.add_parser("list"); al.add_argument("--subject", required=True); al.add_argument("--project", required=True); al.add_argument("--limit", type=int, default=100); al.set_defaults(handler=cmd_approval_list)
     ag = approval_sub.add_parser("get"); ag.add_argument("approval_id"); ag.add_argument("--subject", required=True); ag.add_argument("--project", required=True); ag.set_defaults(handler=cmd_approval_get)
     ad = approval_sub.add_parser("decide"); ad.add_argument("approval_id"); ad.add_argument("decision", choices=("approved", "rejected", "expired")); ad.add_argument("--subject", required=True); ad.add_argument("--project", required=True); ad.add_argument("--decision-by"); ad.add_argument("--reason", default=""); ad.add_argument("--expected-revision", type=int); ad.set_defaults(handler=cmd_approval_decide)
-
     session = sub.add_parser("session"); ss = session.add_subparsers(dest="session_command", required=True)
     st = ss.add_parser("start"); st.add_argument("name"); st.set_defaults(handler=cmd_session)
     sl = ss.add_parser("list"); sl.set_defaults(handler=cmd_session)
     sg = ss.add_parser("get"); sg.add_argument("session_id"); sg.set_defaults(handler=cmd_session)
-
     attach = sub.add_parser("attachment"); attach_sub = attach.add_subparsers(dest="attachment_command", required=True); ai = attach_sub.add_parser("inspect"); ai.add_argument("path"); ai.set_defaults(handler=cmd_attachment)
     auth = sub.add_parser("auth"); auth_sub = auth.add_subparsers(dest="auth_command", required=True); ast = auth_sub.add_parser("status"); ast.set_defaults(handler=cmd_auth)
     config = sub.add_parser("config"); cs = config.add_subparsers(dest="config_command", required=True); cg = cs.add_parser("get"); cg.add_argument("--path"); cg.set_defaults(handler=cmd_config); cset = cs.add_parser("set"); cset.add_argument("key", choices=("transport", "base_url", "token_env", "root", "timeout")); cset.add_argument("value"); cset.add_argument("--path"); cset.set_defaults(handler=cmd_config)
