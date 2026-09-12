@@ -19,7 +19,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-Phases 44–61 are closed. Phase 62 is implemented and merged; final synchronized-tree mainline CI is pending. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
+Phases 44–62 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened.
 
 ## Phase 62 architecture
 
@@ -29,12 +29,13 @@ Phase 62 provides a common portable adapter contract for runtime, session, tool,
 
 OpenCode, CLI, API, IDE, embedded, and agent harnesses can implement the same `HarnessAdapter` protocol. SI Core remains the only execution/governance authority; the gateway never silently changes capabilities, grants execution state, or replaces authorization.
 
-## Phase 62 closure evidence so far
+## Phase 62 closure evidence
 
 - PR #76 merged into `main` as `607085782a75e31a60774afe975edcbd38bf5e4c`.
 - PR CI #1166 / `34692621358` passed wheel verification, repository audit, integration verification, Ruff, and full pytest.
-- Final synchronized-tree mainline CI is the authoritative closure gate.
+- Mainline CI #1180 / `34693460152` passed the repository closure suite after the integration-marker correction.
+- The final documentation-synchronized mainline CI is the authoritative exact-tree closure gate.
 
 ## Current position
 
-**Phase 62 is pending final mainline closure CI; Phase 63 — Ecosystem / Marketplace follows.**
+**Phase 62 is complete. Phase 63 — Ecosystem / Marketplace follows.**
