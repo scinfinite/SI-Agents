@@ -32,7 +32,7 @@ def document() -> dict[str, object]:
     paths["/api/v1/approvals/{approval_id}/events"] = _get("Approval audit events")
     paths["/api/v1/approvals/{approval_id}/decide"] = {"post": {"responses": {"200": {"description": "Recorded human decision"}, "400": {"description": "Invalid decision"}, "403": {"description": "Identity denied"}}}}
     paths["/api/v1/evidence/{evidence_id}"] = _get("Evidence record")
-    paths["/api/v1/evidence/{evidence_id}/verify"] = {"post": {"responses": {"200": {"description": "Updated verification state"}, "400": {"description": "Invalid verification state"}}}
+    paths["/api/v1/evidence/{evidence_id}/verify"] = {"post": {"responses": {"200": {"description": "Updated verification state"}, "400": {"description": "Invalid verification state"}}}}
     paths["/api/v1/runs/{run_id}"] = _get("Run record")
     paths["/api/v1/runs/{run_id}/timeline"] = _get("Evidence timeline for a run")
     paths["/api/v1/agent-builder/from/{agent_id}"] = _get("Editable canonical-agent projection")
