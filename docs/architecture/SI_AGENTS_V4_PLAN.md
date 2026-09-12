@@ -41,7 +41,7 @@ Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagi
 
 Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
 
-PR #78 is merged into `main`. Phase 64 is closed under the synchronized documentation-tree closure validated with the Phase 65 final gate.
+PR #78 is merged into `main`. Phase 64 is closed under the verified V4 documentation baseline.
 
 ## Phase 65 — Workflow + Automation
 
@@ -49,11 +49,11 @@ Phase 65 delivers a transport-neutral declarative workflow engine with versioned
 
 Implementation: `core/automation/workflows.py`.
 
-Verification: `tests/unit/test_phase65_workflows.py`; implementation-tree CI #1239 (`34697885027`) passed distribution build, wheel installation, repository audit, integration verification, Ruff, and full pytest. The synchronized documentation tree is the authoritative final closure target.
+Verification: `tests/unit/test_phase65_workflows.py` and repository-wide CI. The synchronized-tree closure run **CI #1249 / `34698187600`** completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
 
 ## Phase 66 — Advanced Web Control Plane
 
-Dashboards, live activity, routing/health/cost/resources, DAGs, timelines/events/dependencies, logs/evidence/artifacts, code/Markdown/JSON/diff viewers, search, authorized controls, accessibility, and degraded-state UX.
+**Next.** Dashboards, live activity, routing/health/cost/resources, DAGs, timelines/events/dependencies, logs/evidence/artifacts, code/Markdown/JSON/diff viewers, search, authorized controls, accessibility, and degraded-state UX.
 
 ## Phase 67 — Advanced TUI Control Center
 
@@ -77,4 +77,4 @@ Final architecture, authority, state-machine, lifecycle, concurrency, idempotenc
 
 ## Closure gate
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
+A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate.**
