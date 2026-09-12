@@ -6,7 +6,6 @@ import base64
 import hashlib
 import json
 import os
-import struct
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
