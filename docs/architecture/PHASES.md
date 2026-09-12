@@ -36,7 +36,7 @@
 | 49 | Agent + Team Builder | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 50 | Capability Authorization | **Advanced hardened** | Hardening CI #984 / `34671292491` |
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
-| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687` on `215dd5491b4e6f38f454faaf5b0a2f8331694455`; documentation closure is pending its final exact-tree CI. |
+| 52 | Context / Memory Economics | **Complete** | Mainline CI #1015 / `34673115687`; final synchronized-tree CI #1018 / `34673281826` on `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed` |
 | 53 | Persistent Sessions | **Next** | Planned next implementation phase |
 | 54 | Human-in-the-Loop | Planned | Planned |
 | 55 | Durable Waiting + Scheduling | Planned | Planned |
@@ -79,7 +79,7 @@ Combined hardening CI **#984 (`34671292491`)** passed distribution, wheel verifi
 
 ## Phase 52 closure evidence
 
-Phase 52 implementation and adversarial coverage passed PR CI #1014, then the merged mainline exact-tree CI #1015 (`34673115687`) passed distribution build, wheel installation verification, repository audit, integration verification, Ruff, and the full test suite on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`. The documentation-closure branch updates the current/index records and requires one final mainline exact-tree CI after merge.
+Phase 52 implementation and adversarial coverage passed PR CI #1014, mainline CI #1015 (`34673115687`) passed on merge commit `215dd5491b4e6f38f454faaf5b0a2f8331694455`, and final synchronized-tree mainline CI #1018 (`34673281826`) passed on commit `a57bd9f891ca2b1590b91c1d1c67d65dc817f6ed`. The exact current tree is therefore verified green after documentation closure.
 
 ## Detailed planned scope — Phases 52–71
 
@@ -109,7 +109,7 @@ Unified least privilege; identities; scoped permissions/capability tokens; tool/
 
 ### 58 — Workspace / Worktree Lifecycle
 
-Workspace creation/destruction; Git worktree/branch lifecycle; per-agent/task/team isolation; explicitly permitted shared workspaces; locking/ownership; dirty-worktree/conflict detection; diff/patch/merge preparation; artifact collection; snapshots/checkpoints; failure/restart cleanup and recovery; authorized workspace resume; permissions/audit history; abandoned-workspace garbage collection.
+Workspace creation/destruction; Git worktree/branch lifecycle; per-agent/task/team isolation; explicitly permitted shared workspaces; locking/ownership; dirty-worktree/conflict detection; diff/patch/merge preparation; artifact collection; snapshots/checkpoints; failure/restart cleanup and recovery; authorized workspace resume; permissions/audit history; abandoned workspace garbage collection.
 
 ### 59 — Observability
 
