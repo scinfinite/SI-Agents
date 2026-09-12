@@ -6,6 +6,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import pytest
+
 from core.control_api.service import ControlApiService
 from core.control_api.web import create_web_control_server
 
@@ -35,7 +37,9 @@ def test_web_root_and_assets_are_same_origin(tmp_path: Path):
         assert js.status == 200
         assert "api('/api/v1/health')" in js.read().decode()
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
 
 
 def test_web_api_is_reused_without_second_authority(tmp_path: Path):
@@ -46,7 +50,9 @@ def test_web_api_is_reused_without_second_authority(tmp_path: Path):
         assert response.headers["X-Content-Type-Options"] == "nosniff"
         assert '"api_version":"v1"' in response.read().decode()
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
 
 
 def test_source_search_and_diff_viewers_are_bounded(tmp_path: Path):
@@ -62,19 +68,23 @@ def test_source_search_and_diff_viewers_are_bounded(tmp_path: Path):
         assert diff["path"] == "README.md"
         assert diff["base"] == "HEAD~1"
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
 
 
 def test_web_api_authentication_is_inherited(tmp_path: Path):
     server, thread = _serve(tmp_path, token="secret")
     try:
-        with __import__("pytest").raises(urllib.error.HTTPError) as exc:
+        with pytest.raises(urllib.error.HTTPError) as exc:
             _get(server, "/api/v1/source?path=README.md")
         assert exc.value.code == 403
         response = _get(server, "/api/v1/source?path=README.md", headers={"Authorization": "Bearer secret"})
         assert response.status == 200
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
 
 
 def test_web_server_rejects_remote_binding():
@@ -90,8 +100,10 @@ def test_web_server_rejects_remote_binding():
 def test_web_static_path_traversal_is_not_served(tmp_path: Path):
     server, thread = _serve(tmp_path)
     try:
-        with __import__("pytest").raises(urllib.error.HTTPError) as exc:
+        with pytest.raises(urllib.error.HTTPError) as exc:
             _get(server, "/web/control/../server.py")
         assert exc.value.code == 404
     finally:
-        server.shutdown(); server.server_close(); thread.join(timeout=2)
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
