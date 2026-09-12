@@ -6,6 +6,8 @@
 
 Phases 44–61 are closed. Phase 62 is implemented and merged, with final synchronized-tree mainline CI pending. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 63 is next after Phase 62 closure.
 
+The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
+
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
