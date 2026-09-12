@@ -17,11 +17,25 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–66**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 67 — Advanced TUI Control Center is next.**
+V3 is closed. V4 has completed Phases **44–66**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 66 — Advanced Web Control Plane is closed at 100%. Phase 67 — Advanced TUI Control Center is next.**
 
 ## Closed phases
 
 Phases 44–66 are closed under their recorded implementation, merge, documentation, and CI evidence.
+
+### Phase 66 — Advanced Web Control Plane
+
+**Complete / 100%.** Phase 66 provides a secure, accessible, same-origin operational web client over the existing WebServer and Control API. It covers dashboard/health, bounded live activity, workflows and DAG topology, timelines/events/dependencies, evidence, identity-bound approval visibility, governed run-request controls, resource/settings views, and code/Markdown/JSON/diff-oriented repository inspection with bounded search/filtering.
+
+Implementation: `core/web/advanced.py`, `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css`. The advanced handler is installed on the existing `WebServer` rather than creating a competing web authority.
+
+The UI is a client of SI Core rather than a second authority. It inherits the established WebServer authentication/audit boundary, uses restrictive CSP and safe static/repository path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh. Governed run requests remain ordinary Control API requests and cannot bypass SI Core authorization.
+
+Repository inspection is read-only, excludes `.git`, bounds source/diff payloads and search traversal, and uses timeout-bounded argument-vector Git inspection. Accessibility coverage includes keyboard navigation, skip links, semantic landmarks, status announcements, and non-color-only state labels.
+
+Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
+
+PR #79 merged successfully. Final synchronized-tree mainline CI **#1280** / run **34699748468** on commit `89e59f31c5785ab7a29aab8eec927cbebaa3b383` completed successfully. The SDK workflow on the same commit also completed successfully as run **34699748479**. This final synchronized-tree CI is the authoritative Phase 66 closure gate.
 
 ### Phase 65 — Workflow + Automation
 
@@ -30,22 +44,6 @@ Phase 65 delivers a transport-neutral declarative workflow engine with versioned
 Implementation: `core/automation/workflows.py`.
 
 Verification: `tests/unit/test_phase65_workflows.py` and repository-wide CI. Final synchronized-tree CI #1249 / `34698187600` completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
-
-## Phase 66 — Advanced Web Control Plane
-
-**Complete / 100%.** Phase 66 provides a secure, accessible, same-origin operational web client over the existing WebServer and Control API. It covers dashboard/health, live activity, workflows and DAG topology, timelines/events/dependencies, evidence, identity-bound approval visibility, governed run-request controls, resource/settings views, and code/Markdown/JSON/diff-oriented repository inspection with bounded search/filtering.
-
-Implementation: `core/web/advanced.py`, `web/control/index.html`, `web/control/app.js`, and `web/control/styles.css`. The advanced handler is installed on the existing `WebServer` rather than creating a competing web authority.
-
-The UI is a client of SI Core rather than a second authority. It inherits the established WebServer authentication/audit boundary, uses restrictive CSP and safe static/repository path resolution, has no third-party runtime dependency, and keeps streaming available through the existing API while using bounded polling for dashboard refresh. Governed run requests remain ordinary Control API requests and cannot bypass SI Core authorization.
-
-Repository inspection is read-only, excludes `.git`, bounds source/diff payloads and search traversal, and uses a timeout-bounded argument-vector Git inspection.
-
-PR #79 merged successfully. Closure CI #1275 / `34699632473` passed distribution build, wheel verification, repository audit, integration verification, Ruff, full pytest, and the SDK workflow. The current synchronized documentation tree is the final mainline closure target.
-
-Acceptance tests: `tests/unit/test_phase66_web_control.py` and `tests/unit/test_phase66_advanced_web.py`.
-
-Documentation: `docs/architecture/PHASE_66_ADVANCED_WEB_CONTROL_PLANE.md`.
 
 ## Phase 67 — Advanced TUI Control Center
 
@@ -69,4 +67,4 @@ Final architecture, authority, state-machine, lifecycle, concurrency, idempotenc
 
 ## Closure gate
 
-Phase 66 implementation and PR closure gates are green. The final synchronized-tree mainline CI for this documentation state is the authoritative last gate before the phase is fully closed.
+Phase 66 implementation, security/accessibility tests, repository validation, documentation synchronization, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final synchronized-tree mainline CI are green. **Phase 66 is therefore fully closed at 100%.**
