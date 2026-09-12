@@ -9,16 +9,17 @@ User → OpenCode → SI Core / Control API
      → Scheduler / Orchestrator → Tasks / Agents / Teams / Workflows
      → Capability Authorization → OmniRoute → Models / Providers / APIs
      → Results / Artifacts / Evidence → SI Core
-     → OpenCode / Web / TUI / CLI
+     → Observability → Evaluation → Continuous Improvement
+     → Release Gates / Canaries / Rollback → OpenCode / Web / TUI / CLI
 ```
 
-OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core owns execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, durable sessions, human gates, durable waiting, workspace lifecycle, observability, and evaluation. Integrations are adapters and never become competing business authorities.
+OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API routing layer. SI Core owns execution state, orchestration, governance, evidence, lifecycle, persistence, recovery, durable sessions, human gates, durable waiting, workspace lifecycle, observability, evaluation, and continuous-improvement governance. Integrations are adapters and never become competing business authorities.
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–60** in sequence at the required advanced-hardening level. Phases **46, 47, 49, and 50** were previously advanced-hardened; Phases **58, 59, and 60** have now received a dedicated advanced-hardening pass. **Phase 61 — Continuous Improvement is next.**
+V3 is closed. V4 has completed Phases **44–61**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 61 — Continuous Improvement is fully closed. Phase 62 — Cross-Runtime / Cross-Harness is next.**
 
-Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)**, and the Phase 58–60 advanced-hardening closure PR #74 / PR CI #1143 (`34691131729`) / final mainline CI #1144 (`34691176676`) all passed the repository distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest gates.
+Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)**, Phase 58–60 advanced-hardening closure PR #74 / PR CI #1143 (`34691131729`) / final mainline CI #1144 (`34691176676`), and Phase 61 PR #75 / PR CI #1157 (`34692165853`) provide the verified closure evidence.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -106,7 +107,7 @@ Task complexity/capability analysis; task/agent/model matching; capability/quali
 
 Delivered through `core/provider_intelligence/intelligent_router.py`, with deterministic complexity inference, explicit task requirements, quality/reliability/latency/cost scoring, capability/context/output checks, provider/model preference, quota and circuit gating, budget reservations/settlement, retry forecasting, bounded transient/rate-limit fallback, escalation/downgrade controls, non-secret route evidence, health outcomes, recovery probes, and adversarial coverage. `ModelProfile` now includes quality plus streaming and structured-output capability declarations.
 
-Evidence: PR #67 merged as `0c19e1c322b4262128b34a2203c54a30ece31f93`; PR verification CI #1091 (`34682603137`) passed; final synchronized-tree mainline CI #1099 (`34682849381`) passed all repository gates on final main tree.
+Evidence: PR #67 merged as `0c19e1c322b4262128b34a2203c54a30ece31f93`; PR verification CI #1091 (`34682603137`) passed; final synchronized-tree mainline CI #1099 (`34682849381`) passed all repository gates.
 
 ## Phase 57 — Security Platform — complete
 
@@ -132,9 +133,13 @@ Deterministic golden cases and multi-mode scoring, reliability/security/latency/
 
 Evidence: PR #74 / CI #1143 (`34691131729`); final mainline CI #1144 (`34691176676`).
 
-## Phase 61 — Continuous Improvement
+## Phase 61 — Continuous Improvement — complete
 
-Failure analysis/clustering, regression detection, optimization recommendations, agent/team/model/routing/workflow improvement, cost/reliability/performance optimization, experiments, canaries, rollback, human approval for consequential changes, and evidence/history.
+The Continuous Improvement authority converts evaluation evidence into bounded, explainable proposals without becoming a competing execution authority. It provides deterministic failure clustering, explicit baseline/threshold regression signals, optimization recommendations across agent/team/model/routing/workflow targets, confidence/benefit/risk/prerequisite metadata, deterministic weighted experiments, fail-closed canary gates, human approval binding for consequential changes, rollback plans, and durable SHA-256 hash-chained improvement history.
+
+Security and reliability hardening includes bounded serializable inputs, secret-like content rejection before persistence, approval-rationale scanning, full history-chain verification, stable deterministic assignment, explicit canary failure reasons, and rollback-state constraints. Approved changes remain subject to existing SI Core scheduler, security, deployment/workspace, and runtime authorities; Phase 61 itself never mutates those authorities.
+
+Implementation and adversarial coverage is in `tests/test_phase61_continuous_improvement.py`. The phase was merged as PR #75 and passed PR CI #1157 (`34692165853`) including wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest.
 
 ## Phase 62 — Cross-Runtime / Cross-Harness
 
