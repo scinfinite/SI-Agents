@@ -57,7 +57,8 @@ def test_inspection_never_exposes_git_paths():
 
 
 def test_remote_server_keeps_existing_auth_boundary():
-    config = WebConfig(host="127.0.0.1", port=0, auth_token="secret")
+    token = "s" * 32
+    config = WebConfig(host="127.0.0.1", port=0, auth_token=token)
     server = create_advanced_server(config, ControlApiService(Path.cwd()))
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -65,7 +66,7 @@ def test_remote_server_keeps_existing_auth_boundary():
         with pytest.raises(urllib.error.HTTPError) as exc:
             _get(server, "/control/")
         assert exc.value.code == 401
-        page = _get(server, "/control/", {"Authorization": "Bearer secret"})
+        page = _get(server, "/control/", {"Authorization": f"Bearer {token}"})
         assert page.status == 200
     finally:
         _close(server, thread)
