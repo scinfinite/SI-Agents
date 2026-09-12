@@ -16,9 +16,9 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–56** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 57 — Security Platform is the active implementation phase.**
+V3 is closed. V4 has completed Phases **44–57** in sequence. Phases **46, 47, 49, and 50** have additionally passed advanced hardening. **Phase 58 — Workspace / Worktree Lifecycle is next.**
 
-Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, and Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
+Phase 52 final exact-tree CI **#1020 (`34673411916`)**, Phase 53 final synchronized-tree CI **#1041 (`34675322458`)**, Phase 54 final synchronized-tree CI **#1051 (`34676632475`)**, Phase 55 synchronized-tree closure CI **#1080 (`34678317246`)**, Phase 56 final synchronized-tree mainline CI **#1099 (`34682849381`)**, and Phase 57 final synchronized-tree mainline CI **#1113 (`34684260315`)** all passed the required distribution, wheel verification, repository audit, integration verification, Ruff, compileall, and full pytest gates.
 
 ### Phase 44 — Execution Runtime Foundation
 
@@ -108,11 +108,11 @@ Delivered through `core/provider_intelligence/intelligent_router.py`, with deter
 
 Evidence: PR #67 merged as `0c19e1c322b4262128b34a2203c54a30ece31f93`; PR verification CI #1091 (`34682603137`) passed; final synchronized-tree mainline CI #1099 (`34682849381`) passed all repository gates on final main tree.
 
-## Phase 57 — Security Platform — in implementation
+## Phase 57 — Security Platform — complete
 
-Establish the single fail-closed security authority for SI Core: authenticated tenant identities; tenant-bound least-privilege subject/action/resource/scope grants; short-lived request-bound single-use capability tokens; tool/MCP/model/provider/filesystem/command/process/network authorization through explicit grants; secret isolation and redaction; workspace/project isolation; HTTPS egress allowlists with private-network protection; destructive/high-risk/credential approval enforcement; prompt/tool injection defenses; explicit trust boundaries; policy versioning; non-secret audit evidence; and adversarial tests. Security decisions are `ALLOW`, `DENY`, or `APPROVAL_REQUIRED`; approvals never become execution authority.
+Established the single fail-closed security authority for SI Core: authenticated tenant identities; tenant-bound least-privilege subject/action/resource/scope grants; short-lived request-bound single-use capability tokens; tool/MCP/model/provider/filesystem/command/process/network authorization through explicit grants; secret isolation and redaction; workspace/project isolation; HTTPS egress allowlists with private-network protection; destructive/high-risk/credential approval enforcement; prompt/tool injection defenses; explicit trust boundaries; policy versioning; non-secret audit evidence; and adversarial tests. Security decisions are `ALLOW`, `DENY`, or `APPROVAL_REQUIRED`; approvals never become execution authority.
 
-Implemented in `core/security/platform.py` and exported through `core/security`. Verification covers identity/tenant isolation, least privilege, bounded scopes, approvals, egress/private-network controls, credential/egress separation, secret scanning, injection rejection, HMAC token binding/replay prevention/TTL/policy invalidation, expired grants, trust-boundary non-authority, and safe audit evidence. PR #68 verification CI #1109 (`34684116453`) is green; final closure still requires merge and exact-tree mainline CI.
+Implemented in `core/security/platform.py` and exported through `core/security`. Verification covers identity/tenant isolation, least privilege, bounded scopes, approvals, egress/private-network controls, credential/egress separation, secret scanning, injection rejection, HMAC token binding/replay prevention/TTL/policy invalidation, expired grants, trust-boundary non-authority, and safe audit evidence. PR #68 merged as `26e001bc3756fb28ecbc9773db8df6a46d26dba7`; final synchronized-tree mainline CI #1113 (`34684260315`) passed all repository gates on final `main`.
 
 ## Phase 58 — Workspace / Worktree Lifecycle
 
