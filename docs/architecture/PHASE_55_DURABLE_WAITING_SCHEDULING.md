@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete on `main` after final exact-tree CI verification.**
+**Complete on `main` after final synchronized-tree exact-tree CI verification.**
 
 ## Scope delivered
 
@@ -95,6 +95,6 @@ scheduling from execution authority. No external runtime is treated as SI Core a
 
 - Phase 54 was verified complete on `main` before Phase 55 implementation.
 - Phase 54 final synchronized-tree mainline CI #1051 (`34676632475`) passed all required gates.
-- Phase 55 implementation adds `core/waiting`, adversarial tests, explicit claim lifecycle, and
-  Control API routes.
-- Final synchronized documentation and the exact-tree mainline CI run are the closure gate for this record.
+- Phase 55 implementation and adversarial verification are represented by implementation CI #1074 (`34678184341`), which passed distribution, wheel verification, repository audit, integration verification, Ruff, and full pytest.
+- The documentation/index synchronization in the commits immediately preceding this record update is part of the final exact-tree closure tree.
+- The CI run triggered by this final phase-record commit is the final synchronized-tree closure gate; Phase 56 must not start before it passes.
