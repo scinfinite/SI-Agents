@@ -1,6 +1,6 @@
 # Phase 68 — Advanced CLI Platform
 
-**Status:** Implementation complete pending final synchronized-tree closure gate.
+**Status:** Complete / 100% — closed.
 
 ## Authority
 
@@ -36,7 +36,7 @@ Phase 68 adds a deterministic, machine-friendly platform surface:
 - `attachment inspect` — bounded metadata/hash inspection without arbitrary upload execution;
 - `config`, `profile`, `auth` — non-secret client configuration, transport profiles, and environment-token status;
 - `pipeline run` — bounded declarative submission with per-step SI Core governance;
-- `status`, `organization`, `skills`, `memory`, `governance`, `evidence`, `environments`, `harnesses`, `settings`, and `visualization` read surfaces.
+- `status`, `organization`, `skills`, `memory`, `governance`, `evidence`, `environments`, `harnesses`, `settings`, and `visualization` read surfaces through the appropriate existing CLI contracts.
 
 ## Transport contract
 
@@ -63,7 +63,7 @@ Failures use machine-readable error objects and deterministic exit classes:
 - `3` authentication required or rejected;
 - `4` governance or authority rejection.
 
-Human-readable output remains available when `--json` is omitted.
+Human-readable output remains available when `--json` is omitted. Established legacy commands retain their historical routing behavior.
 
 ## Safety invariants
 
@@ -81,6 +81,12 @@ Human-readable output remains available when `--json` is omitted.
 - resume is fail-closed when downstream execution owns the resume transition;
 - unknown or malformed inputs fail without shell interpretation.
 
-## Verification
+## Verification and closure evidence
 
-Coverage is in `tests/test_phase68_cli.py` and existing Control API/TUI/Web suites. Closure requires the full repository CI gate, including wheel installation, repository audit, integration verification, Ruff, full pytest, SDK workflow, documentation synchronization, merge, and final exact-tree mainline CI.
+Coverage is in `tests/test_phase68_cli.py` plus the complete repository suite. The Phase 68 PR passed wheel installation, repository audit, integration verification, Ruff, and full pytest. SDK verification also passed.
+
+- PR #81 merged as `8c5fb08e9c8a5628f59cf929e3c2ac203d4eac29`.
+- Final PR CI: **#1319 / `34703142494`** — green.
+- SDK CI: **#111 / `34703142515`** — green.
+- Final merged-tree mainline CI: **#1320 / `34703212232`** — green.
+- Final documentation synchronization is now applied on `main`; its exact-tree mainline CI is the last release gate for the synchronized closure record.
