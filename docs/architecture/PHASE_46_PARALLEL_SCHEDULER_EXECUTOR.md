@@ -1,11 +1,11 @@
 # Phase 46 — Parallel Scheduler + Executor
 
-**Status:** Complete and CI-verified
+**Status:** Advanced-hardening complete; final verification pending documentation-tree CI
 **Roadmap:** V4 Phase 46
 
-## Objective
+## Advanced-level audit result
 
-Add a durable, dependency-aware parallel scheduler above the Phase 44 execution runtime and Phase 45 event/state layer. The scheduler decides **when** already-authorized executions run. It does not authorize work, change provenance, or become a second control plane.
+The original Phase 46 implementation was functional and CI-verified, but the audit found two production-hardening gaps: explicit execution identities could surface as raw runtime uniqueness failures, and scheduler idempotency needed to be authoritative at the orchestration boundary. These are now fixed. The dependency graph is also defensively checked for cycles and existing schedules are never mutated by a conflicting resubmission.
 
 ## Implemented
 
@@ -18,9 +18,13 @@ Add a durable, dependency-aware parallel scheduler above the Phase 44 execution 
 - Restart recovery of scheduler-owned running records back to waiting, with runtime recovery.
 - Explicit cancellation of queued/running work through the Phase 44 runtime.
 - Scheduler lifecycle events emitted through the Phase 45 event bus.
-- Deterministic synchronous `drain()` for tests/operators plus background `start()`/`stop()` operation.
+- Deterministic synchronous `drain()` plus background `start()`/`stop()` operation.
 - Fail-closed validation for worker count, timing configuration, duplicate/unknown dependencies, and invalid priorities.
-- Queued cancellation and dependency blocking finalize the corresponding authoritative runtime execution as cancelled; the scheduler never leaves a cancelled orchestration record with a live queued execution.
+- Queued cancellation and dependency blocking finalize the corresponding authoritative runtime execution as cancelled.
+- **Idempotent schedule submission:** runtime idempotency and explicit `execution_id` reuse return the existing schedule only when task/dependency/priority metadata is identical.
+- **Conflict protection:** a conflicting reuse is rejected before runtime insertion and cannot mutate the existing schedule.
+- **DAG defense:** dependency insertion performs a graph reachability cycle check in addition to immutable dependency creation semantics.
+- **Deterministic dependency ordering:** persisted dependency edges are returned in stable order.
 
 ## Authority and safety invariants
 
@@ -33,20 +37,24 @@ Add a durable, dependency-aware parallel scheduler above the Phase 44 execution 
 7. Worker concurrency is bounded by the configured `max_workers`.
 8. Restart never silently treats an interrupted running schedule as successfully completed.
 9. Scheduler events are facts and cannot be used as authorization signals.
-10. Scheduler cancellation uses the runtime's cancellation boundary; it does not directly mutate runtime lifecycle state.
+10. Scheduler cancellation uses the runtime cancellation boundary; it does not directly mutate runtime lifecycle state.
+11. A duplicate execution identity cannot create a second schedule or overwrite dependency metadata.
+12. A scheduler graph cannot introduce a dependency cycle through resubmission.
 
 ## Verification coverage
 
-`tests/test_phase46_scheduler.py` covers bounded parallelism, dependency ordering, failure propagation, priority ordering, queued cancellation, persistence/reopen, durable scheduler events, invalid configuration/dependency handling, and terminal runtime state for blocked/cancelled executions.
+`tests/test_phase46_scheduler.py` covers bounded parallelism, dependency ordering, failure propagation, priority ordering, queued cancellation, persistence/reopen, durable scheduler events, invalid configuration/dependency handling, terminal runtime state for blocked/cancelled executions, explicit identity conflict safety, and runtime-idempotent resubmission.
 
-## Final verification evidence
+## Baseline evidence
 
-The final Phase 46 implementation tree is commit **`772716428868a7597540a0bea72f715dfd46a224`**. Final CI run **#938 (`34615157829`)** completed successfully.
+Original final Phase 46 implementation commit: `772716428868a7597540a0bea72f715dfd46a224`. Original final CI: **#938 (`34615157829`)**.
 
-The final CI gate passed distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite. The previous CI #936 caught Ruff issues and CI #937 caught one queued-cancellation runtime-state gap; both were corrected before this final green gate.
+## Advanced-hardening evidence
 
-## Phase 46 gate result
+Advanced hardening is being verified as part of the combined Phase 46/47/49/50 audit branch. CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite after the scheduler fixes.
 
-Phase 46 is closed. The parallel scheduler/executor is implemented on `main`, integrated with the Phase 44 runtime and Phase 45 event bus, tested for concurrency/dependencies/failure/cancellation/recovery/security-boundary behavior, documented, packaging-verified, and final-CI verified.
+## Gate result
 
-Phase 47 — OpenCode Bridge is the next implementation phase.
+The Phase 46 implementation is now advanced-hardened. Final status becomes immutable on `main` only after the documentation synchronization commit also passes exact-tree CI.
+
+Phase 47 — OpenCode Bridge remains part of this combined advanced audit.

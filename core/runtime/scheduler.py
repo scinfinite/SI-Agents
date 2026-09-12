@@ -43,11 +43,7 @@ class ScheduledItem:
 class ParallelScheduler:
     """Durable dependency-aware scheduler over the authoritative execution runtime."""
 
-    def __init__(
-        self, runtime: ExecutionRuntime, adapter: object, *, max_workers: int = 4,
-        path: str = ":memory:", event_bus: EventBus | None = None,
-        aging_seconds: float = 30.0, poll_seconds: float = 0.02,
-    ) -> None:
+    def __init__(self, runtime: ExecutionRuntime, adapter: object, *, max_workers: int = 4, path: str = ":memory:", event_bus: EventBus | None = None, aging_seconds: float = 30.0, poll_seconds: float = 0.02) -> None:
         if max_workers < 1:
             raise ValueError("max_workers must be >= 1")
         if aging_seconds <= 0 or poll_seconds <= 0:
@@ -91,15 +87,31 @@ class ParallelScheduler:
             raise ValueError("priority must be an integer")
         if len(set(depends_on)) != len(depends_on):
             raise ValueError("depends_on must not contain duplicates")
+        if task.execution_id and task.execution_id in depends_on:
+            raise ValueError("an execution cannot depend on itself")
         with self._lock:
             for dependency in depends_on:
                 if self._db.execute("SELECT 1 FROM schedules WHERE execution_id=?", (dependency,)).fetchone() is None:
                     raise ValueError(f"unknown dependency execution: {dependency}")
+            if task.execution_id:
+                existing = self._db.execute("SELECT schedule_id FROM schedules WHERE execution_id=?", (task.execution_id,)).fetchone()
+                if existing is not None:
+                    item = self.get(existing[0])
+                    if tuple(sorted(depends_on)) != item.dependencies or priority != item.priority or task.task_id != item.task_id:
+                        raise ValueError("idempotent execution conflicts with existing schedule metadata")
+                    return item
         execution = self.runtime.accept(task)
-        if execution.execution_id in depends_on:
-            self.runtime.cancel(execution.execution_id)
-            self.runtime.run(execution.execution_id, self.adapter)
-            raise ValueError("an execution cannot depend on itself")
+        with self._lock:
+            existing = self._db.execute("SELECT schedule_id FROM schedules WHERE execution_id=?", (execution.execution_id,)).fetchone()
+            if existing is not None:
+                item = self.get(existing[0])
+                if tuple(sorted(depends_on)) != item.dependencies or priority != item.priority or task.task_id != item.task_id:
+                    raise ValueError("idempotent execution conflicts with existing schedule metadata")
+                return item
+            if self._dependency_would_cycle(execution.execution_id, depends_on):
+                self.runtime.cancel(execution.execution_id)
+                self.runtime.run(execution.execution_id, self.adapter)
+                raise ValueError("schedule dependency graph would contain a cycle")
         schedule_id, now = str(uuid.uuid4()), time.time()
         with self._lock:
             try:
@@ -246,6 +258,26 @@ class ParallelScheduler:
             self.runtime.recover()
             for row in rows:
                 self._emit(row["execution_id"], "scheduler.recovered", {"schedule_id": row["schedule_id"]})
+
+    def _dependency_would_cycle(self, candidate_execution_id: str, depends_on: tuple[str, ...]) -> bool:
+        if candidate_execution_id in depends_on:
+            return True
+        edges: dict[str, tuple[str, ...]] = {}
+        rows = self._db.execute("SELECT schedule_id, execution_id FROM schedules").fetchall()
+        for row in rows:
+            dep_rows = self._db.execute("SELECT dependency_execution_id FROM schedule_dependencies WHERE schedule_id=?", (row["schedule_id"],)).fetchall()
+            edges[row["execution_id"]] = tuple(dep[0] for dep in dep_rows)
+        seen: set[str] = set()
+        stack = list(depends_on)
+        while stack:
+            current = stack.pop()
+            if current == candidate_execution_id:
+                return True
+            if current in seen:
+                continue
+            seen.add(current)
+            stack.extend(edges.get(current, ()))
+        return False
 
     def _emit(self, execution_id: str, event_type: str, payload: Mapping[str, object]) -> None:
         if self.event_bus is not None:

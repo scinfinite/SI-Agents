@@ -1,11 +1,11 @@
 # Phase 47 — OpenCode Bridge
 
-**Status:** Complete and CI-verified
+**Status:** Advanced-hardening complete; final verification pending documentation-tree CI
 **Roadmap:** V4 Phase 47
 
-## Objective
+## Advanced-level audit result
 
-Provide a first-class OpenCode protocol adapter while preserving the SI control/runtime authority boundary. OpenCode supplies transport/session/execution mechanics; SI retains caller authorization, capability policy, provenance, approvals, lifecycle authority, and audit semantics.
+The original Phase 47 bridge was already a strong protocol adapter, but the audit identified missing per-request timeout propagation and an unbounded SSE frame risk. Both are now enforced at the transport boundary. OpenCode remains strictly downstream of SI authority.
 
 ## Implemented
 
@@ -24,6 +24,9 @@ Provide a first-class OpenCode protocol adapter while preserving the SI control/
 - Injectable transport for deterministic tests and alternate platform clients.
 - Session-filtered event consumption so global/unscoped events cannot leak another session's output into an SI invocation.
 - Transport failures during session creation are normalized to a stable SI failed response.
+- **Per-request timeout propagation** from `InvocationRequest.timeout_seconds` to HTTP request and SSE transport operations.
+- **SSE frame bound** of 1 MiB, with oversized frames rejected before unbounded buffering.
+- Streaming completion requires an explicit terminal event; premature stream end is normalized as failure.
 
 ## Authority invariants
 
@@ -35,23 +38,23 @@ Provide a first-class OpenCode protocol adapter while preserving the SI control/
 6. Streaming terminality is normalized to exactly one SI terminal response.
 7. Remote OpenCode access is opt-in rather than the default.
 8. Events without the active OpenCode session identity are ignored by the bridge.
-
-## Upstream protocol alignment
-
-The bridge targets the current OpenCode server surface: health, session creation, session message/prompt_async, abort, and event streaming. The integration is intentionally isolated behind SI's stable adapter contract so upstream protocol changes do not become SI core authority changes.
+9. Request-specific timeout budgets are passed to the downstream transport rather than silently replaced by a global default.
+10. Event buffering is bounded to prevent an upstream peer from exhausting bridge memory through a single SSE frame.
 
 ## Verification coverage
 
-`tests/test_phase47_opencode.py` covers endpoint policy, health/session discovery, blocking invocation, session reuse, model forwarding, cancellation, SSE filtering, streaming terminality, streaming failures, and transport-error normalization.
+`tests/test_phase47_opencode.py` covers endpoint policy, health/session discovery, blocking invocation, session reuse, model forwarding, cancellation, SSE filtering, streaming terminality, streaming failures, transport-error normalization, request timeout propagation, and bounded event transport behavior.
 
-## Final verification evidence
+## Baseline evidence
 
-The implementation initially ran as CI **#940 (`34615549738`)** on commit `21479716adffba5f1ab03742e2b49905666abf3b`. That gate caught two correctness gaps: cancellation was asserted after a completed request, and transport errors during session creation were not normalized. Both were corrected in commit **`52176a1d612637cbc892b354771f80e6af86910e`**.
+Original final Phase 47 CI **#941 (`34615709124`)** passed the complete repository gate.
 
-Final Phase 47 CI **#941 (`34615709124`)** on commit `52176a1d612637cbc892b354771f80e6af86910e` completed successfully. The final job passed distribution build, wheel installation/import smoke tests, repository audit, integration verification, Ruff, compileall, and the complete pytest suite.
+## Advanced-hardening evidence
 
-## Phase 47 gate result
+Combined advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite after the timeout/SSE hardening.
 
-Phase 47 is closed. The OpenCode bridge is implemented on `main`, exported through the runtime package, tested for transport/session/invocation/stream/cancellation/security-boundary behavior, documented, packaging-verified, and final-CI verified.
+## Gate result
 
-Phase 48 — OmniRoute Integration is the next implementation phase.
+The Phase 47 implementation is now advanced-hardened. Final status becomes immutable on `main` only after the documentation synchronization commit also passes exact-tree CI.
+
+Phase 48 — OmniRoute Integration is already closed and is outside this targeted hardening batch.

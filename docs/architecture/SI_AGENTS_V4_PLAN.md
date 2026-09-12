@@ -2,7 +2,40 @@
 
 ## Current verified position
 
-V3 is closed. V4 implementation has completed Phases 44–51 in sequence. Phase 50 was fully closed on `main` at `9222379cfcb091858f0c5dcc1ec1616f933fca38`, with final documentation CI run `34625819419`. Phase 51 implementation is merged to `main`; final exact-tree CI run 977 / `34627956634` is green.
+V3 is closed. V4 implementation has completed Phases 44–51 in sequence. Phase 51 is complete. A subsequent advanced-level audit of Phases 46, 47, 49, and 50 identified and closed production-hardening gaps without reopening the phase sequence.
+
+## Advanced hardening position
+
+Combined advanced audit CI **#984 (`34671292491`)** passed distribution, wheel verification, repository audit, integration verification, Ruff, and the complete pytest suite.
+
+### Phase 46 — Parallel Scheduler + Executor
+
+- Explicit execution identity reuse is checked at the scheduler boundary.
+- Idempotent submissions return the existing schedule only when orchestration metadata matches.
+- Conflicting resubmissions cannot mutate existing schedules or surface raw runtime uniqueness errors.
+- Dependency graph cycle defense is explicit.
+- Existing durable recovery, bounded concurrency, cancellation propagation, and event integration remain intact.
+
+### Phase 47 — OpenCode Bridge
+
+- Per-request timeout budgets propagate to HTTP/SSE transport.
+- SSE frame buffering is capped at 1 MiB.
+- Streaming requires explicit terminal events.
+- Existing loopback-default, session filtering, cancellation, error normalization, and authority boundaries remain intact.
+
+### Phase 49 — Agent + Team Builder
+
+- Agent/team catalogs and manifests are schema-versioned.
+- Definition validation rejects duplicate metadata and invalid declarations.
+- Handoff graphs are acyclic.
+- Deterministic topological execution layers expose parallel composition opportunities without granting authority.
+
+### Phase 50 — Capability Authorization
+
+- High/critical approvals are bound to the exact request fingerprint.
+- Approval replay against modified authorization inputs is rejected.
+- Secret-like metadata keys are rejected before evidence creation.
+- Governance input sizes are bounded and egress semantics remain explicit/fail-closed.
 
 ## Architecture direction
 
@@ -16,7 +49,7 @@ Core principles:
 4. Retries/resume create explicit attempts and preserve provenance.
 5. External providers are adapters, never authority owners.
 6. Evidence and verification are required before phase closure.
-7. Current/index documentation is synchronized after every phase.
+7. Current/index documentation is synchronized after every phase and hardening audit.
 
 ## Phase roadmap
 
@@ -65,4 +98,4 @@ Phase 51 introduces `CheckpointStore`, `Checkpoint`, `ResumePlan`, and `Checkpoi
 
 ## Closure gate
 
-Every phase requires implementation, tests, security/adversarial checks, documentation, all current/index document updates, and final CI verification. Final CI must cover repository audit, distribution/wheel install/import, integration verification, Ruff, compileall, and full pytest. Phase 51 final exact-tree CI run 977 / `34627956634` is green.
+Every phase and hardening audit requires implementation, security/adversarial tests, documentation synchronization, all current/index document updates, and final CI verification. Final CI must cover repository audit, distribution/wheel install/import, integration verification, Ruff, compileall, and full pytest. The advanced hardening implementation gate is CI #984; the documentation-synchronized tree must pass its own final exact-tree CI before these changes are merged to `main`.

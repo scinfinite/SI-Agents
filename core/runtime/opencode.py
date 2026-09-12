@@ -22,9 +22,12 @@ from core.runtime.models import InvocationRequest, InvocationResponse, Invocatio
 from core.runtime.protocol import HarnessAdapter, HarnessMetadata
 
 
+_MAX_SSE_FRAME_BYTES = 1024 * 1024
+
+
 class OpenCodeTransport(Protocol):
-    def request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None) -> Any: ...
-    def stream(self, path: str, *, query: Mapping[str, str] | None = None) -> Iterable[Mapping[str, Any]]: ...
+    def request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None, timeout: float | None = None) -> Any: ...
+    def stream(self, path: str, *, query: Mapping[str, str] | None = None, timeout: float | None = None) -> Iterable[Mapping[str, Any]]: ...
 
 
 class OpenCodeTransportError(BuiltinRuntimeError):
@@ -45,11 +48,11 @@ class UrllibOpenCodeTransport:
         url = f"{self.base_url}/{path.lstrip('/')}"
         return f"{url}?{urllib.parse.urlencode(query)}" if query else url
 
-    def request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None) -> Any:
+    def request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None, timeout: float | None = None) -> Any:
         payload = json.dumps(body).encode() if body is not None else None
         request = urllib.request.Request(self._url(path, query), data=payload, method=method.upper(), headers={"Accept": "application/json", "Content-Type": "application/json"})
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
+            with urllib.request.urlopen(request, timeout=timeout or self.timeout) as response:
                 raw = response.read()
         except urllib.error.HTTPError as exc:
             raise OpenCodeTransportError(exc.code, "http_error") from exc
@@ -62,23 +65,28 @@ class UrllibOpenCodeTransport:
         except json.JSONDecodeError as exc:
             raise OpenCodeTransportError(None, "invalid_json") from exc
 
-    def stream(self, path: str, *, query: Mapping[str, str] | None = None) -> Iterator[Mapping[str, Any]]:
+    def stream(self, path: str, *, query: Mapping[str, str] | None = None, timeout: float | None = None) -> Iterator[Mapping[str, Any]]:
         request = urllib.request.Request(self._url(path, query), method="GET", headers={"Accept": "text/event-stream"})
         try:
-            response = urllib.request.urlopen(request, timeout=self.timeout)
+            response = urllib.request.urlopen(request, timeout=timeout or self.timeout)
         except urllib.error.HTTPError as exc:
             raise OpenCodeTransportError(exc.code, "http_error") from exc
         except (urllib.error.URLError, TimeoutError, socket.timeout) as exc:
             raise OpenCodeTransportError(None, "transport_error") from exc
         with response:
             data: list[str] = []
+            frame_bytes = 0
             for raw_line in response:
+                frame_bytes += len(raw_line)
+                if frame_bytes > _MAX_SSE_FRAME_BYTES:
+                    raise OpenCodeTransportError(None, "event_too_large")
                 line = raw_line.decode("utf-8", errors="replace").rstrip("\r\n")
                 if line.startswith("data:"):
                     data.append(line[5:].lstrip())
                 elif not line and data:
                     payload = "\n".join(data)
                     data.clear()
+                    frame_bytes = 0
                     try:
                         parsed = json.loads(payload)
                     except json.JSONDecodeError:
@@ -151,9 +159,9 @@ class OpenCodeBridge(HarnessAdapter):
                 self._sessions[request.request_id] = session_id
             body = self._message_body(request)
             if request.streaming:
-                self._request("POST", f"/session/{urllib.parse.quote(session_id, safe='')}/prompt_async", body=body)
+                self._request("POST", f"/session/{urllib.parse.quote(session_id, safe='')}/prompt_async", body=body, timeout=request.timeout_seconds)
                 return self._invoke_streaming(request, session_id)
-            result = self._request("POST", f"/session/{urllib.parse.quote(session_id, safe='')}/message", body=body)
+            result = self._request("POST", f"/session/{urllib.parse.quote(session_id, safe='')}/message", body=body, timeout=request.timeout_seconds)
             output = self._extract_text(result)
             event = RuntimeEvent(RuntimeEventType.COMPLETED, request.request_id, 0, output)
             return InvocationResponse(request.request_id, InvocationStatus.COMPLETED, output=output, events=(event,))
@@ -173,8 +181,8 @@ class OpenCodeBridge(HarnessAdapter):
             return False
         return result is True or (isinstance(result, Mapping) and result.get("aborted") is True)
 
-    def event_stream(self, session_id: str) -> Iterator[Mapping[str, Any]]:
-        for event in self._transport.stream("/event"):
+    def event_stream(self, session_id: str, *, timeout: float | None = None) -> Iterator[Mapping[str, Any]]:
+        for event in self._transport.stream("/event", timeout=timeout):
             if self._event_session_id(event) == session_id:
                 yield event
 
@@ -182,7 +190,7 @@ class OpenCodeBridge(HarnessAdapter):
         events: list[RuntimeEvent] = []
         chunks: list[str] = []
         sequence = 0
-        for raw in self.event_stream(session_id):
+        for raw in self.event_stream(session_id, timeout=request.timeout_seconds):
             event_type = str(raw.get("type", ""))
             if event_type in {"message.part.updated", "message.part.delta"}:
                 text = self._event_text(raw)
@@ -260,5 +268,5 @@ class OpenCodeBridge(HarnessAdapter):
                         return value
         return ""
 
-    def _request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None) -> Any:
-        return self._transport.request(method, path, query=query, body=body)
+    def _request(self, method: str, path: str, *, query: Mapping[str, str] | None = None, body: Mapping[str, Any] | None = None, timeout: float | None = None) -> Any:
+        return self._transport.request(method, path, query=query, body=body, timeout=timeout)

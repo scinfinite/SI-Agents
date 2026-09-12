@@ -24,6 +24,7 @@ def make_registry() -> AgentRegistry:
                 skills=("testing",),
                 capabilities=("repo.read",),
             ),
+            AgentDefinition("release", "release", "Prepare a release", capabilities=("repo.read",)),
         )
     )
 
@@ -32,10 +33,13 @@ def test_agent_definition_is_deterministic_and_validates_limits():
     registry = make_registry()
     assert registry.get("architect").canonical()["skills"] == ["architecture"]
     assert registry.digest() == registry.digest()
+    assert registry.catalog()["schema_version"] == 1
     with pytest.raises(BuilderError):
         ResourceLimits(max_parallel=0)
     with pytest.raises(BuilderError):
         AgentDefinition("Bad ID", "role", "description")
+    with pytest.raises(BuilderError):
+        AgentDefinition("agent-x", "role", "description", metadata=(("", "value"),))
 
 
 def test_registry_rejects_conflicting_duplicate_ids():
@@ -55,8 +59,10 @@ def test_team_builder_requires_registered_members_and_builds_manifest():
     )
     assert builder.capabilities(team) == ("repo.read", "repo.write")
     assert builder.effective_parallelism(team) == 3
+    assert builder.execution_layers(team) == (("architect",), ("reviewer",))
     manifest = builder.manifest(team)
     assert manifest["team"]["team_id"] == "delivery-team"
+    assert manifest["execution_layers"] == [["architect"], ["reviewer"]]
     assert len(manifest["manifest_sha256"]) == 64
     assert builder.manifest(team) == manifest
 
@@ -64,7 +70,7 @@ def test_team_builder_requires_registered_members_and_builds_manifest():
         builder.build("broken", "broken", ("missing",))
 
 
-def test_team_rejects_invalid_handoffs_and_duplicate_members():
+def test_team_rejects_invalid_handoffs_duplicate_members_and_cycles():
     builder = TeamBuilder(make_registry())
     with pytest.raises(BuilderError):
         builder.build("bad", "bad", ("architect", "architect"))
@@ -72,10 +78,23 @@ def test_team_rejects_invalid_handoffs_and_duplicate_members():
         builder.build("bad", "bad", ("architect", "reviewer"), handoffs=(("architect", "missing"),))
     with pytest.raises(BuilderError):
         builder.build("bad", "bad", ("architect",), handoffs=(("architect", "architect"),))
+    with pytest.raises(BuilderError, match="acyclic"):
+        builder.build(
+            "cyclic",
+            "cyclic",
+            ("architect", "reviewer", "release"),
+            handoffs=(("architect", "reviewer"), ("reviewer", "release"), ("release", "architect")),
+        )
+
+
+def test_independent_agents_share_a_parallel_layer():
+    builder = TeamBuilder(make_registry())
+    team = builder.build("parallel", "parallel work", ("reviewer", "architect", "release"))
+    assert builder.execution_layers(team) == (("architect", "release", "reviewer"),)
 
 
 def test_catalog_order_and_team_capabilities_are_stable():
     registry = make_registry()
-    assert [agent.agent_id for agent in registry.list()] == ["architect", "reviewer"]
+    assert [agent.agent_id for agent in registry.list()] == ["architect", "release", "reviewer"]
     team = TeamBuilder(registry).build("stable", "stable", ("reviewer", "architect"))
     assert TeamBuilder(registry).manifest(team) == TeamBuilder(registry).manifest(team)

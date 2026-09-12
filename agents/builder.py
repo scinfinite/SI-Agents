@@ -10,6 +10,7 @@ from core.runtime.omniroute import OmniRoutePolicy
 
 
 _NAME = re.compile(r"^[a-z][a-z0-9._-]{1,63}$")
+SCHEMA_VERSION = 1
 
 
 class BuilderError(ValueError):
@@ -61,9 +62,12 @@ class AgentDefinition:
                 raise BuilderError(f"{field_name} must be unique")
         if len({key for key, _ in self.metadata}) != len(self.metadata):
             raise BuilderError("metadata keys must be unique")
+        if any(not key.strip() or not value.strip() for key, value in self.metadata):
+            raise BuilderError("metadata keys and values must not be empty")
 
     def canonical(self) -> dict[str, object]:
         return {
+            "schema_version": SCHEMA_VERSION,
             "agent_id": self.agent_id,
             "role": self.role,
             "description": self.description,
@@ -90,7 +94,7 @@ class AgentDefinition:
 
 @dataclass(frozen=True)
 class TeamDefinition:
-    """Immutable composition of agents with deterministic handoff topology."""
+    """Immutable composition of agents with deterministic, acyclic handoff topology."""
 
     team_id: str
     description: str
@@ -107,6 +111,8 @@ class TeamDefinition:
             raise BuilderError("team description and members are required")
         if len(set(self.members)) != len(self.members):
             raise BuilderError("team members must be unique")
+        if any(not _NAME.fullmatch(member) for member in self.members):
+            raise BuilderError("team members must use valid agent identifiers")
         if self.max_parallel <= 0:
             raise BuilderError("team max_parallel must be positive")
         if len(set(self.handoffs)) != len(self.handoffs):
@@ -116,11 +122,16 @@ class TeamDefinition:
                 raise BuilderError("team handoff cannot target itself")
             if source not in self.members or target not in self.members:
                 raise BuilderError("team handoffs must reference team members")
+        if _has_cycle(self.members, self.handoffs):
+            raise BuilderError("team handoffs must form an acyclic graph")
         if len({key for key, _ in self.metadata}) != len(self.metadata):
             raise BuilderError("metadata keys must be unique")
+        if any(not key.strip() or not value.strip() for key, value in self.metadata):
+            raise BuilderError("metadata keys and values must not be empty")
 
     def canonical(self) -> dict[str, object]:
         return {
+            "schema_version": SCHEMA_VERSION,
             "team_id": self.team_id,
             "description": self.description,
             "members": sorted(self.members),
@@ -154,13 +165,21 @@ class AgentRegistry:
     def list(self) -> tuple[AgentDefinition, ...]:
         return tuple(self._agents[key] for key in sorted(self._agents))
 
+    def catalog(self) -> dict[str, object]:
+        agents = [agent.canonical() for agent in self.list()]
+        encoded = _canonical_json(agents)
+        return {
+            "schema_version": SCHEMA_VERSION,
+            "agents": agents,
+            "catalog_sha256": hashlib.sha256(encoded.encode()).hexdigest(),
+        }
+
     def digest(self) -> str:
-        payload = [agent.canonical() for agent in self.list()]
-        return hashlib.sha256(_canonical_json(payload).encode()).hexdigest()
+        return str(self.catalog()["catalog_sha256"])
 
 
 class TeamBuilder:
-    """Compose teams while preventing undeclared agents/capabilities."""
+    """Compose teams while preventing undeclared agents/capabilities and cyclic handoffs."""
 
     def __init__(self, registry: AgentRegistry) -> None:
         self.registry = registry
@@ -191,11 +210,55 @@ class TeamBuilder:
         member_limit = sum(self.registry.get(member).resources.max_parallel for member in team.members)
         return min(team.max_parallel, max(1, member_limit))
 
+    def execution_layers(self, team: TeamDefinition) -> tuple[tuple[str, ...], ...]:
+        """Return deterministic parallel layers implied by the handoff DAG."""
+        members = set(team.members)
+        predecessors = {member: set() for member in members}
+        for source, target in team.handoffs:
+            predecessors[target].add(source)
+        layers: list[tuple[str, ...]] = []
+        remaining = set(members)
+        while remaining:
+            ready = tuple(sorted(member for member in remaining if not (predecessors[member] & remaining)))
+            if not ready:
+                raise BuilderError("team handoffs contain an execution cycle")
+            layers.append(ready)
+            remaining.difference_update(ready)
+        return tuple(layers)
+
     def manifest(self, team: TeamDefinition) -> dict[str, object]:
         members = [self.registry.get(member).canonical() for member in sorted(team.members)]
-        payload = {"team": team.canonical(), "members": members, "capabilities": list(self.capabilities(team))}
+        payload = {
+            "schema_version": SCHEMA_VERSION,
+            "team": team.canonical(),
+            "members": members,
+            "capabilities": list(self.capabilities(team)),
+            "execution_layers": [list(layer) for layer in self.execution_layers(team)],
+        }
         encoded = _canonical_json(payload)
         return {**payload, "manifest_sha256": hashlib.sha256(encoded.encode()).hexdigest()}
+
+
+def _has_cycle(members: tuple[str, ...], handoffs: tuple[tuple[str, str], ...]) -> bool:
+    graph = {member: [] for member in members}
+    for source, target in handoffs:
+        graph[source].append(target)
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(node: str) -> bool:
+        if node in visiting:
+            return True
+        if node in visited:
+            return False
+        visiting.add(node)
+        if any(visit(child) for child in graph[node]):
+            return True
+        visiting.remove(node)
+        visited.add(node)
+        return False
+
+    return any(visit(member) for member in members)
 
 
 def _canonical_json(value: object) -> str:

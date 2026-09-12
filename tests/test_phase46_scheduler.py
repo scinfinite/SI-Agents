@@ -158,3 +158,33 @@ def test_invalid_configuration_fails_closed(tmp_path: Path):
         scheduler.submit(AuthorizedTask("orphan", {}), depends_on=("missing",))
     scheduler.close()
     store.close()
+
+
+def test_dependency_graph_defense_never_mutates_existing_schedule(tmp_path: Path):
+    store, runtime = make_runtime(tmp_path)
+    adapter = TrackingAdapter()
+    scheduler = ParallelScheduler(runtime, adapter, max_workers=1, path=str(tmp_path / "schedule.db"))
+    first = scheduler.submit(AuthorizedTask("first", {}))
+    second = scheduler.submit(AuthorizedTask("second", {}), depends_on=(first.execution_id,))
+    with pytest.raises(ValueError, match="idempotent execution conflicts"):
+        scheduler.submit(AuthorizedTask("first", {}, execution_id=first.execution_id), depends_on=(second.execution_id,))
+    assert scheduler.get(first.schedule_id).dependencies == ()
+    assert scheduler.get(second.schedule_id).dependencies == (first.execution_id,)
+    assert runtime.store.get(first.execution_id).state == State.QUEUED
+    scheduler.close()
+    store.close()
+
+
+def test_idempotent_runtime_acceptance_returns_existing_schedule(tmp_path: Path):
+    store, runtime = make_runtime(tmp_path)
+    adapter = TrackingAdapter()
+    scheduler = ParallelScheduler(runtime, adapter, max_workers=1, path=str(tmp_path / "schedule.db"))
+    task = AuthorizedTask("same", {"v": 1}, idempotency_key="stable")
+    first = scheduler.submit(task, priority=4)
+    second = scheduler.submit(task, priority=4)
+    assert second == first
+    assert len(scheduler.list()) == 1
+    scheduler.drain(timeout=5)
+    assert len(adapter.started) == 1
+    scheduler.close()
+    store.close()

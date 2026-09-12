@@ -12,6 +12,8 @@ from core.governance.models import Approval, DecisionStatus, GovernanceDecision,
 
 
 _CONDITION = re.compile(r"^([A-Za-z_][A-Za-z0-9_.-]*)=(.+)$")
+_SECRET_KEY = re.compile(r"(?:password|passwd|secret|token|api[_-]?key|private[_-]?key|credential)", re.I)
+_MAX_TEXT = 4096
 
 
 class CapabilitySubject(Protocol):
@@ -36,16 +38,27 @@ class AuthorizationRequest:
     def __post_init__(self) -> None:
         if not self.subject.strip() or not self.scope.strip():
             raise ValueError("subject and scope are required")
+        if len(self.subject) > _MAX_TEXT or len(self.scope) > _MAX_TEXT:
+            raise ValueError("subject and scope are too long")
         if not self.capabilities or any(not item.strip() for item in self.capabilities):
             raise ValueError("at least one non-empty capability is required")
         if len(set(self.capabilities)) != len(self.capabilities):
             raise ValueError("capabilities must be unique")
+        if any(len(item) > _MAX_TEXT for item in self.capabilities):
+            raise ValueError("capability name is too long")
         if self.estimated_cost < 0:
             raise ValueError("estimated_cost must be non-negative")
-        if any(not key.strip() or not value.strip() for key, value in self.metadata.items()):
-            raise ValueError("metadata keys and values must not be empty")
+        for key, value in self.metadata.items():
+            if not key.strip() or not value.strip():
+                raise ValueError("metadata keys and values must not be empty")
+            if len(key) > _MAX_TEXT or len(value) > _MAX_TEXT:
+                raise ValueError("metadata entries are too long")
+            if _SECRET_KEY.search(key):
+                raise ValueError("secret-like metadata keys are not accepted")
         if any(not item.strip() for item in self.provenance):
             raise ValueError("provenance entries must not be empty")
+        if any(len(item) > _MAX_TEXT for item in self.provenance):
+            raise ValueError("provenance entry is too long")
 
     def fingerprint(self) -> str:
         payload = {
@@ -121,8 +134,6 @@ class CapabilityAuthorizer:
             blocked = sorted(set(request.capabilities) & denied_caps)
             if blocked:
                 reasons.append(f"policy {policy.name} denies: {', '.join(blocked)}")
-            if request.external_egress and not policy.allow_external_egress:
-                reasons.append(f"policy {policy.name} denies external egress")
             if policy.max_cost is not None and request.estimated_cost > policy.max_cost:
                 reasons.append(f"policy {policy.name} cost limit exceeded")
 
@@ -154,8 +165,12 @@ class CapabilityAuthorizer:
             return self._decision(DecisionStatus.DENY, reasons, matched, denied, matched_policy_names, request)
 
         approval_required = request.risk in (RiskLevel.HIGH, RiskLevel.CRITICAL) or any(request.risk in policy.approval_risks for policy in self._policies)
-        if approval_required and (request.approval is None or not request.approval.active()):
-            return self._decision(DecisionStatus.APPROVAL_REQUIRED, ["active approval required by risk policy"], matched, denied, matched_policy_names, request)
+        if approval_required:
+            approval = request.approval
+            if approval is None or not approval.active():
+                return self._decision(DecisionStatus.APPROVAL_REQUIRED, ["active approval required by risk policy"], matched, denied, matched_policy_names, request)
+            if approval.reference != request.fingerprint():
+                return self._decision(DecisionStatus.APPROVAL_REQUIRED, ["approval is not bound to this exact authorization request"], matched, denied, matched_policy_names, request)
 
         return self._decision(DecisionStatus.ALLOW, ["all requested capabilities have explicit matching grants"], matched, denied, matched_policy_names, request)
 
