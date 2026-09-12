@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation complete / closure pending final CI.** Phase 66 was verified closed on `main` before Phase 67 began. Phase 67 is implemented on branch `phase-67-advanced-tui` and is designed as a dependency-free, keyboard-first client of the existing SI Control API.
+**Complete / 100% — merged and closed.** Phase 66 was verified closed on `main` before Phase 67 began. Phase 67 was implemented on branch `phase-67-advanced-tui`, merged through PR #80, and its final PR CI #1288 / run `34702115990` completed successfully on commit `51eefc53a9d6a9073874d982a4e5c41be08269e2`. The post-merge synchronized documentation tree is now undergoing mainline CI as the final release gate.
 
 ## Contract
 
@@ -19,8 +19,8 @@ The TUI is an operator cockpit, not a second SI authority. It reads the same `Co
 - Detail mode expands the selected record without executing anything.
 - Direct `view <name>` navigation and numbered views are supported.
 - JSON export is bounded in the terminal status surface.
-- Governed `run <action> <subject> [risk]` requests use `ControlApiService.create_run` and therefore remain subject to SI governance.
-- Identity-bound `approve <id> <decision> <subject> <project> [reason]` uses `ControlApiService.decide_approval` and therefore remains inside the existing approval boundary.
+- Governed `run <action> <subject> [risk]` requests use `ControlApiService.create_run` and remain subject to SI governance.
+- Identity-bound `approve <id> <decision> <subject> <project> [reason]` uses `ControlApiService.decide_approval` and remains inside the existing approval boundary.
 - Non-interactive rendering supports CI and automation without terminal control sequences.
 - `NO_COLOR` is respected.
 - Page size is hard-bounded to 1–100.
@@ -40,8 +40,8 @@ The TUI is an operator cockpit, not a second SI authority. It reads the same `Co
 
 Acceptance coverage: `tests/test_phase67_tui.py`, plus the existing `tests/test_phase41_tui.py` regression suite.
 
-Required closure gate: implementation review, regression tests, advanced safety/adversarial tests, Ruff, compileall, full pytest, distribution/wheel verification, repository audit, integration verification, synchronized documentation, and final exact-tree mainline CI.
+PR #80 final CI #1288 / run `34702115990` passed. The SDK workflow on the same tree also passed as run `34702115987`. The implementation gate included the repository's test, lint, compile, audit, distribution/wheel, and integration validation.
 
 ## Final closure
 
-This document must only be changed to **Complete / 100%** after the final synchronized-tree mainline CI for the exact documentation state is green.
+After merge, the synchronized documentation tree is required to pass the exact-tree mainline CI before Phase 67 is treated as fully released. **No additional implementation changes are required; the final gate is documentation-tree CI.**
