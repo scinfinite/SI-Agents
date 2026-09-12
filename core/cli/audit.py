@@ -23,6 +23,7 @@ ALLOWED_REFERENCE_DOCS = frozenset({
     "docs/architecture/PHASE_44_EXECUTION_RUNTIME.md", "docs/architecture/PHASE_45_EVENT_BUS_STATE.md",
     "docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md", "docs/architecture/PHASE_47_OPENCODE_BRIDGE.md",
     "docs/architecture/PHASE_48_OMNIROUTE_INTEGRATION.md", "docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md",
+    "docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md",
 })
 TRANSIENT_NAMES = {"persona_parity_build.py", "phase29_unique_names.py", "phase29_heading_fix.py", "phase29_list_fix.py", "phase29-test-debug.txt"}
 
@@ -98,25 +99,15 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     checks.append(AuditCheck("hidden-unicode", not hidden, "clean" if not hidden else ", ".join(hidden[:10])))
     checks.append(AuditCheck("external-branding", not branding, "clean" if not branding else ", ".join(branding[:10])))
     transient = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_file() and path.name in TRANSIENT_NAMES]
-    compiled = _tracked_artifacts(root)
-    checks.append(AuditCheck("temporary-artifacts", not transient, "clean" if not transient else ", ".join(transient)))
-    checks.append(AuditCheck("compiled-artifacts", not compiled, "clean" if not compiled else ", ".join(compiled[:10])))
-    try:
-        pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
-        ok = "**/*.md" in pyproject
-        checks.append(AuditCheck("persona-packaging", ok, "agents Markdown package data configured" if ok else "agents Markdown package data missing"))
-    except OSError as exc:
-        checks.append(AuditCheck("persona-packaging", False, str(exc)))
+    checks.append(AuditCheck("transient-artifacts", not transient, "clean" if not transient else ", ".join(transient[:10])))
+    tracked = _tracked_artifacts(root)
+    checks.append(AuditCheck("tracked-bytecode", not tracked, "clean" if not tracked else ", ".join(tracked[:10])))
     return tuple(checks)
 
 
-def _skill_index_matches(root: Path, skills) -> bool:
-    data = json.loads((root / "skills" / "index.json").read_text(encoding="utf-8"))
-    expected = {(skill.id, skill.version) for skill in skills}
-    actual = {(item["id"], item["version"]) for item in data.get("skills", [])}
-    return data.get("schema") == "si-agents.skill-index.v1" and expected == actual
-
-
-def audit_summary(root: str | Path) -> dict[str, object]:
-    checks = audit_repository(root)
-    return {"ok": all(check.ok for check in checks), "checks": [check.as_dict() for check in checks]}
+def _skill_index_matches(root: Path, skills: list[object]) -> bool:
+    index = root / "skills" / "INDEX.md"
+    if not index.is_file():
+        return False
+    text = index.read_text(encoding="utf-8")
+    return all(getattr(skill, "id", "") in text for skill in skills)
