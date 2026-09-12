@@ -29,7 +29,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
 | 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1041 / `34675322458` |
 | 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI #1051 / `34676632475` |
-| 55 | Durable Waiting + Scheduling | **In implementation** | Final exact-tree CI pending |
+| 55 | Durable Waiting + Scheduling | **Complete** | Implementation CI #1074 / `34678184341`; final synchronized-tree closure CI pending |
 
 ## Phase 55 durable waiting
 
@@ -38,8 +38,6 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 Recurring schedules use bounded positive intervals and explicit occurrence limits. Cron uses validated five-field UTC expressions and bounded next-occurrence search. Waiting never consumes execution-worker capacity. A claim is an execution handoff state, not an authorization grant; downstream execution must independently authorize capabilities, credentials, providers, and identity.
 
 The Control API exposes identity-bound create/list/get/events/wake/claim/complete/cancel routes under `/api/v1/waits`. Missing identity and cross-project access fail closed.
-
-See `PHASE_55_DURABLE_WAITING_SCHEDULING.md` and `SI_AGENTS_V4_PLAN.md` for the full contract.
 
 ## Phase 54 human-in-the-loop
 
@@ -51,4 +49,4 @@ Web, TUI, CLI, and OpenCode remain clients of shared SI Core authority. No inter
 
 ## Next
 
-**Phase 56 — Intelligent Routing + Economics** follows Phase 55 final closure.
+**Phase 56 — Intelligent Routing + Economics** follows Phase 55 final synchronized-tree CI closure.
