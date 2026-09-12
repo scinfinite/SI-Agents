@@ -56,6 +56,30 @@ def _first_command(arguments: list[str]) -> str | None:
     return None
 
 
+def _command_args(arguments: list[str], command: str) -> list[str]:
+    """Remove global options and the command for adapter-only subcommands."""
+    result: list[str] = []
+    index = 0
+    removed_command = False
+    while index < len(arguments):
+        token = arguments[index]
+        if token in GLOBAL_FLAGS:
+            result.append(token)
+            index += 1
+            continue
+        if token in GLOBAL_VALUE_OPTIONS:
+            result.extend((token, arguments[index + 1]))
+            index += 2
+            continue
+        if token == command and not removed_command:
+            removed_command = True
+            index += 1
+            continue
+        result.append(token)
+        index += 1
+    return result
+
+
 def _task_alias(arguments: list[str]) -> list[str]:
     if len(arguments) >= 2 and arguments[0] == "task" and arguments[1] == "create":
         return ["run", "create", *arguments[2:]]
@@ -67,25 +91,28 @@ def main(argv: list[str] | None = None) -> int:
     command = _first_command(original)
     arguments = _normalize_global_options(original) if command in ADVANCED_COMMANDS or command in {"session", "agent", "team", "workflow"} else original
     if command == "web":
-        return web_main(arguments[arguments.index("web") + 1:] if "web" in arguments else [])
+        return web_main(_command_args(arguments, command))
     if command == "tui":
-        return tui_main(arguments[arguments.index("tui") + 1:] if "tui" in arguments else [])
+        return tui_main(_command_args(arguments, command))
     if command in {"deploy", "deployment"}:
-        return deployment_main(arguments[arguments.index(command) + 1:])
+        return deployment_main(_command_args(arguments, command))
     if command in {"verify", "validate-release"}:
-        return verify_main(arguments[arguments.index(command) + 1:])
+        return verify_main(_command_args(arguments, command))
     if command in {"agent", "team", "workflow"}:
         from core.cli.aliases import main as alias_main
-        return alias_main(command, [token for token in arguments if token != command])
+        return alias_main(command, _command_args(arguments, command))
     arguments = _task_alias(arguments)
     if arguments and arguments[0] == "logs":
         arguments = ["events", *arguments[1:]]
     if arguments and arguments[0] == "profile":
         from core.cli.profile import main as profile_main
         return profile_main(arguments[1:])
-    if arguments and arguments[0] == "session":
+    if command == "profile":
+        from core.cli.profile import main as profile_main
+        return profile_main(_command_args(arguments, command))
+    if command == "session":
         from core.cli.session import main as session_main
-        return session_main(arguments[1:])
+        return session_main(_command_args(arguments, command))
     if arguments and arguments[0] in ADVANCED_COMMANDS:
         from core.cli.platform import main as platform_main
         return platform_main(arguments)
