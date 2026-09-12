@@ -4,13 +4,12 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–67 are closed**. **Phase 68 — Advanced CLI Platform is implementation-complete pending its final synchronized-tree closure gate.** Phase 71 is the final production-hardening gate.
+Phases **44–68 are closed**. Phase 69 is next. Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
-- **In progress / closure gate** — implementation is complete but final CI/documentation closure is still pending.
 - **Next** — next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -42,21 +41,21 @@ Phases **44–67 are closed**. **Phase 68 — Advanced CLI Platform is implement
 | 65 | Workflow + Automation | Complete / 100% | final synchronized-tree CI #1249 / `34698187600` |
 | 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
 | 67 | Advanced TUI Control Center | **Complete / 100%** | PR #80 / final PR CI #1288 / `34702115990` |
-| 68 | Advanced CLI Platform | **Implementation complete / closure gate** | PR #81 / CI pending final green |
-| 69 | npm Distribution + Setup | Planned | Planned |
+| 68 | Advanced CLI Platform | **Complete / 100%** | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
+| 69 | npm Distribution + Setup | **Next** | Planned |
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
 ## Phase 68 implementation
 
-Phase 68 introduces the advanced transport-neutral `si` CLI platform over SI Core's Control API. The surface covers governed run/task/execution operations, agent/team/workflow navigation, identity-bound approvals, sessions, events/streaming, models/providers delegation, attachment inspection, non-secret configuration/auth status, and bounded declarative pipelines. Local mode calls `ControlApiService`; remote mode uses authenticated HTTP. The CLI remains an adapter and cannot become a second execution or governance authority.
+Phase 68 introduces the advanced transport-neutral `si` CLI platform over SI Core's Control API. The surface covers governed run/task/execution operations, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, events/streaming, models/providers delegation, attachment inspection, non-secret configuration/auth status, transport profiles, and bounded declarative pipelines. Local mode calls `ControlApiService`; remote mode uses authenticated HTTP. The CLI remains an adapter and cannot become a second execution or governance authority, while established legacy commands retain their historical routing contracts.
 
-Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, and `core/cli/dispatch.py`.
+Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/session.py`, `core/cli/profile.py`, and `core/cli/dispatch.py`.
 
 Acceptance coverage: `tests/test_phase68_cli.py` plus the full existing repository suite.
 
 Detailed contract: `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
-## Closure gate
+## Closure evidence
 
-Phase 68 closes only after PR CI passes wheel installation, repository audit, integration verification, Ruff, compileall, full pytest, SDK verification, security/adversarial coverage, documentation synchronization, merge, and a final exact-tree mainline CI run on the merged documentation state.
+Phase 68 passed wheel installation, repository audit, integration verification, Ruff, full pytest, SDK verification, PR merge, and final synchronized-tree mainline CI. Final merged `main` commit: `8c5fb08e9c8a5628f59cf929e3c2ac203d4eac29`; final post-merge documentation synchronization is followed by the exact-tree mainline closure gate.
