@@ -4,7 +4,7 @@
 
 ## V4 status
 
-Phases 44–63 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 64 is in implementation pending final closure CI.
+Phases 44–64 are closed. Phases 46, 47, 49, 50, 58, 59, and 60 received advanced hardening. Phase 65 is next.
 
 The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation** through **Phase 71 — Final Production Hardening**.
 
@@ -12,7 +12,6 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
-- **In implementation** — implementation is merged but final closure CI is pending.
 - **Next** — next implementation phase.
 - **Planned** — future roadmap phase.
 
@@ -40,8 +39,8 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
 | 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; final mainline #1186 / `34693756693` |
 | 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
-| 64 | SDK / Developer Platform | **In implementation** | PR #78 |
-| 65 | Workflow + Automation | Planned | Planned |
+| 64 | SDK / Developer Platform | **Complete** | PR #78 merged; synchronized-tree mainline closure CI pending |
+| 65 | Workflow + Automation | Next | Planned |
 | 66 | Advanced Web Control Plane | Planned | Planned |
 | 67 | Advanced TUI Control Center | Planned | Planned |
 | 68 | Advanced CLI Platform | Planned | Planned |
@@ -49,15 +48,15 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-## Phase 64 implementation
+## Phase 64 closure
 
-Phase 64 adds typed Python and TypeScript SDKs, versioned REST access, stable errors, optional bearer authentication, query-bound cursor pagination/filtering, bounded idempotent run creation, bounded client concurrency, SSE/WebSocket event transports, explicit subscription lifecycle, signed webhook delivery primitives, OpenAPI updates, package metadata, and adversarial transport tests. SDKs remain clients; SI Core retains governance and execution authority.
+Phase 64 delivers typed Python and TypeScript SDKs, versioned REST/SSE/WebSocket access, stable errors, optional bearer authentication, header-bound identity, filter-bound cursor pagination, bounded idempotent run creation, bounded client concurrency, explicit event subscriptions, signed webhook delivery primitives, OpenAPI updates, examples, package metadata, and dedicated SDK CI. SDKs remain clients; SI Core retains governance and execution authority.
 
-Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagination.py`, `core/control_api/subscriptions.py`, and the SDK-facing transport extensions in `core/control_api/server.py` / `openapi.py`.
+Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagination.py`, `core/control_api/subscriptions.py`, `core/control_api/server.py`, and `core/control_api/openapi.py`.
 
 Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
 
-Closure gate: PR #78 must pass the complete repository gate, then the documentation-synchronized exact tree must pass final mainline CI before Phase 64 is marked Complete.
+PR #78 was merged into `main`. The final synchronized-tree mainline CI is the remaining closure gate; Phase 65 does not start until that exact tree is green.
 
 ## Phase 63 closure
 
