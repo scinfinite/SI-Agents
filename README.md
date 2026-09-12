@@ -1,6 +1,6 @@
 # SI-Agents
 
-SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, SDKs, and runtime/integration adapters.
+SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, SDKs, workflows, and runtime/integration adapters.
 
 ## V4 product direction
 
@@ -16,21 +16,21 @@ OpenCode is a primary user-facing harness. OmniRoute is the model/provider/API r
 
 ## Current V4 status
 
-- **Phases 44–64 are complete on `main`.**
-- **Phase 62 — Cross-Runtime / Cross-Harness is fully implemented, audited, documented, merged, and verified by mainline CI.**
-- **Phase 63 — Ecosystem / Marketplace is fully implemented, audited, documented, merged, and verified by final mainline CI #1198 (`34694418960`).**
-- **Phase 64 — SDK / Developer Platform is fully implemented and merged; its synchronized-tree final mainline CI is the closure gate.**
+- **Phases 44–65 are complete on `main`.**
+- **Phase 63 — Ecosystem / Marketplace** is fully implemented, audited, documented, merged, and verified by final mainline CI #1198 (`34694418960`).
+- **Phase 64 — SDK / Developer Platform** is fully implemented and merged through PR #78 and its synchronized-tree closure gate.
+- **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by implementation-tree CI #1239 (`34697885027`); the synchronized documentation tree is the final closure target.
 - **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
 
-## Phase 64 — SDK / Developer Platform
+## Phase 65 — Workflow + Automation
 
-Phase 64 adds typed Python and TypeScript SDKs over the versioned Control API, stable errors, optional bearer authentication, header-bound identity, filter-bound cursor pagination, idempotent run creation, bounded concurrency, SSE/WebSocket event transports, explicit subscriptions, signed webhook delivery primitives, OpenAPI updates, examples, and a dedicated SDK CI gate.
+Phase 65 adds a transport-neutral workflow state machine for versioned declarative DAGs, conditional branching, bounded fan-out and loops, delegation, human approval gates, durable waits, event/webhook/interval triggers, retries, runtime limits, cancellation, request-fingerprint-bound idempotency, durable JSON checkpoints, templates/import/export, restart validation, and reverse-order compensation.
 
-SDKs remain clients/adapters. They do not create execution or governance authority outside SI Core.
+Workflow adapters remain clients of SI Core and never create competing governance or execution authority. See `docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md` for the detailed contract.
 
 ## V4 roadmap
 
-See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the current Phase 64 contract.
+See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASES.md` for phase evidence.
 
 | Phase | Name | Status |
 |---:|---|---|
@@ -55,8 +55,8 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 62 | Cross-Runtime / Cross-Harness | Complete |
 | 63 | Ecosystem / Marketplace | Complete |
 | 64 | SDK / Developer Platform | Complete |
-| 65 | Workflow + Automation | Planned |
-| 66 | Advanced Web Control Plane | Planned |
+| 65 | Workflow + Automation | Complete |
+| 66 | Advanced Web Control Plane | Next |
 | 67 | Advanced TUI Control Center | Planned |
 | 68 | Advanced CLI Platform | Planned |
 | 69 | npm Distribution + Setup | Planned |
@@ -69,4 +69,4 @@ A phase is not complete until implementation, unit/integration tests, security/a
 
 ## Current phase
 
-**Phase 64 — SDK / Developer Platform is closed; Phase 65 starts only after final exact-tree CI is green.**
+**Phase 65 — Workflow + Automation is complete. Phase 66 — Advanced Web Control Plane is next after the final synchronized-tree CI for the current documentation state is green.**
