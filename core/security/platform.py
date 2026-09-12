@@ -1,5 +1,4 @@
-"""Fail-closed identity, authorization, secret, egress and audit contracts."""
-
+"""Fail-closed identity, authorization, egress, secret and audit contracts."""
 from __future__ import annotations
 
 import base64
@@ -16,7 +15,7 @@ from urllib.parse import urlparse
 
 
 class SecurityError(ValueError):
-    """Base error for security contract violations."""
+    """Base security contract error."""
 
 
 class Decision(str, Enum):
@@ -42,6 +41,7 @@ class Identity:
 @dataclass(frozen=True)
 class PermissionGrant:
     subject: str
+    tenant: str
     action: str
     resource: str
     scope: str
@@ -49,13 +49,13 @@ class PermissionGrant:
     require_approval: bool = False
 
     def __post_init__(self) -> None:
-        if not all(value.strip() for value in (self.subject, self.action, self.resource, self.scope)):
-            raise SecurityError("permission grant requires explicit subject/action/resource/scope")
+        if not all(v.strip() for v in (self.subject, self.tenant, self.action, self.resource, self.scope)):
+            raise SecurityError("permission grant requires subject/tenant/action/resource/scope")
         if self.expires_at is not None and self.expires_at.tzinfo is None:
             raise SecurityError("grant expiry must be timezone-aware")
 
-    def active(self, now: datetime | None = None) -> bool:
-        return self.expires_at is None or self.expires_at > (now or datetime.now(UTC))
+    def active(self) -> bool:
+        return self.expires_at is None or self.expires_at > datetime.now(UTC)
 
 
 @dataclass(frozen=True)
@@ -85,8 +85,8 @@ class AuthorizationRequest:
     input_text: str = ""
 
     def __post_init__(self) -> None:
-        if not all(value.strip() for value in (self.action, self.resource, self.scope)):
-            raise SecurityError("authorization requires explicit action/resource/scope")
+        if not all(v.strip() for v in (self.action, self.resource, self.scope)):
+            raise SecurityError("authorization requires action/resource/scope")
 
 
 @dataclass(frozen=True)
@@ -98,7 +98,7 @@ class AuthorizationResult:
 
     @property
     def allowed(self) -> bool:
-        return self.decision == Decision.ALLOW
+        return self.decision is Decision.ALLOW
 
 
 @dataclass(frozen=True)
@@ -110,25 +110,18 @@ class EgressPolicy:
     def permits(self, target: str) -> bool:
         try:
             parsed = urlparse(target)
+            scheme = parsed.scheme.lower()
+            host = (parsed.hostname or "").lower().rstrip(".")
+            address = ipaddress.ip_address(host) if host else None
         except ValueError:
             return False
-        if parsed.scheme.lower() not in {item.lower() for item in self.allowed_schemes}:
+        if scheme not in {s.lower() for s in self.allowed_schemes} or not host:
             return False
-        host = (parsed.hostname or "").lower().rstrip(".")
-        if not host or not self.allowed_hosts:
-            return False
-        try:
-            address = ipaddress.ip_address(host)
-        except ValueError:
-            address = None
         if address is not None and not self.allow_private_addresses and (
-            address.is_private
-            or address.is_loopback
-            or address.is_link_local
-            or address.is_reserved
+            address.is_private or address.is_loopback or address.is_link_local or address.is_reserved
         ):
             return False
-        return host in {item.lower().rstrip(".") for item in self.allowed_hosts}
+        return host in {h.lower().rstrip(".") for h in self.allowed_hosts}
 
 
 @dataclass(frozen=True)
@@ -151,10 +144,6 @@ class PolicyVersion:
     digest: str
     active: bool = True
 
-    def __post_init__(self) -> None:
-        if not self.version.strip() or not self.digest.strip():
-            raise SecurityError("policy version requires version and digest")
-
 
 @dataclass(frozen=True)
 class AuditEvent:
@@ -169,37 +158,32 @@ class AuditEvent:
 
 
 class SecretScanner:
-    """Detect and redact common secret forms before persistence or evidence emission."""
+    """Detect and redact common credential forms."""
 
     _PATTERNS = (
         re.compile(r"(?i)bearer\s+[A-Za-z0-9._~+/=-]{12,}"),
         re.compile(r"(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*[^\s,;]+"),
-        re.compile(
-            r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]+?-----END [A-Z ]*PRIVATE KEY-----"
-        ),
+        re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]+?-----END [A-Z ]*PRIVATE KEY-----"),
         re.compile(r"\b(?:sk|rk)-[A-Za-z0-9_-]{16,}\b"),
     )
 
     @classmethod
     def contains_secret(cls, text: str) -> bool:
-        return any(pattern.search(text) for pattern in cls._PATTERNS)
+        return any(p.search(text) for p in cls._PATTERNS)
 
     @classmethod
     def redact(cls, text: str) -> str:
-        result = text
         for pattern in cls._PATTERNS:
-            result = pattern.sub("[REDACTED]", result)
-        return result
+            text = pattern.sub("[REDACTED]", text)
+        return text
 
 
 class InjectionScanner:
-    """Conservative prompt/tool injection detector; detected instructions fail closed."""
+    """Conservative prompt/tool injection detector."""
 
     _PATTERNS = (
         re.compile(r"(?i)ignore\s+(?:all|any|the)\s+(?:previous|prior|above)\s+instructions"),
-        re.compile(
-            r"(?i)(?:reveal|print|show|dump)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|instructions)"
-        ),
+        re.compile(r"(?i)(?:reveal|print|show|dump)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|instructions)"),
         re.compile(r"(?i)disable\s+(?:security|safety|authorization|policy)"),
         re.compile(r"(?i)you\s+are\s+now\s+(?:the\s+)?(?:system|developer|admin)"),
         re.compile(r"(?i)override\s+(?:policy|permission|approval|security)"),
@@ -207,47 +191,25 @@ class InjectionScanner:
 
     @classmethod
     def contains_injection(cls, text: str) -> bool:
-        return any(pattern.search(text) for pattern in cls._PATTERNS)
+        return any(p.search(text) for p in cls._PATTERNS)
 
 
 class SecurityPolicy:
-    """Versioned, deny-by-default security policy."""
+    """Versioned, deny-by-default policy authority."""
 
-    def __init__(
-        self,
-        grants: Iterable[PermissionGrant] = (),
-        *,
-        policy_version: str = "v1",
-        egress: EgressPolicy | None = None,
-        boundaries: Iterable[TrustBoundary] = (),
-        approval_risks: Iterable[str] = ("high", "critical"),
-    ) -> None:
+    def __init__(self, grants: Iterable[PermissionGrant] = (), *, policy_version: str = "v1", egress: EgressPolicy | None = None, boundaries: Iterable[TrustBoundary] = (), approval_risks: Iterable[str] = ("high", "critical")) -> None:
         self._grants = tuple(grants)
-        self.version = PolicyVersion(
-            policy_version,
-            hashlib.sha256(policy_version.encode()).hexdigest(),
-        )
+        self.version = PolicyVersion(policy_version, hashlib.sha256(policy_version.encode()).hexdigest())
         self.egress = egress or EgressPolicy()
         self._boundaries = tuple(boundaries)
         self._approval_risks = frozenset(approval_risks)
 
     @staticmethod
     def _scope_matches(granted: str, requested: str) -> bool:
-        if granted == requested:
-            return True
-        return granted.endswith("/*") and requested.startswith(granted[:-1])
+        return granted == requested or (granted.endswith("/*") and requested.startswith(granted[:-1]))
 
     def _grant(self, request: AuthorizationRequest) -> PermissionGrant | None:
-        candidates = [
-            grant
-            for grant in self._grants
-            if grant.active()
-            and grant.subject == request.identity.subject
-            and grant.action == request.action
-            and grant.resource == request.resource
-            and self._scope_matches(grant.scope, request.scope)
-        ]
-        return candidates[0] if candidates else None
+        return next((g for g in self._grants if g.active() and g.subject == request.identity.subject and g.tenant == request.identity.tenant and g.action == request.action and g.resource == request.resource and self._scope_matches(g.scope, request.scope)), None)
 
     def evaluate(self, request: AuthorizationRequest) -> tuple[Decision, tuple[str, ...]]:
         reasons: list[str] = []
@@ -271,28 +233,11 @@ class SecurityPolicy:
             reasons.append("high-risk operation requires approval")
         if request.external_egress and request.credential_access:
             reasons.append("credential-bearing external egress is denied")
-        if not any(
-            boundary.source == request.identity.tenant
-            and boundary.destination == request.resource
-            and boundary.allowed
-            for boundary in self._boundaries
-        ) and request.resource.startswith("external:"):
+        if request.resource.startswith("external:") and not any(b.source == request.identity.tenant and b.destination == request.resource and b.allowed for b in self._boundaries):
             reasons.append("trust boundary is not explicitly allowed")
-        grant = self._grant(request)
-        if grant is None:
+        if self._grant(request) is None:
             reasons.append("no active least-privilege grant")
-        elif grant.require_approval and request.approval is None:
-            reasons.append("grant requires approval")
-        deny_markers = (
-            "denied",
-            "rejected",
-            "no active",
-            "not allowlisted",
-            "not explicitly",
-            "unauthenticated",
-            "missing tenant",
-            "inactive",
-        )
+        deny_markers = ("denied", "rejected", "no active", "not allowlisted", "not explicitly", "unauthenticated", "missing tenant", "inactive")
         if any(any(marker in reason for marker in deny_markers) for reason in reasons):
             return Decision.DENY, tuple(reasons)
         if reasons:
@@ -301,7 +246,7 @@ class SecurityPolicy:
 
 
 class SecurityPlatform:
-    """Single security authority for authorization decisions and non-secret evidence."""
+    """Security authority for authorization decisions and non-secret evidence."""
 
     def __init__(self, policy: SecurityPolicy, signing_key: bytes) -> None:
         if not signing_key:
@@ -313,97 +258,43 @@ class SecurityPlatform:
 
     @staticmethod
     def _evidence_id(request: AuthorizationRequest, decision: Decision, version: str) -> str:
-        material = "|".join(
-            (
-                request.identity.subject,
-                request.action,
-                request.resource,
-                request.scope,
-                decision.value,
-                version,
-            )
-        )
+        material = "|".join((request.identity.subject, request.identity.tenant, request.action, request.resource, request.scope, decision.value, version))
         return hashlib.sha256(material.encode()).hexdigest()[:24]
 
     def authorize(self, request: AuthorizationRequest) -> AuthorizationResult:
         decision, reasons = self.policy.evaluate(request)
         evidence_id = self._evidence_id(request, decision, self.policy.version.version)
-        safe_reasons = tuple(SecretScanner.redact(reason) for reason in reasons)
-        self._audit.append(
-            AuditEvent(
-                evidence_id,
-                request.identity.subject,
-                request.action,
-                request.resource,
-                decision,
-                self.policy.version.version,
-                safe_reasons,
-            )
-        )
-        return AuthorizationResult(
-            decision,
-            safe_reasons,
-            self.policy.version.version,
-            evidence_id,
-        )
+        safe_reasons = tuple(SecretScanner.redact(r) for r in reasons)
+        self._audit.append(AuditEvent(evidence_id, request.identity.subject, request.action, request.resource, decision, self.policy.version.version, safe_reasons))
+        return AuthorizationResult(decision, safe_reasons, self.policy.version.version, evidence_id)
 
     def issue_token(self, request: AuthorizationRequest, ttl_seconds: int = 300) -> SecurityToken:
         if ttl_seconds <= 0 or ttl_seconds > 3600:
             raise SecurityError("token TTL must be between 1 and 3600 seconds")
-        result = self.authorize(request)
-        if not result.allowed:
+        if not self.authorize(request).allowed:
             raise SecurityError("authorization did not allow token issuance")
         expires = int(datetime.now(UTC).timestamp()) + ttl_seconds
-        payload = {
-            "sub": request.identity.subject,
-            "act": request.action,
-            "res": request.resource,
-            "scope": request.scope,
-            "exp": expires,
-            "pol": self.policy.version.version,
-        }
-        encoded = base64.urlsafe_b64encode(
-            json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
-        ).decode().rstrip("=")
+        payload = {"sub": request.identity.subject, "tenant": request.identity.tenant, "act": request.action, "res": request.resource, "scope": request.scope, "exp": expires, "pol": self.policy.version.version}
+        encoded = base64.urlsafe_b64encode(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()).decode().rstrip("=")
         signature = hmac.new(self._signing_key, encoded.encode(), hashlib.sha256).hexdigest()
-        token = f"{encoded}.{signature}"
-        return SecurityToken(
-            token,
-            request.identity.subject,
-            request.action,
-            request.resource,
-            request.scope,
-            datetime.fromtimestamp(expires, UTC),
-            self.policy.version.version,
-        )
+        return SecurityToken(f"{encoded}.{signature}", request.identity.subject, request.action, request.resource, request.scope, datetime.fromtimestamp(expires, UTC), self.policy.version.version)
 
     def consume_token(self, token: str, request: AuthorizationRequest) -> bool:
         if not token or token in self._used_tokens or "." not in token:
             return False
         encoded, signature = token.rsplit(".", 1)
-        expected = hmac.new(self._signing_key, encoded.encode(), hashlib.sha256).hexdigest()
-        if not hmac.compare_digest(signature, expected):
+        if not hmac.compare_digest(signature, hmac.new(self._signing_key, encoded.encode(), hashlib.sha256).hexdigest()):
             return False
         try:
-            padding = "=" * (-len(encoded) % 4)
-            payload = json.loads(base64.urlsafe_b64decode(encoded + padding))
+            payload = json.loads(base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4)))
         except (ValueError, json.JSONDecodeError, UnicodeDecodeError):
             return False
-        if not self.policy.version.active:
-            return False
-        if payload.get("pol") != self.policy.version.version:
+        if not self.policy.version.active or payload.get("pol") != self.policy.version.version:
             return False
         if int(payload.get("exp", 0)) <= int(datetime.now(UTC).timestamp()):
             return False
-        if any(
-            payload.get(key) != value
-            for key, value in (
-                ("sub", request.identity.subject),
-                ("act", request.action),
-                ("res", request.resource),
-                ("scope", request.scope),
-            )
-        ):
+        bound = (("sub", request.identity.subject), ("tenant", request.identity.tenant), ("act", request.action), ("res", request.resource), ("scope", request.scope))
+        if any(payload.get(k) != v for k, v in bound):
             return False
         self._used_tokens.add(token)
         return True
