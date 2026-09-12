@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import json
-import tempfile
+from io import BytesIO
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 import pytest
@@ -61,10 +62,12 @@ def test_control_api_supports_auth_pagination_idempotency_and_subscription() -> 
         page = _request(base + "/api/v1/agents?limit=2", token="phase64-test-token")
         assert set(page) == {"items", "next_cursor", "limit"}
 
-        request = Request(base + "/api/v1/runs", data=json.dumps({"action": "read", "subject": "sdk-test"}).encode(), headers={"Content-Type": "application/json", "Authorization": "Bearer phase64-test-token", "X-Idempotency-Key": "stable-1"}, method="POST")
+        body = {"action": "read", "subject": "sdk-test"}
+        headers = {"Content-Type": "application/json", "Authorization": "Bearer phase64-test-token", "X-Idempotency-Key": "stable-1"}
+        request = Request(base + "/api/v1/runs", data=json.dumps(body).encode(), headers=headers, method="POST")
         with urlopen(request, timeout=5) as response:
             first = json.loads(response.read().decode())
-        request = Request(base + "/api/v1/runs", data=json.dumps({"action": "read", "subject": "sdk-test"}).encode(), headers={"Content-Type": "application/json", "Authorization": "Bearer phase64-test-token", "X-Idempotency-Key": "stable-1"}, method="POST")
+        request = Request(base + "/api/v1/runs", data=json.dumps(body).encode(), headers=headers, method="POST")
         with urlopen(request, timeout=5) as response:
             second = json.loads(response.read().decode())
         assert first["id"] == second["id"]
@@ -79,8 +82,6 @@ def test_control_api_supports_auth_pagination_idempotency_and_subscription() -> 
 
 def test_python_sdk_maps_server_errors_to_stable_exception() -> None:
     def opener(request, timeout):
-        from urllib.error import HTTPError
-        from io import BytesIO
         raise HTTPError(request.full_url, 403, "forbidden", {}, BytesIO(b'{"error":"forbidden","message":"no","request_id":"r1"}'))
 
     client = SIClient(opener=opener)
