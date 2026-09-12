@@ -46,9 +46,11 @@ def classify_failure(status: int | None = None, message: str = "") -> FailureCla
     lowered = message.lower()
     if status == 429 or any(token in lowered for token in ("rate limit", "too many requests")):
         return FailureClass.RATE_LIMIT
-    if status in {408, 409, 425} or (status is not None and status >= 500):
+    if status in {408, 409, 425} or (status is not None and status >= 500) or any(
+        token in lowered for token in ("transient", "temporarily unavailable", "timeout", "gateway")
+    ):
         return FailureClass.TRANSIENT
-    if status in {401, 403}:
+    if status in {401, 403} or any(token in lowered for token in ("unauthorized", "forbidden")):
         return FailureClass.AUTHORIZATION
     if status in {400, 404, 422}:
         return FailureClass.INVALID_REQUEST
@@ -228,7 +230,7 @@ class IntelligentRouter:
         complexity = infer_complexity(req)
         raw: list[tuple[float, ProviderProfile, ModelProfile, float, tuple[str, ...]]] = []
         for provider, model in self.registry.models():
-            if provider.provider_id in req.excluded_providers or not self._supports(model, req):
+            if provider.provider_id in req.excluded_providers or not provider.enabled or not model.enabled or not self._supports(model, req):
                 continue
             if not self.quota.available(provider.provider_id) or not self.circuit(provider.provider_id).allow():
                 continue
@@ -296,16 +298,7 @@ class IntelligentRouter:
             raise RoutingError("retry budget exhausted")
         remaining_attempts = self.policy.max_attempts - attempt + 1
         worst = next_candidate.estimated_cost * sum(self.policy.retry_multiplier ** i for i in range(remaining_attempts))
-        return RouteEvidence(
-            infer_complexity(req),
-            next_candidate,
-            len(candidates),
-            escalation,
-            attempt,
-            failure_class.value,
-            next_candidate.estimated_cost,
-            worst,
-        )
+        return RouteEvidence(infer_complexity(req), next_candidate, len(candidates), escalation, attempt, failure_class.value, next_candidate.estimated_cost, worst)
 
     def record_outcome(self, provider_id: str, *, success: bool, latency_ms: float, rate_limited: bool = False) -> None:
         self.health.record(HealthObservation(provider_id, success, latency_ms))
