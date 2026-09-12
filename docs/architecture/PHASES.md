@@ -40,8 +40,8 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 | 61 | Continuous Improvement | Complete | PR #75 / CI #1157 / `34692165853` |
 | 62 | Cross-Runtime / Cross-Harness | Complete | PR #76 / CI #1166 / `34692621358`; final mainline #1186 / `34693756693` |
 | 63 | Ecosystem / Marketplace | Complete | PR #77 / CI #1189 / `34694186010`; final mainline #1198 / `34694418960` |
-| 64 | SDK / Developer Platform | Complete | PR #78 merged; implementation-tree closure CI #1239 / `34697885027`; final synchronized-tree gate follows |
-| 65 | Workflow + Automation | **Complete** | Implementation-tree CI #1239 / `34697885027`; final synchronized documentation-tree CI is the closure gate |
+| 64 | SDK / Developer Platform | Complete | PR #78 merged; implementation closure CI #1239 / `34697885027` |
+| 65 | Workflow + Automation | **Complete / 100%** | Final synchronized-tree CI #1249 / `34698187600` |
 | 66 | Advanced Web Control Plane | Next | Next implementation phase |
 | 67 | Advanced TUI Control Center | Planned | Planned |
 | 68 | Advanced CLI Platform | Planned | Planned |
@@ -57,6 +57,8 @@ The active roadmap explicitly spans **Phase 44 — Execution Runtime Foundation*
 
 Documentation: `docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md`.
 
+**Closure verification:** final synchronized-tree CI #1249 / run `34698187600` completed successfully. Distribution build, wheel installation, repository audit, integration verification, Ruff, full pytest, and diagnostic artifact publication all passed.
+
 ## Phase 64 closure
 
 Phase 64 delivers typed Python and TypeScript SDKs, versioned REST/SSE/WebSocket access, stable errors, optional bearer authentication, header-bound identity, filter-bound cursor pagination, bounded idempotent run creation, bounded client concurrency, explicit event subscriptions, signed webhook delivery primitives, OpenAPI updates, examples, package metadata, and dedicated SDK CI. SDKs remain clients; SI Core retains governance and execution authority.
@@ -65,8 +67,8 @@ Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagi
 
 Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
 
-PR #78 is merged into `main`. Phase 64 is closed as part of the synchronized-tree documentation closure validated with Phase 65.
+PR #78 is merged into `main`. Phase 64 is closed under the verified V4 documentation baseline.
 
 ## Closure gate
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green.
+A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **Phase 65 satisfies this gate.**
