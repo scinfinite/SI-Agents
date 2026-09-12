@@ -33,7 +33,6 @@ def test_discovery_is_deterministic_and_reports_capabilities() -> None:
     registry.register(adapter("zeta", streaming=True), enabled=True)
     registry.register(adapter("alpha"), enabled=True)
     gateway = CrossRuntimeGateway(registry)
-
     discovered = gateway.discover()
     assert [item.harness_id for item in discovered] == ["alpha", "zeta"]
     assert discovered[1].capabilities.streaming is True
@@ -45,31 +44,20 @@ def test_select_requires_streaming_capability_and_preference_is_deterministic() 
     registry.register(adapter("plain"), enabled=True)
     registry.register(adapter("stream", streaming=True), enabled=True)
     gateway = CrossRuntimeGateway(registry)
-
     request = InvocationRequest("echo", "x", "project", streaming=True)
-    selected = gateway.select(request)
-    assert [item.metadata.harness_id for item in selected] == ["stream"]
-
+    assert [item.metadata.harness_id for item in gateway.select(request)] == ["stream"]
     request = InvocationRequest("echo", "x", "project")
-    selected = gateway.select(request, preferred_harness="stream")
-    assert selected[0].metadata.harness_id == "stream"
+    assert gateway.select(request, preferred_harness="stream")[0].metadata.harness_id == "stream"
 
 
 def test_retryable_prestart_failure_uses_safe_fallback_and_records_decision() -> None:
     def retryable(request):
-        return InvocationResponse(
-            request.request_id,
-            InvocationStatus.FAILED,
-            error=RuntimeError(RuntimeErrorCode.TIMEOUT, "temporary", retryable=True),
-        )
-
+        return InvocationResponse(request.request_id, InvocationStatus.FAILED, error=RuntimeError(RuntimeErrorCode.TIMEOUT, "temporary", retryable=True))
     registry = HarnessRegistry()
     registry.register(adapter("primary", response=retryable), enabled=True)
     registry.register(adapter("fallback"), enabled=True)
     gateway = CrossRuntimeGateway(registry)
-    request = InvocationRequest("echo", "x", "project")
-
-    response = gateway.invoke(request, preferred_harness="primary")
+    response = gateway.invoke(InvocationRequest("echo", "x", "project"), preferred_harness="primary")
     assert response.output == "fallback"
     decision = gateway.decisions()[-1]
     assert decision.attempted_harnesses == ("primary", "fallback")
@@ -85,7 +73,6 @@ def test_fallback_is_refused_after_execution_started() -> None:
             events=(RuntimeEvent(RuntimeEventType.STARTED, request.request_id, 0),),
             error=RuntimeError(RuntimeErrorCode.TIMEOUT, "late", retryable=True),
         )
-
     registry = HarnessRegistry()
     registry.register(adapter("primary", response=started_failure), enabled=True)
     registry.register(adapter("fallback"), enabled=True)
@@ -97,21 +84,14 @@ def test_fallback_is_refused_after_execution_started() -> None:
 
 def test_repeated_failures_quarantine_harness_and_probe_recovers() -> None:
     def fail(request):
-        return InvocationResponse(
-            request.request_id,
-            InvocationStatus.FAILED,
-            error=RuntimeError(RuntimeErrorCode.TIMEOUT, "temporary", retryable=True),
-        )
-
+        return InvocationResponse(request.request_id, InvocationStatus.FAILED, error=RuntimeError(RuntimeErrorCode.TIMEOUT, "temporary", retryable=True))
     registry = HarnessRegistry()
     registry.register(adapter("bad", response=fail), enabled=True)
     registry.register(adapter("good"), enabled=True)
     gateway = CrossRuntimeGateway(registry, quarantine_after=2, quarantine_seconds=60)
     for _ in range(2):
-        response = gateway.invoke(InvocationRequest("echo", "x", "project"), preferred_harness="bad")
-        assert response.output == "good"
+        assert gateway.invoke(InvocationRequest("echo", "x", "project"), preferred_harness="bad").output == "good"
     assert next(item for item in gateway.discover() if item.harness_id == "bad").health is HarnessHealth.QUARANTINED
-
     gateway = CrossRuntimeGateway(registry, health_probe=lambda _: True, quarantine_after=2)
     assert gateway.probe("bad") is HarnessHealth.HEALTHY
 
@@ -123,10 +103,7 @@ def test_session_binding_prevents_cross_project_or_cross_harness_use() -> None:
     sessions = SessionRegistry()
     gateway = CrossRuntimeGateway(registry, sessions)
     session = gateway.open_session(RuntimeSession("s1", "project-a", "a"))
-
-    request = InvocationRequest("echo", "x", "project-a", session_id=session.session_id)
-    assert gateway.invoke(request).output == "a"
-
+    assert gateway.invoke(InvocationRequest("echo", "x", "project-a", session_id=session.session_id)).output == "a"
     bad = InvocationRequest("echo", "x", "project-b", session_id=session.session_id)
     try:
         gateway.invoke(bad)
@@ -143,7 +120,6 @@ def test_explicit_session_migration_closes_old_binding_and_creates_new_one() -> 
     sessions = SessionRegistry()
     gateway = CrossRuntimeGateway(registry, sessions)
     gateway.open_session(RuntimeSession("s1", "project-a", "a"))
-
     migrated = gateway.migrate_session("s1", project_id="project-a", from_harness="a", to_harness="b")
     assert migrated.harness_id == "b"
     assert migrated.session_id != "s1"
@@ -200,6 +176,6 @@ def test_route_decision_fingerprint_does_not_include_request_input() -> None:
     registry = HarnessRegistry()
     registry.register(adapter("a"), enabled=True)
     gateway = CrossRuntimeGateway(registry)
-    response = gateway.invoke(InvocationRequest("echo", {"secret": "do-not-store"}, "project"))
+    response = gateway.invoke(InvocationRequest("echo", "secret-do-not-store", "project"))
     assert response.output == "a"
-    assert "do-not-store" not in gateway.decisions()[-1].decision_id
+    assert "secret-do-not-store" not in gateway.decisions()[-1].decision_id
