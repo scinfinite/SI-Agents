@@ -60,6 +60,7 @@ def test_wait_is_durable_and_resume_continues(tmp_path) -> None:
         WorkflowStep("done", WorkflowStepKind.TASK, action="done", depends_on=("wait",)),
     ))
     run = engine.start("wf")
+    run.created_at = NOW.isoformat()
     waiting = engine.tick(run.run_id, now=NOW)
     assert waiting.status is WorkflowRunStatus.WAITING
     restored = WorkflowEngine(state_path=path)
@@ -77,6 +78,7 @@ def test_human_gate_requires_explicit_approval() -> None:
         WorkflowStep("done", WorkflowStepKind.TASK, action="done", depends_on=("gate",)),
     ))
     run = engine.start("wf")
+    run.created_at = NOW.isoformat()
     assert engine.tick(run.run_id, now=NOW).status is WorkflowRunStatus.WAITING
     assert run.step_states["gate"] == "waiting"
     assert engine.resume(run.run_id, variables={"approved": True}, now=NOW).status is WorkflowRunStatus.SUCCEEDED
@@ -123,6 +125,7 @@ def test_interval_trigger_is_time_based() -> None:
     ))
     assert len(engine.due_intervals(now=NOW)) == 1
     run = engine.trigger_intervals(now=NOW)[0]
+    run.created_at = NOW.isoformat()
     assert run.trigger == "interval"
     assert engine.due_intervals(now=NOW + timedelta(seconds=59)) == ()
     assert len(engine.due_intervals(now=NOW + timedelta(seconds=61))) == 1
@@ -147,8 +150,8 @@ def test_retry_and_runtime_timeout() -> None:
     timeout = WorkflowDefinition("timeout", 1, "Timeout", (WorkflowStep("w", WorkflowStepKind.WAIT, wait_seconds=1),), max_runtime_seconds=1)
     engine.register(timeout)
     timed = engine.start("timeout")
-    assert engine.tick(timed.run_id, now=NOW).status is WorkflowRunStatus.WAITING
-    assert engine.tick(timed.run_id, now=NOW + timedelta(seconds=2)).status is WorkflowRunStatus.FAILED
+    timed.created_at = (NOW - timedelta(seconds=2)).isoformat()
+    assert engine.tick(timed.run_id, now=NOW).status is WorkflowRunStatus.FAILED
 
 
 def test_concurrent_idempotency_is_atomic() -> None:
