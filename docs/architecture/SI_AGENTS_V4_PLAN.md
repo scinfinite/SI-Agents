@@ -17,11 +17,11 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current verified position
 
-V3 is closed. V4 has completed Phases **44–63**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness and Phase 63 — Ecosystem / Marketplace are complete: implementation, adversarial verification, documentation synchronization, merge, and mainline CI closure are green. Phase 64 — SDK / Developer Platform is in implementation pending its final exact-tree mainline CI.**
+V3 is closed. V4 has completed Phases **44–64**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 62 — Cross-Runtime / Cross-Harness, Phase 63 — Ecosystem / Marketplace, and Phase 64 — SDK / Developer Platform are implemented, audited, documented, merged, and awaiting only the final synchronized-tree mainline closure CI for the current documentation tree.**
 
 ## Closed phases
 
-Phases 44–63 are closed under their recorded CI evidence. Phase 62 merged as PR #76 (`607085782a75e31a60774afe975edcbd38bf5e4c`) with final mainline CI #1186 (`34693756693`) green.
+Phases 44–64 are closed under their recorded implementation/merge evidence, with the current exact-tree mainline CI acting as the final closure gate for Phase 64. Phase 62 merged as PR #76 (`607085782a75e31a60774afe975edcbd38bf5e4c`) with final mainline CI #1186 (`34693756693`) green.
 
 ### Phase 63 — Ecosystem / Marketplace
 
@@ -33,13 +33,15 @@ Implementation: `core/marketplace/registry.py` and `core/marketplace/__init__.py
 
 Verification: `tests/unit/test_phase63_marketplace.py`, PR #77 / CI #1189 (`34694186010`), and final exact-tree mainline CI #1198 (`34694418960`) on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
 
-## Phase 64 — SDK / Developer Platform — in implementation
+## Phase 64 — SDK / Developer Platform — complete pending final tree gate
 
 Phase 64 delivers Python and TypeScript SDKs, versioned REST/WebSocket/SSE access, typed schemas and stable errors, optional bearer authentication, header-bound identity, idempotent run creation, bounded concurrency, cursor pagination/filtering, event subscriptions, signed webhook delivery primitives, OpenAPI updates, package metadata, examples, and adversarial tests. SDKs remain clients and do not gain governance or execution authority.
 
 Implementation: `sdk/python/si_agents`, `sdk/typescript`, `core/control_api/pagination.py`, `core/control_api/subscriptions.py`, and SDK transport extensions in `core/control_api/server.py` / `openapi.py`.
 
 Documentation: `docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md`.
+
+PR #78 was merged into `main`. The dedicated SDK gate was added to validate Python compile/tests and strict TypeScript build/check; the synchronized documentation tree must now pass the complete mainline closure suite before Phase 65 begins.
 
 ## Phase 65 — Workflow + Automation
 
