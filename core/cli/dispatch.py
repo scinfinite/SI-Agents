@@ -13,7 +13,7 @@ ADVANCED_COMMANDS = {
     "status", "agents", "teams", "workflows", "organization", "skills", "memory",
     "governance", "evidence", "environments", "harnesses", "settings", "visualization",
     "events", "run", "task", "execution", "approval", "session", "attachment", "auth",
-    "config", "models", "providers", "stream", "resume", "pipeline",
+    "config", "models", "providers", "stream", "resume", "pipeline", "agent", "team", "workflow",
 }
 
 
@@ -27,12 +27,13 @@ def main(argv: list[str] | None = None) -> int:
         return deployment_main(arguments[1:])
     if arguments and arguments[0] in {"verify", "validate-release"}:
         return verify_main(arguments[1:])
+    if arguments and arguments[0] in {"agent", "team", "workflow"}:
+        from core.cli.aliases import main as alias_main
+        return alias_main(arguments[0], arguments[1:])
     if arguments and arguments[0] in ADVANCED_COMMANDS:
         from core.cli.platform import main as platform_main
-
         return platform_main(arguments)
     from core.cli.main import main as legacy_main
-
     return legacy_main(arguments)
 
 
