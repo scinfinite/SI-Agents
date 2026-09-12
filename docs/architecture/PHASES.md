@@ -38,8 +38,8 @@
 | 51 | Checkpoints + Resume | Complete | CI #977 / `34627956634` |
 | 52 | Context / Memory Economics | **Complete** | Final exact-tree CI #1020 / `34673411916` |
 | 53 | Persistent Sessions | **Complete** | Final synchronized-tree mainline CI #1037 / `34675239106` |
-| 54 | Human-in-the-Loop | **Next** | Next phase |
-| 55 | Durable Waiting + Scheduling | Planned | Planned |
+| 54 | Human-in-the-Loop | **Complete** | Final synchronized-tree mainline CI #1051 / `34676632475` |
+| 55 | Durable Waiting + Scheduling | **In implementation** | Final mainline exact-tree CI pending |
 | 56 | Intelligent Routing + Economics | Planned | Planned |
 | 57 | Security Platform | Planned | Planned |
 | 58 | Workspace / Worktree Lifecycle | Planned | Planned |
@@ -57,4 +57,4 @@
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-Phase 54 is the next implementation phase after Phase 53 closure.
+Phase 55 is the active implementation phase after Phase 54 closure.
