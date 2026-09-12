@@ -19,11 +19,11 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Verified V4 phases
 
-**Phases 44–65 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened. **Phase 66 — Advanced Web Control Plane is active.**
+**Phases 44–66 are closed.** Phases 46, 47, 49, 50, 58, 59, and 60 are advanced-hardened. **Phase 67 — Advanced TUI Control Center is next.**
 
 ## Phase 66 architecture
 
-Phase 66 adds a same-origin, dependency-free web control client layered over the existing WebServer and versioned Control API. It exposes operational overview/health, live activity, workflow/run inspection, topology/DAG relationships, evidence, identity-bound approvals, resources/settings, and bounded repository source/search/diff inspection. It does not create a second state or authorization authority.
+Phase 66 adds a same-origin, dependency-free web control client layered over the existing WebServer and versioned Control API. It exposes operational overview/health, live activity, workflow/run inspection, topology/DAG relationships, evidence, identity-bound approvals, governed run-request controls, resources/settings, and bounded repository source/search/diff inspection. It does not create a second state or authorization authority.
 
 `core/web/advanced.py` installs the Phase 66 handler on the existing `WebServer`; `web/control/` contains the browser surface. The existing authentication/audit boundary is retained. Static resources use a restrictive CSP, `nosniff`, safe path resolution, and no third-party runtime assets. Repository viewers enforce file-type, size, query, traversal, and `.git` bounds.
 
@@ -48,7 +48,8 @@ See `PHASE_64_SDK_DEVELOPER_PLATFORM.md` for the detailed Phase 64 contract and 
 - Phase 63: PR #77 merged; final exact-tree mainline CI #1198 / `34694418960` passed on `633af3e9a5b1a106fafee37c4c95d0b18e19743e`.
 - Phase 64: PR #78 merged; implementation-tree closure CI #1239 / `34697885027` passed the repository closure suite.
 - Phase 65: final synchronized-tree CI #1249 / `34698187600` completed successfully with distribution build, wheel verification, repository audit, integration verification, Ruff, and full pytest all green.
+- Phase 66: PR #79 merged; closure CI #1275 / `34699632473` passed all repository and SDK gates. The current synchronized documentation tree is the final mainline closure target.
 
 ## Current position
 
-**Phase 65 — Workflow + Automation is closed. Phase 66 — Advanced Web Control Plane is active.**
+**Phase 66 — Advanced Web Control Plane is closed at 100%. Phase 67 — Advanced TUI Control Center is next, after the final synchronized-tree mainline gate for this documentation state is green.**
