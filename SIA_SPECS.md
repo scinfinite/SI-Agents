@@ -1,6 +1,6 @@
 # SIA-SPECS — SI-Agents Complete System Specification
 
-**Status:** Phase 70 End-to-End Production Validation complete; Phase 71 is the final hardening gate
+**Status:** Phase 70 End-to-End Production Validation complete; Phase 71 final production hardening implemented and pending final mainline verification
 
 This document is the high-level product and engineering specification for SI-Agents. It is intentionally implementation-neutral where possible; detailed contracts live under `docs/architecture/` and historical phase records live under `docs/architecture/phases/`.
 
@@ -25,6 +25,7 @@ External clients/integrations—including Web, TUI, CLI, npm, SDKs, OpenCode, Om
 - Web, TUI, CLI, npm bootstrapper, Python SDK, and TypeScript SDK operator/developer surfaces.
 - OpenCode integration and OmniRoute provider/model routing integration.
 - Termux/mobile and Codespace/Desktop environment awareness.
+- Bounded runtime lifecycle state with idempotent terminal replay and duplicate-execution protection.
 
 ## 3. Authority model
 
@@ -36,6 +37,7 @@ External clients/integrations—including Web, TUI, CLI, npm, SDKs, OpenCode, Om
 6. Imported Markdown/JSON/YAML configuration is data until explicitly validated and authorized.
 7. Credentials are never persisted by convenience layers and are never placed in URLs.
 8. npm is a distribution/bootstrap adapter only; it cannot create a second runtime authority.
+9. Runtime invocation identity is scoped to `(harness_id, request_id)`; lifecycle state cannot be replayed across harness boundaries.
 
 ## 4. Capacity model
 
@@ -117,6 +119,9 @@ The npm package `si-agents` is a thin cross-platform launcher/bootstrapper. It r
 - Safe path/identifier handling.
 - Integrity-protected handoffs/checkpoints.
 - Audit evidence for security-sensitive decisions.
+- Request-ID reuse is rejected when the immutable request payload differs.
+- Lifecycle state is bounded and protected by a lock for concurrent callers.
+- Cancellation is terminal and cannot overwrite a terminal result.
 
 ## 9. Provenance and legal-risk controls
 
@@ -165,7 +170,7 @@ A feature is not considered complete merely because files exist. Completion requ
 9. final CI;
 10. post-merge verification on the exact mainline tree.
 
-Phase 69 additionally requires npm metadata/version/license consistency, exact tarball allowlist verification, and launcher smoke tests. Phase 70 additionally requires deterministic end-to-end production-path coverage and explicit failure-containment checks.
+Phase 69 additionally requires npm metadata/version/license consistency, exact tarball allowlist verification, and launcher smoke tests. Phase 70 additionally requires deterministic end-to-end production-path coverage and explicit failure-containment checks. Phase 71 additionally requires lifecycle/idempotency/concurrency/cancellation hardening coverage and final post-merge verification on the exact mainline tree.
 
 ## 12. Repository organization
 
@@ -177,6 +182,6 @@ Phase 69 additionally requires npm metadata/version/license consistency, exact t
 - `tests/` — regression, unit, integration, security, and phase acceptance tests.
 - `bin/` — npm distribution launcher.
 - `scripts/` — repository verification utilities, including npm package verification.
-- `docs/architecture/phases/` — canonical historical phase records 1–70.
+- `docs/architecture/phases/` — canonical historical phase records 1–71.
 - `docs/platforms/` — environment-specific operating guidance.
 - `docs/legal/` — licensing/provenance policy.

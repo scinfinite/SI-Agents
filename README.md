@@ -2,9 +2,9 @@
 
 SI-Agents is a governed, evidence-driven AI engineering and agent platform built around one authoritative SI Core exposed through Web, TUI, CLI, SDKs, OpenCode, OmniRoute, workflows, and runtime/integration adapters.
 
-## Phase 70 status
+## Phase 71 status
 
-Phases **44–70 are closed**. Phase **69 — npm Distribution + Setup** is implemented with a thin npm launcher/bootstrapper over the authoritative Python runtime. Phase **70 — End-to-End Production Validation** is complete and the final roadmap phase is Phase 71.
+Phases **44–70 are closed**. Phase **71 — Final Production Hardening** is the final V4 production gate. It hardens runtime lifecycle, idempotency, concurrency, cancellation, and bounded request-state behavior while preserving SI Core as the sole execution authority.
 
 ### npm distribution
 
@@ -22,11 +22,11 @@ The npm package requires Node.js 18+ and Python 3.11+ for runtime execution. It 
 
 `si-agents setup` is an explicit bootstrap operation that installs the matching Python package when it is not already importable. The npm tarball is deliberately allowlisted to the launcher, `LICENSE`, `NOTICE`, and `README.npm.md`; repository source, tests, CI files, and development artifacts are excluded.
 
-## Phase 70 production validation
+## Phase 71 production hardening
 
-Phase 70 validates the OpenCode → SI RuntimeEngine → OmniRoute → model/provider boundary → SI → OpenCode control/data path using deterministic CI-safe transports. It also covers governance denial, session/project isolation, model fallback, and harness-scoped cancellation while retaining the complete repository regression and packaging gates.
+The authoritative `RuntimeEngine` now uses a bounded, thread-safe invocation ledger keyed by `(harness_id, request_id)`. Terminal responses are replayable, request-ID payload reuse fails closed, concurrent duplicates cannot execute a capability twice, cancellation is terminal, and lifecycle state is bounded. Existing governance, session/project isolation, OpenCode, OmniRoute, Web/TUI/CLI, SDK, wheel, npm, repository-audit, Ruff, compileall, and full pytest gates remain mandatory.
 
-See `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md` for the acceptance record.
+See `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md` for the final-hardening contract and closure gate.
 
 ## Capacity profiles
 
@@ -77,7 +77,7 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 68 | Advanced CLI Platform | Complete |
 | 69 | npm Distribution + Setup | **Complete / 100%** |
 | 70 | End-to-End Production Validation | **Complete / 100%** |
-| 71 | Final Production Hardening | **Next** |
+| 71 | Final Production Hardening | **Pending final verification** |
 
 ## Engineering gate
 
@@ -91,6 +91,7 @@ A phase is not complete until implementation, targeted tests, regression/integra
 - `docs/architecture/phases/README.md` — canonical phase archive.
 - `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md` — Phase 69 contract and acceptance record.
 - `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md` — Phase 70 acceptance record.
+- `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md` — Phase 71 final hardening contract.
 - `docs/architecture/CAPACITY_POLICY.md` — Low/Medium/High execution policy.
 - `docs/platforms/TERMUX.md` — Termux operating contract.
 - `docs/legal/PROVENANCE_AND_LICENSE.md` — provenance and legal-risk controls.

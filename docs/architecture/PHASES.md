@@ -4,7 +4,7 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–70 are closed**. Phase 71 is the final production-hardening gate.
+Phases **44–70 are closed**. Phase 71 is the final production-hardening gate and is pending final mainline verification.
 
 ## Status legend
 
@@ -12,6 +12,7 @@ Phases **44–70 are closed**. Phase 71 is the final production-hardening gate.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
 - **Next** — next implementation phase after the current closed phase.
 - **Planned** — future roadmap phase.
+- **Pending final verification** — implementation is complete, but final mainline closure evidence is still required.
 
 ## V4 sequence
 
@@ -43,17 +44,19 @@ Phases **44–70 are closed**. Phase 71 is the final production-hardening gate.
 | 67 | Advanced TUI Control Center | Complete / 100% | PR #80 / final PR CI #1288 / `34702115990` |
 | 68 | Advanced CLI Platform | Complete / 100% | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
 | 69 | npm Distribution + Setup | Complete / 100% | final mainline CI #1363 / `34742449609` |
-| 70 | End-to-End Production Validation | **Complete / 100%** | Phase 70 acceptance coverage + final mainline CI |
-| 71 | Final Production Hardening | **Next** | Planned |
+| 70 | End-to-End Production Validation | **Complete / 100%** | final mainline CI #1372 / `34742931329` + SDK #164 / `34742931334` |
+| 71 | Final Production Hardening | **Pending final verification** | Phase 71 lifecycle/idempotency/concurrency hardening + final mainline CI pending |
 
-## Phase 70 implementation
+## Phase 71 implementation
 
-Phase 70 adds deterministic end-to-end production-path coverage without requiring external model/provider credentials. A localhost OpenCode-compatible server exercises the real `OpenCodeAdapter`; its message path delegates into the real `RuntimeEngine`, which invokes the real `OmniRouteBridge` against a deterministic transport. This verifies the authority boundary and response path while keeping CI independent of external accounts, billing, network availability, and secrets.
+Phase 71 hardens the authoritative RuntimeEngine lifecycle without adding a second authority. `InvocationLedger` is thread-safe and bounded, keys state by `(harness_id, request_id)`, caches terminal responses for idempotent replay, rejects request-ID payload confusion, prevents concurrent duplicate execution, and makes cancellation terminal.
 
-The acceptance suite also verifies governance denial before downstream execution, session/project isolation, harness-scoped cancellation behavior, and preferred/fallback model selection. Existing OpenCode, OmniRoute, runtime, Web/TUI/CLI, SDK, wheel, npm, repository-audit, Ruff, compileall, and full pytest gates remain mandatory.
+Implementation: `core/runtime/lifecycle.py`, `core/runtime/engine.py`, `core/runtime/__init__.py`.
 
-Detailed contract: `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md`.
+Acceptance coverage: `tests/integration/test_phase71_final_hardening.py`.
+
+Detailed contract: `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md`.
 
 ## Closure evidence
 
-Phase 70 is complete only when the acceptance implementation is present on canonical `main`, documentation is synchronized, the full existing repository gates remain green, SDK CI is green, and final mainline CI is green on the exact Phase 70 tree.
+Phase 71 is complete only when the hardening implementation is present on canonical `main`, documentation is synchronized, the full existing repository gates remain green, SDK CI is green, and final mainline CI is green on the exact final Phase 71 tree. Post-merge branch cleanup must leave only canonical `main`.
