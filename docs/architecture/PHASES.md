@@ -6,6 +6,17 @@
 
 Phases **44–68 are closed**. Phase 69 is next. Phase 71 is the final production-hardening gate.
 
+## Current hardening baseline
+
+The post-Phase-68 hardening baseline now includes:
+
+- **300 agent personas across 18 divisions** with repository-owned catalog extensions and a 300-persona parity gate.
+- **Low / Medium / High capacity policy** with Termux High-work and local-compilation denial and Desktop/Codespace offload guidance.
+- **Termux + OpenCode + OmniRoute interoperability guidance** with explicit authority boundaries.
+- **Repository-neutral provenance hygiene** and Apache-2.0 licensing for SI-Agents-owned work.
+- **Systematic phase navigation** under `docs/phases/` while historical architecture paths remain compatible.
+- **Current system specification** in `SIA_SPECS.md` and current status in `docs/STATUS.md`.
+
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
@@ -54,7 +65,7 @@ Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/session
 
 Acceptance coverage: `tests/test_phase68_cli.py` plus the full existing repository suite.
 
-Detailed contract: `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
+Detailed contract: `docs/phases/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 ## Closure evidence
 
