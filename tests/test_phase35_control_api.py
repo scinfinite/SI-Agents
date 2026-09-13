@@ -18,14 +18,14 @@ def test_snapshot_exposes_canonical_counts() -> None:
     service = ControlApiService(ROOT)
     snapshot = service.snapshot().as_dict()
     assert snapshot["api_version"] == "v1"
-    assert snapshot["counts"]["agents"] == 279
+    assert snapshot["counts"]["agents"] == 300
     assert snapshot["counts"]["teams"] >= 1
     assert snapshot["counts"]["workflows"] == 4
 
 
 def test_read_models_are_deterministic_and_inert() -> None:
     service = ControlApiService(ROOT)
-    assert len(service.agents()) == 279
+    assert len(service.agents()) == 300
     assert service.agents() == sorted(service.agents(), key=lambda x: (x["division"], x["name"], x["id"]))
     assert len(service.workflows()) == 4
     assert service.memory()["entries"] == []
