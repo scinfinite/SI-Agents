@@ -1,7 +1,6 @@
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from unittest.mock import patch
 
 from adapters.opencode import OpenCodeAdapter, OpenCodeConfig
 from core.governance.models import DataClass, GovernanceRequest, RiskLevel
@@ -15,7 +14,7 @@ from core.runtime import (
     SessionRegistry,
 )
 from core.runtime.models import RuntimeErrorCode
-from core.runtime.omniroute import OmniRouteBridge, OmniRouteModel
+from core.runtime.omniroute import OmniRouteBridge, OmniRouteModel, OmniRoutePolicy
 
 
 class _FakeOmniTransport:
@@ -24,8 +23,6 @@ class _FakeOmniTransport:
 
     def request(self, method: str, path: str, *, query=None, body=None, token=None):
         self.calls.append((method, path, body))
-        if path == "/health":
-            return {"status": "ok"}
         if path == "/v1/models":
             return {
                 "data": [
@@ -76,11 +73,7 @@ class _OpenCodeHandler(BaseHTTPRequestHandler):
                 input=payload["parts"][0]["text"],
                 project_id="phase70-project",
                 metadata=(("preferred_models", "acceptance-model"),),
-                governance=GovernanceRequest(
-                    "phase70.e2e",
-                    RiskLevel.LOW,
-                    DataClass.PUBLIC,
-                ),
+                governance=GovernanceRequest("phase70.e2e", RiskLevel.LOW, DataClass.PUBLIC),
             )
             result = self.runtime.invoke("omniroute", request)
             assert result.status is InvocationStatus.COMPLETED
@@ -116,9 +109,7 @@ def test_phase70_opencode_si_omniroute_path() -> None:
     runtime, transport = _runtime()
     server, handler = _start_server(runtime)
     try:
-        adapter = OpenCodeAdapter(
-            OpenCodeConfig(base_url=f"http://127.0.0.1:{server.server_port}")
-        )
+        adapter = OpenCodeAdapter(OpenCodeConfig(base_url=f"http://127.0.0.1:{server.server_port}"))
         request = InvocationRequest(
             request_id="phase70-opencode",
             capability_id="chat",
@@ -126,8 +117,7 @@ def test_phase70_opencode_si_omniroute_path() -> None:
             project_id="phase70-project",
             metadata=(("model", "acceptance-model"), ("agent", "developer")),
         )
-        with patch.object(OpenCodeAdapter, "_create_session", wraps=adapter._create_session):
-            result = adapter.invoke(request)
+        result = adapter.invoke(request)
         assert result.status is InvocationStatus.COMPLETED
         assert result.output == "production-path-ok"
         assert result.events[0].type is RuntimeEventType.COMPLETED
@@ -136,8 +126,6 @@ def test_phase70_opencode_si_omniroute_path() -> None:
             "/v1/chat/completions",
         ]
         assert [path for path, _ in handler.calls] == [
-            "/session/ses_phase70/message",
-        ] or [path for path, _ in handler.calls] == [
             "/session",
             "/session/ses_phase70/message",
         ]
@@ -154,11 +142,7 @@ def test_phase70_governance_denial_stops_downstream_execution() -> None:
         input="blocked",
         project_id="phase70-project",
         session_id="phase70-session",
-        governance=GovernanceRequest(
-            "phase70.denied",
-            RiskLevel.CRITICAL,
-            DataClass.SECRET,
-        ),
+        governance=GovernanceRequest("phase70.denied", RiskLevel.CRITICAL, DataClass.SECRET),
     )
     result = runtime.invoke("omniroute", request)
     assert result.status is InvocationStatus.FAILED
@@ -190,14 +174,13 @@ def test_phase70_cancel_path_remains_harness_scoped() -> None:
 
 
 def test_phase70_model_selection_preserves_fallback_policy() -> None:
-    transport = _FakeOmniTransport()
-    bridge = OmniRouteBridge(transport=transport)
+    bridge = OmniRouteBridge(transport=_FakeOmniTransport())
     models = (
         OmniRouteModel("preferred", capabilities=frozenset({"chat"}), input_cost=1),
         OmniRouteModel("fallback", capabilities=frozenset({"chat"}), input_cost=0),
     )
     selected = bridge.select_model(
-        __import__("core.runtime.omniroute", fromlist=["OmniRoutePolicy"]).OmniRoutePolicy(
+        OmniRoutePolicy(
             required_capabilities=frozenset({"chat"}),
             preferred_models=("missing",),
             fallback_models=("fallback",),
