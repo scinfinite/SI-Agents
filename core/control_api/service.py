@@ -8,7 +8,6 @@ from pathlib import Path
 from threading import RLock
 from typing import Any
 
-from core.capacity import CapacityPolicy, CapacityTarget
 from core.governance.engine import GovernanceEngine
 from core.governance.models import DataClass, GovernanceRequest, RiskLevel
 from core.hitl import ApprovalState, HumanApprovalService
@@ -25,7 +24,6 @@ class ControlApiService:
     def __init__(self, root: str | Path, governance: GovernanceEngine | None = None) -> None:
         self.root = Path(root).resolve()
         self.governance = governance or GovernanceEngine()
-        self.capacity_policy = CapacityPolicy()
         self._lock = RLock()
         self._runs: dict[str, RunRecord] = {}
         self._events: list[ApiEvent] = []
@@ -67,47 +65,73 @@ class ControlApiService:
             for t in sorted(self._teams.all(), key=lambda item: item.id)
         ]
 
-    def capacity(self, payload: dict[str, object] | None = None) -> dict[str, object]:
-        return self.capacity_policy.evaluate(payload or {}).as_dict()
-
     def organization(self) -> dict[str, object]:
         return {
             "teams": [
-                {"id": t.id, "name": t.name, "purpose": t.purpose}
+                {"id": t.id, "name": t.name, "purpose": t.purpose, "division_ids": list(t.division_ids), "member_agent_ids": list(t.member_agent_ids), "lead_agent_id": t.lead_agent_id}
                 for t in self._organization.teams
             ],
-            "divisions": [
-                {"id": d.id, "team_id": d.team_id}
-                for d in self._organization.division_assignments
+            "division_assignments": [
+                {"division_id": a.division_id, "team_id": a.team_id, "rationale": a.rationale}
+                for a in self._organization.division_assignments
             ],
             "workflows": [
                 {
                     "id": w.id,
                     "name": w.name,
                     "purpose": w.purpose,
-                    "steps": [s.id for s in w.steps],
+                    "steps": [
+                        {"id": s.id, "kind": s.kind.value, "team_id": s.team_id, "agent_id": s.agent_id, "purpose": s.purpose, "depends_on": list(s.depends_on)}
+                        for s in w.steps
+                    ],
                 }
                 for w in self._organization.workflows
             ],
         }
 
+    def workflows(self) -> list[dict[str, object]]:
+        return list(self.organization()["workflows"])
+
     def skills(self) -> list[dict[str, object]]:
-        return []
+        skills_root = self.root / "skills"
+        if not skills_root.exists():
+            return []
+        return [
+            {"id": path.parent.name, "path": str(path.relative_to(self.root))}
+            for path in sorted(skills_root.rglob("SKILL.md"))
+        ]
 
     def memory(self) -> dict[str, object]:
-        return {"status": "available", "mutations": "governed"}
+        return {"entries": [], "note": "Memory read model is intentionally not an authority; core.memory owns persistence."}
 
     def governance_state(self) -> dict[str, object]:
-        return {"status": "enforced", "rules": len(self.governance.store.snapshot().rules), "permissions": len(self.governance.store.snapshot().permissions)}
+        snapshot = self.governance.store.snapshot()
+        return {
+            "permissions": [
+                {"subject": x.subject, "capability": x.capability, "scope": x.scope, "effect": x.effect.value, "conditions": list(x.conditions)}
+                for x in snapshot.permissions
+            ],
+            "policies": [
+                {"name": x.name, "description": x.description, "deny_capabilities": list(x.deny_capabilities), "approval_risks": [r.value for r in x.approval_risks], "max_cost": x.max_cost, "allow_external_egress": x.allow_external_egress}
+                for x in snapshot.policies
+            ],
+            "capabilities": [{"name": x.name, "description": x.description, "risk": x.risk.value} for x in snapshot.capabilities],
+        }
 
     def evidence(self) -> dict[str, object]:
-        return {"status": "available", "mutations": "audited"}
+        with self._lock:
+            return {
+                "events": [event.as_dict() for event in self._events],
+                "run_count": len(self._runs),
+                "queued_runs": sum(run.status is RunStatus.QUEUED for run in self._runs.values()),
+                "note": "Execution evidence is produced by downstream execution and verification components; this view reports only control-plane evidence.",
+            }
 
     def environments(self) -> dict[str, object]:
         termux = bool(os.environ.get("TERMUX_VERSION")) or "/com.termux/" in os.environ.get("PREFIX", "")
         codespace = bool(os.environ.get("CODESPACES"))
         kind = "termux" if termux else "codespace" if codespace else "unknown"
-        return {"current": {"kind": kind, "platform": platform.system().lower(), "architecture": platform.machine(), "python_version": platform.python_version(), "cwd": str(self.root)}, "supported": ["termux", "codespace", "unknown"], "mutations": "read-only", "capacity": self.capacity_policy.describe()}
+        return {"current": {"kind": kind, "platform": platform.system().lower(), "architecture": platform.machine(), "python_version": platform.python_version(), "cwd": str(self.root)}, "supported": ["termux", "codespace", "unknown"], "mutations": "read-only"}
 
     def harnesses(self) -> list[dict[str, object]]:
         adapters = self.root / "adapters"
@@ -116,7 +140,7 @@ class ControlApiService:
         return [{"id": path.name, "path": str(path.relative_to(self.root)), "state": "registered"} for path in sorted(adapters.iterdir()) if path.is_dir() and not path.name.startswith(".")]
 
     def settings(self) -> dict[str, object]:
-        return {"api_version": API_VERSION, "web": {"default_host": "127.0.0.1", "default_port": 8788, "remote": "explicit opt-in with authentication"}, "security": {"cors": "explicit allowlist only", "telemetry": "disabled", "mutation_body_limit": "1 MiB"}, "execution": {"run_creation": "governed, capacity-checked, and queued only", "execution": "downstream"}, "capacity": self.capacity_policy.describe(), "human_in_the_loop": {"approval_decisions": "identity-bound and audited", "expiry": "fail-closed", "execution_authority": "downstream re-authorization required"}}
+        return {"api_version": API_VERSION, "web": {"default_host": "127.0.0.1", "default_port": 8788, "remote": "explicit opt-in with authentication"}, "security": {"cors": "explicit allowlist only", "telemetry": "disabled", "mutation_body_limit": "1 MiB"}, "execution": {"run_creation": "governed and queued only", "execution": "downstream"}, "human_in_the_loop": {"approval_decisions": "identity-bound and audited", "expiry": "fail-closed", "execution_authority": "downstream re-authorization required"}}
 
     def visualization(self) -> dict[str, object]:
         agents = sorted(self._agents.all(), key=lambda item: item.id)
@@ -250,16 +274,6 @@ class ControlApiService:
             raise ValueError("invalid risk, data_class, or estimated_cost") from exc
         if estimated_cost < 0:
             raise ValueError("estimated_cost must be non-negative")
-        execution_target = payload.get("execution_target")
-        if execution_target is not None and not isinstance(execution_target, str):
-            raise ValueError("execution_target must be a string")
-        try:
-            target = CapacityTarget(str(execution_target).lower()) if execution_target else None
-        except ValueError as exc:
-            raise ValueError("execution_target must be local, termux, desktop, codespace, or remote") from exc
-        capacity = self.capacity_policy.evaluate(payload, target=target)
-        if not capacity.allowed:
-            raise PermissionError(json.dumps({"status": "capacity_denied", "reasons": list(capacity.reasons), "warning": capacity.warning, "capacity": capacity.as_dict()}))
         request = GovernanceRequest(
             action=action,
             risk=risk,
@@ -278,11 +292,8 @@ class ControlApiService:
         decision = self.governance.decide(request)
         if decision.status.value != "allow":
             raise PermissionError(json.dumps({"status": decision.status.value, "reasons": list(decision.reasons)}))
-        run = RunRecord(new_id("run"), action, RunStatus.QUEUED, subject, governance_status=decision.status.value, capacity=capacity.level.value, execution_target=capacity.target.value)
-        metadata = {"run_id": run.id, "action": action, "capacity": capacity.level.value, "execution_target": capacity.target.value}
-        if capacity.warning:
-            metadata["capacity_warning"] = capacity.warning
-        event = ApiEvent(new_id("evt"), "run.accepted", subject, metadata=metadata)
+        run = RunRecord(new_id("run"), action, RunStatus.QUEUED, subject, governance_status=decision.status.value)
+        event = ApiEvent(new_id("evt"), "run.accepted", subject, metadata={"run_id": run.id, "action": action})
         with self._lock:
             self._runs[run.id] = run
             self._events.append(event)
