@@ -2,40 +2,18 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from core.legal.provenance import scan_text_files
+
 ROOT = Path(__file__).resolve().parents[1]
-FORBIDDEN = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
-TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
-ALLOWED_REFERENCE_DOCS = {
-    ROOT / "README.md",
-    ROOT / "docs" / "README.md",
-    ROOT / "docs" / "architecture" / "SI_AGENTS_V4_PLAN.md",
-    ROOT / "docs" / "architecture" / "README.md",
-    ROOT / "docs" / "architecture" / "PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
-    ROOT / "docs" / "architecture" / "PHASE_44_EXECUTION_RUNTIME.md",
-    ROOT / "docs" / "architecture" / "PHASE_45_EVENT_BUS_STATE.md",
-    ROOT / "docs" / "architecture" / "PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md",
-    ROOT / "docs" / "architecture" / "PHASE_47_OPENCODE_BRIDGE.md",
-    ROOT / "docs" / "architecture" / "PHASE_48_OMNIROUTE_INTEGRATION.md",
-    ROOT / "docs" / "architecture" / "PHASE_64_SDK_DEVELOPER_PLATFORM.md",
-    ROOT / "docs" / "architecture" / "PHASE_65_WORKFLOW_AUTOMATION.md",
-}
+TEXT_SUFFIXES = frozenset({".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"})
 
 
 def test_shipped_repository_has_no_external_project_branding() -> None:
-    for path in ROOT.rglob("*"):
-        if not path.is_file() or ".git" in path.parts or ".ci-wheel-venv" in path.parts or path.suffix not in TEXT_SUFFIXES:
-            continue
-        if path in ALLOWED_REFERENCE_DOCS:
-            continue
-        text = path.read_text(encoding="utf-8", errors="ignore")
-        assert not any(term in text for term in FORBIDDEN), path
+    assert scan_text_files(ROOT, TEXT_SUFFIXES) == []
 
 
 def test_temporary_phase29_artifacts_are_absent() -> None:
     forbidden_names = {
-        "agency" + "-agents" + "-parity.json",
-        "agency" + "_agents" + "_audit.py",
-        "PHASE_29_" + "AGENCY_" + "AGENTS_AUDIT.md",
         "persona_parity_build.py",
         "phase29_unique_names.py",
         "phase29_heading_fix.py",
