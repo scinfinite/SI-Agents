@@ -90,9 +90,10 @@ def test_parser_rejects_duplicate_dangerous_and_unknown_frontmatter() -> None:
         parse_persona(unknown)
 
 
-def test_parser_rejects_non_bullet_lists() -> None:
-    with pytest.raises(ValueError, match="bullet"):
-        parse_persona(PERSONA.replace("- Parsing", "Parsing"))
+def test_parser_rejects_mixed_collection_syntax() -> None:
+    malformed = PERSONA.replace("- Parsing\n- Testing", "Parsing\n- Testing")
+    with pytest.raises(ValueError, match="cannot mix paragraphs"):
+        parse_persona(malformed)
 
 
 def test_compiler_preserves_governance_fields() -> None:
