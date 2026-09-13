@@ -3,6 +3,7 @@
 from core.governance.engine import GovernanceEngine
 from core.governance.models import DecisionStatus
 from core.runtime.adapter import validate_capability_request, validate_response
+from core.runtime.lifecycle import InvocationLedger
 from core.runtime.models import (
     InvocationRequest,
     InvocationResponse,
@@ -24,13 +25,15 @@ class RuntimeEngine:
         registry: HarnessRegistry | None = None,
         sessions: SessionRegistry | None = None,
         governance: GovernanceEngine | None = None,
+        ledger: InvocationLedger | None = None,
     ) -> None:
         self.registry = registry or HarnessRegistry()
         self.sessions = sessions or SessionRegistry()
         self.governance = governance or GovernanceEngine()
+        self.ledger = ledger or InvocationLedger()
 
     def invoke(self, harness_id: str, request: InvocationRequest) -> InvocationResponse:
-        """Validate isolation/policy, invoke the adapter, then normalize its response."""
+        """Validate policy/isolation, reserve the request, invoke once, and cache the result."""
         try:
             adapter = self.registry.get(harness_id)
         except KeyError:
@@ -55,30 +58,67 @@ class RuntimeEngine:
             return self._failure(request, capability_error.code, capability_error.message)
 
         if request.governance is None:
-            return self._failure(request, RuntimeErrorCode.GOVERNANCE_DENIED, "governance request is required")
+            response = self._failure(request, RuntimeErrorCode.GOVERNANCE_DENIED, "governance request is required")
+            return self._remember(harness_id, request, response)
         decision = self.governance.decide(request.governance)
         if decision.status is not DecisionStatus.ALLOW:
-            return self._failure(
+            response = self._failure(
                 request,
                 RuntimeErrorCode.GOVERNANCE_DENIED,
                 "; ".join(decision.reasons) or "governance did not allow invocation",
             )
+            return self._remember(harness_id, request, response)
+
+        try:
+            cached = self.ledger.begin(harness_id, request)
+        except ValueError as exc:
+            return self._failure(request, RuntimeErrorCode.INVALID_REQUEST, str(exc))
+        except RuntimeError:
+            return self._failure(request, RuntimeErrorCode.INVALID_REQUEST, "request is already in progress")
+        if cached is not None:
+            return cached
+        if self.ledger.is_cancelled(harness_id, request.request_id):
+            return self._remember(harness_id, request, self._cancelled(request))
 
         try:
             response = adapter.invoke(request)
         except Exception:  # noqa: BLE001 - adapter boundary must normalize arbitrary implementations
-            return self._failure(request, RuntimeErrorCode.EXECUTION_FAILED, "harness invocation failed")
-        try:
-            validate_response(request, response)
-        except ValueError as exc:
-            return self._failure(request, RuntimeErrorCode.EXECUTION_FAILED, str(exc))
-        return response
+            response = self._failure(request, RuntimeErrorCode.EXECUTION_FAILED, "harness invocation failed")
+        else:
+            try:
+                validate_response(request, response)
+            except ValueError as exc:
+                response = self._failure(request, RuntimeErrorCode.EXECUTION_FAILED, str(exc))
+        if self.ledger.is_cancelled(harness_id, request.request_id):
+            response = self._cancelled(request)
+        return self._remember(harness_id, request, response)
 
     def cancel(self, harness_id: str, request_id: str) -> bool:
-        """Forward cancellation only to an explicitly enabled harness."""
+        """Cancel a known invocation and forward the request to the enabled harness."""
         if not request_id.strip():
             return False
-        return self.registry.get(harness_id).cancel(request_id)
+        ledger_cancelled = self.ledger.cancel(harness_id, request_id)
+        try:
+            adapter_cancelled = self.registry.get(harness_id).cancel(request_id)
+        except (KeyError, PermissionError):
+            adapter_cancelled = False
+        return ledger_cancelled or adapter_cancelled
+
+    def _remember(self, harness_id: str, request: InvocationRequest, response: InvocationResponse) -> InvocationResponse:
+        try:
+            return self.ledger.finish(harness_id, request, response)
+        except KeyError:
+            return response
+        except ValueError:
+            return self._failure(request, RuntimeErrorCode.INVALID_REQUEST, "request_id is already bound to a different request")
+
+    @staticmethod
+    def _cancelled(request: InvocationRequest) -> InvocationResponse:
+        return InvocationResponse(
+            request.request_id,
+            InvocationStatus.CANCELLED,
+            events=(RuntimeEvent(RuntimeEventType.CANCELLED, request.request_id, 0),),
+        )
 
     @staticmethod
     def _failure(
