@@ -4,7 +4,9 @@
 
 SI-Agents V4 has completed Phases **44–68**. Phases **46, 47, 49, 50, 58, 59, and 60** are advanced-hardened. **Phase 68 — Advanced CLI Platform is complete at 100%.**
 
-See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap, `architecture/README.md` for the current architecture summary, and `architecture/PHASES.md` for phase evidence.
+Current hardening adds **300 agent personas across 18 divisions**, Low/Medium/High capacity controls, Termux guidance, repository-neutral provenance hygiene, Apache-2.0 licensing, and a systematic `docs/phases/` phase archive surface.
+
+Use `SIA_SPECS.md` for the complete current system specification, `STATUS.md` for current status, `architecture/SI_AGENTS_V4_PLAN.md` for the roadmap, and `architecture/README.md` for the architecture summary.
 
 ## Phase 68 — Advanced CLI Platform
 
@@ -14,15 +16,25 @@ Local mode calls `ControlApiService`; remote mode uses authenticated HTTP. The C
 
 Closure evidence: PR #81 merged as `8c5fb08e9c8a5628f59cf929e3c2ac203d4eac29`; final PR CI #1319 / run `34703142494` and SDK CI #111 / run `34703142515` were green; final synchronized-tree mainline CI #1320 / run `34703212232` is green.
 
-Contract: `architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`. Acceptance coverage: `tests/test_phase68_cli.py` plus the complete repository suite.
+## Capacity and Termux
+
+- Low: bounded inspection and short edits; allowed on Termux with one worker.
+- Medium: bounded tests, lint, review, and analysis; allowed on Termux with two workers.
+- High: compilation, large builds, benchmarks, large indexing, code generation, migrations; blocked locally on Termux and redirected to Desktop/Codespace.
+
+The policy reduces SI-Agents-managed local load but cannot guarantee hardware temperature because external processes remain outside SI-Agents' direct control.
+
+## Persona catalog
+
+The runtime catalog is **300 personas / 18 divisions**. The base catalog plus repository-owned extension manifests are validated together by the persona parity gate.
+
+## Legal/provenance controls
+
+SI-Agents-owned work is licensed under Apache-2.0. Repository hygiene removes unnecessary external project branding from shipped surfaces. OpenCode and OmniRoute remain named because they are supported integrations. See `legal/PROVENANCE_AND_LICENSE.md`.
 
 ## Phase 67 — Advanced TUI Control Center
 
 **100% complete and closed.** Phase 67 provides a dependency-free, keyboard-first terminal operator cockpit over the existing Control API. It preserves the historical 14-view surface while adding bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct navigation, bounded JSON status export, non-interactive rendering, governed run creation, and identity-bound approval controls.
-
-The TUI is only a client of SI Core: it owns ephemeral presentation state, never invokes a shell or provider directly, and routes supported mutations through existing governed Control API methods. Page size is bounded to 1–100, unknown commands are inert, and `NO_COLOR` is supported. Acceptance coverage is in `tests/test_phase67_tui.py` with the Phase 41 regression suite retained.
-
-Closure evidence: PR #80 merged successfully. Final PR CI **#1288** / run **34702115990** on commit `51eefc53a9d6a9073874d982a4e5c41be08269e2` completed successfully, with the SDK workflow also green (run **34702115987**). The final synchronized documentation mainline gate for Phase 67 was green before Phase 68 began.
 
 ## Phase 66 — Advanced Web Control Plane
 
@@ -53,4 +65,4 @@ Web, TUI, CLI, OpenCode, SDKs, workflows, and future runtimes remain clients/ada
 
 ## Phase closure rule
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, and final exact-tree mainline CI are green. **Phase 68 satisfies this closure rule.**
+A phase is not complete until implementation, tests, adversarial/security checks, documentation synchronization, repository audit, distribution verification, integration verification, lint/type/build checks, SDK verification, and final exact-tree mainline CI are green. **Phase 68 satisfies this closure rule.**
