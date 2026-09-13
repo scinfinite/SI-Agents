@@ -59,7 +59,7 @@ A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps
 
 ## References
 
-The implementation follows the repository's standing engineering-reference policy: current ECC and Agency Agents patterns are used only as generalized guidance for bounded workflows, explicit deliverables, security boundaries, and validation; no external project implementation or prompt is copied as an authority.
+The implementation follows a repository-owned engineering-reference policy: broadly observed open-source patterns may be generalized into neutral contracts for bounded workflows, explicit deliverables, security boundaries, and validation; no external implementation or prompt is copied as an authority.
 
 ## Closure rule
 
