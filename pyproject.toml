@@ -16,6 +16,7 @@ si-web = "core.web.cli:main"
 si-tui = "core.tui.cli:main"
 si-deploy = "core.deployment_center.cli:main"
 si-verify = "core.hardening.cli:main"
+si-capacity = "core.cli.capacity:main"
 
 [tool.setuptools.packages.find]
 include = ["adapters*", "agents*", "core*", "skills*", "tools*", "sdk*"]
