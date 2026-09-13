@@ -17,11 +17,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–70**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 70 — End-to-End Production Validation is complete at 100%. Phase 71 — Final Production Hardening is next.**
-
-## Closed phases
-
-Phases 44–70 are closed under their recorded implementation, documentation, and verification evidence. Phase 70 validates the production control/data path without introducing a second execution authority.
+V3 is closed. V4 has completed Phases **44–70**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 71 — Final Production Hardening is implemented and awaiting final mainline CI closure.**
 
 ### Phase 70 — End-to-End Production Validation
 
@@ -31,18 +27,22 @@ Implementation/test coverage: `tests/integration/test_phase70_production_path.py
 
 Detailed acceptance record: `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md`.
 
-### Phase 69 — npm Distribution + Setup
-
-**Complete / 100%.** Phase 69 delivers a thin npm launcher/bootstrapper, `npx si-agents`, global-install support, explicit `si-agents setup`, cross-platform Python discovery, an `SI_AGENTS_PYTHON` override, actionable prerequisite failures, content allowlisting, npm/Python version and license checks, exact tarball verification, and launcher smoke tests. The launcher forwards runtime commands to `core.cli.dispatch` and does not become a competing execution, authorization, or provider-routing authority.
-
-Implementation: `package.json`, `bin/si-agents.js`, `README.npm.md`, `scripts/verify-npm-package.mjs`.
-
-Detailed contract: `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md`.
-
 ## Phase 71 — Final Production Hardening
 
-Final architecture, authority, state-machine, lifecycle, concurrency, idempotency, persistence, crash/restart, security, egress, tool/provider/runtime/context/scheduler/workspace/observability/UX/SDK/package/E2E audit with adversarial validation, performance/reliability, installation/upgrade, exact-tree, documentation, and final release evidence.
+**Implementation complete / final verification pending.** The final hardening pass adds a bounded thread-safe invocation ledger at the authoritative RuntimeEngine boundary. Lifecycle entries are keyed by `(harness_id, request_id)`, terminal responses are replayable, request-ID payload confusion fails closed, concurrent duplicate requests cannot execute a capability twice, cancellation is terminal, and request-state retention is bounded.
+
+Implementation:
+
+- `core/runtime/lifecycle.py`
+- `core/runtime/engine.py`
+- `core/runtime/__init__.py`
+
+Acceptance coverage:
+
+- `tests/integration/test_phase71_final_hardening.py`
+
+Detailed contract: `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md`.
 
 ## Closure gate
 
-A phase is closed only after implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. Phase 69 additionally requires npm package-content, version/license, and launcher smoke verification. Phase 70 additionally requires deterministic end-to-end production-path coverage and explicit failure-containment checks.
+A phase is closed only after implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. Phase 69 additionally requires npm package-content, version/license, and launcher smoke verification. Phase 70 additionally requires deterministic end-to-end production-path coverage and explicit failure-containment checks. Phase 71 additionally requires lifecycle/idempotency/concurrency/cancellation hardening coverage and post-merge verification on the exact final mainline tree.
