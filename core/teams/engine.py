@@ -6,7 +6,7 @@ from copy import deepcopy
 from threading import Event
 
 from agents.base import AgentContext, AgentResult, AgentWorker
-from core.capacity import CapacityPolicy, resolve_from_environment
+from core.capacity import resolve_from_environment
 from core.teams.models import (
     ContextMode,
     TaskDefinition,
