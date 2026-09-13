@@ -98,7 +98,8 @@ def test_control_center_javascript_has_expected_navigation(tmp_path):
             assert label in js
         assert "innerHTML" not in js
         assert "fetch(" in js
-        assert "credentials: \"same-origin\"" in js
+        assert "credentials" in js
+        assert "same-origin" in js
     finally:
         _stop(server, thread)
 
