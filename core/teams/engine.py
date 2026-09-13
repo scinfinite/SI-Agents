@@ -6,6 +6,7 @@ from copy import deepcopy
 from threading import Event
 
 from agents.base import AgentContext, AgentResult, AgentWorker
+from core.capacity import CapacityPolicy, resolve_from_environment
 from core.teams.models import (
     ContextMode,
     TaskDefinition,
@@ -35,12 +36,22 @@ class TeamEngine:
     ) -> TeamExecution:
         team = self.registry.get(team_id)
         self._validate_acyclic(team)
+        context_input = deepcopy(initial_context or {})
+        workload = str(context_input.get("objective", "general"))
+        capacity = resolve_from_environment(workload=workload)
+        if not capacity.allowed:
+            execution = TeamExecution(team_id=team.id, context=context_input)
+            execution.status = TaskStatus.FAILED
+            execution.errors.append(capacity.warning or capacity.reason or "execution capacity denied")
+            execution.emit(WorkflowEventType.WORKFLOW_FAILED, data={"reason": "capacity-denied", "capacity": capacity.as_dict()})
+            return execution
+        parallelism = min(team.max_parallelism, capacity.workers)
         cancel_event = cancellation or Event()
-        execution = TeamExecution(team_id=team.id, context=deepcopy(initial_context or {}))
+        execution = TeamExecution(team_id=team.id, context=context_input)
         execution.task_status = {task.id: TaskStatus.PENDING for task in team.tasks}
         execution.attempts = {task.id: 0 for task in team.tasks}
         execution.status = TaskStatus.RUNNING
-        execution.emit(WorkflowEventType.WORKFLOW_STARTED, data={"team": team.id})
+        execution.emit(WorkflowEventType.WORKFLOW_STARTED, data={"team": team.id, "capacity": capacity.as_dict()})
 
         task_map = {task.id: task for task in team.tasks}
         while True:
@@ -65,10 +76,10 @@ class TeamEngine:
             for task in ready:
                 execution.emit(WorkflowEventType.TASK_READY, task_id=task.id)
 
-            batch = ready[: team.max_parallelism]
+            batch = ready[:parallelism]
             for task in batch:
                 execution.task_status[task.id] = TaskStatus.RUNNING
-            with ThreadPoolExecutor(max_workers=team.max_parallelism) as pool:
+            with ThreadPoolExecutor(max_workers=parallelism) as pool:
                 futures = {
                     pool.submit(self._run_task, task, execution, resolve_worker, cancel_event): task
                     for task in batch
