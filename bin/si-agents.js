@@ -4,16 +4,13 @@
 
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 
 const VERSION = '0.1.0';
 const PYTHON_PACKAGE = 'si-agents';
 
 function commandExists(command) {
-  const probe = process.platform === 'win32' ? 'where' : 'command';
-  const args = process.platform === 'win32' ? [command] : ['-v', command];
-  const result = spawnSync(probe, args, { stdio: 'ignore', shell: false });
+  const result = spawnSync(command, ['--version'], { stdio: 'ignore', shell: false });
   return result.status === 0;
 }
 
@@ -63,7 +60,7 @@ function localSourceRoot() {
 function printSetupHelp(python) {
   console.error('si-agents: the SI-Agents Python runtime is not installed or is not importable.');
   if (python) {
-    console.error(`  Run: ${process.platform === 'win32' ? 'si-agents setup' : 'npx si-agents setup'}`);
+    console.error('  Run: npx si-agents setup');
     console.error(`  Or:  ${python} -m pip install ${PYTHON_PACKAGE}==${VERSION}`);
   } else {
     console.error('  Install Python 3.11+ and ensure it is available on PATH.');
