@@ -10,7 +10,7 @@ SI-Agents code, prompts, persona text, documentation, UI copy, schemas, examples
 
 Ideas, methods, interfaces, and functional concepts may have different legal treatment from expressive implementation and documentation. The project therefore uses independent implementation and provenance records rather than assuming that a similar feature is itself unlawful or automatically safe.
 
-The U.S. Copyright Office states that copyright in computer programs covers copyrightable expression, while functional aspects such as algorithms, formatting, functions, logic, and system design are not protected by copyright in the same way. This does not resolve every jurisdiction, license, trademark, patent, or contractual issue. See the official Copyright Office material before making legal conclusions. urlCopyright Office — Circular 61https://www.copyright.gov/circs/circ61.pdf?loclr=blogcop
+The U.S. Copyright Office states that copyright in computer programs covers copyrightable expression, while functional aspects such as algorithms, formatting, functions, logic, and system design are not protected by copyright in the same way. This does not resolve every jurisdiction, license, trademark, patent, or contractual issue. See Copyright Office Circular 61: https://www.copyright.gov/circs/circ61.pdf
 
 ## Repository controls
 
@@ -27,9 +27,9 @@ The U.S. Copyright Office states that copyright in computer programs covers copy
 
 ## License
 
-SI-Agents-owned material is distributed under the Apache License 2.0. The project must retain the full `LICENSE` text and a `NOTICE` file where required. Apache's own release guidance requires the full license text and appropriate notice handling for Apache-licensed distributions. urlApache License 2.0 release guidancehttps://apache.org/legal/release-policy.html
+SI-Agents-owned material is distributed under the Apache License 2.0. The project must retain the full `LICENSE` text and a `NOTICE` file where required. Apache's release guidance requires the full license text and appropriate notice handling for Apache-licensed distributions: https://apache.org/legal/release-policy.html
 
-The Apache License includes copyright and patent grants subject to its terms, but it does not guarantee that a recipient can never face a third-party claim. urlApache License 2.0https://www.apache.org/licenses/LICENSE-2.0
+The Apache License includes copyright and patent grants subject to its terms, but it does not guarantee that a recipient can never face a third-party claim. License text: https://www.apache.org/licenses/LICENSE-2.0
 
 ## Contribution provenance
 
