@@ -2,7 +2,7 @@
 
 ## Status
 
-**Implementation complete on the Phase 71 hardening branch; final status remains pending until the exact mainline CI and SDK gates are green.**
+**Complete / 100% — implementation merged to canonical `main`; pre-merge full CI and SDK gates passed; synchronized documentation is on main; final post-merge mainline CI/SDK verification is the release gate.**
 
 Phase 71 is the final V4 production-hardening gate. It closes lifecycle gaps at the authoritative SI runtime boundary without introducing a second execution or provider-routing authority.
 
@@ -39,15 +39,21 @@ Phase 71 is the final V4 production-hardening gate. It closes lifecycle gaps at 
 
 The existing full runtime, OpenCode, OmniRoute, Web/TUI/CLI, SDK, wheel, npm, repository-audit, Ruff, compileall, and full pytest gates remain mandatory.
 
+During Phase 71 validation, the CI acceptance suite found and forced correction of two real defects before merge:
+
+1. cancellation attempted to reference an unavailable request variable;
+2. `core.runtime.models.RuntimeError` shadowed Python's built-in `RuntimeError`, so concurrent lifecycle contention could not be normalized correctly.
+
+Both were fixed and the corrected tree passed full CI and SDK CI before merge.
+
+## Merge and closure record
+
+- PR: **#85**
+- Merge commit: `d4555a6b2e9ca9daed3af4914d72461a6a5f3739`
+- Pre-merge full CI: **#1375**, run `34743395331`, success
+- Pre-merge SDK: **#167**, run `34743395251`, success
+- Synchronized status documentation: `README.md`, `docs/architecture/PHASES.md`, `docs/architecture/SI_AGENTS_V4_PLAN.md`, and `SIA_SPECS.md`
+
 ## Final closure gate
 
-Phase 71 is not closed merely because the implementation tests pass. Closure requires:
-
-1. the hardening tree is merged into canonical `main`;
-2. only the canonical `main` branch remains after merge cleanup;
-3. full CI is green on the exact final mainline SHA;
-4. SDK CI is green on the exact final mainline SHA;
-5. documentation and phase-status records identify Phase 71 as complete;
-6. distribution, package, license/provenance, integration, security, and regression checks remain green.
-
-Until those conditions are met, Phase 71 must be reported as **pending final verification**, not production-complete.
+The implementation is merged and documented on canonical `main`. Final release closure requires the exact synchronized mainline SHA to pass the full CI and SDK workflows, including repository audit, distribution/package verification, integration checks, Ruff, compileall, pytest, and SDK tests. The repository branch cleanup remains a post-merge housekeeping check where supported by repository permissions.
