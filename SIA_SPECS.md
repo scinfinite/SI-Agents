@@ -1,6 +1,6 @@
 # SIA-SPECS — SI-Agents Complete System Specification
 
-**Status:** Phase 69 npm distribution implemented; Phase 70 is next
+**Status:** Phase 70 End-to-End Production Validation complete; Phase 71 is the final hardening gate
 
 This document is the high-level product and engineering specification for SI-Agents. It is intentionally implementation-neutral where possible; detailed contracts live under `docs/architecture/` and historical phase records live under `docs/architecture/phases/`.
 
@@ -84,6 +84,8 @@ The supported composition is:
 
 `User → SI-Agents governance/control → OpenCode/harness adapter → OmniRoute routing → model/provider`
 
+Phase 70 acceptance tests validate this composition through a deterministic localhost OpenCode server and deterministic OmniRoute transport, while preserving the real SI RuntimeEngine, OpenCode adapter, and OmniRoute bridge contracts.
+
 Any failure at a governance boundary is fail-closed.
 
 ## 7. Web / TUI / CLI
@@ -146,7 +148,7 @@ npm install -g si-agents
 si-agents setup
 ```
 
-The npm package contains only its launcher, license/notice metadata, and npm usage guide. It does not bundle a second copy of the Python runtime. `si-agents setup` explicitly installs the matching Python package when required. Publication to the npm registry is a maintainer-controlled release action and is not performed automatically by CI.
+The npm package contains only its launcher, license/notice metadata, and npm usage guide. It does not bundle a second copy of the Python runtime. `si-agents setup` explicitly installs the matching Python package when required. Publication to the npm registry is a maintainer-controlled release action and is not performed automatically by the repository CI.
 
 ## 11. Verification standard
 
@@ -163,7 +165,7 @@ A feature is not considered complete merely because files exist. Completion requ
 9. final CI;
 10. post-merge verification on the exact mainline tree.
 
-Phase 69 additionally requires npm metadata/version/license consistency, exact tarball allowlist verification, and launcher smoke tests.
+Phase 69 additionally requires npm metadata/version/license consistency, exact tarball allowlist verification, and launcher smoke tests. Phase 70 additionally requires deterministic end-to-end production-path coverage and explicit failure-containment checks.
 
 ## 12. Repository organization
 
@@ -175,12 +177,6 @@ Phase 69 additionally requires npm metadata/version/license consistency, exact t
 - `tests/` — regression, unit, integration, security, and phase acceptance tests.
 - `bin/` — npm distribution launcher.
 - `scripts/` — repository verification utilities, including npm package verification.
-- `docs/architecture/phases/` — canonical historical phase records 1–69.
+- `docs/architecture/phases/` — canonical historical phase records 1–70.
 - `docs/platforms/` — environment-specific operating guidance.
 - `docs/legal/` — licensing/provenance policy.
-- `SIA_SPECS.md` — this system specification.
-- `AGENTS.md` — repository agent operating contract.
-
-## 13. Non-goals
-
-SI-Agents does not promise zero device heating, zero cost, zero legal risk, zero provider failures, or unrestricted execution. It instead provides bounded, auditable, evidence-backed behavior and explicit escalation to a stronger execution environment when the local host is unsuitable.
