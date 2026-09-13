@@ -2,23 +2,25 @@
 
 SI-Agents is a governed, evidence-driven AI engineering and agent platform built around one authoritative SI Core exposed through Web, TUI, CLI, SDKs, OpenCode, OmniRoute, workflows, and runtime/integration adapters.
 
-## Pre-Phase 69 hardening status
+## Phase 69 status
 
-Phases **44–68 are closed**. Before Phase 69 begins, the repository has a dedicated hardening gate covering documentation organization, the 300-persona target, provenance/license hygiene, Termux capacity controls, and runtime verification.
+Phases **44–68 are closed**. Phase **69 — npm Distribution + Setup** is implemented with a thin npm launcher/bootstrapper over the authoritative Python runtime. Phase 70 is the next roadmap phase.
 
-### Current hardening baseline
+### npm distribution
 
-- **300 SI-native persona definitions** are the target/current corpus, with 21 independently authored repository extensions merged through the catalog loader.
-- Historical phase records **1–68** are now canonically stored under `docs/architecture/phases/`.
-- `AGENTS.md` is the main repository-agent operating contract.
-- `SIA_SPECS.md` is the complete current system specification.
-- `core/capacity/` provides Low/Medium/High capacity governance.
-- Termux Low supports **1–2 selectable workers**.
-- Termux Medium supports **3–5 selectable workers**.
-- Termux High and heavy build/compile workloads are blocked and redirected to Desktop/Codespace.
-- OpenCode and OmniRoute remain supported SI-Agents integration boundaries.
-- Repository provenance/branding checks reject unnecessary external inspiration-project names from operational surfaces.
-- Apache-2.0 licensing/notice and contributor provenance policies are documented.
+```bash
+npx si-agents --version
+npx si-agents help
+npx si-agents setup
+
+npm install -g si-agents
+si-agents setup
+si-agents agents
+```
+
+The npm package requires Node.js 18+ and Python 3.11+ for runtime execution. It discovers `python3`/`python` on Unix-like systems and `python`/`py` on Windows, or uses `SI_AGENTS_PYTHON` when explicitly provided. It never becomes a competing execution or authorization authority: commands are forwarded to `core.cli.dispatch`.
+
+`si-agents setup` is an explicit bootstrap operation that installs the matching Python package when it is not already importable. The npm tarball is deliberately allowlisted to the launcher, `LICENSE`, `NOTICE`, and `README.npm.md`; repository source, tests, CI files, and development artifacts are excluded.
 
 ## Capacity profiles
 
@@ -67,7 +69,9 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 66 | Advanced Web Control Plane | Complete |
 | 67 | Advanced TUI Control Center | Complete |
 | 68 | Advanced CLI Platform | Complete |
-| 69 | npm Distribution + Setup | **Next — blocked until hardening gate closes** |
+| 69 | npm Distribution + Setup | **Complete / 100%** |
+| 70 | End-to-End Production Validation | Next |
+| 71 | Final Production Hardening | Planned |
 
 ## Engineering gate
 
@@ -79,8 +83,7 @@ A phase is not complete until implementation, targeted tests, regression/integra
 - `SIA_SPECS.md` — complete system specification.
 - `docs/architecture/PHASES.md` — current phase status.
 - `docs/architecture/phases/README.md` — canonical phase archive.
+- `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md` — Phase 69 contract and acceptance record.
 - `docs/architecture/CAPACITY_POLICY.md` — Low/Medium/High execution policy.
 - `docs/platforms/TERMUX.md` — Termux operating contract.
 - `docs/legal/PROVENANCE_AND_LICENSE.md` — provenance and legal-risk controls.
-
-**Phase 69 must not start until this hardening branch passes its complete CI and exact-tree verification gate.**
