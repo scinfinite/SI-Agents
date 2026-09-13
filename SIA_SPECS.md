@@ -1,6 +1,6 @@
 # SIA-SPECS — SI-Agents Complete System Specification
 
-**Status:** Phase 70 End-to-End Production Validation complete; Phase 71 final production hardening implemented and pending final mainline verification
+**Status:** Phase 71 Final Production Hardening complete / 100%; final post-merge mainline CI and SDK verification is the release gate
 
 This document is the high-level product and engineering specification for SI-Agents. It is intentionally implementation-neutral where possible; detailed contracts live under `docs/architecture/` and historical phase records live under `docs/architecture/phases/`.
 
