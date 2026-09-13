@@ -28,6 +28,12 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: npm
+
       - name: Install project and test tooling
         run: |
           python -m pip install --upgrade pip
@@ -83,6 +89,9 @@ jobs:
         run: |
           python -m compileall -q adapters agents core skills tools
           python -m pytest --strict-config --strict-markers > pytest-report.txt 2>&1 || (cat pytest-report.txt; exit 1)
+
+      - name: Verify npm distribution
+        run: npm run verify
 
       - name: Upload pytest diagnostics
         if: always()
