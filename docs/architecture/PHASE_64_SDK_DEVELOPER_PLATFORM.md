@@ -61,7 +61,7 @@ The SDK is packaged with the Python distribution, while the TypeScript package c
 
 ## Reference patterns
 
-Current ECC emphasizes security-first, research-first agent tooling and broad multi-harness developer workflows; current Agency Agents emphasizes specialized agents, repeatable workflows, explicit deliverables, and tool-specific installation paths. Phase 64 generalizes those principles into a neutral SDK contract: typed interfaces, bounded operations, explicit integration boundaries, and reproducible developer entry points rather than copying either project's implementation or prompts.
+Phase 64 intentionally generalizes broadly observed open-source engineering patterns—typed interfaces, security-first defaults, specialized workflows, explicit deliverables, bounded operations, integration boundaries, and reproducible developer entry points—without copying external implementation or expressive prompt content.
 
 ## Closure evidence
 
