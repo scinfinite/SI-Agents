@@ -4,8 +4,9 @@ import { readFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('..', import.meta.url).pathname;
+const root = fileURLToPath(new URL('..', import.meta.url));
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const pyproject = readFileSync(join(root, 'pyproject.toml'), 'utf8');
 const versionMatch = pyproject.match(/^version\s*=\s*"([^"]+)"/m);
@@ -21,17 +22,22 @@ for (const required of [launcher, join(root, 'LICENSE'), join(root, 'NOTICE'), j
 
 const temp = mkdtempSync(join(tmpdir(), 'si-agents-npm-'));
 try {
-  execFileSync('npm', ['pack', '--ignore-scripts', '--pack-destination', temp], { cwd: root, stdio: 'inherit' });
+  const packed = execFileSync(
+    'npm',
+    ['pack', '--ignore-scripts', '--json', '--pack-destination', temp],
+    { cwd: root, encoding: 'utf8' },
+  );
+  const metadata = JSON.parse(packed);
   const tarball = join(temp, `${pkg.name}-${pkg.version}.tgz`);
   if (!existsSync(tarball)) throw new Error(`npm pack did not create ${tarball}`);
-  const files = execFileSync('tar', ['-tzf', tarball], { encoding: 'utf8' })
-    .split('\n').filter(Boolean).sort();
+  const files = metadata[0]?.files?.map((entry) => entry.path).sort() ?? [];
   const expected = [
-    'package/LICENSE',
-    'package/NOTICE',
-    'package/README.npm.md',
-    'package/bin/si-agents.js',
-    'package/package.json',
+    'LICENSE',
+    'NOTICE',
+    'README.md',
+    'README.npm.md',
+    'bin/si-agents.js',
+    'package.json',
   ];
   if (JSON.stringify(files) !== JSON.stringify(expected)) {
     throw new Error(`Unexpected npm tarball contents:\n${files.join('\n')}`);
