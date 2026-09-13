@@ -1,5 +1,6 @@
 import json
 import threading
+from dataclasses import replace
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from adapters.opencode import OpenCodeAdapter, OpenCodeConfig
@@ -136,13 +137,19 @@ def test_phase70_opencode_si_omniroute_path() -> None:
 
 def test_phase70_governance_denial_stops_downstream_execution() -> None:
     runtime, transport = _runtime()
+    denied = replace(
+        GovernanceRequest("phase70.denied", RiskLevel.LOW, DataClass.PUBLIC),
+        destructive=True,
+        production=True,
+        risk=RiskLevel.HIGH,
+    )
     request = InvocationRequest(
         request_id="phase70-denied",
         capability_id="chat",
         input="blocked",
         project_id="phase70-project",
         session_id="phase70-session",
-        governance=GovernanceRequest("phase70.denied", RiskLevel.CRITICAL, DataClass.CONFIDENTIAL),
+        governance=denied,
     )
     result = runtime.invoke("omniroute", request)
     assert result.status is InvocationStatus.FAILED
