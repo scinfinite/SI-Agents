@@ -1,35 +1,44 @@
 # SI-Agents
 
-SI-Agents is the governed execution and agent platform for Project-SI. V4 is built around one authoritative SI Core exposed through Web, TUI, CLI, OpenCode, SDKs, workflows, and runtime/integration adapters.
+SI-Agents is a governed, evidence-driven AI engineering and agent platform built around one authoritative SI Core exposed through Web, TUI, CLI, SDKs, OpenCode, OmniRoute, workflows, and runtime/integration adapters.
 
-## Current V4 status
+## Pre-Phase 69 hardening status
 
-- **Phases 44–68 are complete on `main`.**
-- **Phase 68 — Advanced CLI Platform** is fully implemented, audited, documented, merged through PR #81, and verified by final PR CI #1319 (`34703142494`), SDK CI #111 (`34703142515`), and final synchronized-tree mainline CI #1320 (`34703212232`).
-- **Phase 67 — Advanced TUI Control Center** is fully implemented, audited, documented, merged through PR #80, and verified by final PR CI #1288 (`34702115990`).
-- **Phase 66 — Advanced Web Control Plane** is fully implemented, audited, documented, merged through PR #79, and verified by final synchronized-tree mainline CI #1284 (`34701494501`).
-- **Phase 65 — Workflow + Automation** is fully implemented, audited, documented, and verified by final synchronized-tree CI #1249 (`34698187600`).
-- **Phases 46, 47, 49, 50, 58, 59, and 60 passed dedicated advanced hardening.**
+Phases **44–68 are closed**. Before Phase 69 begins, the repository has a dedicated hardening gate covering documentation organization, the 300-persona target, provenance/license hygiene, Termux capacity controls, and runtime verification.
 
-## Phase 68 — Advanced CLI Platform
+### Current hardening baseline
 
-Phase 68 adds a transport-neutral, machine-friendly `si` platform over SI Core. It provides governed run/task/execution commands, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, event/state observation and run streaming, model/provider discovery delegation, attachment inspection, non-secret config/auth status, transport profiles, and bounded declarative pipelines.
+- **300 SI-native persona definitions** are the target/current corpus, with 21 independently authored repository extensions merged through the catalog loader.
+- Historical phase records **1–68** are now canonically stored under `docs/architecture/phases/`.
+- `AGENTS.md` is the main repository-agent operating contract.
+- `SIA_SPECS.md` is the complete current system specification.
+- `core/capacity/` provides Low/Medium/High capacity governance.
+- Termux Low supports **1–2 selectable workers**.
+- Termux Medium supports **3–5 selectable workers**.
+- Termux High and heavy build/compile workloads are blocked and redirected to Desktop/Codespace.
+- OpenCode and OmniRoute remain supported SI-Agents integration boundaries.
+- Repository provenance/branding checks reject unnecessary external inspiration-project names from operational surfaces.
+- Apache-2.0 licensing/notice and contributor provenance policies are documented.
 
-Local mode calls the existing `ControlApiService`; remote mode uses authenticated HTTP against the existing Control API. The CLI is an adapter rather than a second execution/governance authority. It never invokes arbitrary shells or providers directly, never persists authentication secrets, and fail-closes when downstream execution owns a lifecycle transition such as resume.
+## Capacity profiles
 
-Safety/automation contracts include deterministic JSON envelopes and exit classes, 1 MiB remote payload limits, 10 MiB attachment inspection, 256 KiB pipeline files, 100 pipeline steps, 100 retained client sessions, 32 non-secret profiles, bounded streaming, path-safe identifiers, and backward-compatible routing for the established legacy CLI surface. See `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md` and `tests/test_phase68_cli.py`.
+```text
+Low     Termux: 1–2 workers
+Medium  Termux: 3–5 workers
+High    Termux: blocked → Desktop/Codespace
+```
 
-## Phase 67 — Advanced TUI Control Center
+Select through `SI_CAPACITY` and `SI_WORKERS`, or inspect the resolved policy with:
 
-Phase 67 provides a dependency-free, keyboard-first terminal operator cockpit over the existing Control API. It preserves the historical 14-view contract while adding bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct view navigation, bounded JSON status export, non-interactive rendering, governed run creation, and identity-bound approval controls.
+```bash
+si-capacity --json
+```
 
-The TUI is a client of SI Core rather than a second authority. It owns only ephemeral presentation/navigation state, never executes shell commands, never invokes providers directly, and routes mutations through the existing governed Control API methods. Page size is bounded to 1–100, unknown commands are inert, `NO_COLOR` is respected, and CI/non-TTY rendering is deterministic.
-
-Acceptance coverage: `tests/test_phase67_tui.py` plus the Phase 41 regression suite `tests/test_phase41_tui.py`. See `docs/architecture/PHASE_67_ADVANCED_TUI_CONTROL_CENTER.md` for the complete contract.
+The capacity policy limits SI-controlled concurrency. It cannot guarantee a hardware temperature because OS, harness, provider, and hardware thermal behavior remain outside SI-Agents' complete authority.
 
 ## V4 roadmap
 
-See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASES.md` for phase evidence.
+See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `docs/architecture/PHASES.md` for phase evidence. Historical phase contracts live in `docs/architecture/phases/`.
 
 | Phase | Name | Status |
 |---:|---|---|
@@ -54,18 +63,24 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 62 | Cross-Runtime / Cross-Harness | Complete |
 | 63 | Ecosystem / Marketplace | Complete |
 | 64 | SDK / Developer Platform | Complete |
-| 65 | Workflow + Automation | Complete / 100% |
-| 66 | Advanced Web Control Plane | Complete / 100% |
-| 67 | Advanced TUI Control Center | **Complete / 100%** |
-| 68 | Advanced CLI Platform | **Complete / 100%** |
-| 69 | npm Distribution + Setup | Planned |
-| 70 | End-to-End Production Validation | Planned |
-| 71 | Final Production Hardening | Planned |
+| 65 | Workflow + Automation | Complete |
+| 66 | Advanced Web Control Plane | Complete |
+| 67 | Advanced TUI Control Center | Complete |
+| 68 | Advanced CLI Platform | Complete |
+| 69 | npm Distribution + Setup | **Next — blocked until hardening gate closes** |
 
 ## Engineering gate
 
-A phase is not complete until implementation, unit/integration tests, security/adversarial tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. **Phase 68 satisfies this gate.**
+A phase is not complete until implementation, targeted tests, regression/integration tests, security/adversarial checks, packaging/distribution verification, repository/provenance audit, documentation synchronization, lint/syntax checks, and final exact-tree mainline CI are green.
 
-## Current phase
+## Core references
 
-**Phase 68 — Advanced CLI Platform is 100% complete and closed on `main`. Phase 69 — npm Distribution + Setup is next.**
+- `AGENTS.md` — agent operating rules.
+- `SIA_SPECS.md` — complete system specification.
+- `docs/architecture/PHASES.md` — current phase status.
+- `docs/architecture/phases/README.md` — canonical phase archive.
+- `docs/architecture/CAPACITY_POLICY.md` — Low/Medium/High execution policy.
+- `docs/platforms/TERMUX.md` — Termux operating contract.
+- `docs/legal/PROVENANCE_AND_LICENSE.md` — provenance and legal-risk controls.
+
+**Phase 69 must not start until this hardening branch passes its complete CI and exact-tree verification gate.**
