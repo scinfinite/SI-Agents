@@ -1,5 +1,7 @@
 """Governed runtime coordinator for cross-harness invocation."""
 
+import builtins
+
 from core.governance.engine import GovernanceEngine
 from core.governance.models import DecisionStatus
 from core.runtime.adapter import validate_capability_request, validate_response
@@ -73,7 +75,7 @@ class RuntimeEngine:
             cached = self.ledger.begin(harness_id, request)
         except ValueError as exc:
             return self._failure(request, RuntimeErrorCode.INVALID_REQUEST, str(exc))
-        except RuntimeError:
+        except builtins.RuntimeError:
             return self._failure(request, RuntimeErrorCode.INVALID_REQUEST, "request is already in progress")
         if cached is not None:
             return cached
