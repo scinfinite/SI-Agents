@@ -4,7 +4,7 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–68 are closed**. Phase 69 adds the npm distribution/bootstrap surface. Phase 70 validates the complete product end-to-end. Phase 71 is the final production-hardening gate.
+Phases **44–70 are closed**. Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
@@ -40,20 +40,20 @@ Phases **44–68 are closed**. Phase 69 adds the npm distribution/bootstrap surf
 | 64 | SDK / Developer Platform | Complete | PR #78 / closure CI #1239 / `34697885027` |
 | 65 | Workflow + Automation | Complete / 100% | final synchronized-tree CI #1249 / `34698187600` |
 | 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
-| 67 | Advanced TUI Control Center | **Complete / 100%** | PR #80 / final PR CI #1288 / `34702115990` |
-| 68 | Advanced CLI Platform | **Complete / 100%** | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
-| 69 | npm Distribution + Setup | **Complete / 100%** | npm package verification + final mainline CI |
-| 70 | End-to-End Production Validation | Planned | Planned |
-| 71 | Final Production Hardening | Planned | Planned |
+| 67 | Advanced TUI Control Center | Complete / 100% | PR #80 / final PR CI #1288 / `34702115990` |
+| 68 | Advanced CLI Platform | Complete / 100% | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
+| 69 | npm Distribution + Setup | Complete / 100% | final mainline CI #1363 / `34742449609` |
+| 70 | End-to-End Production Validation | **Complete / 100%** | Phase 70 acceptance coverage + final mainline CI |
+| 71 | Final Production Hardening | **Next** | Planned |
 
-## Phase 69 implementation
+## Phase 70 implementation
 
-Phase 69 adds a deliberately thin npm distribution surface. `package.json` declares the npm package and executable; `bin/si-agents.js` discovers a supported Python executable and forwards commands to `core.cli.dispatch`, preserving SI Core as the runtime authority. `si-agents setup` provides an explicit bootstrap path for the matching Python package. The launcher is shell-independent, supports an explicit `SI_AGENTS_PYTHON` override, and returns actionable prerequisite errors.
+Phase 70 adds deterministic end-to-end production-path coverage without requiring external model/provider credentials. A localhost OpenCode-compatible server exercises the real `OpenCodeAdapter`; its message path delegates into the real `RuntimeEngine`, which invokes the real `OmniRouteBridge` against a deterministic transport. This verifies the authority boundary and response path while keeping CI independent of external accounts, billing, network availability, and secrets.
 
-The npm package is content-allowlisted to the launcher, `LICENSE`, `NOTICE`, and `README.npm.md`. `scripts/verify-npm-package.mjs` checks npm/Python version parity, license metadata, required files, exact `npm pack` contents, and launcher version/help smoke behavior. CI runs this verifier after the existing Python distribution, audit, integration, lint, compile, and pytest gates.
+The acceptance suite also verifies governance denial before downstream execution, session/project isolation, harness-scoped cancellation behavior, and preferred/fallback model selection. Existing OpenCode, OmniRoute, runtime, Web/TUI/CLI, SDK, wheel, npm, repository-audit, Ruff, compileall, and full pytest gates remain mandatory.
 
-Detailed contract: `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md`.
+Detailed contract: `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md`.
 
 ## Closure evidence
 
-Phase 69 is complete only when the implementation is present on canonical `main`, npm packaging verification is green, the full existing repository gates remain green, and final mainline CI is green on the exact Phase 69 tree. npm registry publication itself is a maintainer-controlled release operation and is not performed automatically by the repository CI.
+Phase 70 is complete only when the acceptance implementation is present on canonical `main`, documentation is synchronized, the full existing repository gates remain green, SDK CI is green, and final mainline CI is green on the exact Phase 70 tree.
