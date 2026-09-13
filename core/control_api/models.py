@@ -36,12 +36,15 @@ class RunRecord:
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     governance_status: str = "allow"
     evidence: tuple[str, ...] = ()
+    capacity: str = "low"
+    execution_target: str = "local"
 
     def as_dict(self) -> dict[str, object]:
         return {
             "id": self.id, "action": self.action, "status": self.status.value,
             "subject": self.subject, "created_at": self.created_at.isoformat(),
             "governance_status": self.governance_status, "evidence": list(self.evidence),
+            "capacity": self.capacity, "execution_target": self.execution_target,
         }
 
 
