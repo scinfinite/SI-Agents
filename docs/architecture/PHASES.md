@@ -4,7 +4,7 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–70 are closed**. Phase 71 is the final production-hardening gate and is pending final mainline verification.
+Phases **44–71 are closed**. Phase 71 is the final V4 production-hardening gate.
 
 ## Status legend
 
@@ -12,7 +12,6 @@ Phases **44–70 are closed**. Phase 71 is the final production-hardening gate a
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
 - **Next** — next implementation phase after the current closed phase.
 - **Planned** — future roadmap phase.
-- **Pending final verification** — implementation is complete, but final mainline closure evidence is still required.
 
 ## V4 sequence
 
@@ -45,7 +44,7 @@ Phases **44–70 are closed**. Phase 71 is the final production-hardening gate a
 | 68 | Advanced CLI Platform | Complete / 100% | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
 | 69 | npm Distribution + Setup | Complete / 100% | final mainline CI #1363 / `34742449609` |
 | 70 | End-to-End Production Validation | **Complete / 100%** | final mainline CI #1372 / `34742931329` + SDK #164 / `34742931334` |
-| 71 | Final Production Hardening | **Pending final verification** | Phase 71 lifecycle/idempotency/concurrency hardening + final mainline CI pending |
+| 71 | Final Production Hardening | **Complete / 100%** | PR #85; pre-merge CI #1375 / `34743395331` + SDK #167 / `34743395251`; post-merge final gate required on synchronized main |
 
 ## Phase 71 implementation
 
@@ -59,4 +58,4 @@ Detailed contract: `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING
 
 ## Closure evidence
 
-Phase 71 is complete only when the hardening implementation is present on canonical `main`, documentation is synchronized, the full existing repository gates remain green, SDK CI is green, and final mainline CI is green on the exact final Phase 71 tree. Post-merge branch cleanup must leave only canonical `main`.
+Phase 71 implementation was merged to canonical `main` as `d4555a6b2e9ca9daed3af4914d72461a6a5f3739`. Pre-merge full CI and SDK gates were green after correcting a real concurrency exception-handling defect found by the acceptance suite. The synchronized documentation is now on main; the final post-merge mainline CI/SDK verification is the last release gate.
