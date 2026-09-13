@@ -2,10 +2,10 @@
 
 ## Authority
 
-SI-Agents V4 is built around one authoritative SI Core. Web, TUI, CLI, OpenCode, runtime adapters, schedulers, agents, teams, workflows, SDKs, and integrations are clients/adapters, not competing state authorities.
+SI-Agents V4 is built around one authoritative SI Core. Web, TUI, CLI, npm, OpenCode, runtime adapters, schedulers, agents, teams, workflows, SDKs, and integrations are clients/adapters, not competing state authorities.
 
 ```text
-User → OpenCode / Web / TUI / CLI / SDK → SI Core / Control API
+User → OpenCode / Web / TUI / CLI / npm / SDK → SI Core / Control API
      → Capacity → Scheduler / Orchestrator → Tasks / Agents / Teams / Workflows
      → Capability Authorization → OmniRoute → Models / Providers / APIs
      → Results / Artifacts / Evidence → SI Core
@@ -17,37 +17,23 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–68**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 68 — Advanced CLI Platform is closed at 100%. Phase 69 — npm Distribution + Setup is next, after the pre-Phase 69 hardening gate.**
-
-## Pre-Phase 69 hardening gate
-
-Before Phase 69 implementation begins, the repository must pass the following current-state checks:
-
-- all current documents and architecture indexes are synchronized;
-- Phase records 1–68 are organized under `docs/architecture/phases/`;
-- the current persona corpus contains exactly 300 definitions;
-- the runtime catalog merges and validates the 21 repository-owned persona extensions;
-- provenance/license/branding checks are green;
-- Termux Low supports 1–2 selectable workers and Medium supports 3–5;
-- High/heavy workloads are blocked on Termux and redirected to Desktop/Codespace;
-- scheduler/team concurrency is clamped by capacity policy;
-- OpenCode and OmniRoute remain intentional integration boundaries;
-- package, wheel, CLI, SDK, Web, TUI, and repository audit checks are green;
-- final exact-tree CI is green.
+V3 is closed. V4 has completed Phases **44–69**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 69 — npm Distribution + Setup is implemented at 100%. Phase 70 — End-to-End Production Validation is next.**
 
 ## Closed phases
 
-Phases 44–68 are closed under their recorded implementation, merge, documentation, and CI evidence.
+Phases 44–69 are closed under their recorded implementation, documentation, and verification evidence. Phase 69 specifically adds the npm distribution/bootstrap surface without changing SI Core authority.
+
+### Phase 69 — npm Distribution + Setup
+
+**Complete / 100%.** Phase 69 delivers a thin npm launcher/bootstrapper, `npx si-agents`, global-install support, explicit `si-agents setup`, cross-platform Python discovery, an `SI_AGENTS_PYTHON` override, actionable prerequisite failures, content allowlisting, npm/Python version and license checks, exact tarball verification, and launcher smoke tests. The launcher forwards runtime commands to `core.cli.dispatch` and does not become a competing execution, authorization, or provider-routing authority.
+
+Implementation: `package.json`, `bin/si-agents.js`, `README.npm.md`, `scripts/verify-npm-package.mjs`.
+
+Detailed contract: `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md`.
 
 ### Phase 68 — Advanced CLI Platform
 
 **Complete / 100%.** Phase 68 delivers a transport-neutral advanced `si` CLI over SI Core. It provides governed `run create/list/get`, task/execution inspection, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, event/state observation and bounded run streaming, model/provider discovery delegation, attachment inspection, non-secret config/auth status, transport profiles, and bounded declarative pipelines.
-
-The CLI remains an adapter rather than a second authority. Run creation is governed by SI Core; model/provider routing remains delegated to OmniRoute; authentication secrets are environment-only; arbitrary shell execution is not available.
-
-Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/session.py`, `core/cli/profile.py`, `core/cli/dispatch.py`.
-
-Detailed contract: `docs/architecture/phases/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 ### Phase 67 — Advanced TUI Control Center
 
@@ -61,13 +47,9 @@ Detailed contract: `docs/architecture/phases/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 **Complete / 100%.** Phase 65 provides a transport-neutral declarative workflow engine with versioned DAGs, branching, bounded fan-out/loops, delegation, human gates, durable waits, triggers, retries, limits, cancellation, idempotency, checkpoints, templates, restart validation, and compensation.
 
-## Phase 69 — npm Distribution + Setup
-
-npm package/global CLI, one-command installation, platform/architecture detection, bootstrap/setup, OpenCode/OmniRoute detection/configuration, SI Core validation, diagnostics, upgrade/uninstall/migration, and clean-machine validation.
-
 ## Phase 70 — End-to-End Production Validation
 
-Validate the complete OpenCode → SI → OmniRoute → provider/model → SI → OpenCode path across agents, teams, dependencies, reviews, fallback, limits, retries, cancellation, pause/resume, checkpoints, waits, approvals, restart/session/workspace recovery, security failures, context/cost limits, control surfaces, installation, upgrades, artifacts, evidence, telemetry, and evaluation.
+Validate the complete OpenCode → SI → OmniRoute → provider/model → SI → OpenCode path across agents, teams, dependencies, reviews, fallback, limits, retries, cancellation, pause/resume, checkpoints, waits, approvals, restart/session/workspace recovery, security failures, context/cost limits, control surfaces, installation, upgrades, artifacts, evidence, telemetry, and evaluation. Phase 70 must include npm clean-machine/install/upgrade validation.
 
 ## Phase 71 — Final Production Hardening
 
@@ -75,4 +57,4 @@ Final architecture, authority, state-machine, lifecycle, concurrency, idempotenc
 
 ## Closure gate
 
-A phase is closed only after implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. **Phase 68 satisfies its original closure gate; the current hardening gate is required before Phase 69 begins.**
+A phase is closed only after implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, merge, and final exact-tree mainline CI are green. Phase 69 additionally requires npm package-content, version/license, and launcher smoke verification.
