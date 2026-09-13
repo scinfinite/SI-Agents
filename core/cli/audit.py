@@ -7,31 +7,23 @@ import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from core.legal.provenance import scan_text_files
 from core.organization.loader import load_catalog
 from core.personas.registry import PersonaRegistry
 from core.skills.registry import SkillRegistry
 from core.skills.validator import validate_skill
 
-TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
+TEXT_SUFFIXES = frozenset({".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"})
 HIDDEN_UNICODE = {"\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069", "\u202a", "\u202b", "\u202c", "\u202d", "\u206a", "\u206b", "\u206c", "\u206d", "\u206e", "\u206f"}
-FORBIDDEN_BRANDING = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
-# Explicit architecture/phase research records may name external systems. Executable,
-# package, and operational surfaces remain free of external branding.
-ALLOWED_REFERENCE_DOCS = frozenset({
-    "README.md", "docs/README.md", "docs/architecture/README.md", "docs/architecture/SI_AGENTS_V4_PLAN.md",
-    "docs/architecture/MODEL_ROUTING.md", "docs/architecture/PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
-    "docs/architecture/PHASE_44_EXECUTION_RUNTIME.md", "docs/architecture/PHASE_45_EVENT_BUS_STATE.md",
-    "docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md", "docs/architecture/PHASE_47_OPENCODE_BRIDGE.md",
-    "docs/architecture/PHASE_48_OMNIROUTE_INTEGRATION.md", "docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md",
-    "docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md",
-})
 TRANSIENT_NAMES = {"persona_parity_build.py", "phase29_unique_names.py", "phase29_heading_fix.py", "phase29_list_fix.py", "phase29-test-debug.txt"}
+
 
 @dataclass(frozen=True)
 class AuditCheck:
     name: str
     ok: bool
     detail: str
+
     def as_dict(self) -> dict[str, object]:
         return asdict(self)
 
@@ -85,7 +77,6 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
         checks.append(AuditCheck("skill-registry", False, str(exc)))
     hidden: list[str] = []
-    branding: list[str] = []
     for path in _text_files(root):
         relative = str(path.relative_to(root))
         try:
@@ -94,8 +85,7 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
             continue
         if any(char in text for char in HIDDEN_UNICODE):
             hidden.append(relative)
-        if relative not in ALLOWED_REFERENCE_DOCS and any(term in text for term in FORBIDDEN_BRANDING):
-            branding.append(relative)
+    branding = scan_text_files(root, TEXT_SUFFIXES)
     checks.append(AuditCheck("hidden-unicode", not hidden, "clean" if not hidden else ", ".join(hidden[:10])))
     checks.append(AuditCheck("external-branding", not branding, "clean" if not branding else ", ".join(branding[:10])))
     transient = [str(path.relative_to(root)) for path in root.rglob("*") if path.is_file() and path.name in TRANSIENT_NAMES]
@@ -116,8 +106,3 @@ def _skill_index_matches(root: Path, skills) -> bool:
     expected = {(skill.id, skill.version) for skill in skills}
     actual = {(item["id"], item["version"]) for item in data.get("skills", [])}
     return data.get("schema") == "si-agents.skill-index.v1" and expected == actual
-
-
-def audit_summary(root: str | Path) -> dict[str, object]:
-    checks = audit_repository(root)
-    return {"ok": all(check.ok for check in checks), "checks": [check.as_dict() for check in checks]}
