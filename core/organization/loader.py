@@ -9,8 +9,9 @@ from core.organization.registry import AgentCatalog
 
 
 def load_catalog(path: str | Path) -> AgentCatalog:
-    """Load and validate the canonical JSON catalog without adding a runtime dependency."""
-    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    """Load the canonical catalog plus independently authored repository extensions."""
+    catalog_path = Path(path)
+    payload = json.loads(catalog_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("version") != 1:
         raise ValueError("Unsupported or missing agent catalog version")
 
@@ -19,6 +20,16 @@ def load_catalog(path: str | Path) -> AgentCatalog:
         catalog.register_division(Division(**_required(raw, "id", "name", "description")))
     for raw in payload.get("agents", []):
         catalog.register(AgentDefinition(**_agent_kwargs(raw)))
+
+    extension_path = catalog_path.with_name("agent-catalog-extensions.json")
+    if extension_path.exists():
+        extension = json.loads(extension_path.read_text(encoding="utf-8"))
+        if not isinstance(extension, dict) or extension.get("version") != 1:
+            raise ValueError("Unsupported agent catalog extension version")
+        if extension.get("schema") != "si-agents.agent-catalog-extension.v1":
+            raise ValueError("Unsupported agent catalog extension schema")
+        for raw in extension.get("agents", []):
+            catalog.register(AgentDefinition(**_agent_kwargs(raw)))
 
     errors = catalog.validate()
     if errors:

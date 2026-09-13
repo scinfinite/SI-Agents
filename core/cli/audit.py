@@ -15,23 +15,23 @@ from core.skills.validator import validate_skill
 TEXT_SUFFIXES = {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}
 HIDDEN_UNICODE = {"\u200b", "\u200c", "\u200d", "\ufeff", "\u2060", "\u2066", "\u2067", "\u2068", "\u2069", "\u202a", "\u202b", "\u202c", "\u202d", "\u206a", "\u206b", "\u206c", "\u206d", "\u206e", "\u206f"}
 FORBIDDEN_BRANDING = ("Agency" + " Agents", "agency" + "-agents", "E" + "CC")
-# Explicit architecture/phase research records may name external systems. Executable,
-# package, and operational surfaces remain free of external branding.
+# Only actual SI-Agents integration names are allowed in user-facing integration records.
 ALLOWED_REFERENCE_DOCS = frozenset({
     "README.md", "docs/README.md", "docs/architecture/README.md", "docs/architecture/SI_AGENTS_V4_PLAN.md",
-    "docs/architecture/MODEL_ROUTING.md", "docs/architecture/PHASE_44_EXECUTION_RUNTIME_CONTRACTS.md",
-    "docs/architecture/PHASE_44_EXECUTION_RUNTIME.md", "docs/architecture/PHASE_45_EVENT_BUS_STATE.md",
-    "docs/architecture/PHASE_46_PARALLEL_SCHEDULER_EXECUTOR.md", "docs/architecture/PHASE_47_OPENCODE_BRIDGE.md",
-    "docs/architecture/PHASE_48_OMNIROUTE_INTEGRATION.md", "docs/architecture/PHASE_64_SDK_DEVELOPER_PLATFORM.md",
-    "docs/architecture/PHASE_65_WORKFLOW_AUTOMATION.md",
+    "docs/architecture/MODEL_ROUTING.md", "docs/architecture/phases/PHASE_23_OPENCODE_INTEGRATION.md",
+    "docs/architecture/phases/PHASE_24_OMNIROUTE_INTEGRATION.md", "docs/architecture/phases/PHASE_47_OPENCODE_BRIDGE.md",
+    "docs/architecture/phases/PHASE_48_OMNIROUTE_INTEGRATION.md", "docs/architecture/WEB_CONTROL_CENTER_DESIGN.md",
+    "docs/legal/PROVENANCE_AND_LICENSE.md", "docs/platforms/TERMUX.md", "SIA_SPECS.md", "AGENTS.md",
 })
 TRANSIENT_NAMES = {"persona_parity_build.py", "phase29_unique_names.py", "phase29_heading_fix.py", "phase29_list_fix.py", "phase29-test-debug.txt"}
+
 
 @dataclass(frozen=True)
 class AuditCheck:
     name: str
     ok: bool
     detail: str
+
     def as_dict(self) -> dict[str, object]:
         return asdict(self)
 
@@ -57,7 +57,13 @@ def _tracked_artifacts(root: Path) -> list[str]:
 def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
     root = Path(root).resolve()
     checks: list[AuditCheck] = []
-    required = ("README.md", "pyproject.toml", "config/agent-catalog.json", "config/team-catalog.json", "core/personas/registry.py", "core/skills/models.py", "core/skills/parser.py", "docs/architecture/PHASE_29_AGENT_PERSONA.md", "docs/architecture/PHASE_30_PORTABLE_SKILLS.md", "docs/architecture/PHASE_31_RULES_HOOKS_EVENTS.md")
+    required = (
+        "README.md", "pyproject.toml", "config/agent-catalog.json", "config/team-catalog.json",
+        "core/personas/registry.py", "core/skills/models.py", "core/skills/parser.py",
+        "docs/architecture/phases/PHASE_29_AGENT_PERSONA.md", "docs/architecture/phases/PHASE_30_PORTABLE_SKILLS.md",
+        "docs/architecture/phases/PHASE_31_RULES_HOOKS_EVENTS.md", "SIA_SPECS.md", "AGENTS.md",
+        "docs/legal/PROVENANCE_AND_LICENSE.md", "docs/platforms/TERMUX.md",
+    )
     missing = [item for item in required if not (root / item).is_file()]
     checks.append(AuditCheck("required-files", not missing, "missing: " + ", ".join(missing) if missing else "all present"))
     try:
@@ -72,7 +78,7 @@ def audit_repository(root: str | Path) -> tuple[AuditCheck, ...]:
         persona_errors = persona_registry.validate_against_catalog(catalog) if catalog is not None else ("catalog unavailable",)
         checks.append(AuditCheck("persona-registry", not persona_errors, f"{len(personas)} personas" + ("; " + "; ".join(persona_errors[:5]) if persona_errors else "")))
         if catalog is not None:
-            checks.append(AuditCheck("persona-count", len(personas) == len(catalog.all()), f"personas={len(personas)}, agents={len(catalog.all())}"))
+            checks.append(AuditCheck("persona-count", len(personas) == len(catalog.all()) == 300, f"personas={len(personas)}, agents={len(catalog.all())}"))
     except (OSError, TypeError, ValueError) as exc:
         checks.append(AuditCheck("persona-registry", False, str(exc)))
     try:

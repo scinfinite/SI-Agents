@@ -142,7 +142,7 @@ def test_all_canonical_personas_parse_and_match_catalog() -> None:
     registry.load_directory("agents")
     assert registry.validate_against_catalog(catalog) == ()
     ids = {persona.id for persona in registry.all()}
-    assert len(ids) == 279
+    assert len(ids) == 300
     assert CANONICAL_ID in ids
 
 

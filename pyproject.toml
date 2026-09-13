@@ -16,6 +16,7 @@ si-web = "core.web.cli:main"
 si-tui = "core.tui.cli:main"
 si-deploy = "core.deployment_center.cli:main"
 si-verify = "core.hardening.cli:main"
+si-capacity = "core.cli.capacity:main"
 
 [tool.setuptools.packages.find]
 include = ["adapters*", "agents*", "core*", "skills*", "tools*", "sdk*"]
@@ -26,7 +27,7 @@ skills = ["**/*.md", "*.json", "*.yaml"]
 "core.web" = ["assets/*.html", "assets/*.js", "assets/*.css"]
 
 [tool.setuptools.data-files]
-"share/si-agents/config" = ["config/agent-catalog.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
+"share/si-agents/config" = ["config/agent-catalog.json", "config/agent-catalog-extensions.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

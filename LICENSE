@@ -1,0 +1,12 @@
+Apache License 2.0
+
+Copyright 2026 SC Infinite
+
+SI-Agents-owned material in this repository is licensed under the Apache License, Version 2.0.
+
+The authoritative Apache License 2.0 text is published by the Apache Software Foundation at:
+https://www.apache.org/licenses/LICENSE-2.0
+
+SPDX-License-Identifier: Apache-2.0
+
+This repository also contains integration boundaries, dependency metadata, and other material that may be subject to separate third-party terms. Those terms remain applicable where required; see NOTICE and docs/legal/PROVENANCE_AND_LICENSE.md.

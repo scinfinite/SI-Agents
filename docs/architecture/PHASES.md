@@ -4,13 +4,28 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–68 are closed**. Phase 69 is next. Phase 71 is the final production-hardening gate.
+Phases **44–68 are closed**. Phase 69 is next, but the pre-Phase 69 hardening gate is intentionally separate and must be green before implementation begins. Phase 71 is the final production-hardening gate.
+
+## Pre-Phase 69 hardening gate
+
+The current hardening branch verifies:
+
+- current documentation and architecture status;
+- canonical phase archive under `docs/architecture/phases/`;
+- exactly 300 persona Markdown definitions and a 300-entry merged runtime catalog;
+- provenance/license/branding controls;
+- Termux Low 1–2 and Medium 3–5 selectable workers;
+- High/heavy workload blocking on Termux/mobile;
+- scheduler/team concurrency clamping;
+- Web/OpenCode/OmniRoute compatibility boundaries;
+- package/wheel/CLI compatibility;
+- final exact-tree CI.
 
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
-- **Next** — next implementation phase.
+- **Next** — next implementation phase after the hardening gate.
 - **Planned** — future roadmap phase.
 
 ## V4 sequence
@@ -42,7 +57,7 @@ Phases **44–68 are closed**. Phase 69 is next. Phase 71 is the final productio
 | 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
 | 67 | Advanced TUI Control Center | **Complete / 100%** | PR #80 / final PR CI #1288 / `34702115990` |
 | 68 | Advanced CLI Platform | **Complete / 100%** | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
-| 69 | npm Distribution + Setup | **Next** | Planned |
+| 69 | npm Distribution + Setup | **Next after hardening** | Planned |
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
@@ -54,8 +69,8 @@ Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/session
 
 Acceptance coverage: `tests/test_phase68_cli.py` plus the full existing repository suite.
 
-Detailed contract: `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
+Detailed contract: `docs/architecture/phases/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
 
 ## Closure evidence
 
-Phase 68 passed wheel installation, repository audit, integration verification, Ruff, full pytest, SDK verification, PR merge, and final synchronized-tree mainline CI. Final merged `main` commit: `8c5fb08e9c8a5628f59cf929e3c2ac203d4eac29`; final post-merge documentation synchronization is followed by the exact-tree mainline closure gate.
+Phase 68 passed its original closure gates. The current pre-Phase 69 branch must now pass a fresh exact-tree CI because it changes the persona catalog, capacity enforcement, documentation organization, licensing/provenance controls, and runtime compatibility surfaces.

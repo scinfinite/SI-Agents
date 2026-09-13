@@ -4,25 +4,30 @@
 
 SI-Agents V4 has completed Phases **44–68**. Phases **46, 47, 49, 50, 58, 59, and 60** are advanced-hardened. **Phase 68 — Advanced CLI Platform is complete at 100%.**
 
-See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap, `architecture/README.md` for the current architecture summary, and `architecture/PHASES.md` for phase evidence.
+The repository is currently in a **pre-Phase 69 hardening gate**. Phase 69 implementation must not begin until that gate is green.
+
+See `architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap, `architecture/README.md` for the current architecture summary, `architecture/PHASES.md` for phase evidence, `architecture/phases/` for the canonical historical phase archive, and `../SIA_SPECS.md` for the complete system specification.
+
+## Current hardening baseline
+
+- **300 SI-native personas** are the current corpus target.
+- Historical Phase records 1–68 are organized under `architecture/phases/`.
+- `AGENTS.md` is the main repository-agent operating contract.
+- `SIA_SPECS.md` is the complete current system specification.
+- Low/Medium/High capacity policy is implemented in `core/capacity/`.
+- Termux Low supports 1–2 selectable workers; Medium supports 3–5; High and heavy workloads are blocked locally.
+- OpenCode and OmniRoute remain intentional SI-Agents integrations.
+- Provenance, licensing, contributor, and external-branding controls are documented and audited.
 
 ## Phase 68 — Advanced CLI Platform
 
 **100% complete and closed.** Phase 68 provides a transport-neutral CLI adapter over SI Core with governed run/task/execution operations, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, events and bounded run streaming, model/provider discovery delegation, attachment inspection, non-secret config/auth status, transport profiles, and bounded declarative pipelines.
 
-Local mode calls `ControlApiService`; remote mode uses authenticated HTTP. The CLI emits deterministic JSON envelopes and machine-readable failures, uses bounded request/response and local artifact sizes, never persists authentication secrets, never executes arbitrary shell commands, and fail-closes when downstream execution owns a lifecycle transition such as resume. Established legacy CLI commands remain backward compatible.
-
-Closure evidence: PR #81 merged as `8c5fb08e9c8a5628f59cf929e3c2ac203d4eac29`; final PR CI #1319 / run `34703142494` and SDK CI #111 / run `34703142515` were green; final synchronized-tree mainline CI #1320 / run `34703212232` is green.
-
-Contract: `architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`. Acceptance coverage: `tests/test_phase68_cli.py` plus the complete repository suite.
+Contract: `architecture/phases/PHASE_68_ADVANCED_CLI_PLATFORM.md`. Acceptance coverage: `tests/test_phase68_cli.py` plus the complete repository suite.
 
 ## Phase 67 — Advanced TUI Control Center
 
-**100% complete and closed.** Phase 67 provides a dependency-free, keyboard-first terminal operator cockpit over the existing Control API. It preserves the historical 14-view surface while adding bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct navigation, bounded JSON status export, non-interactive rendering, governed run creation, and identity-bound approval controls.
-
-The TUI is only a client of SI Core: it owns ephemeral presentation state, never invokes a shell or provider directly, and routes supported mutations through existing governed Control API methods. Page size is bounded to 1–100, unknown commands are inert, and `NO_COLOR` is supported. Acceptance coverage is in `tests/test_phase67_tui.py` with the Phase 41 regression suite retained.
-
-Closure evidence: PR #80 merged successfully. Final PR CI **#1288** / run **34702115990** on commit `51eefc53a9d6a9073874d982a4e5c41be08269e2` completed successfully, with the SDK workflow also green (run **34702115987**). The final synchronized documentation mainline gate for Phase 67 was green before Phase 68 began.
+**100% complete and closed.** Phase 67 provides a dependency-free, keyboard-first terminal operator cockpit over the existing Control API with bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct navigation, bounded JSON status export, non-interactive rendering, governed run creation, and identity-bound approval controls.
 
 ## Phase 66 — Advanced Web Control Plane
 
@@ -49,8 +54,8 @@ Web, TUI, CLI, OpenCode, SDKs, workflows, and future runtimes remain clients/ada
 
 ## Next phase
 
-**Phase 69 — npm Distribution + Setup.**
+**Phase 69 — npm Distribution + Setup**, after the pre-Phase 69 hardening gate closes.
 
 ## Phase closure rule
 
-A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, and final exact-tree mainline CI are green. **Phase 68 satisfies this closure rule.**
+A phase is not complete until implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, SDK verification, and final exact-tree mainline CI are green. **Phase 68 satisfies its original closure rule; the hardening gate is the current prerequisite for Phase 69.**

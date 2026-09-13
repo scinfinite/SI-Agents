@@ -1,7 +1,7 @@
 {
   "schema": "si-agents.persona-source-index.v1",
   "snapshot": "6d29a9b08785a0e49ffc9818bbdd381164c2df5f",
-  "agent_count": 279,
+  "agent_count": 300,
   "source_division_count": 18,
-  "note": "The immutable snapshot identifier and checked-in persona corpus establish provenance without retaining external repository branding in the shipped project."
+  "note": "The immutable historical snapshot establishes provenance for the original corpus; the current checked-in persona corpus is independently extended to 300 SI-owned definitions."
 }

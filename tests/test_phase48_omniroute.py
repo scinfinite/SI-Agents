@@ -220,7 +220,7 @@ def test_cancellation_is_explicitly_unsupported():
     assert OmniRouteBridge(transport=FakeTransport()).cancel("request") is False
 
 
-def test_audit_allows_explicit_external_reference_documents():
+def test_audit_allows_only_declared_integration_reference_documents():
     root = Path(__file__).resolve().parents[1]
     checks = {check.name: check for check in audit_repository(root)}
     assert checks["external-branding"].ok is True

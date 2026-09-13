@@ -1,8 +1,8 @@
 {
   "schema": "si-agents.persona-parity.v1",
   "snapshot": "6d29a9b08785a0e49ffc9818bbdd381164c2df5f",
-  "source_definition_count": 279,
-  "si_persona_count": 279,
+  "source_definition_count": 300,
+  "si_persona_count": 300,
   "source_division_count": 18,
   "canonical_divisions": [
     "engineering",
@@ -19,5 +19,6 @@
     "invalid_personas": 0,
     "governance_leakage": 0,
     "hidden_control_characters": 0
-  }
+  },
+  "extension_policy": "Repository-owned extensions are independently authored and merged at catalog load time."
 }
