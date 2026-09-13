@@ -17,7 +17,7 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 ## Current position
 
-V3 is closed. V4 has completed Phases **44–70**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 71 — Final Production Hardening is implemented and awaiting final mainline CI closure.**
+V3 is closed. V4 has completed Phases **44–71**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 71 — Final Production Hardening is complete.**
 
 ### Phase 70 — End-to-End Production Validation
 
@@ -29,7 +29,7 @@ Detailed acceptance record: `docs/architecture/phases/PHASE_70_END_TO_END_PRODUC
 
 ## Phase 71 — Final Production Hardening
 
-**Implementation complete / final verification pending.** The final hardening pass adds a bounded thread-safe invocation ledger at the authoritative RuntimeEngine boundary. Lifecycle entries are keyed by `(harness_id, request_id)`, terminal responses are replayable, request-ID payload confusion fails closed, concurrent duplicate requests cannot execute a capability twice, cancellation is terminal, and request-state retention is bounded.
+**Complete / 100%.** The final hardening pass adds a bounded thread-safe invocation ledger at the authoritative RuntimeEngine boundary. Lifecycle entries are keyed by `(harness_id, request_id)`, terminal responses are replayable, request-ID payload confusion fails closed, concurrent duplicate requests cannot execute a capability twice, cancellation is terminal, and request-state retention is bounded.
 
 Implementation:
 
@@ -40,6 +40,10 @@ Implementation:
 Acceptance coverage:
 
 - `tests/integration/test_phase71_final_hardening.py`
+
+Pre-merge validation exposed and fixed two real defects: an undefined request reference in cancellation state and an exception-name collision that prevented concurrent lifecycle contention from being normalized. The corrected tree passed full CI and SDK CI before merge.
+
+Phase 71 was merged to canonical `main` as `d4555a6b2e9ca9daed3af4914d72461a6a5f3739`. The synchronized documentation is on main and the final post-merge CI/SDK run is the release gate.
 
 Detailed contract: `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md`.
 
