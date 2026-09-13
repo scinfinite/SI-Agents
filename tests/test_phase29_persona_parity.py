@@ -3,20 +3,21 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from core.organization import load_catalog
 from core.personas.registry import PersonaRegistry
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_phase29_has_exactly_279_personas() -> None:
+def test_phase29_has_exactly_300_personas() -> None:
     paths = sorted(p for p in (ROOT / "agents").rglob("*.md") if p.name != "README.md")
-    assert len(paths) == 279
+    assert len(paths) == 300
     assert all(p.read_text(encoding="utf-8").startswith("---\n") for p in paths)
 
 
 def test_phase29_provenance_manifest_is_complete() -> None:
     data = json.loads((ROOT / "config/persona-source-index.json").read_text(encoding="utf-8"))
-    assert data["agent_count"] == 279
+    assert data["agent_count"] == 300
     assert data["source_division_count"] == 18
     assert len(data["snapshot"]) == 40
     assert "repository" not in data
@@ -25,11 +26,10 @@ def test_phase29_provenance_manifest_is_complete() -> None:
 def test_phase29_registry_and_catalog_match() -> None:
     registry = PersonaRegistry()
     loaded = registry.load_directory(ROOT / "agents")
-    assert len(loaded) == 279
-    catalog = json.loads((ROOT / "config/agent-catalog.json").read_text(encoding="utf-8"))
-    assert len(catalog["agents"]) == 279
-    by_id = {agent["id"]: agent for agent in catalog["agents"]}
-    assert len(by_id) == 279
+    assert len(loaded) == 300
+    catalog = load_catalog(ROOT / "config/agent-catalog.json")
+    by_id = {agent.id: agent for agent in catalog.all()}
+    assert len(by_id) == 300
     assert registry.validate_against_catalog(_CatalogAdapter(by_id)) == ()
 
 
@@ -43,9 +43,9 @@ def test_phase29_personas_contain_no_hidden_unicode_controls() -> None:
 
 
 class _CatalogAdapter:
-    def __init__(self, values: dict[str, dict[str, object]]) -> None:
+    def __init__(self, values: dict[str, object]) -> None:
         self.values = values
 
     def get(self, key: str):
         value = self.values[key]
-        return type("CatalogAgent", (), {"name": value["name"], "division": value["division"]})()
+        return type("CatalogAgent", (), {"name": value.name, "division": value.division})()
