@@ -122,18 +122,22 @@ def _scalar(content: str) -> str:
 
 
 def _items(content: str) -> tuple[str, ...]:
-    items = []
-    for line in content.splitlines():
-        value = line.strip()
-        if not value:
-            continue
-        if not value.startswith("-") or value == "-":
-            raise ValueError("List persona sections must contain Markdown bullet items")
-        items.append(value[1:].strip())
-    if not items:
-        raise ValueError("Persona list section cannot be empty")
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+    if not lines:
+        raise ValueError("Persona collection section cannot be empty")
+    bullet_flags = [line.startswith("-") and line != "-" for line in lines]
+    if any(bullet_flags) and not all(bullet_flags):
+        raise ValueError("Persona collection sections cannot mix paragraphs and Markdown bullets")
+    if not any(bullet_flags):
+        if len(lines) != 1:
+            raise ValueError("Persona collection sections must use Markdown bullet items for multiple entries")
+        items = [lines[0]]
+    else:
+        items = [line[1:].strip() for line in lines]
+    if any(not item for item in items):
+        raise ValueError("Persona collection section contains an empty item")
     if len(items) != len(set(items)):
-        raise ValueError("Persona list section contains duplicate items")
+        raise ValueError("Persona collection section contains duplicate items")
     return tuple(items)
 
 
