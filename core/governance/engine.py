@@ -32,8 +32,6 @@ class GovernanceEngine:
         capacity = self.capacity.evaluate({"action": request.action})
         if not capacity.allowed:
             reasons.append("capacity policy denies high-capacity local work; use a desktop or Codespace target")
-        elif capacity.warning:
-            reasons.append(capacity.warning)
         effective_risk = self.risk.classify(request)
 
         if request.approval is not None and not request.approval.active():
