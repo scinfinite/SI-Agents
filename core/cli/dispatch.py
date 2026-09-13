@@ -58,6 +58,9 @@ def main(argv: list[str] | None = None) -> int:
         return deployment_main(arguments[1:])
     if arguments and arguments[0] in {"verify", "validate-release"}:
         return verify_main(arguments[1:])
+    if arguments and arguments[0] == "capacity":
+        from core.cli.capacity import main as capacity_main
+        return capacity_main(arguments[1:])
     if arguments and arguments[0] in {"agent", "team", "workflow"}:
         from core.cli.aliases import main as alias_main
         return alias_main(arguments[0], _normalize_global_options(arguments[1:]))
