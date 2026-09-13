@@ -1,0 +1,36 @@
+{
+  "name": "si-agents",
+  "version": "0.1.0",
+  "description": "Cross-platform npm bootstrapper for the SI-Agents Python runtime",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/scinfinite/SI-Agents",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scinfinite/SI-Agents.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scinfinite/SI-Agents/issues"
+  },
+  "bin": {
+    "si-agents": "bin/si-agents.js"
+  },
+  "files": [
+    "bin/si-agents.js",
+    "LICENSE",
+    "NOTICE",
+    "README.npm.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "verify": "node scripts/verify-npm-package.mjs"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "engineering",
+    "cli",
+    "automation"
+  ]
+}
