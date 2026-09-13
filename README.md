@@ -4,7 +4,7 @@ SI-Agents is a governed, evidence-driven AI engineering and agent platform built
 
 ## Phase 71 status
 
-Phases **44–70 are closed**. Phase **71 — Final Production Hardening** is the final V4 production gate. It hardens runtime lifecycle, idempotency, concurrency, cancellation, and bounded request-state behavior while preserving SI Core as the sole execution authority.
+Phases **44–71 are closed**. Phase **71 — Final Production Hardening** is complete and verified on canonical `main`. The final hardening preserves SI Core as the sole execution authority while enforcing bounded lifecycle, idempotency, concurrency, and cancellation invariants at the RuntimeEngine boundary.
 
 ### npm distribution
 
@@ -24,9 +24,9 @@ The npm package requires Node.js 18+ and Python 3.11+ for runtime execution. It 
 
 ## Phase 71 production hardening
 
-The authoritative `RuntimeEngine` now uses a bounded, thread-safe invocation ledger keyed by `(harness_id, request_id)`. Terminal responses are replayable, request-ID payload reuse fails closed, concurrent duplicates cannot execute a capability twice, cancellation is terminal, and lifecycle state is bounded. Existing governance, session/project isolation, OpenCode, OmniRoute, Web/TUI/CLI, SDK, wheel, npm, repository-audit, Ruff, compileall, and full pytest gates remain mandatory.
+The authoritative `RuntimeEngine` uses a bounded, thread-safe invocation ledger keyed by `(harness_id, request_id)`. Terminal responses are replayable, request-ID payload reuse fails closed, concurrent duplicates cannot execute a capability twice, cancellation is terminal, and lifecycle state is bounded. Full repository regression, packaging, npm, SDK, integration, audit, Ruff, and pytest gates were verified before and after merge.
 
-See `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md` for the final-hardening contract and closure gate.
+See `docs/architecture/phases/PHASE_71_FINAL_PRODUCTION_HARDENING.md` for the final-hardening contract and acceptance record.
 
 ## Capacity profiles
 
@@ -77,7 +77,7 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 68 | Advanced CLI Platform | Complete |
 | 69 | npm Distribution + Setup | **Complete / 100%** |
 | 70 | End-to-End Production Validation | **Complete / 100%** |
-| 71 | Final Production Hardening | **Pending final verification** |
+| 71 | Final Production Hardening | **Complete / 100%** |
 
 ## Engineering gate
 
