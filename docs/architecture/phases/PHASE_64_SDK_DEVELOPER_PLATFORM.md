@@ -33,7 +33,7 @@ Phase 64 turns the versioned Control API into a stable developer surface without
 ### Idempotency and concurrency
 
 - `X-Idempotency-Key` is supported for run creation with a bounded replay cache.
-- Client concurrency is explicitly bounded rather than spawning unbounded request fan-out.
+- Client concurrency is explicitly bounded (maximum 32 workers) rather than spawning unbounded request fan-out.
 - Idempotent replay returns the original run payload instead of creating a second control-plane run.
 
 ### Event subscriptions
@@ -53,7 +53,7 @@ The SDK is packaged with the Python distribution, while the TypeScript package c
 1. SDKs never become policy or execution authorities.
 2. Authentication is header-only; tokens are not serialized into URLs.
 3. Pagination cursors are opaque, bounded, and bound to their original filter/query set.
-4. Request bodies remain subject to the existing Control API limit.
+4. Request bodies remain subject to the existing 1 MiB Control API limit.
 5. Idempotency keys are bounded and replay only within the server instance/cache scope.
 6. Webhook secrets are returned only at registration time and are not exposed by subscription listing.
 7. Remote webhook targets require HTTPS; loopback HTTP is reserved for local development.
@@ -61,7 +61,7 @@ The SDK is packaged with the Python distribution, while the TypeScript package c
 
 ## Reference patterns
 
-Phase 64 uses broadly known engineering patterns—typed interfaces, bounded operations, explicit integration boundaries, reproducible developer entry points, security-first defaults, and specialized workflow surfaces—without copying another project's implementation, prompts, branding, or distinctive expressive material.
+Current ECC emphasizes security-first, research-first agent tooling and broad multi-harness developer workflows; current Agency Agents emphasizes specialized agents, repeatable workflows, explicit deliverables, and tool-specific installation paths. Phase 64 generalizes those principles into a neutral SDK contract: typed interfaces, bounded operations, explicit integration boundaries, and reproducible developer entry points rather than copying either project's implementation or prompts.
 
 ## Closure evidence
 
