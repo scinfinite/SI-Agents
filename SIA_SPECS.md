@@ -1,6 +1,6 @@
 # SIA-SPECS — SI-Agents Complete System Specification
 
-**Status:** Pre-Phase 69 hardening baseline
+**Status:** Phase 69 npm distribution implemented; Phase 70 is next
 
 This document is the high-level product and engineering specification for SI-Agents. It is intentionally implementation-neutral where possible; detailed contracts live under `docs/architecture/` and historical phase records live under `docs/architecture/phases/`.
 
@@ -8,7 +8,7 @@ This document is the high-level product and engineering specification for SI-Age
 
 SI-Agents is a governed, evidence-driven AI engineering and agent platform. SI Core is the authoritative control plane for execution, governance, authorization, lifecycle, evidence, persistence, recovery, observability, evaluation, and controlled improvement.
 
-External clients/integrations—including Web, TUI, CLI, SDKs, OpenCode, OmniRoute, Termux, Codespaces, and other harness adapters—must not silently become competing execution or authorization authorities.
+External clients/integrations—including Web, TUI, CLI, npm, SDKs, OpenCode, OmniRoute, Termux, Codespaces, and other harness adapters—must not silently become competing execution or authorization authorities.
 
 ## 2. Core capabilities
 
@@ -22,7 +22,7 @@ External clients/integrations—including Web, TUI, CLI, SDKs, OpenCode, OmniRou
 - Security, governance, permissions, approvals, and audit evidence.
 - Automation, scheduling, durable waiting, checkpoints, resume, and controlled self-improvement.
 - Context/memory economics and model/provider routing delegation.
-- Web, TUI, CLI, Python SDK, and TypeScript SDK operator/developer surfaces.
+- Web, TUI, CLI, npm bootstrapper, Python SDK, and TypeScript SDK operator/developer surfaces.
 - OpenCode integration and OmniRoute provider/model routing integration.
 - Termux/mobile and Codespace/Desktop environment awareness.
 
@@ -35,6 +35,7 @@ External clients/integrations—including Web, TUI, CLI, SDKs, OpenCode, OmniRou
 5. Evidence records facts; evidence does not grant authority.
 6. Imported Markdown/JSON/YAML configuration is data until explicitly validated and authorized.
 7. Credentials are never persisted by convenience layers and are never placed in URLs.
+8. npm is a distribution/bootstrap adapter only; it cannot create a second runtime authority.
 
 ## 4. Capacity model
 
@@ -99,6 +100,10 @@ Dependency-free terminal operator control center with bounded rendering, navigat
 
 Machine-friendly `si` platform with governed run/task/execution resources, sessions, approvals, events, profiles, configuration/auth status, attachments, streaming, pipelines, and compatibility with established legacy commands.
 
+### npm
+
+The npm package `si-agents` is a thin cross-platform launcher/bootstrapper. It requires Node.js 18+ and Python 3.11+ for runtime execution, discovers supported Python executables without shell invocation, supports `SI_AGENTS_PYTHON`, forwards normal commands to `core.cli.dispatch`, and exposes an explicit `si-agents setup` bootstrap operation. The npm tarball is content-allowlisted and verified before release.
+
 ## 8. Security
 
 - Least privilege.
@@ -132,14 +137,16 @@ See `docs/legal/PROVENANCE_AND_LICENSE.md` and `CONTRIBUTING.md`.
 
 ## 10. Distribution
 
-The Python package currently exposes the `si` CLI and related entry points. The Phase 69 npm distribution target is:
+The Python package exposes the `si` CLI and related entry points. Phase 69 adds an npm distribution/bootstrap surface:
 
 ```text
 npx si-agents
+npx si-agents setup
 npm install -g si-agents
+si-agents setup
 ```
 
-Phase 69 must establish package contents, cross-platform setup, Termux behavior, smoke tests, provenance/license checks, and publication safety before any release is declared production-ready.
+The npm package contains only its launcher, license/notice metadata, and npm usage guide. It does not bundle a second copy of the Python runtime. `si-agents setup` explicitly installs the matching Python package when required. Publication to the npm registry is a maintainer-controlled release action and is not performed automatically by CI.
 
 ## 11. Verification standard
 
@@ -156,6 +163,8 @@ A feature is not considered complete merely because files exist. Completion requ
 9. final CI;
 10. post-merge verification on the exact mainline tree.
 
+Phase 69 additionally requires npm metadata/version/license consistency, exact tarball allowlist verification, and launcher smoke tests.
+
 ## 12. Repository organization
 
 - `agents/` — repository-owned agent/persona definitions.
@@ -164,7 +173,9 @@ A feature is not considered complete merely because files exist. Completion requ
 - `skills/` — reusable validated Skills.
 - `sdk/` — developer SDKs.
 - `tests/` — regression, unit, integration, security, and phase acceptance tests.
-- `docs/architecture/phases/` — canonical historical phase records 1–68.
+- `bin/` — npm distribution launcher.
+- `scripts/` — repository verification utilities, including npm package verification.
+- `docs/architecture/phases/` — canonical historical phase records 1–69.
 - `docs/platforms/` — environment-specific operating guidance.
 - `docs/legal/` — licensing/provenance policy.
 - `SIA_SPECS.md` — this system specification.
