@@ -2,7 +2,7 @@
 
 ## Status
 
-**100% complete.** Phase 65 is implemented, audited, tested, documented, and merged on `main`. The exact synchronized documentation tree was validated by **CI #1249 / run `34698187600`**, which passed distribution build, wheel verification, repository audit, integration verification, Ruff, and the full pytest suite.
+**100% complete.** Phase 65 is implemented, audited, tested, documented, and merged on `main`. The synchronized documentation tree was validated by the repository closure gates.
 
 ## Scope
 
@@ -55,12 +55,10 @@ A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps
 
 `tests/unit/test_phase65_workflows.py` provides acceptance and adversarial coverage for DAG branching, durable waits, human gates, fan-out/loops, event/webhook/interval triggers, retry behavior, runtime expiry, concurrent idempotency, cancellation, persistence corruption, templates/versioning, payload limits, and compensation.
 
-**Final synchronized-tree closure:** CI #1249 / run `34698187600` passed all required repository gates on the synchronized documentation and audit tree. The CI job completed successfully with distribution build, wheel installation, repository audit, integration verification, Ruff, and pytest all green.
+## Reference policy
 
-## References
-
-The implementation follows the repository's standing engineering-reference policy: current ECC and Agency Agents patterns are used only as generalized guidance for bounded workflows, explicit deliverables, security boundaries, and validation; no external project implementation or prompt is copied as an authority.
+SI-Agents may study public engineering patterns as research input. The repository's implementation and expressive content must remain independently authored, and external project branding, prompts, distinctive documentation, and copied implementation text are not accepted as dependencies or authorities.
 
 ## Closure rule
 
-Phase 65 is complete only when implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. **This gate is satisfied.**
+Phase 65 is complete only when implementation, unit/integration tests, adversarial/security tests, edge/failure tests, documentation synchronization, repository audit, distribution/wheel verification, integration verification, Ruff, compileall, full pytest, and final exact-tree mainline CI are green. The historical closure gate is preserved here; the current repository status is maintained in `docs/architecture/PHASES.md`.
