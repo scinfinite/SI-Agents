@@ -5,8 +5,8 @@ import subprocess
 from pathlib import Path
 
 from core.control_api.service import ControlApiService
-from core.web.advanced import create_advanced_server
 from core.web.models import WebConfig
+from core.web.server import create_server
 
 
 def test_production_ui_assets_define_approved_design_contract():
@@ -39,7 +39,7 @@ def test_production_ui_javascript_is_syntax_valid_when_node_is_available():
 
 
 def test_production_ui_root_and_all_primary_api_views_are_reachable():
-    server = create_advanced_server(WebConfig(host="127.0.0.1", port=0), ControlApiService(Path.cwd()))
+    server = create_server(WebConfig(host="127.0.0.1", port=0), ControlApiService(Path.cwd()))
     try:
         import threading
         import urllib.request
@@ -50,7 +50,7 @@ def test_production_ui_root_and_all_primary_api_views_are_reachable():
         for path in ("/", "/assets/app.css", "/assets/app.js"):
             response = urllib.request.urlopen(base + path, timeout=3)
             assert response.status == 200
-        for path in ("/api/v1/", "/api/v1/health", "/api/v1/agents", "/api/v1/teams", "/api/v1/workflows", "/api/v1/visualization", "/api/v1/evidence", "/api/v1/runs", "/api/v1/organization", "/api/v1/governance", "/api/v1/environments", "/api/v1/harnesses", "/api/v1/settings"):
+        for path in ("/api/v1", "/api/v1/health", "/api/v1/agents", "/api/v1/teams", "/api/v1/workflows", "/api/v1/visualization", "/api/v1/evidence", "/api/v1/runs", "/api/v1/organization", "/api/v1/governance", "/api/v1/environments", "/api/v1/harnesses", "/api/v1/settings"):
             response = urllib.request.urlopen(base + path, timeout=3)
             assert response.status == 200
     finally:
