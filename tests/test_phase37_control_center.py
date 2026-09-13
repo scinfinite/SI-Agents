@@ -97,8 +97,8 @@ def test_control_center_javascript_has_expected_navigation(tmp_path):
         for label in ("Overview", "Agents", "Teams", "Workflows", "Skills", "Memory", "Knowledge", "Evidence", "Runs", "Organization", "Governance", "Environments", "Harnesses", "Settings"):
             assert label in js
         assert "innerHTML" not in js
-        assert "fetchJSON" in js
-        assert "credentials: \"same-origin\"" not in js
+        assert "fetch(" in js
+        assert "credentials: \"same-origin\"" in js
     finally:
         _stop(server, thread)
 
