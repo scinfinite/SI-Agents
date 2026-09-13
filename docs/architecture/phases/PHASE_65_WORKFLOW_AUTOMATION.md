@@ -55,11 +55,9 @@ A wait stores an absolute `wait_until` timestamp. Restarting before expiry keeps
 
 `tests/unit/test_phase65_workflows.py` provides acceptance and adversarial coverage for DAG branching, durable waits, human gates, fan-out/loops, event/webhook/interval triggers, retry behavior, runtime expiry, concurrent idempotency, cancellation, persistence corruption, templates/versioning, payload limits, and compensation.
 
-**Final synchronized-tree closure:** CI #1249 / run `34698187600` passed all required repository gates on the synchronized documentation and audit tree. The CI job completed successfully with distribution build, wheel installation, repository audit, integration verification, Ruff, and pytest all green.
+## Reference policy
 
-## References
-
-The implementation follows the repository's standing engineering-reference policy: current ECC and Agency Agents patterns are used only as generalized guidance for bounded workflows, explicit deliverables, security boundaries, and validation; no external project implementation or prompt is copied as an authority.
+Phase 65 uses broadly known engineering patterns—declarative state machines, explicit deliverables, bounded retries, security boundaries, deterministic validation, and evidence-backed automation—without copying another project's implementation, prompts, branding, or distinctive expressive material.
 
 ## Closure rule
 
