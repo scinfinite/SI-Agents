@@ -4,28 +4,13 @@
 
 ## V4 roadmap: Phase 44 through Phase 71
 
-Phases **44–68 are closed**. Phase 69 is next, but the pre-Phase 69 hardening gate is intentionally separate and must be green before implementation begins. Phase 71 is the final production-hardening gate.
-
-## Pre-Phase 69 hardening gate
-
-The current hardening branch verifies:
-
-- current documentation and architecture status;
-- canonical phase archive under `docs/architecture/phases/`;
-- exactly 300 persona Markdown definitions and a 300-entry merged runtime catalog;
-- provenance/license/branding controls;
-- Termux Low 1–2 and Medium 3–5 selectable workers;
-- High/heavy workload blocking on Termux/mobile;
-- scheduler/team concurrency clamping;
-- Web/OpenCode/OmniRoute compatibility boundaries;
-- package/wheel/CLI compatibility;
-- final exact-tree CI.
+Phases **44–68 are closed**. Phase 69 adds the npm distribution/bootstrap surface. Phase 70 validates the complete product end-to-end. Phase 71 is the final production-hardening gate.
 
 ## Status legend
 
 - **Complete** — implementation, tests, documentation, and final CI evidence verified.
 - **Advanced hardened** — a closed phase received additional production/security invariants and green hardening CI.
-- **Next** — next implementation phase after the hardening gate.
+- **Next** — next implementation phase after the current closed phase.
 - **Planned** — future roadmap phase.
 
 ## V4 sequence
@@ -57,20 +42,18 @@ The current hardening branch verifies:
 | 66 | Advanced Web Control Plane | Complete / 100% | PR #79 / final synchronized-tree CI #1284 / `34701494501` |
 | 67 | Advanced TUI Control Center | **Complete / 100%** | PR #80 / final PR CI #1288 / `34702115990` |
 | 68 | Advanced CLI Platform | **Complete / 100%** | PR #81 / PR CI #1319 / `34703142494` / SDK #111 / `34703142515` / final mainline #1320 / `34703212232` |
-| 69 | npm Distribution + Setup | **Next after hardening** | Planned |
+| 69 | npm Distribution + Setup | **Complete / 100%** | npm package verification + final mainline CI |
 | 70 | End-to-End Production Validation | Planned | Planned |
 | 71 | Final Production Hardening | Planned | Planned |
 
-## Phase 68 implementation
+## Phase 69 implementation
 
-Phase 68 introduces the advanced transport-neutral `si` CLI platform over SI Core's Control API. The surface covers governed run/task/execution operations, agent/team/workflow navigation, identity-bound approvals, bounded client sessions, events/streaming, models/providers delegation, attachment inspection, non-secret configuration/auth status, transport profiles, and bounded declarative pipelines. Local mode calls `ControlApiService`; remote mode uses authenticated HTTP. The CLI remains an adapter and cannot become a second execution or governance authority, while established legacy commands retain their historical routing contracts.
+Phase 69 adds a deliberately thin npm distribution surface. `package.json` declares the npm package and executable; `bin/si-agents.js` discovers a supported Python executable and forwards commands to `core.cli.dispatch`, preserving SI Core as the runtime authority. `si-agents setup` provides an explicit bootstrap path for the matching Python package. The launcher is shell-independent, supports an explicit `SI_AGENTS_PYTHON` override, and returns actionable prerequisite errors.
 
-Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/session.py`, `core/cli/profile.py`, and `core/cli/dispatch.py`.
+The npm package is content-allowlisted to the launcher, `LICENSE`, `NOTICE`, and `README.npm.md`. `scripts/verify-npm-package.mjs` checks npm/Python version parity, license metadata, required files, exact `npm pack` contents, and launcher version/help smoke behavior. CI runs this verifier after the existing Python distribution, audit, integration, lint, compile, and pytest gates.
 
-Acceptance coverage: `tests/test_phase68_cli.py` plus the full existing repository suite.
-
-Detailed contract: `docs/architecture/phases/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
+Detailed contract: `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md`.
 
 ## Closure evidence
 
-Phase 68 passed its original closure gates. The current pre-Phase 69 branch must now pass a fresh exact-tree CI because it changes the persona catalog, capacity enforcement, documentation organization, licensing/provenance controls, and runtime compatibility surfaces.
+Phase 69 is complete only when the implementation is present on canonical `main`, npm packaging verification is green, the full existing repository gates remain green, and final mainline CI is green on the exact Phase 69 tree. npm registry publication itself is a maintainer-controlled release operation and is not performed automatically by the repository CI.
