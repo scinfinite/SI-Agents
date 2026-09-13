@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Mapping
 
+from core.capacity import resolve_from_environment
 from core.runtime.events import EventBus
 from core.runtime.execution import AuthorizedTask, Execution, ExecutionRuntime, State
 
@@ -48,7 +49,11 @@ class ParallelScheduler:
             raise ValueError("max_workers must be >= 1")
         if aging_seconds <= 0 or poll_seconds <= 0:
             raise ValueError("aging_seconds and poll_seconds must be > 0")
-        self.runtime, self.adapter, self.max_workers = runtime, adapter, max_workers
+        capacity = resolve_from_environment()
+        effective_workers = min(max_workers, capacity.workers) if capacity.allowed else 0
+        if effective_workers < 1:
+            raise ValueError(capacity.warning or capacity.reason or "execution capacity denied")
+        self.runtime, self.adapter, self.max_workers = runtime, adapter, effective_workers
         self.event_bus, self.aging_seconds, self.poll_seconds = event_bus, aging_seconds, poll_seconds
         self.path = path
         self._db = sqlite3.connect(path, check_same_thread=False, isolation_level=None)
@@ -56,7 +61,7 @@ class ParallelScheduler:
         self._lock = threading.RLock()
         self._wake, self._stop = threading.Event(), threading.Event()
         self._thread: threading.Thread | None = None
-        self._executor = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="si-exec")
+        self._executor = ThreadPoolExecutor(max_workers=effective_workers, thread_name_prefix="si-exec")
         self._futures: dict[str, Future[Execution]] = {}
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA foreign_keys=ON")
@@ -124,7 +129,7 @@ class ParallelScheduler:
                 self.runtime.cancel(execution.execution_id)
                 self.runtime.run(execution.execution_id, self.adapter)
                 raise
-        self._emit(execution.execution_id, "scheduler.queued", {"schedule_id": schedule_id, "priority": priority, "dependencies": list(depends_on)})
+        self._emit(execution.execution_id, "scheduler.queued", {"schedule_id": schedule_id, "priority": priority, "dependencies": list(depends_on), "capacity_workers": self.max_workers})
         self._wake.set()
         return self.get(schedule_id)
 
