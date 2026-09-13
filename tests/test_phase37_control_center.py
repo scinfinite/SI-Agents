@@ -81,9 +81,10 @@ def test_control_center_html_contains_control_center_shell(tmp_path):
         response = _get(server, "/")
         html = response.read().decode()
         assert "SI-Agents Control Center" in html
-        assert "Control Center navigation" in html
+        assert 'aria-label="Control Center sections"' in html
         assert "assets/app.js" in html
         assert "assets/app.css" in html
+        assert "meta name=\"robots\" content=\"noindex,nofollow\"" in html
     finally:
         _stop(server, thread)
 
@@ -96,7 +97,8 @@ def test_control_center_javascript_has_expected_navigation(tmp_path):
         for label in ("Overview", "Agents", "Teams", "Workflows", "Skills", "Memory", "Knowledge", "Evidence", "Runs", "Organization", "Governance", "Environments", "Harnesses", "Settings"):
             assert label in js
         assert "innerHTML" not in js
-        assert "credentials: \"same-origin\"" in js
+        assert "fetchJSON" in js
+        assert "credentials: \"same-origin\"" not in js
     finally:
         _stop(server, thread)
 
