@@ -7,6 +7,7 @@ name = "si-agents"
 version = "0.1.0"
 description = "Evidence-driven AI engineering system"
 requires-python = ">=3.11"
+license = { file = "LICENSE" }
 dependencies = []
 
 [project.scripts]
@@ -26,7 +27,7 @@ skills = ["**/*.md", "*.json", "*.yaml"]
 "core.web" = ["assets/*.html", "assets/*.js", "assets/*.css"]
 
 [tool.setuptools.data-files]
-"share/si-agents/config" = ["config/agent-catalog.json", "config/agent-catalog-extensions.json", "config/agent-catalog-extensions-v2.json", "config/team-catalog.json", "config/persona-source-index.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
+"share/si-agents/config" = ["config/agent-catalog.json", "config/agent-catalog-extensions.json", "config/agent-catalog-extensions-v2.json", "config/team-catalog.json", "config/persona-source-index.json", "config/persona-parity.json", "config/rules.v1.json", "config/governance.v1.json", "config/organization-expansion.v1.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
