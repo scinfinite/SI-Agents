@@ -1,4 +1,5 @@
-from threading import Barrier, Thread
+from threading import Event, Thread
+from time import sleep
 
 import pytest
 
@@ -105,12 +106,14 @@ def test_ledger_is_bounded() -> None:
 
 def test_concurrent_duplicate_requests_never_execute_twice() -> None:
     calls = 0
-    barrier = Barrier(2)
+    entered = Event()
+    release = Event()
 
     def handler(value: object) -> object:
         nonlocal calls
         calls += 1
-        barrier.wait(timeout=2)
+        entered.set()
+        assert release.wait(timeout=2)
         return value
 
     registry = HarnessRegistry()
@@ -119,13 +122,13 @@ def test_concurrent_duplicate_requests_never_execute_twice() -> None:
     request = InvocationRequest("echo", "x", "project", request_id="req-5", governance=governance())
     responses: list[object] = []
 
-    def invoke() -> None:
-        responses.append(engine.invoke("local", request))
-
-    first = Thread(target=invoke)
-    second = Thread(target=invoke)
+    first = Thread(target=lambda: responses.append(engine.invoke("local", request)))
     first.start()
+    assert entered.wait(timeout=2)
+    second = Thread(target=lambda: responses.append(engine.invoke("local", request)))
     second.start()
+    sleep(0.01)
+    release.set()
     first.join(timeout=3)
     second.join(timeout=3)
 
