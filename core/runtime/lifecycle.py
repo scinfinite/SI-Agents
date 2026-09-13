@@ -85,7 +85,7 @@ class InvocationLedger:
                 InvocationStatus.CANCELLED,
                 events=(RuntimeEvent(RuntimeEventType.CANCELLED, request_id, 0),),
             )
-            self._entries[key] = LifecycleEntry(request, InvocationStatus.CANCELLED, response)
+            self._entries[key] = LifecycleEntry(current.request, InvocationStatus.CANCELLED, response)
             self._entries.move_to_end(key)
             return True
 
