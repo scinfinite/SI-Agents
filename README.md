@@ -2,9 +2,9 @@
 
 SI-Agents is a governed, evidence-driven AI engineering and agent platform built around one authoritative SI Core exposed through Web, TUI, CLI, SDKs, OpenCode, OmniRoute, workflows, and runtime/integration adapters.
 
-## Phase 69 status
+## Phase 70 status
 
-Phases **44–68 are closed**. Phase **69 — npm Distribution + Setup** is implemented with a thin npm launcher/bootstrapper over the authoritative Python runtime. Phase 70 is the next roadmap phase.
+Phases **44–70 are closed**. Phase **69 — npm Distribution + Setup** is implemented with a thin npm launcher/bootstrapper over the authoritative Python runtime. Phase **70 — End-to-End Production Validation** is complete and the final roadmap phase is Phase 71.
 
 ### npm distribution
 
@@ -21,6 +21,12 @@ si-agents agents
 The npm package requires Node.js 18+ and Python 3.11+ for runtime execution. It discovers `python3`/`python` on Unix-like systems and `python`/`py` on Windows, or uses `SI_AGENTS_PYTHON` when explicitly provided. It never becomes a competing execution or authorization authority: commands are forwarded to `core.cli.dispatch`.
 
 `si-agents setup` is an explicit bootstrap operation that installs the matching Python package when it is not already importable. The npm tarball is deliberately allowlisted to the launcher, `LICENSE`, `NOTICE`, and `README.npm.md`; repository source, tests, CI files, and development artifacts are excluded.
+
+## Phase 70 production validation
+
+Phase 70 validates the OpenCode → SI RuntimeEngine → OmniRoute → model/provider boundary → SI → OpenCode control/data path using deterministic CI-safe transports. It also covers governance denial, session/project isolation, model fallback, and harness-scoped cancellation while retaining the complete repository regression and packaging gates.
+
+See `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md` for the acceptance record.
 
 ## Capacity profiles
 
@@ -70,8 +76,8 @@ See `docs/architecture/SI_AGENTS_V4_PLAN.md` for the authoritative roadmap and `
 | 67 | Advanced TUI Control Center | Complete |
 | 68 | Advanced CLI Platform | Complete |
 | 69 | npm Distribution + Setup | **Complete / 100%** |
-| 70 | End-to-End Production Validation | Next |
-| 71 | Final Production Hardening | Planned |
+| 70 | End-to-End Production Validation | **Complete / 100%** |
+| 71 | Final Production Hardening | **Next** |
 
 ## Engineering gate
 
@@ -84,6 +90,7 @@ A phase is not complete until implementation, targeted tests, regression/integra
 - `docs/architecture/PHASES.md` — current phase status.
 - `docs/architecture/phases/README.md` — canonical phase archive.
 - `docs/architecture/phases/PHASE_69_NPM_DISTRIBUTION_SETUP.md` — Phase 69 contract and acceptance record.
+- `docs/architecture/phases/PHASE_70_END_TO_END_PRODUCTION_VALIDATION.md` — Phase 70 acceptance record.
 - `docs/architecture/CAPACITY_POLICY.md` — Low/Medium/High execution policy.
 - `docs/platforms/TERMUX.md` — Termux operating contract.
 - `docs/legal/PROVENANCE_AND_LICENSE.md` — provenance and legal-risk controls.
