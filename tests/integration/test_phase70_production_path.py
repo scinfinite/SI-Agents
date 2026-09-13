@@ -142,7 +142,7 @@ def test_phase70_governance_denial_stops_downstream_execution() -> None:
         input="blocked",
         project_id="phase70-project",
         session_id="phase70-session",
-        governance=GovernanceRequest("phase70.denied", RiskLevel.CRITICAL, DataClass.SECRET),
+        governance=GovernanceRequest("phase70.denied", RiskLevel.CRITICAL, DataClass.CONFIDENTIAL),
     )
     result = runtime.invoke("omniroute", request)
     assert result.status is InvocationStatus.FAILED
