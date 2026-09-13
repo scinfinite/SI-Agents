@@ -1,5 +1,6 @@
 """Single governance decision point for policy gates."""
 
+from core.capacity import CapacityPolicy
 from core.governance.cost import CostPolicy
 from core.governance.data_policy import DataPolicy
 from core.governance.legal import LegalPolicy
@@ -18,6 +19,7 @@ class GovernanceEngine:
         self.cost = CostPolicy()
         self.data = DataPolicy()
         self.risk = RiskClassifier()
+        self.capacity = CapacityPolicy()
         self.store = store or GovernanceStore()
 
     def decide(self, request: GovernanceRequest) -> Decision:
@@ -27,6 +29,11 @@ class GovernanceEngine:
             *self.cost.evaluate(request),
             *self.data.evaluate(request),
         ]
+        capacity = self.capacity.evaluate({"action": request.action})
+        if not capacity.allowed:
+            reasons.append("capacity policy denies high-capacity local work; use a desktop or Codespace target")
+        elif capacity.warning:
+            reasons.append(capacity.warning)
         effective_risk = self.risk.classify(request)
 
         if request.approval is not None and not request.approval.active():
