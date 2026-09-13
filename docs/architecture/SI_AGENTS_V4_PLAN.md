@@ -19,6 +19,18 @@ OmniRoute owns model/provider/API routing. SI Core owns execution, orchestration
 
 V3 is closed. V4 has completed Phases **44–68**. Phases **46, 47, 49, 50, 58, 59, and 60** were advanced-hardened. **Phase 68 — Advanced CLI Platform is closed at 100%. Phase 69 — npm Distribution + Setup is next.**
 
+### Current post-Phase-68 hardening baseline
+
+- Runtime persona catalog: **300 personas across 18 divisions**.
+- Capacity levels: **Low / Medium / High** with Termux-specific admission controls.
+- Termux High-capacity work and local compilation: **blocked**; Desktop/Codespace are preferred.
+- OpenCode and OmniRoute remain explicit integration boundaries.
+- Repository-neutral provenance hygiene and Apache-2.0 licensing are in place.
+- Current system specification: `SIA_SPECS.md`.
+- Primary agent instructions: `AGENTS.md`.
+- Current status: `docs/STATUS.md`.
+- Phase archive/navigation: `docs/phases/`.
+
 ## Closed phases
 
 Phases 44–68 are closed under their recorded implementation, merge, documentation, and CI evidence.
@@ -29,19 +41,9 @@ Phases 44–68 are closed under their recorded implementation, merge, documentat
 
 The CLI remains an adapter rather than a second authority. Run creation is governed by SI Core; model/provider routing remains delegated to OmniRoute; resume fails closed when downstream execution owns the transition; authentication secrets are environment-only; arbitrary shell execution is not available. Existing legacy catalog/run/setup commands retain their established routing contracts.
 
-Machine operation is a first-class contract: deterministic JSON envelopes, stable exit classes, 1 MiB remote request/response bounds, 10 MiB attachment inspection, 256 KiB pipeline files, 100 pipeline steps, 100 sessions, 32 non-secret profiles, bounded streaming, path-safe identifiers, and fail-closed authority boundaries.
-
-Implementation: `core/cli/platform.py`, `core/cli/aliases.py`, `core/cli/session.py`, `core/cli/profile.py`, `core/cli/dispatch.py`.
-
-Acceptance coverage: `tests/test_phase68_cli.py` plus the complete repository suite. Detailed contract: `docs/architecture/PHASE_68_ADVANCED_CLI_PLATFORM.md`.
-
-PR #81 merged successfully as commit `8c5fb08e9c8a5628f59cf929e3c2ac203d4eac29`. Final PR CI **#1319** / run **34703142494**, SDK CI **#111** / run **34703142515**, and merged-tree mainline CI **#1320** / run **34703212232** completed successfully.
-
 ### Phase 67 — Advanced TUI Control Center
 
 **Complete / 100%.** Phase 67 delivers a dependency-free, keyboard-first terminal operator cockpit over the existing Control API. It preserves the historical 14-view contract and adds bounded selection, filtering, deterministic sorting, detail inspection, pause/live state, direct navigation, bounded JSON status export, non-interactive rendering, governed run creation, and identity-bound approval controls.
-
-PR #80 merged successfully. Final PR CI **#1288** / run **34702115990** completed successfully.
 
 ### Phase 66 — Advanced Web Control Plane
 
@@ -53,7 +55,7 @@ PR #80 merged successfully. Final PR CI **#1288** / run **34702115990** complete
 
 ## Phase 69 — npm Distribution + Setup
 
-npm package/global CLI, one-command installation, platform/architecture detection, bootstrap/setup, OpenCode/OmniRoute detection/configuration, SI Core validation, diagnostics, upgrade/uninstall/migration, and clean-machine validation.
+npm package/global CLI, one-command installation, platform/architecture detection, bootstrap/setup, OpenCode/OmniRoute detection/configuration, SI Core validation, diagnostics, upgrade/uninstall/migration, and clean-machine validation. The intended user-facing command is `npx si-agents`; persistent installation is `npm install -g si-agents`.
 
 ## Phase 70 — End-to-End Production Validation
 
