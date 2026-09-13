@@ -9,7 +9,7 @@ from core.organization.registry import AgentCatalog
 
 
 def load_catalog(path: str | Path) -> AgentCatalog:
-    """Load the base catalog plus the repository-owned extension manifest."""
+    """Load the base catalog plus repository-owned extension manifests."""
     source = Path(path)
     payload = json.loads(source.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("version") != 1:
@@ -21,13 +21,19 @@ def load_catalog(path: str | Path) -> AgentCatalog:
     for raw in payload.get("agents", []):
         catalog.register(AgentDefinition(**_agent_kwargs(raw)))
 
-    extension = source.with_name("agent-catalog-extensions.json")
-    if extension.exists():
+    for extension in sorted(source.parent.glob("agent-catalog-extensions*.json")):
+        if extension.name == source.name:
+            continue
         extension_payload = json.loads(extension.read_text(encoding="utf-8"))
         if not isinstance(extension_payload, dict) or extension_payload.get("version") != 1:
-            raise ValueError("Unsupported agent catalog extension version")
+            raise ValueError(f"Unsupported agent catalog extension version: {extension.name}")
+        existing_ids = {agent.id for agent in catalog.all()}
         for raw in extension_payload.get("agents", []):
-            catalog.register(AgentDefinition(**_agent_kwargs(raw)))
+            values = _agent_kwargs(raw)
+            if values["id"] in existing_ids:
+                continue
+            catalog.register(AgentDefinition(**values))
+            existing_ids.add(values["id"])
 
     errors = catalog.validate()
     if errors:
