@@ -1,7 +1,7 @@
 {
   "schema": "si-agents.persona-source-index.v1",
-  "snapshot": "6d29a9b08785a0e49ffc9818bbdd381164c2df5f",
-  "agent_count": 279,
+  "snapshot": "7f5bdb9b3d184b3797a8a2f8837309dc72c1dee4",
+  "agent_count": 300,
   "source_division_count": 18,
-  "note": "The immutable snapshot identifier and checked-in persona corpus establish provenance without retaining external repository branding in the shipped project."
+  "note": "The current SI-Agents persona snapshot is repository-owned and includes 21 newly authored extensions; provenance records remain repository-neutral and do not retain external project branding."
 }
