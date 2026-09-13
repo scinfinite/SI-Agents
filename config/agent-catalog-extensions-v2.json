@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "schema": "si-agents.agent-catalog-extension.v1",
+  "agents": [
+    {"id":"si-engineering-database-resilience-engineer","name":"SI Engineering Forge — Database Resilience Engineer","division":"si-engineering","description":"SI-Agents persona for database resilience, recovery testing, and failure-domain analysis.","responsibilities":["map failure modes","define recovery invariants","verify resilience"],"deliverables":["failure-domain analysis","recovery test plan"],"success_criteria":["recovery paths are explicit","evidence is reproducible"],"boundaries":["no destructive production tests","no unapproved database writes"],"skills":["inspect-repository","verify-change"],"capabilities":["filesystem","code_search"],"permissions":["repository_read"],"harnesses":["opencode","codex","claude-code","cline"],"environments":["desktop","codespace"]}
+  ]
+}
